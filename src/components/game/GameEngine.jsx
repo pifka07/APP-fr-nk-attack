@@ -564,6 +564,41 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         });
 
+        // Draw Powerups
+        state.powerups.forEach(p => {
+            if (!p.active) return;
+            
+            // Use the new atlas if possible, or fallback colors
+            if (assetsLoaded.current && IMAGES.current.uiAtlas) {
+                // Guessing coordinates from the provided image structure (Middle row)
+                // Lightning, Poop, Coin
+                const atlas = IMAGES.current.uiAtlas;
+                let sx = 0, sy = atlas.height * 0.4, sw = atlas.width * 0.2, sh = atlas.height * 0.2;
+                
+                if (p.type === 'energy') { sx = atlas.width * 0.05; } // Lightning
+                else if (p.type === 'ammo') { sx = atlas.width * 0.3; } // Poop
+                else if (p.type === 'coin') { sx = atlas.width * 0.55; } // Coin
+
+                // Pulse effect
+                const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
+                
+                ctx.save();
+                ctx.translate(p.x + p.width/2, p.y + p.height/2);
+                ctx.scale(scale, scale);
+                ctx.drawImage(atlas, sx, sy, sw, sh, -p.width/2, -p.height/2, p.width, p.height);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = p.type === 'coin' ? 'gold' : (p.type === 'ammo' ? 'brown' : 'cyan');
+                ctx.beginPath();
+                ctx.arc(p.x + p.width/2, p.y + p.height/2, p.width/2, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.font = '20px Arial';
+                ctx.fillText(p.type === 'coin' ? '$' : (p.type === 'ammo' ? 'P' : 'E'), p.x + p.width/2, p.y + p.height/2 + 5);
+            }
+        });
+
         // Draw Particles
         state.particles.forEach(p => {
             ctx.globalAlpha = p.life;

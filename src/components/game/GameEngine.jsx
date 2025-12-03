@@ -9,12 +9,12 @@ const SCROLL_SPEED_INITIAL = 3;
 // Assets & Sprite Maps
 const SPRITE_MAP = {
     player: {
-        // Animations defined as arrays of frames
-        idle: [{ x: 0, y: 0, w: 0.33, h: 0.5 }, { x: 0, y: 0.5, w: 0.33, h: 0.5 }], // Bobbing
-        fly: [{ x: 0.33, y: 0, w: 0.33, h: 0.5 }, { x: 0, y: 0, w: 0.33, h: 0.5 }], // Flap (Wing up/down)
-        action: [{ x: 0.66, y: 0, w: 0.33, h: 0.5 }], // Pooping frame
-        angry: [{ x: 0.33, y: 0.5, w: 0.33, h: 0.5 }],
-        dead: [{ x: 0.66, y: 0.5, w: 0.33, h: 0.5 }]
+        // Single frame image for now, utilizing code-based animation (rotation/bobbing)
+        idle: [{ x: 0, y: 0, w: 1, h: 1 }],
+        fly: [{ x: 0, y: 0, w: 1, h: 1 }],
+        action: [{ x: 0, y: 0, w: 1, h: 1 }],
+        angry: [{ x: 0, y: 0, w: 1, h: 1 }],
+        dead: [{ x: 0, y: 0, w: 1, h: 1 }]
     },
     enemies: {
         // Simulating animation for single-frame assets by bobbing/rotating in render
@@ -45,7 +45,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     useEffect(() => {
         // Load Images
         IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png";
-        IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png";
+        IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2a1fa123b_FrnkdieTaube2-Kopie.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
         IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
 

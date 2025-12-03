@@ -36,8 +36,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
     const IMAGES = useRef({
-        sky: new Image(),
-        city: new Image(),
+        background: new Image(),
         playerSheet: new Image(),
         enemiesSheet: new Image(),
         uiAtlas: new Image()
@@ -45,8 +44,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     useEffect(() => {
         // Load Images
-        IMAGES.current.sky.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/0bb12c266_ChatGPTImage3Dez202518_19_15.png";
-        IMAGES.current.city.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d8d333126_ChatGPTImage3Dez202518_25_08.png";
+        IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png";
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
         IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
@@ -54,7 +52,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 5) assetsLoaded.current = true;
+            if (loadedCount >= 4) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -427,53 +425,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Clear
         ctx.clearRect(0, 0, width, height);
 
-        // --- PARALLAX RENDERING ---
-        
-        // 1. Sky (Slowest)
-        if (assetsLoaded.current && IMAGES.current.sky) {
-            const bg = IMAGES.current.sky;
+        // --- BACKGROUND RENDERING ---
+        if (assetsLoaded.current && IMAGES.current.background) {
+            const bg = IMAGES.current.background;
+            // Cover screen, maintain aspect ratio to fill
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;
-            const offset = (state.distance * 0.2) % w; // 0.2x speed
+            
+            // Scroll at game speed (10x distance unit)
+            const offset = (state.distance * 10) % w; 
             
             ctx.drawImage(bg, -offset, 0, w, h);
             ctx.drawImage(bg, w - offset, 0, w, h);
+            if (w - offset < width) {
+                ctx.drawImage(bg, (w * 2) - offset, 0, w, h);
+            }
         } else {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
         }
-
-        // 2. Midground City (Medium)
-        if (assetsLoaded.current && IMAGES.current.city) {
-            const city = IMAGES.current.city;
-            // Align to bottom of ground
-            const h = height * 0.6; // City takes up 60% height
-            const w = city.width * (h / city.height); 
-            const y = (height * GROUND_Y_PCT) - h + 20; // Slightly overlap ground
-            const offset = (state.distance * 0.5) % w; // 0.5x speed
-            
-            ctx.drawImage(city, -offset, y, w, h);
-            ctx.drawImage(city, w - offset, y, w, h);
-            ctx.drawImage(city, (w * 2) - offset, y, w, h); // Safety 3rd tile
-        }
-
-        // 3. Foreground Ground (Fastest - Game Speed)
-        const groundY = height * GROUND_Y_PCT;
-        ctx.fillStyle = '#2D3748'; // Road color
-        ctx.fillRect(0, groundY, width, height - groundY);
-        
-        // Road markings (Animated)
-        ctx.fillStyle = '#FEFCBF'; // Yellow/White lines
-        const lineSpacing = 100;
-        const lineOffset = (state.distance * 1) % lineSpacing;
-        for (let i = -1; i < width / lineSpacing + 1; i++) {
-            ctx.fillRect((i * lineSpacing) - lineOffset, groundY + 40, 60, 10);
-        }
-
-        // Sidewalk
-        ctx.fillStyle = '#4A5568'; 
-        ctx.fillRect(0, groundY - 15, width, 15);
 
         // Draw Player
         if (assetsLoaded.current) {

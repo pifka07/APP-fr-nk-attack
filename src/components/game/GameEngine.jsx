@@ -449,17 +449,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Poops
         state.poops.forEach(p => {
-            if (assetsLoaded.current) {
-                const sheet = IMAGES.current.enemiesSheet;
-                const def = SPRITE_MAP.enemies.poop;
-                ctx.drawImage(
-                    sheet, 
-                    def.x * sheet.width, def.y * sheet.height, 
-                    def.w * sheet.width, def.h * sheet.height, 
-                    p.x - 15, p.y - 15, 30, 30
-                );
-            } else {
-                ctx.fillText('💩', p.x, p.y);
+            if (p.active) {
+                 if (assetsLoaded.current) {
+                    const sheet = IMAGES.current.enemiesSheet;
+                    const def = SPRITE_MAP.enemies.poop[0];
+                    
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    // Spin the poop!
+                    ctx.rotate(state.animFrame * 0.2);
+                    
+                    ctx.drawImage(
+                        sheet, 
+                        def.x * sheet.width, def.y * sheet.height, 
+                        def.w * sheet.width, def.h * sheet.height, 
+                        -15, -15, 30, 30
+                    );
+                    ctx.restore();
+                 } else {
+                    ctx.fillText('💩', p.x, p.y);
+                 }
             }
         });
 

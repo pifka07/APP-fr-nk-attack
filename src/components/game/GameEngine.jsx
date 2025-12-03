@@ -42,7 +42,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         playerGround: new Image(), // Standing
         enemiesSheet: new Image(),
         uiAtlas: new Image(),
-        eagle: new Image()
+        eagle: new Image(),
+        cop: new Image(),
+        granny: new Image(),
+        car: new Image(),
+        drone: new Image()
     });
 
     useEffect(() => {
@@ -54,11 +58,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
         IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
         IMAGES.current.eagle.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b5521b477_FrnkdieTaubeicon7.png";
+        IMAGES.current.cop.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/54c38cb42_FrnkdieTaubeicon5.png";
+        IMAGES.current.granny.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a952543cb_FrnkdieTaubeicon6.png";
+        IMAGES.current.car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/eb0e93ce2_FrnkdieTaubeicon2.png";
+        IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6e5167c95_FrnkdieTaubeicon8.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 7) assetsLoaded.current = true;
+            if (loadedCount >= 11) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -522,14 +530,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.enemies.forEach(e => {
             if (assetsLoaded.current && e.spriteType) {
                 let sheet, sx, sy, sw, sh;
+                
+                // Helper for single image sprites
+                const useFullImage = (img) => {
+                    sheet = img;
+                    sx = 0; sy = 0; sw = img.width; sh = img.height;
+                };
 
-                if (e.spriteType === 'eagle') {
-                    sheet = IMAGES.current.eagle;
-                    sx = 0;
-                    sy = 0;
-                    sw = sheet.width;
-                    sh = sheet.height;
-                } else {
+                if (e.spriteType === 'eagle') useFullImage(IMAGES.current.eagle);
+                else if (e.spriteType === 'cop') useFullImage(IMAGES.current.cop);
+                else if (e.spriteType === 'granny') useFullImage(IMAGES.current.granny);
+                else if (e.spriteType === 'car') useFullImage(IMAGES.current.car);
+                else if (e.spriteType === 'drone') useFullImage(IMAGES.current.drone);
+                else {
+                    // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
                     const frames = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
                     const def = frames[0]; 

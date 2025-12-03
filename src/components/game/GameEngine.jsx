@@ -37,8 +37,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const assetsLoaded = useRef(false);
     const IMAGES = useRef({
         background: new Image(),
-        playerSheet: new Image(),
+        playerSheet: new Image(), // Flying
         playerDead: new Image(),
+        playerGround: new Image(), // Standing
         enemiesSheet: new Image(),
         uiAtlas: new Image()
     });
@@ -48,13 +49,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png";
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/59fa7a8db_FrnkdieTaube2-Kopie.png";
         IMAGES.current.playerDead.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ae2c71989_FrnkdieTaube4-Kopie.png";
+        IMAGES.current.playerGround.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dc76f3fcb_FrnkdieTaube5-Kopie.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
         IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 5) assetsLoaded.current = true;
+            if (loadedCount >= 6) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -460,32 +462,29 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(deadImg, -playerSize/2, -playerSize/2, playerSize, playerSize);
                 ctx.restore();
             } else {
-                // Draw Alive Player
-                const sheet = IMAGES.current.playerSheet;
-                let animKey = 'idle';
-
-                if (state.player.vy < -2) animKey = 'fly';
-                else if (state.player.vy > 2) animKey = 'action';
-                if (skin === 'gangster') animKey = 'angry';
-
-                const frames = SPRITE_MAP.player[animKey] || SPRITE_MAP.player.idle;
-                // Cycle frames every 10 ticks
-                const frameIndex = Math.floor(state.animFrame / 10) % frames.length;
-                const spriteDef = frames[frameIndex];
-
-                const sx = spriteDef.x * sheet.width;
-                const sy = spriteDef.y * sheet.height;
-                const sw = spriteDef.w * sheet.width;
-                const sh = spriteDef.h * sheet.height;
+                // Check if player is on ground
+                const groundY = height * GROUND_Y_PCT;
+                const isOnGround = state.player.y >= groundY - state.player.radius - 1; // Tolerance
 
                 const playerSize = 90;
-
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
-                const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);
-                ctx.rotate(rotation);
 
-                ctx.drawImage(sheet, sx, sy, sw, sh, -playerSize/2, -playerSize/2, playerSize, playerSize);
+                if (isOnGround) {
+                    // Draw Standing Player
+                    const groundImg = IMAGES.current.playerGround;
+                    ctx.drawImage(groundImg, -playerSize/2, -playerSize/2, playerSize, playerSize);
+                } else {
+                    // Draw Flying Player
+                    const sheet = IMAGES.current.playerSheet;
+
+                    // Rotation based on vertical velocity
+                    const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);
+                    ctx.rotate(rotation);
+
+                    // Use whole image as sprite for now since user provided single image for flying
+                    ctx.drawImage(sheet, -playerSize/2, -playerSize/2, playerSize, playerSize);
+                }
                 ctx.restore();
             }
         } else {

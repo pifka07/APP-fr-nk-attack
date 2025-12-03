@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { base44 } from '@/api/base44Client';
 import GameEngine from '@/components/game/GameEngine';
-import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target } from "lucide-react";
+import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
+const UI_ATLAS = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
+
 export default function Game() {
     const engineRef = useRef(null);
-    const [gameState, setGameState] = useState('start'); // start, playing, paused, gameover
+    const [gameState, setGameState] = useState('start'); 
     const [score, setScore] = useState(0);
     const [coins, setCoins] = useState(0);
     const [health, setHealth] = useState(100);
@@ -153,18 +155,46 @@ export default function Game() {
                     <div className="flex justify-between items-start">
                         {/* Health & Score */}
                         <div className="space-y-2">
-                            <div className="flex items-center gap-1 bg-slate-900/50 backdrop-blur-sm p-2 rounded-full border border-slate-700">
-                                <Heart className="w-5 h-5 text-red-500 fill-current" />
-                                <div className="w-32 h-3 bg-slate-700 rounded-full overflow-hidden">
+                            {/* Health Bar with Icon */}
+                            <div className="flex items-center gap-2">
+                                <div className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden relative bg-blue-400">
+                                    {/* Cropped Energy Icon from Atlas */}
+                                    <div style={{
+                                        backgroundImage: `url(${UI_ATLAS})`,
+                                        backgroundPosition: '10% 45%', 
+                                        backgroundSize: '500%',
+                                        width: '100%',
+                                        height: '100%'
+                                    }} />
+                                </div>
+                                <div className="w-32 h-4 bg-slate-800 rounded-full border-2 border-slate-600 overflow-hidden relative">
                                     <div 
-                                        className="h-full bg-red-500 transition-all duration-300" 
+                                        className="h-full bg-gradient-to-r from-teal-400 to-teal-300 transition-all duration-300" 
                                         style={{ width: `${health}%` }}
                                     />
+                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow-md">ENERGY</div>
                                 </div>
                             </div>
-                            <div className="bg-slate-900/50 backdrop-blur-sm p-2 rounded-lg border border-slate-700 inline-block">
-                                <div className="text-2xl font-black text-yellow-400 tabular-nums">{score}</div>
-                                <div className="text-xs text-slate-400">PTS</div>
+
+                            {/* Coins Display */}
+                            <div className="flex items-center gap-2">
+                                <div className="w-10 h-10 rounded-full border-2 border-yellow-400 shadow-md overflow-hidden relative bg-yellow-100">
+                                    <div style={{
+                                        backgroundImage: `url(${UI_ATLAS})`,
+                                        backgroundPosition: '60% 45%', 
+                                        backgroundSize: '500%',
+                                        width: '100%',
+                                        height: '100%'
+                                    }} />
+                                </div>
+                                <div className="bg-slate-900/80 px-3 py-1 rounded-xl border border-yellow-500/30">
+                                    <div className="text-xl font-black text-yellow-400 tabular-nums">{coins}</div>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-900/50 backdrop-blur-sm px-3 py-1 rounded-lg border border-slate-700 inline-block ml-1">
+                                <div className="text-xl font-black text-white tabular-nums tracking-wider">{score}</div>
+                                <div className="text-[10px] text-slate-400 font-bold">SCORE</div>
                             </div>
                         </div>
 
@@ -205,14 +235,23 @@ export default function Game() {
                         TAP SCREEN TO FLY
                     </div>
 
-                    {/* Poop Button */}
+                    {/* Poop Button with Ammo */}
                     <motion.button 
                         whileTap={{ scale: 0.9 }}
-                        className="pointer-events-auto w-24 h-24 rounded-full bg-gradient-to-b from-orange-400 to-orange-600 border-4 border-white/20 shadow-[0_8px_0_rgb(194,65,12)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center"
+                        className="pointer-events-auto w-28 h-28 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 border-4 border-white/30 shadow-[0_8px_0_#1e3a8a] active:shadow-none active:translate-y-2 transition-all flex flex-col items-center justify-center relative overflow-hidden group"
                         onClick={handlePoop}
                         onTouchStart={handlePoop}
                     >
-                        <span className="text-5xl filter drop-shadow-md">💩</span>
+                        <div className="absolute inset-0 bg-blue-400/20 group-hover:bg-blue-400/30 transition-colors" />
+                        
+                        {/* Poop Icon from Atlas */}
+                        <div className="w-16 h-16 mb-1 relative z-10" style={{
+                            backgroundImage: `url(${UI_ATLAS})`,
+                            backgroundPosition: '35% 45%', 
+                            backgroundSize: '500%',
+                        }} />
+                        
+                        <div className="text-xs font-black text-white bg-black/20 px-2 rounded-full z-10">FIRE</div>
                     </motion.button>
                 </div>
             )}

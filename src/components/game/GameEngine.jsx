@@ -39,23 +39,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         sky: new Image(),
         city: new Image(),
         playerSheet: new Image(),
-        enemiesSheet: new Image()
+        enemiesSheet: new Image(),
+        uiAtlas: new Image()
     });
 
     useEffect(() => {
         // Load Images
-        // Background (Sky/Clouds)
         IMAGES.current.sky.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/fc69b9ed5_ChatGPTImage3Dez202518_19_15.png";
-        // Midground (City Skyline)
         IMAGES.current.city.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d8d333126_ChatGPTImage3Dez202518_25_08.png";
-
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
+        IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 4) assetsLoaded.current = true;
+            if (loadedCount >= 5) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -81,6 +80,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         lastPoopTime: 0,
         combo: 0,
         comboTimer: 0,
+        maxPoops: 3, // Dynamic ammo
+        currentPoops: 3,
         animFrame: 0 // Global animation tick
     });
 
@@ -133,9 +134,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Cooldown check
         if (now - state.lastPoopTime < effectiveConfig.cooldown) return;
         
-        // Max active poops check (optional based on upgrade)
-        // if (state.poops.length >= effectiveConfig.maxPoops) return;
+        // Ammo check (reloading mechanism)
+        if (state.currentPoops <= 0) return; // Out of ammo
 
+        state.currentPoops--;
         state.lastPoopTime = now;
         state.poops.push({
             x: state.player.x,
@@ -225,6 +227,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         enemies.push(enemy);
     };
 
+    const spawnPowerup = (width, height) => {
+        const state = gameStateRef.current;
+        if (Math.random() > 0.01) return; // 1% chance per frame
+
+        const typeRand = Math.random();
+        let type = 'coin';
+        if (typeRand > 0.8) type = 'ammo'; // Poop refill
+        else if (typeRand > 0.9) type = 'energy'; // Speed/Invincibility
+
+        state.powerups.push({
+            x: width + 50,
+            y: Math.random() * (height * 0.6) + 50,
+            width: 40,
+            height: 40,
+            type,
+            vx: -state.scrollSpeed,
+            active: true
+        });
+    };
+
     const createParticles = (x, y, color, count = 5) => {
         for (let i = 0; i < count; i++) {
             gameStateRef.current.particles.push({
@@ -282,10 +304,21 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (frameRef.current % Math.max(20, Math.floor(SPAWN_RATE_INITIAL - state.scrollSpeed * 5)) === 0) {
             spawnEnemy(width, height);
         }
+        spawnPowerup(width, height);
+
+        // Reload Ammo slowly
+        if (frameRef.current % 60 === 0 && state.currentPoops < getEffectiveConfig().maxPoops) {
+            state.currentPoops++;
+        }
 
         // Update Enemies
         state.enemies.forEach(e => {
             e.x += e.vx;
+        });
+
+        // Update Powerups
+        state.powerups.forEach(p => {
+            p.x += p.vx;
         });
 
         // Update Particles
@@ -355,9 +388,36 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         });
 
+        // 3. Player collecting Powerups
+        state.powerups.forEach(p => {
+            if (!p.active) return;
+            const dx = state.player.x - (p.x + p.width/2);
+            const dy = state.player.y - (p.y + p.height/2);
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            if (dist < state.player.radius + (p.width/2)) {
+                p.active = false;
+                createParticles(p.x, p.y, '#FFFFFF', 5);
+                
+                if (p.type === 'coin') {
+                    state.coins += 5;
+                    state.score += 50;
+                } else if (p.type === 'ammo') {
+                    state.currentPoops = getEffectiveConfig().maxPoops; // Refill
+                    createParticles(state.player.x, state.player.y, '#8B4513', 8);
+                } else if (p.type === 'energy') {
+                    state.health = Math.min(100, state.health + 20);
+                    onHealthUpdate(state.health);
+                    createParticles(state.player.x, state.player.y, '#00FFFF', 8);
+                }
+                onScoreUpdate(state.score, state.coins);
+            }
+        });
+
         // Cleanup
         state.poops = state.poops.filter(p => p.active && p.x < width && p.y < height);
         state.enemies = state.enemies.filter(e => e.x > -100 && e.hp > 0); // Remove offscreen or dead
+        state.powerups = state.powerups.filter(p => p.active && p.x > -100);
         state.particles = state.particles.filter(p => p.life > 0);
     };
 

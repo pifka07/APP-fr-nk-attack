@@ -34,12 +34,6 @@ export default function Game() {
 
                 // Default config
                 let config = {
-                    base44.entities.PlayerUpgrade.list(),
-                    base44.entities.Upgrade.list()
-                ]);
-                
-                // Default config
-                let config = {
                     maxPoops: 3,
                     cooldownReduction: 0,
                     agility: 1,

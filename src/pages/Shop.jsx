@@ -1,0 +1,224 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { base44 } from '@/api/base44Client';
+import { ArrowLeft, Coins, Zap, Palette, Lock, Check } from "lucide-react";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+
+export default function Shop() {
+    const [user, setUser] = useState(null);
+    const [upgrades, setUpgrades] = useState([]);
+    const [skins, setSkins] = useState([]);
+    const [playerUpgrades, setPlayerUpgrades] = useState([]);
+    const [playerSkins, setPlayerSkins] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        try {
+            const [userData, upgradesData, skinsData, pUpgradesData, pSkinsData] = await Promise.all([
+                base44.auth.me(),
+                base44.entities.Upgrade.list(),
+                base44.entities.Skin.list(),
+                base44.entities.PlayerUpgrade.list(), // User security rule ensures we only see our own
+                base44.entities.PlayerSkin.list()
+            ]);
+            setUser(userData);
+            setUpgrades(upgradesData);
+            setSkins(skinsData);
+            setPlayerUpgrades(pUpgradesData);
+            setPlayerSkins(pSkinsData);
+        } catch (error) {
+            console.error("Error fetching shop data", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const handleBuyUpgrade = async (upgrade) => {
+        const currentLevel = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id)?.level || 0;
+        if (currentLevel >= upgrade.max_level) return;
+
+        const cost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
+
+        if (user.total_coins < cost) {
+            toast.error("Not enough coins!");
+            return;
+        }
+
+        try {
+            // Deduct coins
+            await base44.auth.updateMe({ total_coins: user.total_coins - cost });
+            
+            // Update or Create PlayerUpgrade
+            const existingPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
+            if (existingPu) {
+                await base44.entities.PlayerUpgrade.update(existingPu.id, { level: existingPu.level + 1 });
+            } else {
+                await base44.entities.PlayerUpgrade.create({ upgrade_id: upgrade.id, level: 1 });
+            }
+
+            toast.success(`Upgraded ${upgrade.name}!`);
+            fetchData(); // Refresh data
+        } catch (error) {
+            console.error("Purchase failed", error);
+            toast.error("Purchase failed. Try again.");
+        }
+    };
+
+    const handleBuySkin = async (skin) => {
+        if (user.total_coins < skin.cost_coins) {
+            toast.error("Not enough coins!");
+            return;
+        }
+
+        try {
+            await base44.auth.updateMe({ total_coins: user.total_coins - skin.cost_coins });
+            await base44.entities.PlayerSkin.create({ skin_id: skin.id, owned: true });
+            toast.success(`Unlocked ${skin.name}!`);
+            fetchData();
+        } catch (error) {
+            toast.error("Purchase failed.");
+        }
+    };
+
+    const handleEquipSkin = async (skinKey) => {
+        try {
+            await base44.auth.updateMe({ equipped_skin: skinKey });
+            toast.success("Skin Equipped!");
+            fetchData();
+        } catch (error) {
+            toast.error("Failed to equip skin.");
+        }
+    };
+
+    if (loading) return <div className="flex justify-center items-center h-screen text-teal-400">Loading Shop...</div>;
+
+    return (
+        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pb-20">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
+                <div className="flex items-center gap-2">
+                    <Link to={createPageUrl('Home')}>
+                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+                            <ArrowLeft className="w-6 h-6" />
+                        </Button>
+                    </Link>
+                    <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">SHOP</h1>
+                </div>
+                <div className="flex items-center bg-slate-800 px-3 py-1.5 rounded-full border border-yellow-500/30">
+                    <div className="w-4 h-4 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
+                    <span className="font-mono font-bold text-yellow-400">{user?.total_coins || 0}</span>
+                </div>
+            </div>
+
+            <Tabs defaultValue="upgrades" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-slate-800 mb-6">
+                    <TabsTrigger value="upgrades" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
+                        <Zap className="w-4 h-4 mr-2" /> Upgrades
+                    </TabsTrigger>
+                    <TabsTrigger value="skins" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                        <Palette className="w-4 h-4 mr-2" /> Skins
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="upgrades" className="space-y-4">
+                    {upgrades.map(upgrade => {
+                        const currentPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
+                        const currentLevel = currentPu?.level || 0;
+                        const isMaxed = currentLevel >= upgrade.max_level;
+                        const nextCost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
+                        const canAfford = user?.total_coins >= nextCost;
+
+                        return (
+                            <Card key={upgrade.id} className="bg-slate-800 border-slate-700">
+                                <CardHeader className="pb-2">
+                                    <div className="flex justify-between">
+                                        <CardTitle className="text-lg font-bold text-teal-300">{upgrade.name}</CardTitle>
+                                        <Badge variant={isMaxed ? "default" : "outline"} className={isMaxed ? "bg-teal-500" : "text-teal-400 border-teal-400"}>
+                                            Lvl {currentLevel} / {upgrade.max_level}
+                                        </Badge>
+                                    </div>
+                                    <CardDescription className="text-slate-400">{upgrade.description}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-teal-500 transition-all duration-500" 
+                                            style={{ width: `${(currentLevel / upgrade.max_level) * 100}%` }}
+                                        />
+                                    </div>
+                                </CardContent>
+                                <CardFooter>
+                                    {isMaxed ? (
+                                        <Button disabled className="w-full bg-slate-700 text-slate-400">Max Level Reached</Button>
+                                    ) : (
+                                        <Button 
+                                            onClick={() => handleBuyUpgrade(upgrade)}
+                                            disabled={!canAfford}
+                                            className={`w-full font-bold ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
+                                        >
+                                            <Coins className="w-4 h-4 mr-2" /> 
+                                            Upgrade ({nextCost})
+                                        </Button>
+                                    )}
+                                </CardFooter>
+                            </Card>
+                        );
+                    })}
+                </TabsContent>
+
+                <TabsContent value="skins" className="grid grid-cols-2 gap-4">
+                    {skins.map(skin => {
+                        const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
+                        const isEquipped = user?.equipped_skin === skin.key;
+                        const canAfford = user?.total_coins >= skin.cost_coins;
+
+                        return (
+                            <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
+                                <Card className={`bg-slate-800 border-2 overflow-hidden h-full flex flex-col ${isEquipped ? 'border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'border-slate-700'}`}>
+                                    <div className="h-24 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
+                                        <span className="text-4xl z-10">🐦</span>
+                                        {isEquipped && <div className="absolute top-2 right-2 bg-purple-600 text-xs px-2 py-1 rounded-full font-bold">EQUIPPED</div>}
+                                    </div>
+                                    <CardContent className="p-4 flex-grow">
+                                        <h3 className="font-bold text-white mb-1">{skin.name}</h3>
+                                        <p className="text-xs text-slate-400">{skin.description}</p>
+                                    </CardContent>
+                                    <CardFooter className="p-3 pt-0 mt-auto">
+                                        {isOwned ? (
+                                            <Button 
+                                                onClick={() => handleEquipSkin(skin.key)}
+                                                variant={isEquipped ? "secondary" : "outline"} 
+                                                className="w-full text-xs"
+                                                disabled={isEquipped}
+                                            >
+                                                {isEquipped ? <><Check className="w-3 h-3 mr-1" /> Active</> : "Equip"}
+                                            </Button>
+                                        ) : (
+                                            <Button 
+                                                onClick={() => handleBuySkin(skin)}
+                                                disabled={!canAfford}
+                                                className={`w-full text-xs ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700'}`}
+                                            >
+                                                <Coins className="w-3 h-3 mr-1" /> {skin.cost_coins}
+                                            </Button>
+                                        )}
+                                    </CardFooter>
+                                </Card>
+                            </motion.div>
+                        );
+                    })}
+                </TabsContent>
+            </Tabs>
+        </div>
+    );
+}

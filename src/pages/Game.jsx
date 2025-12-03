@@ -238,20 +238,15 @@ export default function Game() {
                     {/* Poop Button with Ammo */}
                     <motion.button 
                         whileTap={{ scale: 0.9 }}
-                        className="pointer-events-auto w-28 h-28 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 border-4 border-white/30 shadow-[0_8px_0_#1e3a8a] active:shadow-none active:translate-y-2 transition-all flex flex-col items-center justify-center relative overflow-hidden group"
+                        className="pointer-events-auto w-28 h-28 rounded-full shadow-[0_8px_0_#0f5d55] active:shadow-none active:translate-y-2 transition-all relative overflow-hidden bg-transparent border-0 p-0"
                         onClick={handlePoop}
                         onTouchStart={handlePoop}
                     >
-                        <div className="absolute inset-0 bg-blue-400/20 group-hover:bg-blue-400/30 transition-colors" />
-                        
-                        {/* Poop Icon from Atlas */}
-                        <div className="w-16 h-16 mb-1 relative z-10" style={{
-                            backgroundImage: `url(${UI_ATLAS})`,
-                            backgroundPosition: '35% 45%', 
-                            backgroundSize: '500%',
-                        }} />
-                        
-                        <div className="text-xs font-black text-white bg-black/20 px-2 rounded-full z-10">FIRE</div>
+                         <img 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4de0465cf_FrnkdieTaubeiconkake.png" 
+                            className="w-full h-full object-contain"
+                            alt="Poop"
+                        />
                     </motion.button>
                 </div>
             )}

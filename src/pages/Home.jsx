@@ -27,7 +27,7 @@ export default function Home() {
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dea64ff85_ChatGPTImage3Dez202518_18_52.png" 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b3b7d6b41_ChatGPTImage3Dez202518_19_15.png" 
                     alt="Background" 
                     className="w-full h-full object-cover object-center"
                 />

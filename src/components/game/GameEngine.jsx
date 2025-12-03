@@ -314,24 +314,35 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.fillRect(0, groundY - 10, width, 10);
 
         // Draw Player
-        ctx.font = '40px serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        let playerSprite = SPRITES.PLAYER;
-        if (skin === 'gangster') playerSprite = '😎';
-        else if (skin === 'business') playerSprite = '🤵';
-        else if (skin === 'christmas') playerSprite = '🎅';
-        else if (skin === 'gold') playerSprite = '👑';
-        
-        // Draw wings/body base if needed, but for now just the emoji
-        // Maybe combine?
-        if (skin !== 'default') {
-            ctx.fillText('🐦', state.player.x, state.player.y); // Base bird
-            ctx.font = '20px serif';
-            ctx.fillText(playerSprite, state.player.x + 10, state.player.y - 10); // Accessory
+        if (assetsLoaded.current) {
+            const sheet = IMAGES.current.playerSheet;
+            let spriteDef = SPRITE_MAP.player.idle;
+            
+            if (state.player.vy < -2) spriteDef = SPRITE_MAP.player.fly;
+            else if (state.player.vy > 2) spriteDef = SPRITE_MAP.player.action;
+            
+            if (skin === 'gangster') spriteDef = SPRITE_MAP.player.angry; // Just mapping skins to expressions for now
+            
+            const sx = spriteDef.x * sheet.width;
+            const sy = spriteDef.y * sheet.height;
+            const sw = spriteDef.w * sheet.width;
+            const sh = spriteDef.h * sheet.height;
+            
+            const playerSize = 80; // Bigger size
+            
+            ctx.save();
+            ctx.translate(state.player.x, state.player.y);
+            // Tilt based on velocity
+            const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.5), 0.5);
+            ctx.rotate(rotation);
+            
+            ctx.drawImage(sheet, sx, sy, sw, sh, -playerSize/2, -playerSize/2, playerSize, playerSize);
+            ctx.restore();
         } else {
-            ctx.fillText(SPRITES.PLAYER, state.player.x, state.player.y);
+            ctx.font = '40px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🐦', state.player.x, state.player.y);
         }
 
         // Draw Poops

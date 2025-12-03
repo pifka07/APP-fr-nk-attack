@@ -23,53 +23,29 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-cyan-900 via-purple-900 to-slate-900 p-6 relative overflow-hidden">
-            {/* Animated Background Elements */}
-            <motion.div 
-                animate={{ x: [0, 100, 0], y: [0, -20, 0] }}
-                transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="absolute top-20 left-10 opacity-20"
-            >
-                <div className="w-32 h-32 rounded-full bg-teal-400 blur-3xl"></div>
-            </motion.div>
-            <motion.div 
-                animate={{ x: [0, -100, 0], y: [0, 30, 0] }}
-                transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-                className="absolute bottom-20 right-10 opacity-20"
-            >
-                <div className="w-40 h-40 rounded-full bg-purple-500 blur-3xl"></div>
-            </motion.div>
-
-            {/* Title Section */}
-            <div className="text-center mb-12 z-10">
-                <motion.h1 
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-purple-400 to-yellow-400 drop-shadow-lg"
-                    style={{ fontFamily: 'Impact, sans-serif' }} // Fallback to a chunky font
-                >
-                    FRÄNK
-                </motion.h1>
-                <motion.p 
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="text-xl font-bold text-teal-200 tracking-wide mt-2"
-                >
-                    THE POOP FROM ABOVE
-                </motion.p>
+        <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 relative overflow-hidden">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+                <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dea64ff85_ChatGPTImage3Dez202518_18_52.png" 
+                    alt="Background" 
+                    className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
             </div>
 
-            {/* Fränk Avatar (Placeholder) */}
-            <motion.div 
-                animate={{ y: [-10, 10, -10] }}
-                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                className="mb-12 relative z-10"
-            >
-                <div className="w-32 h-32 bg-slate-800 rounded-full flex items-center justify-center border-4 border-teal-400 shadow-[0_0_30px_rgba(45,212,191,0.5)]">
-                    <span className="text-6xl">🐦</span>
-                </div>
-            </motion.div>
+            {/* Title Section */}
+            <div className="text-center mb-8 z-10 relative">
+                <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="mb-4"
+                >
+                    <h1 className="text-6xl font-black text-white drop-shadow-[0_4px_0_#000] tracking-wider" style={{ fontFamily: 'Impact, sans-serif' }}>
+                        FRÄNK
+                    </h1>
+                </motion.div>
+            </div>
 
             {/* Menu Buttons */}
             <div className="w-full max-w-xs space-y-4 z-10">

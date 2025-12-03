@@ -200,13 +200,17 @@ export default function Game() {
 
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
-                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none flex justify-end items-end">
+                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none flex justify-between items-end">
+                     <div className="text-white/50 text-sm font-bold animate-pulse pointer-events-none ml-4 mb-4">
+                        TAP SCREEN TO FLY
+                    </div>
+
                     {/* Poop Button */}
                     <motion.button 
                         whileTap={{ scale: 0.9 }}
-                        className="pointer-events-auto w-24 h-24 rounded-full bg-gradient-to-b from-teal-400 to-teal-600 border-4 border-white/20 shadow-xl flex items-center justify-center active:bg-teal-700"
+                        className="pointer-events-auto w-24 h-24 rounded-full bg-gradient-to-b from-orange-400 to-orange-600 border-4 border-white/20 shadow-[0_8px_0_rgb(194,65,12)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center"
                         onClick={handlePoop}
-                        onTouchStart={handlePoop} // Better response on mobile
+                        onTouchStart={handlePoop}
                     >
                         <span className="text-5xl filter drop-shadow-md">💩</span>
                     </motion.button>
@@ -220,22 +224,32 @@ export default function Game() {
                         READY TO POOP?
                     </h1>
                     <div className="space-y-4 w-full max-w-xs">
-                        <Button 
-                            size="lg" 
-                            className="w-full h-16 text-xl font-bold bg-yellow-400 hover:bg-yellow-500 text-slate-900 animate-pulse"
-                            onClick={(e) => { e.stopPropagation(); startGame(); }}
-                        >
-                            <Play className="mr-2 w-6 h-6 fill-current" /> START RUN
-                        </Button>
-                        <Link to={createPageUrl('Home')} className="block">
-                            <Button variant="outline" size="lg" className="w-full border-slate-600 text-slate-400 hover:text-white">
-                                <HomeIcon className="mr-2 w-5 h-5" /> BACK HOME
+                        <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
+                            <div className="mb-6">
+                                <img 
+                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/afbb5dca0_ChatGPTImage3Dez202518_29_58.png" 
+                                    className="w-32 h-32 mx-auto object-cover object-[70%_0%] rounded-full border-4 border-teal-500 bg-cyan-400 mb-4" 
+                                    style={{ objectPosition: '66% 27%', width: '120px', height: '120px' }} // Crop to Fränk's face from Loading
+                                    alt="Fränk"
+                                />
+                                <p className="text-teal-300 font-bold mb-1">MISSION</p>
+                                <p className="text-white text-xl font-black uppercase">Poop on Everything</p>
+                            </div>
+
+                            <Button 
+                                size="lg" 
+                                className="w-full h-16 text-2xl font-black bg-orange-500 hover:bg-orange-600 text-white border-b-8 border-orange-700 rounded-2xl active:border-b-0 active:translate-y-2 transition-all mb-4"
+                                onClick={(e) => { e.stopPropagation(); startGame(); }}
+                            >
+                                PLAY
                             </Button>
-                        </Link>
-                    </div>
-                    <div className="mt-12 text-slate-400 text-center text-sm">
-                        <p>Tap screen to FLY</p>
-                        <p>Press Button to POOP</p>
+                            
+                            <Link to={createPageUrl('Home')} className="block">
+                                <Button variant="ghost" className="w-full text-slate-400 hover:text-white hover:bg-transparent">
+                                    MENU
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             )}

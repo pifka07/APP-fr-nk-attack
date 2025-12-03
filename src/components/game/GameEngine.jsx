@@ -41,7 +41,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         playerDead: new Image(),
         playerGround: new Image(), // Standing
         enemiesSheet: new Image(),
-        uiAtlas: new Image()
+        uiAtlas: new Image(),
+        eagle: new Image()
     });
 
     useEffect(() => {
@@ -52,11 +53,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.playerGround.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dc76f3fcb_FrnkdieTaube5-Kopie.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
         IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
+        IMAGES.current.eagle.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b5521b477_FrnkdieTaubeicon7.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 6) assetsLoaded.current = true;
+            if (loadedCount >= 7) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -519,14 +521,23 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Enemies
         state.enemies.forEach(e => {
             if (assetsLoaded.current && e.spriteType) {
-                const sheet = IMAGES.current.enemiesSheet;
-                const frames = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
-                const def = frames[0]; // Enemies single frame for now, animate transform
-                
-                const sx = def.x * sheet.width;
-                const sy = def.y * sheet.height;
-                const sw = def.w * sheet.width;
-                const sh = def.h * sheet.height;
+                let sheet, sx, sy, sw, sh;
+
+                if (e.spriteType === 'eagle') {
+                    sheet = IMAGES.current.eagle;
+                    sx = 0;
+                    sy = 0;
+                    sw = sheet.width;
+                    sh = sheet.height;
+                } else {
+                    sheet = IMAGES.current.enemiesSheet;
+                    const frames = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
+                    const def = frames[0]; 
+                    sx = def.x * sheet.width;
+                    sy = def.y * sheet.height;
+                    sw = def.w * sheet.width;
+                    sh = def.h * sheet.height;
+                }
                 
                 ctx.save();
                 ctx.translate(e.x + e.width/2, e.y + e.height/2);

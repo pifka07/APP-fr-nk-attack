@@ -19,11 +19,21 @@ export default function Game() {
     const [finalStats, setFinalStats] = useState(null);
     const [saving, setSaving] = useState(false);
     const [gameConfig, setGameConfig] = useState({});
+    const [skin, setSkin] = useState('default');
 
     useEffect(() => {
         const loadConfig = async () => {
             try {
-                const [playerUpgrades, upgrades] = await Promise.all([
+                const [user, playerUpgrades, upgrades] = await Promise.all([
+                    base44.auth.me(),
+                    base44.entities.PlayerUpgrade.list(),
+                    base44.entities.Upgrade.list()
+                ]);
+                
+                setSkin(user.equipped_skin || 'default');
+
+                // Default config
+                let config = {
                     base44.entities.PlayerUpgrade.list(),
                     base44.entities.Upgrade.list()
                 ]);
@@ -135,6 +145,7 @@ export default function Game() {
                 <GameEngine 
                     ref={engineRef}
                     config={gameConfig}
+                    skin={skin}
                     onGameOver={handleGameOver}
                     onScoreUpdate={(s, c) => { setScore(s); setCoins(c); }}
                     onHealthUpdate={setHealth}

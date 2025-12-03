@@ -20,7 +20,7 @@ const SPRITES = {
     WATER: '💧'
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, difficultyMultiplier = 1 }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', difficultyMultiplier = 1 }, ref) => {
     const canvasRef = useRef(null);
     const requestRef = useRef();
     const frameRef = useRef(0);
@@ -317,7 +317,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.font = '40px serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(SPRITES.PLAYER, state.player.x, state.player.y);
+        
+        let playerSprite = SPRITES.PLAYER;
+        if (skin === 'gangster') playerSprite = '😎';
+        else if (skin === 'business') playerSprite = '🤵';
+        else if (skin === 'christmas') playerSprite = '🎅';
+        else if (skin === 'gold') playerSprite = '👑';
+        
+        // Draw wings/body base if needed, but for now just the emoji
+        // Maybe combine?
+        if (skin !== 'default') {
+            ctx.fillText('🐦', state.player.x, state.player.y); // Base bird
+            ctx.font = '20px serif';
+            ctx.fillText(playerSprite, state.player.x + 10, state.player.y - 10); // Accessory
+        } else {
+            ctx.fillText(SPRITES.PLAYER, state.player.x, state.player.y);
+        }
 
         // Draw Poops
         ctx.font = '20px serif';

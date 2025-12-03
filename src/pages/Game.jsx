@@ -17,6 +17,43 @@ export default function Game() {
     const [health, setHealth] = useState(100);
     const [finalStats, setFinalStats] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [gameConfig, setGameConfig] = useState({});
+
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                const [playerUpgrades, upgrades] = await Promise.all([
+                    base44.entities.PlayerUpgrade.list(),
+                    base44.entities.Upgrade.list()
+                ]);
+                
+                // Default config
+                let config = {
+                    maxPoops: 3,
+                    cooldownReduction: 0,
+                    agility: 1,
+                    comboDuration: 2000
+                };
+
+                playerUpgrades.forEach(pu => {
+                    const upgrade = upgrades.find(u => u.id === pu.upgrade_id);
+                    if (upgrade) {
+                        const totalEffect = upgrade.effect_per_level * pu.level;
+                        switch(upgrade.key) {
+                            case 'poop_tank': config.maxPoops += Math.floor(totalEffect); break;
+                            case 'poop_cooldown': config.cooldownReduction += totalEffect; break;
+                            case 'wing_speed': config.agility += totalEffect; break;
+                            case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;
+                        }
+                    }
+                });
+                setGameConfig(config);
+            } catch (e) {
+                console.error("Failed to load game config", e);
+            }
+        };
+        loadConfig();
+    }, []);
 
     const startGame = () => {
         setGameState('playing');
@@ -95,6 +132,7 @@ export default function Game() {
             <div className="absolute inset-0 z-0">
                 <GameEngine 
                     ref={engineRef}
+                    config={gameConfig}
                     onGameOver={handleGameOver}
                     onScoreUpdate={(s, c) => { setScore(s); setCoins(c); }}
                     onHealthUpdate={setHealth}

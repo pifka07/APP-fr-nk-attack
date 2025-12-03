@@ -20,7 +20,7 @@ const SPRITES = {
     WATER: '💧'
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, difficultyMultiplier = 1 }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, config = {}, difficultyMultiplier = 1 }, ref) => {
     const canvasRef = useRef(null);
     const requestRef = useRef();
     const frameRef = useRef(0);
@@ -35,7 +35,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, diff
         enemies: [], // Targets and obstacles
         particles: [],
         scrollSpeed: SCROLL_SPEED_INITIAL,
-        lastTime: 0
+        lastTime: 0,
+        lastPoopTime: 0
+    });
+
+    // Apply config
+    const getEffectiveConfig = () => ({
+        maxPoops: config.maxPoops || 3,
+        cooldown: Math.max(100, 500 - (config.cooldownReduction || 0) * 50), // Base 500ms
+        flapStrength: FLAP_STRENGTH * (config.agility || 1)
     });
 
     // Expose methods to parent
@@ -43,6 +51,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, diff
         start: () => {
             gameStateRef.current.isPlaying = true;
             gameStateRef.current.lastTime = performance.now();
+            gameStateRef.current.health = 100;
+            gameStateRef.current.score = 0;
+            gameStateRef.current.coins = 0;
+            gameStateRef.current.distance = 0;
+            gameStateRef.current.enemies = [];
+            gameStateRef.current.poops = [];
+            gameStateRef.current.particles = [];
+            gameStateRef.current.player.y = 100;
+            gameStateRef.current.player.vy = 0;
+            
             requestRef.current = requestAnimationFrame(gameLoop);
         },
         poop: () => {
@@ -51,7 +69,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, diff
         },
         flap: () => {
             if (!gameStateRef.current.isPlaying) return;
-            gameStateRef.current.player.vy = FLAP_STRENGTH;
+            gameStateRef.current.player.vy = getEffectiveConfig().flapStrength;
         },
         stop: () => {
             gameStateRef.current.isPlaying = false;
@@ -60,11 +78,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, diff
     }));
 
     const spawnPoop = () => {
-        const { player, poops } = gameStateRef.current;
-        // Limit active poops? nah, let it rain
-        poops.push({
-            x: player.x,
-            y: player.y + 20,
+        const state = gameStateRef.current;
+        const now = performance.now();
+        const effectiveConfig = getEffectiveConfig();
+
+        // Cooldown check
+        if (now - state.lastPoopTime < effectiveConfig.cooldown) return;
+        
+        // Max active poops check (optional based on upgrade)
+        // if (state.poops.length >= effectiveConfig.maxPoops) return;
+
+        state.lastPoopTime = now;
+        state.poops.push({
+            x: state.player.x,
+            y: state.player.y + 20,
             vx: 2, // slight forward momentum
             vy: 5, // initial drop speed
             active: true

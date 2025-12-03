@@ -20,7 +20,7 @@ const SPRITES = {
     WATER: '💧'
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, config = {}, difficultyMultiplier = 1 }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, difficultyMultiplier = 1 }, ref) => {
     const canvasRef = useRef(null);
     const requestRef = useRef();
     const frameRef = useRef(0);
@@ -36,14 +36,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, conf
         particles: [],
         scrollSpeed: SCROLL_SPEED_INITIAL,
         lastTime: 0,
-        lastPoopTime: 0
+        lastPoopTime: 0,
+        combo: 0,
+        comboTimer: 0
     });
 
     // Apply config
     const getEffectiveConfig = () => ({
         maxPoops: config.maxPoops || 3,
         cooldown: Math.max(100, 500 - (config.cooldownReduction || 0) * 50), // Base 500ms
-        flapStrength: FLAP_STRENGTH * (config.agility || 1)
+        flapStrength: FLAP_STRENGTH * (config.agility || 1),
+        comboDuration: config.comboDuration || 2000
     });
 
     // Expose methods to parent
@@ -60,6 +63,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, conf
             gameStateRef.current.particles = [];
             gameStateRef.current.player.y = 100;
             gameStateRef.current.player.vy = 0;
+            gameStateRef.current.combo = 0;
+            gameStateRef.current.comboTimer = 0;
             
             requestRef.current = requestAnimationFrame(gameLoop);
         },
@@ -200,6 +205,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, conf
             p.vy += GRAVITY * 0.5; // accelerate down
         });
 
+        // Combo Timer
+        if (state.combo > 0) {
+            state.comboTimer -= deltaTime;
+            if (state.comboTimer <= 0) {
+                state.combo = 0;
+                if (onComboUpdate) onComboUpdate(0);
+            }
+        }
+
         // Enemy/World Movement & Spawning
         frameRef.current++;
         if (frameRef.current % Math.max(20, Math.floor(SPAWN_RATE_INITIAL - state.scrollSpeed * 5)) === 0) {
@@ -237,11 +251,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, conf
                     // HIT!
                     p.active = false;
                     e.hp = 0; // Die
-                    state.score += e.scoreValue;
+                    
+                    // Combo Logic
+                    state.combo += 1;
+                    state.comboTimer = getEffectiveConfig().comboDuration;
+                    if (onComboUpdate) onComboUpdate(state.combo);
+
+                    const multiplier = 1 + (state.combo / 10);
+                    const points = Math.floor(e.scoreValue * multiplier);
+
+                    state.score += points;
                     state.coins += 1; // 1 coin per hit base
                     createParticles(e.x + e.width/2, e.y + e.height/2, '#FFFF00', 10); // Sparkles
                     
-                    // Notify React (throttled ideally, but direct here)
+                    // Notify React
                     onScoreUpdate(state.score, state.coins);
                 }
             });

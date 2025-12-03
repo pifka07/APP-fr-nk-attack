@@ -15,6 +15,7 @@ export default function Game() {
     const [score, setScore] = useState(0);
     const [coins, setCoins] = useState(0);
     const [health, setHealth] = useState(100);
+    const [combo, setCombo] = useState(0);
     const [finalStats, setFinalStats] = useState(null);
     const [saving, setSaving] = useState(false);
     const [gameConfig, setGameConfig] = useState({});
@@ -60,6 +61,7 @@ export default function Game() {
         setScore(0);
         setCoins(0);
         setHealth(100);
+        setCombo(0);
         setFinalStats(null);
         if (engineRef.current) engineRef.current.start();
     };
@@ -136,6 +138,7 @@ export default function Game() {
                     onGameOver={handleGameOver}
                     onScoreUpdate={(s, c) => { setScore(s); setCoins(c); }}
                     onHealthUpdate={setHealth}
+                    onComboUpdate={setCombo}
                 />
             </div>
 
@@ -159,6 +162,23 @@ export default function Game() {
                                 <div className="text-xs text-slate-400">PTS</div>
                             </div>
                         </div>
+
+                        {/* Combo Indicator */}
+                        <AnimatePresence>
+                            {combo > 1 && (
+                                <motion.div 
+                                    initial={{ scale: 0, rotate: -10 }}
+                                    animate={{ scale: 1.2, rotate: 0 }}
+                                    exit={{ scale: 0, opacity: 0 }}
+                                    key="combo"
+                                    className="absolute top-16 left-4"
+                                >
+                                    <div className="bg-purple-600 text-white font-black text-xl px-3 py-1 rounded-lg shadow-lg border-2 border-white transform -rotate-6">
+                                        {combo}x COMBO!
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         {/* Pause Button */}
                         <Button 

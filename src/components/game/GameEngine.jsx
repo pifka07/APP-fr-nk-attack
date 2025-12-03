@@ -6,22 +6,51 @@ const GROUND_Y_PCT = 0.85; // Ground level at 85% height
 const SPAWN_RATE_INITIAL = 100; // Frames between spawns
 const SCROLL_SPEED_INITIAL = 3;
 
-// Assets (Emojis)
-const SPRITES = {
-    PLAYER: '🐦',
-    POOP: '💩',
-    PEDESTRIAN: '🚶',
-    BUSINESSMAN: '🕴️',
-    COP: '👮',
-    CAR: '🚗',
-    TAXI: '🚕',
-    SIGN: '🛑',
-    BIRD: '🦅',
-    WATER: '💧'
+// Assets & Sprite Maps
+const SPRITE_MAP = {
+    player: {
+        idle: { x: 0, y: 0, w: 0.33, h: 0.5 },
+        fly: { x: 0.33, y: 0, w: 0.33, h: 0.5 },
+        action: { x: 0.66, y: 0, w: 0.33, h: 0.5 },
+        idle2: { x: 0, y: 0.5, w: 0.33, h: 0.5 },
+        angry: { x: 0.33, y: 0.5, w: 0.33, h: 0.5 },
+        dead: { x: 0.66, y: 0.5, w: 0.33, h: 0.5 }
+    },
+    enemies: {
+        car: { x: 0.02, y: 0.05, w: 0.25, h: 0.25 },
+        cop: { x: 0.35, y: 0.05, w: 0.2, h: 0.45 },
+        granny: { x: 0.7, y: 0.05, w: 0.25, h: 0.45 },
+        dog: { x: 0.05, y: 0.35, w: 0.2, h: 0.25 },
+        poop: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 },
+        drone: { x: 0.4, y: 0.8, w: 0.25, h: 0.15 },
+        eagle: { x: 0.6, y: 0.55, w: 0.35, h: 0.3 }
+    }
 };
 
 const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', difficultyMultiplier = 1 }, ref) => {
     const canvasRef = useRef(null);
+    const assetsLoaded = useRef(false);
+    const IMAGES = useRef({
+        background: new Image(),
+        playerSheet: new Image(),
+        enemiesSheet: new Image()
+    });
+
+    useEffect(() => {
+        // Load Images
+        IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/fc69b9ed5_ChatGPTImage3Dez202518_19_15.png";
+        IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png";
+        IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
+
+        let loadedCount = 0;
+        const checkLoad = () => {
+            loadedCount++;
+            if (loadedCount >= 3) assetsLoaded.current = true;
+        };
+        IMAGES.current.background.onload = checkLoad;
+        IMAGES.current.playerSheet.onload = checkLoad;
+        IMAGES.current.enemiesSheet.onload = checkLoad;
+    }, []);
     const requestRef = useRef();
     const frameRef = useRef(0);
     const gameStateRef = useRef({
@@ -105,58 +134,77 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
-        const typeRoll = Math.random();
         const groundY = height * GROUND_Y_PCT;
         
         let enemy = {
             x: width + 50,
-            y: groundY - 30, // Default ground entity
-            type: 'pedestrian',
-            emoji: SPRITES.PEDESTRIAN,
-            width: 30,
-            height: 30,
+            y: groundY - 50,
+            width: 60,
+            height: 60,
+            hp: 1,
             isTarget: true,
             isObstacle: false,
             scoreValue: 10,
-            vx: -scrollSpeed, // Moves with world or slightly different
-            hp: 1
+            vx: -scrollSpeed,
+            spriteType: 'car' // default
         };
 
-        // 20% Obstacle (Air or Ground)
-        if (Math.random() < 0.2 + (difficultyMultiplier * 0.05)) {
-            enemy.isTarget = false;
-            enemy.isObstacle = true;
-            if (Math.random() > 0.5) {
-                // Air obstacle (Bird/Drone)
-                enemy.type = 'bird';
-                enemy.emoji = SPRITES.BIRD;
-                enemy.y = Math.random() * (groundY - 100); // Random air height
-                enemy.vx = -scrollSpeed * 1.5; // Moves faster
+        const rand = Math.random();
+        const isAir = Math.random() > 0.6;
+
+        if (!isAir) {
+            // Ground
+            if (rand < 0.4) {
+                // Car
+                enemy.spriteType = 'car';
+                enemy.isTarget = true;
+                enemy.width = 90;
+                enemy.height = 70;
+                enemy.vx = -scrollSpeed - 2;
+                enemy.scoreValue = 30;
+            } else if (rand < 0.7) {
+                // Cop
+                enemy.spriteType = 'cop';
+                enemy.isTarget = true;
+                enemy.width = 50;
+                enemy.height = 80;
+                enemy.y = groundY - 70;
+                enemy.scoreValue = 50;
+            } else if (rand < 0.85) {
+                // Granny (Obstacle!)
+                enemy.spriteType = 'granny';
+                enemy.isTarget = false;
+                enemy.isObstacle = true;
+                enemy.width = 50;
+                enemy.height = 80;
+                enemy.y = groundY - 70;
             } else {
-                // Ground obstacle (Sign)
-                enemy.type = 'sign';
-                enemy.emoji = SPRITES.SIGN;
-                enemy.y = groundY - 40;
+                // Dog
+                enemy.spriteType = 'dog';
+                enemy.isTarget = false; // Neutral/Obstacle
+                enemy.isObstacle = true;
+                enemy.width = 40;
+                enemy.height = 40;
+                enemy.y = groundY - 30;
             }
         } else {
-            // Target
-            if (typeRoll > 0.9) {
-                enemy.type = 'cop';
-                enemy.emoji = SPRITES.COP;
-                enemy.scoreValue = 50;
-                enemy.vx = -scrollSpeed - 1; // Runs towards you? or away?
-            } else if (typeRoll > 0.7) {
-                enemy.type = 'car';
-                enemy.emoji = SPRITES.CAR;
-                enemy.scoreValue = 30;
+            // Air
+            if (Math.random() < 0.5) {
+                enemy.spriteType = 'eagle';
+                enemy.isTarget = false;
+                enemy.isObstacle = true;
+                enemy.y = Math.random() * (groundY - 200);
+                enemy.width = 80;
+                enemy.height = 60;
+                enemy.vx = -scrollSpeed * 1.5;
+            } else {
+                enemy.spriteType = 'drone';
+                enemy.isTarget = false;
+                enemy.isObstacle = true;
+                enemy.y = Math.random() * (groundY - 150);
                 enemy.width = 60;
-                enemy.vx = -scrollSpeed - 2; // Faster
-            } else if (typeRoll > 0.6) {
-                enemy.type = 'taxi';
-                enemy.emoji = SPRITES.TAXI;
-                enemy.scoreValue = 60;
-                enemy.width = 60;
-                enemy.vx = -scrollSpeed - 2.5;
+                enemy.height = 40;
+                enemy.vx = -scrollSpeed * 1.2;
             }
         }
 
@@ -304,14 +352,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Clear
         ctx.clearRect(0, 0, width, height);
 
-        // Background (Simple gradient sky)
-        // Already handled by CSS in parent, but maybe draw some clouds?
-        // Draw Ground
-        const groundY = height * GROUND_Y_PCT;
-        ctx.fillStyle = '#2D3748'; // Road color
-        ctx.fillRect(0, groundY, width, height - groundY);
-        ctx.fillStyle = '#4A5568'; // Sidewalk
-        ctx.fillRect(0, groundY - 10, width, 10);
+        // Draw Background
+        if (assetsLoaded.current && IMAGES.current.background) {
+            const bg = IMAGES.current.background;
+            // Cover screen logic
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            // Parallax
+            const offset = (state.distance * 1) % w;
+            
+            ctx.drawImage(bg, -offset, 0, w, h);
+            ctx.drawImage(bg, w - offset, 0, w, h);
+        } else {
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, width, height);
+            const groundY = height * GROUND_Y_PCT;
+            ctx.fillStyle = '#2D3748';
+            ctx.fillRect(0, groundY, width, height - groundY);
+        }
 
         // Draw Player
         if (assetsLoaded.current) {
@@ -321,40 +380,62 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (state.player.vy < -2) spriteDef = SPRITE_MAP.player.fly;
             else if (state.player.vy > 2) spriteDef = SPRITE_MAP.player.action;
             
-            if (skin === 'gangster') spriteDef = SPRITE_MAP.player.angry; // Just mapping skins to expressions for now
+            if (skin === 'gangster') spriteDef = SPRITE_MAP.player.angry; 
             
             const sx = spriteDef.x * sheet.width;
             const sy = spriteDef.y * sheet.height;
             const sw = spriteDef.w * sheet.width;
             const sh = spriteDef.h * sheet.height;
             
-            const playerSize = 80; // Bigger size
+            const playerSize = 90;
             
             ctx.save();
             ctx.translate(state.player.x, state.player.y);
-            // Tilt based on velocity
-            const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.5), 0.5);
+            const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);
             ctx.rotate(rotation);
             
             ctx.drawImage(sheet, sx, sy, sw, sh, -playerSize/2, -playerSize/2, playerSize, playerSize);
             ctx.restore();
         } else {
-            ctx.font = '40px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
             ctx.fillText('🐦', state.player.x, state.player.y);
         }
 
         // Draw Poops
-        ctx.font = '20px serif';
         state.poops.forEach(p => {
-            ctx.fillText(SPRITES.POOP, p.x, p.y);
+            if (assetsLoaded.current) {
+                const sheet = IMAGES.current.enemiesSheet;
+                const def = SPRITE_MAP.enemies.poop;
+                ctx.drawImage(
+                    sheet, 
+                    def.x * sheet.width, def.y * sheet.height, 
+                    def.w * sheet.width, def.h * sheet.height, 
+                    p.x - 15, p.y - 15, 30, 30
+                );
+            } else {
+                ctx.fillText('💩', p.x, p.y);
+            }
         });
 
         // Draw Enemies
         state.enemies.forEach(e => {
-            ctx.font = '30px serif';
-            ctx.fillText(e.emoji, e.x + e.width/2, e.y + e.height/2);
+            if (assetsLoaded.current && e.spriteType) {
+                const sheet = IMAGES.current.enemiesSheet;
+                const def = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
+                
+                const sx = def.x * sheet.width;
+                const sy = def.y * sheet.height;
+                const sw = def.w * sheet.width;
+                const sh = def.h * sheet.height;
+                
+                ctx.drawImage(sheet, sx, sy, sw, sh, e.x, e.y, e.width, e.height);
+                
+                // Debug
+                // ctx.strokeStyle = 'red';
+                // ctx.strokeRect(e.x, e.y, e.width, e.height);
+            } else {
+                ctx.font = '30px serif';
+                ctx.fillText('📦', e.x + e.width/2, e.y + e.height/2);
+            }
         });
 
         // Draw Particles
@@ -362,7 +443,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             ctx.globalAlpha = p.life;
             ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
             ctx.fill();
             ctx.globalAlpha = 1.0;
         });

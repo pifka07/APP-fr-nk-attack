@@ -277,44 +277,61 @@ export default function Game() {
 
             {/* Game Over Screen */}
             {gameState === 'gameover' && finalStats && (
-                <div className="absolute inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center p-6">
+                <div className="absolute inset-0 z-50 bg-slate-900/95 backdrop-blur-xl flex flex-col items-center justify-center p-6">
                     <motion.div 
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl w-full max-w-sm text-center"
+                        className="w-full max-w-sm text-center"
                     >
-                        <h2 className="text-4xl font-black text-white mb-2">GAME OVER</h2>
-                        <p className="text-slate-400 mb-6">You ran out of feathers!</p>
-
-                        <div className="grid grid-cols-2 gap-4 mb-8">
-                            <div className="bg-slate-900 p-4 rounded-xl">
-                                <div className="text-yellow-400 text-3xl font-bold">{finalStats.score}</div>
-                                <div className="text-xs text-slate-500 uppercase">Score</div>
-                            </div>
-                            <div className="bg-slate-900 p-4 rounded-xl">
-                                <div className="text-teal-400 text-3xl font-bold">{finalStats.coins}</div>
-                                <div className="text-xs text-slate-500 uppercase">Coins</div>
+                        <div className="mb-6">
+                            <h2 className="text-6xl font-black text-white mb-2 drop-shadow-[0_4px_0_#000]">GAME</h2>
+                            <h2 className="text-6xl font-black text-white mb-6 drop-shadow-[0_4px_0_#000]">OVER</h2>
+                            
+                            {/* Dead Fränk Image */}
+                            <div className="relative w-48 h-48 mx-auto mb-6">
+                                <img 
+                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png" 
+                                    className="w-full h-full object-cover object-[100%_100%]" // Crop to Dead Fränk (bottom right)
+                                    style={{ objectPosition: '100% 100%' }}
+                                    alt="Dead Fränk"
+                                />
                             </div>
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="bg-slate-800/80 border-4 border-slate-700 p-6 rounded-3xl mb-6">
+                            <div className="flex justify-around mb-2">
+                                <div>
+                                    <div className="text-xs text-slate-400 uppercase font-bold">Score</div>
+                                    <div className="text-yellow-400 text-4xl font-black">{finalStats.score}</div>
+                                </div>
+                                <div>
+                                    <div className="text-xs text-slate-400 uppercase font-bold">Coins</div>
+                                    <div className="text-teal-400 text-4xl font-black">{finalStats.coins}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
                             <Button 
                                 size="lg" 
-                                className="w-full h-14 font-bold bg-yellow-400 hover:bg-yellow-500 text-slate-900"
+                                className="w-full h-16 text-2xl font-black bg-orange-500 hover:bg-orange-600 text-white border-b-8 border-orange-700 rounded-2xl active:border-b-0 active:translate-y-2 transition-all"
                                 onClick={(e) => { e.stopPropagation(); startGame(); }}
                             >
-                                <RefreshCw className="mr-2 w-5 h-5" /> PLAY AGAIN
+                                RETRY
                             </Button>
-                            <Link to={createPageUrl('Shop')} className="block">
-                                <Button variant="outline" className="w-full border-slate-600 text-slate-300">
-                                    VISIT SHOP
-                                </Button>
-                            </Link>
-                            <Link to={createPageUrl('Home')} className="block">
-                                <Button variant="ghost" className="w-full text-slate-500 hover:text-white">
-                                    <HomeIcon className="mr-2 w-4 h-4" /> Main Menu
-                                </Button>
-                            </Link>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <Link to={createPageUrl('Shop')}>
+                                    <Button className="w-full h-14 font-bold bg-purple-600 hover:bg-purple-700 text-white border-b-4 border-purple-800 rounded-xl active:border-b-0 active:translate-y-1">
+                                        SHOP
+                                    </Button>
+                                </Link>
+                                <Link to={createPageUrl('Home')}>
+                                    <Button className="w-full h-14 font-bold bg-yellow-500 hover:bg-yellow-600 text-slate-900 border-b-4 border-yellow-700 rounded-xl active:border-b-0 active:translate-y-1">
+                                        MENU
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </motion.div>
                 </div>

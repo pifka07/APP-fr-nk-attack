@@ -1,0 +1,247 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { base44 } from '@/api/base44Client';
+import GameEngine from '@/components/game/GameEngine';
+import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+
+export default function Game() {
+    const engineRef = useRef(null);
+    const [gameState, setGameState] = useState('start'); // start, playing, paused, gameover
+    const [score, setScore] = useState(0);
+    const [coins, setCoins] = useState(0);
+    const [health, setHealth] = useState(100);
+    const [finalStats, setFinalStats] = useState(null);
+    const [saving, setSaving] = useState(false);
+
+    const startGame = () => {
+        setGameState('playing');
+        setScore(0);
+        setCoins(0);
+        setHealth(100);
+        setFinalStats(null);
+        if (engineRef.current) engineRef.current.start();
+    };
+
+    const pauseGame = () => {
+        setGameState('paused');
+        if (engineRef.current) engineRef.current.stop();
+    };
+
+    const resumeGame = () => {
+        setGameState('playing');
+        if (engineRef.current) engineRef.current.start();
+    };
+
+    const handleGameOver = async (stats) => {
+        setGameState('gameover');
+        setFinalStats(stats);
+        setSaving(true);
+
+        try {
+            const user = await base44.auth.me();
+            
+            // Create Run Record
+            await base44.entities.Run.create({
+                score: stats.score,
+                distance: stats.distance,
+                coins_earned: stats.coins,
+                mode: 'endless'
+            });
+
+            // Update User Stats
+            await base44.auth.updateMe({
+                total_coins: (user.total_coins || 0) + stats.coins,
+                best_score: Math.max(user.best_score || 0, stats.score),
+                best_distance: Math.max(user.best_distance || 0, stats.distance)
+            });
+
+            toast.success("Run saved!");
+        } catch (error) {
+            console.error("Failed to save run", error);
+            toast.error("Failed to save stats");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleScreenTouch = (e) => {
+        // If tapping on a button, don't flap
+        if (e.target.closest('button')) return;
+        
+        if (gameState === 'playing' && engineRef.current) {
+            engineRef.current.flap();
+        }
+    };
+
+    const handlePoop = (e) => {
+        e.stopPropagation(); // Prevent flap
+        if (gameState === 'playing' && engineRef.current) {
+            engineRef.current.poop();
+        }
+    };
+
+    return (
+        <div 
+            className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none"
+            onMouseDown={handleScreenTouch}
+            onTouchStart={handleScreenTouch}
+        >
+            {/* Game Engine Canvas */}
+            <div className="absolute inset-0 z-0">
+                <GameEngine 
+                    ref={engineRef}
+                    onGameOver={handleGameOver}
+                    onScoreUpdate={(s, c) => { setScore(s); setCoins(c); }}
+                    onHealthUpdate={setHealth}
+                />
+            </div>
+
+            {/* HUD */}
+            {gameState !== 'start' && (
+                <div className="absolute top-0 left-0 right-0 p-4 z-10 pointer-events-none">
+                    <div className="flex justify-between items-start">
+                        {/* Health & Score */}
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-1 bg-slate-900/50 backdrop-blur-sm p-2 rounded-full border border-slate-700">
+                                <Heart className="w-5 h-5 text-red-500 fill-current" />
+                                <div className="w-32 h-3 bg-slate-700 rounded-full overflow-hidden">
+                                    <div 
+                                        className="h-full bg-red-500 transition-all duration-300" 
+                                        style={{ width: `${health}%` }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="bg-slate-900/50 backdrop-blur-sm p-2 rounded-lg border border-slate-700 inline-block">
+                                <div className="text-2xl font-black text-yellow-400 tabular-nums">{score}</div>
+                                <div className="text-xs text-slate-400">PTS</div>
+                            </div>
+                        </div>
+
+                        {/* Pause Button */}
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="pointer-events-auto text-white hover:bg-white/20 rounded-full"
+                            onClick={(e) => { e.stopPropagation(); pauseGame(); }}
+                        >
+                            <Pause className="w-8 h-8" />
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Controls Overlay (Mobile friendly) */}
+            {gameState === 'playing' && (
+                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none flex justify-end items-end">
+                    {/* Poop Button */}
+                    <motion.button 
+                        whileTap={{ scale: 0.9 }}
+                        className="pointer-events-auto w-24 h-24 rounded-full bg-gradient-to-b from-teal-400 to-teal-600 border-4 border-white/20 shadow-xl flex items-center justify-center active:bg-teal-700"
+                        onClick={handlePoop}
+                        onTouchStart={handlePoop} // Better response on mobile
+                    >
+                        <span className="text-5xl filter drop-shadow-md">💩</span>
+                    </motion.button>
+                </div>
+            )}
+
+            {/* Start Screen */}
+            {gameState === 'start' && (
+                <div className="absolute inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-6">
+                    <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-purple-600 mb-8 drop-shadow-lg text-center">
+                        READY TO POOP?
+                    </h1>
+                    <div className="space-y-4 w-full max-w-xs">
+                        <Button 
+                            size="lg" 
+                            className="w-full h-16 text-xl font-bold bg-yellow-400 hover:bg-yellow-500 text-slate-900 animate-pulse"
+                            onClick={(e) => { e.stopPropagation(); startGame(); }}
+                        >
+                            <Play className="mr-2 w-6 h-6 fill-current" /> START RUN
+                        </Button>
+                        <Link to={createPageUrl('Home')} className="block">
+                            <Button variant="outline" size="lg" className="w-full border-slate-600 text-slate-400 hover:text-white">
+                                <HomeIcon className="mr-2 w-5 h-5" /> BACK HOME
+                            </Button>
+                        </Link>
+                    </div>
+                    <div className="mt-12 text-slate-400 text-center text-sm">
+                        <p>Tap screen to FLY</p>
+                        <p>Press Button to POOP</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Pause Screen */}
+            {gameState === 'paused' && (
+                <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-6">
+                    <h2 className="text-4xl font-bold text-white mb-8">PAUSED</h2>
+                    <div className="space-y-4 w-full max-w-xs">
+                        <Button 
+                            size="lg" 
+                            className="w-full h-14 bg-teal-500 hover:bg-teal-600 text-white"
+                            onClick={(e) => { e.stopPropagation(); resumeGame(); }}
+                        >
+                            <Play className="mr-2 w-5 h-5 fill-current" /> RESUME
+                        </Button>
+                        <Link to={createPageUrl('Home')} className="block">
+                            <Button variant="destructive" size="lg" className="w-full">
+                                <HomeIcon className="mr-2 w-5 h-5" /> QUIT
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            )}
+
+            {/* Game Over Screen */}
+            {gameState === 'gameover' && finalStats && (
+                <div className="absolute inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center p-6">
+                    <motion.div 
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl w-full max-w-sm text-center"
+                    >
+                        <h2 className="text-4xl font-black text-white mb-2">GAME OVER</h2>
+                        <p className="text-slate-400 mb-6">You ran out of feathers!</p>
+
+                        <div className="grid grid-cols-2 gap-4 mb-8">
+                            <div className="bg-slate-900 p-4 rounded-xl">
+                                <div className="text-yellow-400 text-3xl font-bold">{finalStats.score}</div>
+                                <div className="text-xs text-slate-500 uppercase">Score</div>
+                            </div>
+                            <div className="bg-slate-900 p-4 rounded-xl">
+                                <div className="text-teal-400 text-3xl font-bold">{finalStats.coins}</div>
+                                <div className="text-xs text-slate-500 uppercase">Coins</div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            <Button 
+                                size="lg" 
+                                className="w-full h-14 font-bold bg-yellow-400 hover:bg-yellow-500 text-slate-900"
+                                onClick={(e) => { e.stopPropagation(); startGame(); }}
+                            >
+                                <RefreshCw className="mr-2 w-5 h-5" /> PLAY AGAIN
+                            </Button>
+                            <Link to={createPageUrl('Shop')} className="block">
+                                <Button variant="outline" className="w-full border-slate-600 text-slate-300">
+                                    VISIT SHOP
+                                </Button>
+                            </Link>
+                            <Link to={createPageUrl('Home')} className="block">
+                                <Button variant="ghost" className="w-full text-slate-500 hover:text-white">
+                                    <HomeIcon className="mr-2 w-4 h-4" /> Main Menu
+                                </Button>
+                            </Link>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+        </div>
+    );
+}

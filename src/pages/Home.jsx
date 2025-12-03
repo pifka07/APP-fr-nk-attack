@@ -39,8 +39,13 @@ export default function Home() {
                 <motion.div
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="mb-4"
+                    className="mb-4 flex flex-col items-center"
                 >
+                    <img 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/81c474281_FrnkdieTaube3-Kopie.png" 
+                        alt="Fränk Character" 
+                        className="w-40 h-40 object-contain mb-2 drop-shadow-2xl filter brightness-110"
+                    />
                     <h1 className="text-6xl font-black text-white drop-shadow-[0_4px_0_#000] tracking-wider" style={{ fontFamily: 'Impact, sans-serif' }}>
                         FRÄNK
                     </h1>

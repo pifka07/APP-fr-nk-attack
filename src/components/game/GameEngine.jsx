@@ -9,21 +9,26 @@ const SCROLL_SPEED_INITIAL = 3;
 // Assets & Sprite Maps
 const SPRITE_MAP = {
     player: {
-        idle: { x: 0, y: 0, w: 0.33, h: 0.5 },
-        fly: { x: 0.33, y: 0, w: 0.33, h: 0.5 },
-        action: { x: 0.66, y: 0, w: 0.33, h: 0.5 },
-        idle2: { x: 0, y: 0.5, w: 0.33, h: 0.5 },
-        angry: { x: 0.33, y: 0.5, w: 0.33, h: 0.5 },
-        dead: { x: 0.66, y: 0.5, w: 0.33, h: 0.5 }
+        // Animations defined as arrays of frames
+        idle: [{ x: 0, y: 0, w: 0.33, h: 0.5 }, { x: 0, y: 0.5, w: 0.33, h: 0.5 }], // Bobbing
+        fly: [{ x: 0.33, y: 0, w: 0.33, h: 0.5 }, { x: 0, y: 0, w: 0.33, h: 0.5 }], // Flap (Wing up/down)
+        action: [{ x: 0.66, y: 0, w: 0.33, h: 0.5 }], // Pooping frame
+        angry: [{ x: 0.33, y: 0.5, w: 0.33, h: 0.5 }],
+        dead: [{ x: 0.66, y: 0.5, w: 0.33, h: 0.5 }]
     },
     enemies: {
-        car: { x: 0.02, y: 0.05, w: 0.25, h: 0.25 },
-        cop: { x: 0.35, y: 0.05, w: 0.2, h: 0.45 },
-        granny: { x: 0.7, y: 0.05, w: 0.25, h: 0.45 },
-        dog: { x: 0.05, y: 0.35, w: 0.2, h: 0.25 },
-        poop: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 },
-        drone: { x: 0.4, y: 0.8, w: 0.25, h: 0.15 },
-        eagle: { x: 0.6, y: 0.55, w: 0.35, h: 0.3 }
+        // Simulating animation for single-frame assets by bobbing/rotating in render
+        car: [{ x: 0.02, y: 0.05, w: 0.25, h: 0.25 }], 
+        cop: [{ x: 0.35, y: 0.05, w: 0.2, h: 0.45 }], 
+        granny: [{ x: 0.7, y: 0.05, w: 0.25, h: 0.45 }],
+        dog: [{ x: 0.05, y: 0.35, w: 0.2, h: 0.25 }],
+        poop: [{ x: 0.1, y: 0.7, w: 0.2, h: 0.2 }],
+        drone: [{ x: 0.4, y: 0.8, w: 0.25, h: 0.15 }],
+        eagle: [{ x: 0.6, y: 0.55, w: 0.35, h: 0.3 }]
+    },
+    powerups: {
+        speed: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 }, // Placeholder: reuse poop shape but colored
+        shield: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 }
     }
 };
 
@@ -31,25 +36,32 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
     const IMAGES = useRef({
-        background: new Image(),
+        sky: new Image(),
+        city: new Image(),
         playerSheet: new Image(),
         enemiesSheet: new Image()
     });
 
     useEffect(() => {
         // Load Images
-        IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/fc69b9ed5_ChatGPTImage3Dez202518_19_15.png";
+        // Background (Sky/Clouds)
+        IMAGES.current.sky.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/fc69b9ed5_ChatGPTImage3Dez202518_19_15.png";
+        // Midground (City Skyline)
+        IMAGES.current.city.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d8d333126_ChatGPTImage3Dez202518_25_08.png";
+
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 3) assetsLoaded.current = true;
+            if (loadedCount >= 4) assetsLoaded.current = true;
         };
-        IMAGES.current.background.onload = checkLoad;
-        IMAGES.current.playerSheet.onload = checkLoad;
-        IMAGES.current.enemiesSheet.onload = checkLoad;
+        Object.values(IMAGES.current).forEach(img => {
+            img.onload = checkLoad;
+            // Handle cached images
+            if (img.complete) checkLoad();
+        });
     }, []);
     const requestRef = useRef();
     const frameRef = useRef(0);
@@ -61,13 +73,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         health: 100,
         player: { x: 50, y: 100, vy: 0, radius: 20 },
         poops: [],
-        enemies: [], // Targets and obstacles
+        enemies: [], 
+        powerups: [],
         particles: [],
         scrollSpeed: SCROLL_SPEED_INITIAL,
         lastTime: 0,
         lastPoopTime: 0,
         combo: 0,
-        comboTimer: 0
+        comboTimer: 0,
+        animFrame: 0 // Global animation tick
     });
 
     // Apply config
@@ -230,6 +244,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Increase difficulty
         state.scrollSpeed += 0.0005;
         state.distance += (state.scrollSpeed / 10);
+        state.animFrame++; // Tick animation
 
         // Player Physics
         state.player.vy += GRAVITY;
@@ -352,35 +367,67 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Clear
         ctx.clearRect(0, 0, width, height);
 
-        // Draw Background
-        if (assetsLoaded.current && IMAGES.current.background) {
-            const bg = IMAGES.current.background;
-            // Cover screen logic
+        // --- PARALLAX RENDERING ---
+        
+        // 1. Sky (Slowest)
+        if (assetsLoaded.current && IMAGES.current.sky) {
+            const bg = IMAGES.current.sky;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;
-            // Parallax
-            const offset = (state.distance * 1) % w;
+            const offset = (state.distance * 0.2) % w; // 0.2x speed
             
             ctx.drawImage(bg, -offset, 0, w, h);
             ctx.drawImage(bg, w - offset, 0, w, h);
         } else {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
-            const groundY = height * GROUND_Y_PCT;
-            ctx.fillStyle = '#2D3748';
-            ctx.fillRect(0, groundY, width, height - groundY);
         }
+
+        // 2. Midground City (Medium)
+        if (assetsLoaded.current && IMAGES.current.city) {
+            const city = IMAGES.current.city;
+            // Align to bottom of ground
+            const h = height * 0.6; // City takes up 60% height
+            const w = city.width * (h / city.height); 
+            const y = (height * GROUND_Y_PCT) - h + 20; // Slightly overlap ground
+            const offset = (state.distance * 0.5) % w; // 0.5x speed
+            
+            ctx.drawImage(city, -offset, y, w, h);
+            ctx.drawImage(city, w - offset, y, w, h);
+            ctx.drawImage(city, (w * 2) - offset, y, w, h); // Safety 3rd tile
+        }
+
+        // 3. Foreground Ground (Fastest - Game Speed)
+        const groundY = height * GROUND_Y_PCT;
+        ctx.fillStyle = '#2D3748'; // Road color
+        ctx.fillRect(0, groundY, width, height - groundY);
+        
+        // Road markings (Animated)
+        ctx.fillStyle = '#FEFCBF'; // Yellow/White lines
+        const lineSpacing = 100;
+        const lineOffset = (state.distance * 1) % lineSpacing;
+        for (let i = -1; i < width / lineSpacing + 1; i++) {
+            ctx.fillRect((i * lineSpacing) - lineOffset, groundY + 40, 60, 10);
+        }
+
+        // Sidewalk
+        ctx.fillStyle = '#4A5568'; 
+        ctx.fillRect(0, groundY - 15, width, 15);
 
         // Draw Player
         if (assetsLoaded.current) {
             const sheet = IMAGES.current.playerSheet;
-            let spriteDef = SPRITE_MAP.player.idle;
+            let animKey = 'idle';
             
-            if (state.player.vy < -2) spriteDef = SPRITE_MAP.player.fly;
-            else if (state.player.vy > 2) spriteDef = SPRITE_MAP.player.action;
-            
-            if (skin === 'gangster') spriteDef = SPRITE_MAP.player.angry; 
+            if (state.player.vy < -2) animKey = 'fly';
+            else if (state.player.vy > 2) animKey = 'action';
+            if (skin === 'gangster') animKey = 'angry';
+
+            const frames = SPRITE_MAP.player[animKey] || SPRITE_MAP.player.idle;
+            // Cycle frames every 10 ticks
+            const frameIndex = Math.floor(state.animFrame / 10) % frames.length;
+            const spriteDef = frames[frameIndex];
             
             const sx = spriteDef.x * sheet.width;
             const sy = spriteDef.y * sheet.height;
@@ -420,18 +467,28 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.enemies.forEach(e => {
             if (assetsLoaded.current && e.spriteType) {
                 const sheet = IMAGES.current.enemiesSheet;
-                const def = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
+                const frames = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
+                const def = frames[0]; // Enemies single frame for now, animate transform
                 
                 const sx = def.x * sheet.width;
                 const sy = def.y * sheet.height;
                 const sw = def.w * sheet.width;
                 const sh = def.h * sheet.height;
                 
-                ctx.drawImage(sheet, sx, sy, sw, sh, e.x, e.y, e.width, e.height);
+                ctx.save();
+                ctx.translate(e.x + e.width/2, e.y + e.height/2);
                 
-                // Debug
-                // ctx.strokeStyle = 'red';
-                // ctx.strokeRect(e.x, e.y, e.width, e.height);
+                // Simple animations based on type
+                if (e.spriteType === 'car' || e.spriteType === 'cop') {
+                    // Bounce
+                    ctx.translate(0, Math.sin(state.animFrame * 0.5) * 2);
+                } else if (e.spriteType === 'granny') {
+                    // Waddle
+                    ctx.rotate(Math.sin(state.animFrame * 0.2) * 0.1);
+                }
+                
+                ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+                ctx.restore();
             } else {
                 ctx.font = '30px serif';
                 ctx.fillText('📦', e.x + e.width/2, e.y + e.height/2);

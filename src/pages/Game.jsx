@@ -329,9 +329,8 @@ export default function Game() {
                             {/* Dead Fränk Image */}
                             <div className="relative w-48 h-48 mx-auto mb-6">
                                 <img 
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/973061496_ChatGPTImage3Dez202518_18_26.png" 
-                                    className="w-full h-full object-cover object-[100%_100%]" // Crop to Dead Fränk (bottom right)
-                                    style={{ objectPosition: '100% 100%' }}
+                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ae2c71989_FrnkdieTaube4-Kopie.png" 
+                                    className="w-full h-full object-contain" 
                                     alt="Dead Fränk"
                                 />
                             </div>

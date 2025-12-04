@@ -519,8 +519,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.drawImage(groundImg, -playerSize/2, -playerSize/2, playerSize, playerSize);
                 } else {
                     // Draw Flying Player
-                    // Use glide image if holding input, otherwise standard flying
-                    const sheet = state.inputActive ? IMAGES.current.playerGlide : IMAGES.current.playerSheet;
+                    // Use glide image always for flying as requested
+                    const sheet = IMAGES.current.playerGlide;
 
                     // Rotation based on vertical velocity
                     const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);

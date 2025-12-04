@@ -248,10 +248,10 @@ export default function Game() {
                         <Button 
                             variant="ghost" 
                             size="icon" 
-                            className="pointer-events-auto text-white hover:bg-white/20 rounded-full"
+                            className="pointer-events-auto bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-14 h-14 flex items-center justify-center hover:bg-slate-700"
                             onClick={(e) => { e.stopPropagation(); pauseGame(); }}
                         >
-                            <Pause className="w-8 h-8" />
+                            <Pause className="w-6 h-6" />
                         </Button>
                     </div>
                 </div>
@@ -303,14 +303,14 @@ export default function Game() {
 
                             <Button 
                                 size="lg" 
-                                className="w-full h-16 text-2xl font-black bg-orange-500 hover:bg-orange-600 text-white border-b-8 border-orange-700 rounded-2xl active:border-b-0 active:translate-y-2 transition-all mb-4"
+                                className="w-full h-16 text-2xl font-black bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
                                 onClick={(e) => { e.stopPropagation(); startGame(); }}
                             >
                                 PLAY
                             </Button>
-                            
+
                             <Link to={createPageUrl('Home')} className="block">
-                                <Button variant="ghost" className="w-full text-slate-400 hover:text-white hover:bg-transparent">
+                                <Button className="w-full h-12 bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
                                     MENU
                                 </Button>
                             </Link>
@@ -326,13 +326,13 @@ export default function Game() {
                     <div className="space-y-4 w-full max-w-xs">
                         <Button 
                             size="lg" 
-                            className="w-full h-14 bg-teal-500 hover:bg-teal-600 text-white"
+                            className="w-full h-14 bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase"
                             onClick={(e) => { e.stopPropagation(); resumeGame(); }}
                         >
                             <Play className="mr-2 w-5 h-5 fill-current" /> RESUME
                         </Button>
                         <Link to={createPageUrl('Home')} className="block">
-                            <Button variant="destructive" size="lg" className="w-full">
+                            <Button size="lg" className="w-full h-14 bg-red-500 hover:bg-red-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
                                 <HomeIcon className="mr-2 w-5 h-5" /> QUIT
                             </Button>
                         </Link>

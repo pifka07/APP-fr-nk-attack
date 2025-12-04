@@ -108,11 +108,11 @@ export default function Shop() {
             <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <div className="flex items-center gap-2">
                     <Link to={createPageUrl('Home')}>
-                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+                        <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700">
                             <ArrowLeft className="w-6 h-6" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">SHOP</h1>
+                    <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400 ml-2">SHOP</h1>
                 </div>
                 <div className="flex items-center bg-slate-800 px-3 py-1.5 rounded-full border border-yellow-500/30">
                     <div className="w-4 h-4 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
@@ -159,17 +159,17 @@ export default function Shop() {
                                 </CardContent>
                                 <CardFooter>
                                     {isMaxed ? (
-                                        <Button disabled className="w-full bg-slate-700 text-slate-400">Max Level Reached</Button>
-                                    ) : (
-                                        <Button 
-                                            onClick={() => handleBuyUpgrade(upgrade)}
-                                            disabled={!canAfford}
-                                            className={`w-full font-bold ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
-                                        >
-                                            <Coins className="w-4 h-4 mr-2" /> 
-                                            Upgrade ({nextCost})
-                                        </Button>
-                                    )}
+                                            <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-bold uppercase">Maxed</Button>
+                                        ) : (
+                                            <Button 
+                                                onClick={() => handleBuyUpgrade(upgrade)}
+                                                disabled={!canAfford}
+                                                className={`w-full h-12 font-bold border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
+                                            >
+                                                <Coins className="w-4 h-4 mr-2" /> 
+                                                Upgrade ({nextCost})
+                                            </Button>
+                                        )}
                                 </CardFooter>
                             </Card>
                         );
@@ -197,9 +197,8 @@ export default function Shop() {
                                         {isOwned ? (
                                             <Button 
                                                 onClick={() => handleEquipSkin(skin.key)}
-                                                variant={isEquipped ? "secondary" : "outline"} 
-                                                className="w-full text-xs"
                                                 disabled={isEquipped}
+                                                className={`w-full h-10 text-xs border-4 ${isEquipped ? 'bg-purple-600 border-slate-900 text-white opacity-50' : 'bg-slate-700 border-slate-900 text-white hover:bg-purple-500 shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1'} rounded-full font-bold uppercase`}
                                             >
                                                 {isEquipped ? <><Check className="w-3 h-3 mr-1" /> Active</> : "Equip"}
                                             </Button>
@@ -207,7 +206,7 @@ export default function Shop() {
                                             <Button 
                                                 onClick={() => handleBuySkin(skin)}
                                                 disabled={!canAfford}
-                                                className={`w-full text-xs ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700'}`}
+                                                className={`w-full h-10 text-xs border-4 border-slate-900 shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
                                             >
                                                 <Coins className="w-3 h-3 mr-1" /> {skin.cost_coins}
                                             </Button>

@@ -114,16 +114,34 @@ export default function Game() {
         }
     };
 
+    const touchYRef = useRef(null);
+
     const handleInputStart = (e) => {
         // If tapping on a button, don't flap
         if (e.target.closest('button')) return;
-        
+
         if (gameState === 'playing' && engineRef.current) {
             engineRef.current.startInput();
+            // Initialize touch/mouse position
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            touchYRef.current = clientY;
+        }
+    };
+
+    const handleInputMove = (e) => {
+        if (gameState === 'playing' && engineRef.current && touchYRef.current !== null) {
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const deltaY = clientY - touchYRef.current;
+
+            // Pass movement to engine (sensitivity adjustment if needed)
+            engineRef.current.movePlayer(deltaY * 1.2);
+
+            touchYRef.current = clientY;
         }
     };
 
     const handleInputEnd = () => {
+        touchYRef.current = null;
         if (gameState === 'playing' && engineRef.current) {
             engineRef.current.endInput();
         }
@@ -141,6 +159,8 @@ export default function Game() {
             className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none"
             onMouseDown={handleInputStart}
             onTouchStart={handleInputStart}
+            onMouseMove={handleInputMove}
+            onTouchMove={handleInputMove}
             onMouseUp={handleInputEnd}
             onTouchEnd={handleInputEnd}
             onMouseLeave={handleInputEnd}

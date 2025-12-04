@@ -124,30 +124,30 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.enemies = [];
             gameStateRef.current.poops = [];
             gameStateRef.current.particles = [];
-            gameStateRef.current.player.y = 100;
+            gameStateRef.current.player.y = 2000; // Start on ground (clamped later)
             gameStateRef.current.player.vy = 0;
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
-            
+
             requestRef.current = requestAnimationFrame(gameLoop);
         },
         poop: () => {
             if (!gameStateRef.current.isPlaying) return;
             spawnPoop();
         },
+        movePlayer: (dy) => {
+            if (!gameStateRef.current.isPlaying) return;
+            gameStateRef.current.player.y += dy;
+            // Mock velocity for rotation animation
+            gameStateRef.current.player.vy = dy; 
+        },
         startInput: () => {
             if (!gameStateRef.current.isPlaying) return;
             gameStateRef.current.inputActive = true;
-            // Initial boost on tap
-            gameStateRef.current.player.vy = getEffectiveConfig().flapStrength;
         },
         endInput: () => {
             gameStateRef.current.inputActive = false;
-        },
-        flap: () => {
-            // Legacy support if needed, mapped to startInput
-            if (!gameStateRef.current.isPlaying) return;
-            gameStateRef.current.player.vy = getEffectiveConfig().flapStrength;
+            gameStateRef.current.player.vy = 0; // Stop rotation when input ends
         },
         stop: () => {
             gameStateRef.current.isPlaying = false;
@@ -298,14 +298,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.animFrame++; // Tick animation
 
         // Player Physics
-        if (state.inputActive) {
-            // Hold to maintain height (dampen velocity, no gravity)
-            state.player.vy *= 0.9; 
-        } else {
-            // Fall
-            state.player.vy += GRAVITY;
+        // Gravity removed for direct control. Position is updated via movePlayer()
+        // Decay visual velocity for smooth rotation return to 0
+        if (!state.inputActive) {
+            state.player.vy *= 0.5;
         }
-        state.player.y += state.player.vy;
 
         // Floor/Ceiling collision
         const groundY = height * GROUND_Y_PCT;

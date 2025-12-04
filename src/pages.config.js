@@ -3,6 +3,7 @@ import Shop from './pages/Shop';
 import Missions from './pages/Missions';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import __Layout from './Layout.jsx';
 
 
@@ -12,6 +13,7 @@ export const PAGES = {
     "Missions": Missions,
     "Profile": Profile,
     "Game": Game,
+    "PrivacyPolicy": PrivacyPolicy,
 }
 
 export const pagesConfig = {

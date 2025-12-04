@@ -98,10 +98,16 @@ export default function Home() {
                     </motion.div>
                     )}
 
-                    <div className="absolute top-4 right-4 z-20">
-                    <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">
-                    by pifka07
-                    </a>
+                    <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-1">
+                        <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">
+                            by pifka07
+                        </a>
+                    </div>
+
+                    <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center">
+                        <Link to={createPageUrl('PrivacyPolicy')} className="text-[10px] text-slate-600 hover:text-slate-400 transition-colors uppercase tracking-widest font-bold">
+                            Datenschutzerklärung
+                        </Link>
                     </div>
                     </div>
                     );

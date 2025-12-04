@@ -250,6 +250,8 @@ export default function Game() {
                         className="pointer-events-auto w-28 h-28 rounded-full shadow-[0_8px_0_#0f5d55] active:shadow-none active:translate-y-2 transition-all relative overflow-hidden bg-transparent border-0 p-0"
                         onClick={handlePoop}
                         onTouchStart={handlePoop}
+                        onMouseUp={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
                     >
                          <img 
                             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4de0465cf_FrnkdieTaubeiconkake.png" 

@@ -49,7 +49,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         car: new Image(),
         drone: new Image(),
         dog: new Image(),
-        coin: new Image()
+        coin: new Image(),
+        poopProjectile: new Image()
         });
 
     useEffect(() => {
@@ -68,11 +69,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2661da5d3_Drone.png";
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2ca5b9994_mnze.png";
+        IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4cb39be25_ChatGPTImage4Dez202512_15_08.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 14) assetsLoaded.current = true;
+            if (loadedCount >= 15) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -537,20 +539,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             if (p.active) {
                  if (assetsLoaded.current) {
-                    const sheet = IMAGES.current.enemiesSheet;
-                    const def = SPRITE_MAP.enemies.poop[0];
-                    
+                    const img = IMAGES.current.poopProjectile;
+
                     ctx.save();
                     ctx.translate(p.x, p.y);
                     // Spin the poop!
                     ctx.rotate(state.animFrame * 0.2);
-                    
-                    ctx.drawImage(
-                        sheet, 
-                        def.x * sheet.width, def.y * sheet.height, 
-                        def.w * sheet.width, def.h * sheet.height, 
-                        -15, -15, 30, 30
-                    );
+
+                    // Draw full image
+                    ctx.drawImage(img, -15, -15, 30, 30);
                     ctx.restore();
                  } else {
                     ctx.fillText('💩', p.x, p.y);

@@ -35,6 +35,13 @@ const SPRITE_MAP = {
 const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', difficultyMultiplier = 1 }, ref) => {
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
+    const AUDIOS = useRef({
+        bgm: new Audio("https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3"),
+        fart: new Audio("https://www.soundjay.com/human/sounds/fart-01.mp3"),
+        explosion: new Audio("https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"),
+        ouch: new Audio("https://www.myinstants.com/media/sounds/roblox-death-sound_1.mp3")
+    });
+
     const IMAGES = useRef({
         background: new Image(),
         playerSheet: new Image(), // Flying
@@ -81,7 +88,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Handle cached images
             if (img.complete) checkLoad();
         });
+        
+        // Configure Audio
+        AUDIOS.current.bgm.loop = true;
+        AUDIOS.current.bgm.volume = 0.5;
+        AUDIOS.current.fart.volume = 0.8;
+        AUDIOS.current.explosion.volume = 0.6;
+        AUDIOS.current.ouch.volume = 1.0;
     }, []);
+
+    const playSound = (name) => {
+        const audio = AUDIOS.current[name];
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.error("Audio play failed", e));
+        }
+    };
     const requestRef = useRef();
     const frameRef = useRef(0);
     const gameStateRef = useRef({
@@ -131,6 +153,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
 
+            AUDIOS.current.bgm.play().catch(e => console.error("BGM failed", e));
             requestRef.current = requestAnimationFrame(gameLoop);
         },
         poop: () => {
@@ -153,6 +176,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         },
         stop: () => {
             gameStateRef.current.isPlaying = false;
+            AUDIOS.current.bgm.pause();
             cancelAnimationFrame(requestRef.current);
         }
         }));
@@ -168,6 +192,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Ammo check (reloading mechanism)
         if (state.currentPoops <= 0) return; // Out of ammo
 
+        playSound('fart');
         state.currentPoops--;
         state.lastPoopTime = now;
         state.poops.push({
@@ -220,7 +245,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             } else if (rand < 0.85) {
                 // Granny (Obstacle!)
                 enemy.spriteType = 'granny';
-                enemy.isTarget = false;
+                enemy.isTarget = true;
                 enemy.isObstacle = true;
                 enemy.width = 50;
                 enemy.height = 80;
@@ -228,7 +253,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             } else {
                 // Dog
                 enemy.spriteType = 'dog';
-                enemy.isTarget = false; // Neutral/Obstacle
+                enemy.isTarget = true; // Neutral/Obstacle
                 enemy.isObstacle = true;
                 enemy.width = 40;
                 enemy.height = 40;
@@ -238,7 +263,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Air
             if (Math.random() < 0.5) {
                 enemy.spriteType = 'eagle';
-                enemy.isTarget = false;
+                enemy.isTarget = true;
                 enemy.isObstacle = true;
                 // Spawn slightly lower (approx 1cm / 50px)
                 enemy.y = 50 + Math.random() * (groundY - 250);
@@ -247,7 +272,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.vx = -scrollSpeed * 1.5;
             } else {
                 enemy.spriteType = 'drone';
-                enemy.isTarget = false;
+                enemy.isTarget = true;
                 enemy.isObstacle = true;
                 enemy.y = Math.random() * (groundY - 150);
                 enemy.width = 60;
@@ -381,29 +406,36 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
             // Hit enemy?
             state.enemies.forEach(e => {
-                if (e.hp > 0 && e.isTarget && 
-                    p.x > e.x && p.x < e.x + e.width &&
-                    p.y > e.y && p.y < e.y + e.height) {
-                    
-                    // HIT!
-                    p.active = false;
-                    e.hp = 0; // Die
-                    
-                    // Combo Logic
-                    state.combo += 1;
-                    state.comboTimer = getEffectiveConfig().comboDuration;
-                    if (onComboUpdate) onComboUpdate(state.combo);
+            if (e.hp > 0 && e.isTarget && 
+            p.x > e.x && p.x < e.x + e.width &&
+            p.y > e.y && p.y < e.y + e.height) {
 
-                    const multiplier = 1 + (state.combo / 10);
-                    const points = Math.floor(e.scoreValue * multiplier);
+            // HIT!
+            p.active = false;
+            e.hp = 0; // Die
 
-                    state.score += points;
-                    state.coins += 1; // 1 coin per hit base
-                    createParticles(e.x + e.width/2, e.y + e.height/2, '#FFFF00', 10); // Sparkles
-                    
-                    // Notify React
-                    onScoreUpdate(state.score, state.coins);
-                }
+            // Play Sound
+            if (['cop', 'granny', 'dog'].includes(e.spriteType)) {
+                playSound('ouch');
+            } else {
+                playSound('explosion');
+            }
+
+            // Combo Logic
+            state.combo += 1;
+            state.comboTimer = getEffectiveConfig().comboDuration;
+            if (onComboUpdate) onComboUpdate(state.combo);
+
+            const multiplier = 1 + (state.combo / 10);
+            const points = Math.floor(e.scoreValue * multiplier);
+
+            state.score += points;
+            state.coins += 1; // 1 coin per hit base
+            createParticles(e.x + e.width/2, e.y + e.height/2, '#FFFF00', 10); // Sparkles
+
+            // Notify React
+            onScoreUpdate(state.score, state.coins);
+            }
             });
         });
 

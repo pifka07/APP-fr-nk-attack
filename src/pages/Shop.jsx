@@ -159,12 +159,12 @@ export default function Shop() {
                                 </CardContent>
                                 <CardFooter>
                                     {isMaxed ? (
-                                            <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-bold uppercase">Maxed</Button>
+                                            <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-titan tracking-wide uppercase">Maxed</Button>
                                         ) : (
                                             <Button 
                                                 onClick={() => handleBuyUpgrade(upgrade)}
                                                 disabled={!canAfford}
-                                                className={`w-full h-12 font-bold border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
+                                                className={`w-full h-12 font-titan tracking-wide border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
                                             >
                                                 <Coins className="w-4 h-4 mr-2" /> 
                                                 Upgrade ({nextCost})
@@ -198,19 +198,19 @@ export default function Shop() {
                                             <Button 
                                                 onClick={() => handleEquipSkin(skin.key)}
                                                 disabled={isEquipped}
-                                                className={`w-full h-10 text-xs border-4 ${isEquipped ? 'bg-purple-600 border-slate-900 text-white opacity-50' : 'bg-slate-700 border-slate-900 text-white hover:bg-purple-500 shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1'} rounded-full font-bold uppercase`}
+                                                className={`w-full h-10 text-xs border-4 ${isEquipped ? 'bg-purple-600 border-slate-900 text-white opacity-50' : 'bg-slate-700 border-slate-900 text-white hover:bg-purple-500 shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1'} rounded-full font-titan tracking-wide uppercase`}
                                             >
                                                 {isEquipped ? <><Check className="w-3 h-3 mr-1" /> Active</> : "Equip"}
                                             </Button>
-                                        ) : (
+                                            ) : (
                                             <Button 
                                                 onClick={() => handleBuySkin(skin)}
                                                 disabled={!canAfford}
-                                                className={`w-full h-10 text-xs border-4 border-slate-900 shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
+                                                className={`w-full h-10 text-xs border-4 border-slate-900 shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-titan tracking-wide uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
                                             >
                                                 <Coins className="w-3 h-3 mr-1" /> {skin.cost_coins}
                                             </Button>
-                                        )}
+                                            )}
                                     </CardFooter>
                                 </Card>
                             </motion.div>

@@ -303,14 +303,14 @@ export default function Game() {
 
                             <Button 
                                 size="lg" 
-                                className="w-full h-16 text-2xl font-black bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
+                                className="w-full h-16 text-3xl font-titan bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
                                 onClick={(e) => { e.stopPropagation(); startGame(); }}
                             >
                                 PLAY
                             </Button>
 
                             <Link to={createPageUrl('Home')} className="block">
-                                <Button className="w-full h-12 bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
+                                <Button className="w-full h-12 font-titan text-xl bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
                                     MENU
                                 </Button>
                             </Link>
@@ -326,13 +326,13 @@ export default function Game() {
                     <div className="space-y-4 w-full max-w-xs">
                         <Button 
                             size="lg" 
-                            className="w-full h-14 bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase"
+                            className="w-full h-14 font-titan text-xl bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
                             onClick={(e) => { e.stopPropagation(); resumeGame(); }}
                         >
                             <Play className="mr-2 w-5 h-5 fill-current" /> RESUME
                         </Button>
                         <Link to={createPageUrl('Home')} className="block">
-                            <Button size="lg" className="w-full h-14 bg-red-500 hover:bg-red-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
+                            <Button size="lg" className="w-full h-14 font-titan text-xl bg-red-500 hover:bg-red-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
                                 <HomeIcon className="mr-2 w-5 h-5" /> QUIT
                             </Button>
                         </Link>

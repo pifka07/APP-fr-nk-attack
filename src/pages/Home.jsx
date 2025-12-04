@@ -55,26 +55,26 @@ export default function Home() {
             {/* Menu Buttons */}
             <div className="w-full max-w-xs space-y-4 z-10">
                 <Link to={createPageUrl('Game')}>
-                    <Button className="w-full h-16 text-xl font-black bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider">
+                    <Button className="w-full h-16 text-2xl font-titan bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider">
                         <Play className="mr-2 w-6 h-6 fill-current" /> PLAY
                     </Button>
                 </Link>
 
                 <div className="grid grid-cols-2 gap-4">
                     <Link to={createPageUrl('Shop')}>
-                        <Button className="w-full h-14 bg-purple-600 hover:bg-purple-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
+                        <Button className="w-full h-14 font-titan text-lg bg-purple-600 hover:bg-purple-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
                             <ShoppingCart className="mr-2 w-5 h-5" /> Shop
                         </Button>
                     </Link>
                     <Link to={createPageUrl('Missions')}>
-                        <Button className="w-full h-14 bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
+                        <Button className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
                             <Target className="mr-2 w-5 h-5" /> Missions
                         </Button>
                     </Link>
                 </div>
 
                 <Link to={createPageUrl('Profile')}>
-                    <Button className="w-full h-12 bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full font-bold uppercase">
+                    <Button className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
                         <UserIcon className="mr-2 w-5 h-5" /> Profile & Stats
                     </Button>
                 </Link>

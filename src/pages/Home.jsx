@@ -56,7 +56,7 @@ export default function Home() {
             <div className="w-full max-w-xs space-y-4 z-10">
                 <Link to={createPageUrl('Game')}>
                     <Button className="w-full h-16 text-xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-slate-900 border-0 shadow-[0_0_20px_rgba(250,204,21,0.4)] transform hover:scale-105 transition-all mb-4">
-                        <Play className="mr-2 w-6 h-6 fill-current" /> PLAY RUN
+                        <Play className="mr-2 w-6 h-6 fill-current" /> PLAY
                     </Button>
                 </Link>
 

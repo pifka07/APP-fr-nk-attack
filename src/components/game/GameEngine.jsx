@@ -78,6 +78,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const frameRef = useRef(0);
     const gameStateRef = useRef({
         isPlaying: false,
+        inputActive: false,
         score: 0,
         coins: 0,
         distance: 0,

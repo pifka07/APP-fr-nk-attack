@@ -38,6 +38,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const IMAGES = useRef({
         background: new Image(),
         playerSheet: new Image(), // Flying
+        playerGlide: new Image(), // Gliding (input active)
         playerDead: new Image(),
         playerGround: new Image(), // Standing
         enemiesSheet: new Image(),
@@ -54,6 +55,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Load Images
         IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png";
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/59fa7a8db_FrnkdieTaube2-Kopie.png";
+        IMAGES.current.playerGlide.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2f3ab0772_ChatGPTImage4Dez202509_43_52.png";
         IMAGES.current.playerDead.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ae2c71989_FrnkdieTaube4-Kopie.png";
         IMAGES.current.playerGround.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dc76f3fcb_FrnkdieTaube5-Kopie.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
@@ -68,7 +70,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 12) assetsLoaded.current = true;
+            if (loadedCount >= 13) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -509,7 +511,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.drawImage(groundImg, -playerSize/2, -playerSize/2, playerSize, playerSize);
                 } else {
                     // Draw Flying Player
-                    const sheet = IMAGES.current.playerSheet;
+                    // Use glide image if holding input, otherwise standard flying
+                    const sheet = state.inputActive ? IMAGES.current.playerGlide : IMAGES.current.playerSheet;
 
                     // Rotation based on vertical velocity
                     const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);

@@ -320,60 +320,41 @@ export default function Game() {
 
             {/* Game Over Screen */}
             {gameState === 'gameover' && finalStats && (
-                <div className="absolute inset-0 z-50 bg-slate-900/95 backdrop-blur-xl flex flex-col items-center justify-center p-6">
+                <div className="absolute inset-0 z-50 bg-slate-900/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
                     <motion.div 
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="w-full max-w-sm text-center"
+                        className="w-full max-w-sm relative"
                     >
-                        <div className="mb-6">
-                            <h2 className="text-6xl font-black text-white mb-2 drop-shadow-[0_4px_0_#000]">GAME</h2>
-                            <h2 className="text-6xl font-black text-white mb-6 drop-shadow-[0_4px_0_#000]">OVER</h2>
-                            
-                            {/* Dead Fränk Image */}
-                            <div className="relative w-48 h-48 mx-auto mb-6">
-                                <img 
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ae2c71989_FrnkdieTaube4-Kopie.png" 
-                                    className="w-full h-full object-contain" 
-                                    alt="Dead Fränk"
-                                />
-                            </div>
+                        <img 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c9b686995_gameover.png" 
+                            alt="Game Over" 
+                            className="w-full h-auto drop-shadow-2xl"
+                        />
+
+                        {/* Stats Overlay */}
+                        <div className="absolute top-[34%] left-0 right-0 flex justify-center gap-8 z-10">
+                             <div className="text-center transform -rotate-3">
+                                 <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Score</div>
+                                 <div className="text-2xl font-black text-slate-900">{finalStats.score}</div>
+                             </div>
+                             <div className="text-center transform rotate-3">
+                                 <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Coins</div>
+                                 <div className="text-2xl font-black text-slate-900">{finalStats.coins}</div>
+                             </div>
                         </div>
 
-                        <div className="bg-slate-800/80 border-4 border-slate-700 p-6 rounded-3xl mb-6">
-                            <div className="flex justify-around mb-2">
-                                <div>
-                                    <div className="text-xs text-slate-400 uppercase font-bold">Score</div>
-                                    <div className="text-yellow-400 text-4xl font-black">{finalStats.score}</div>
-                                </div>
-                                <div>
-                                    <div className="text-xs text-slate-400 uppercase font-bold">Coins</div>
-                                    <div className="text-teal-400 text-4xl font-black">{finalStats.coins}</div>
-                                </div>
-                            </div>
+                        {/* Invisible Buttons Overlay */}
+                        <div className="absolute bottom-[8%] left-[8%] w-[38%] h-[12%]">
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); startGame(); }}
+                              className="w-full h-full rounded-full active:bg-white/20 transition-colors"
+                            />
                         </div>
-
-                        <div className="space-y-4">
-                            <Button 
-                                size="lg" 
-                                className="w-full h-16 text-2xl font-black bg-orange-500 hover:bg-orange-600 text-white border-b-8 border-orange-700 rounded-2xl active:border-b-0 active:translate-y-2 transition-all"
-                                onClick={(e) => { e.stopPropagation(); startGame(); }}
-                            >
-                                RETRY
-                            </Button>
-                            
-                            <div className="grid grid-cols-2 gap-4">
-                                <Link to={createPageUrl('Shop')}>
-                                    <Button className="w-full h-14 font-bold bg-purple-600 hover:bg-purple-700 text-white border-b-4 border-purple-800 rounded-xl active:border-b-0 active:translate-y-1">
-                                        SHOP
-                                    </Button>
-                                </Link>
-                                <Link to={createPageUrl('Home')}>
-                                    <Button className="w-full h-14 font-bold bg-yellow-500 hover:bg-yellow-600 text-slate-900 border-b-4 border-yellow-700 rounded-xl active:border-b-0 active:translate-y-1">
-                                        MENU
-                                    </Button>
-                                </Link>
-                            </div>
+                        <div className="absolute bottom-[8%] right-[8%] w-[38%] h-[12%]">
+                            <Link to={createPageUrl('Home')} className="block w-full h-full">
+                              <button className="w-full h-full rounded-full active:bg-white/20 transition-colors" />
+                            </Link>
                         </div>
                     </motion.div>
                 </div>

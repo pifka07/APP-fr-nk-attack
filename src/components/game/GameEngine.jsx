@@ -238,7 +238,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.spriteType = 'eagle';
                 enemy.isTarget = false;
                 enemy.isObstacle = true;
-                enemy.y = Math.random() * (groundY - 200);
+                // Spawn slightly lower (approx 1cm / 50px)
+                enemy.y = 50 + Math.random() * (groundY - 250);
                 enemy.width = 80;
                 enemy.height = 60;
                 enemy.vx = -scrollSpeed * 1.5;

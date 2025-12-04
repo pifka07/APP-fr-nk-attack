@@ -347,6 +347,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Update Enemies
         state.enemies.forEach(e => {
             e.x += e.vx;
+
+            // Eagle behavior: Fly straight until middle of screen, then drop
+            if (e.spriteType === 'eagle' && !e.hasDropped && e.x < width / 2) {
+                e.y += 50; // Drop approx 1cm
+                e.hasDropped = true;
+            }
         });
 
         // Update Powerups

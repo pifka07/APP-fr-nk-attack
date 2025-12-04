@@ -128,7 +128,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (!gameStateRef.current.isPlaying) return;
             spawnPoop();
         },
+        startInput: () => {
+            if (!gameStateRef.current.isPlaying) return;
+            gameStateRef.current.inputActive = true;
+            // Initial boost on tap
+            gameStateRef.current.player.vy = getEffectiveConfig().flapStrength;
+        },
+        endInput: () => {
+            gameStateRef.current.inputActive = false;
+        },
         flap: () => {
+            // Legacy support if needed, mapped to startInput
             if (!gameStateRef.current.isPlaying) return;
             gameStateRef.current.player.vy = getEffectiveConfig().flapStrength;
         },
@@ -136,7 +146,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.isPlaying = false;
             cancelAnimationFrame(requestRef.current);
         }
-    }));
+        }));
 
     const spawnPoop = () => {
         const state = gameStateRef.current;
@@ -281,7 +291,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.animFrame++; // Tick animation
 
         // Player Physics
-        state.player.vy += GRAVITY;
+        if (state.inputActive) {
+            // Hold to maintain height (dampen velocity, no gravity)
+            state.player.vy *= 0.9; 
+        } else {
+            // Fall
+            state.player.vy += GRAVITY;
+        }
         state.player.y += state.player.vy;
 
         // Floor/Ceiling collision
@@ -389,9 +405,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Crash!
                     e.hp = 0; // Destroy obstacle? or keep it? Let's destroy it to prevent multi-hit
                     state.health -= 20;
+                    // Deduct points as requested
+                    state.score = Math.max(0, state.score - 50);
+
                     createParticles(state.player.x, state.player.y, '#FF0000', 10);
                     onHealthUpdate(state.health);
-                    
+                    onScoreUpdate(state.score, state.coins); // Update score display
+
                     if (state.health <= 0) {
                         state.isPlaying = false;
                         onGameOver({ score: state.score, coins: state.coins, distance: Math.floor(state.distance) });

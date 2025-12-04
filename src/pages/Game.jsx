@@ -114,12 +114,18 @@ export default function Game() {
         }
     };
 
-    const handleScreenTouch = (e) => {
+    const handleInputStart = (e) => {
         // If tapping on a button, don't flap
         if (e.target.closest('button')) return;
         
         if (gameState === 'playing' && engineRef.current) {
-            engineRef.current.flap();
+            engineRef.current.startInput();
+        }
+    };
+
+    const handleInputEnd = () => {
+        if (gameState === 'playing' && engineRef.current) {
+            engineRef.current.endInput();
         }
     };
 
@@ -133,8 +139,11 @@ export default function Game() {
     return (
         <div 
             className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none"
-            onMouseDown={handleScreenTouch}
-            onTouchStart={handleScreenTouch}
+            onMouseDown={handleInputStart}
+            onTouchStart={handleInputStart}
+            onMouseUp={handleInputEnd}
+            onTouchEnd={handleInputEnd}
+            onMouseLeave={handleInputEnd}
         >
             {/* Game Engine Canvas */}
             <div className="absolute inset-0 z-0">

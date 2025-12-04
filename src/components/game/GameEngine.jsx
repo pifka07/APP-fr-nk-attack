@@ -125,8 +125,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         comboTimer: 0,
         maxPoops: 3, // Dynamic ammo
         currentPoops: 3,
-        animFrame: 0 // Global animation tick
-    });
+        animFrame: 0, // Global animation tick
+        rapidFireUntil: 0,
+        shotQueue: []
+        });
 
     // Apply config
     const getEffectiveConfig = () => ({

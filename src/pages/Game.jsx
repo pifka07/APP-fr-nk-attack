@@ -272,8 +272,8 @@ export default function Game() {
                         <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
                             <div className="mb-6">
                                 <img 
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/0e73e32a1_frankbild.png" 
-                                    className="w-32 h-32 mx-auto object-cover rounded-full border-4 border-teal-500 bg-cyan-400 mb-4" 
+                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a638c62a8_frankbild.png" 
+                                    className="w-32 h-32 mx-auto object-cover rounded-3xl border-4 border-teal-500 bg-cyan-400 mb-4" 
                                     style={{ width: '120px', height: '120px' }}
                                     alt="Fränk"
                                 />

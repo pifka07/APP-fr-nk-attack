@@ -104,6 +104,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         AUDIOS.current.fart.volume = 0.8;
         AUDIOS.current.explosion.volume = 0.6;
         AUDIOS.current.ouch.volume = 1.0;
+
+        return () => {
+            if (AUDIOS.current.bgm) {
+                AUDIOS.current.bgm.pause();
+                AUDIOS.current.bgm.currentTime = 0;
+            }
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        };
     }, []);
 
     const playSound = (name) => {
@@ -509,6 +517,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
                     if (state.health <= 0) {
                         state.isPlaying = false;
+                        AUDIOS.current.bgm.pause();
+                        AUDIOS.current.bgm.currentTime = 0;
                         onGameOver({ score: state.score, coins: state.coins, distance: Math.floor(state.distance) });
                     }
                 }

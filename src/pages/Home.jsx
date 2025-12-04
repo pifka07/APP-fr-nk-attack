@@ -95,8 +95,14 @@ export default function Home() {
                         <Trophy className="w-3 h-3 mr-2 text-purple-400" />
                         Highscore: {user.best_score || 0}
                     </div>
-                </motion.div>
-            )}
-        </div>
-    );
-}
+                    </motion.div>
+                    )}
+
+                    <div className="absolute top-4 right-4 z-20">
+                    <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">
+                    by pifka07
+                    </a>
+                    </div>
+                    </div>
+                    );
+                    }

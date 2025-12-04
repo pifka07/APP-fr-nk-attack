@@ -32,7 +32,7 @@ const SPRITE_MAP = {
     }
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', difficultyMultiplier = 1 }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true }, ref) => {
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
     const AUDIOS = useRef({
@@ -59,6 +59,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         coin: new Image(),
         poopProjectile: new Image()
         });
+
+    useEffect(() => {
+        if (AUDIOS.current.bgm) {
+            AUDIOS.current.bgm.muted = !musicEnabled;
+            if (musicEnabled && gameStateRef.current.isPlaying) {
+                AUDIOS.current.bgm.play().catch(e => console.log("BGM Play prevented"));
+            }
+        }
+    }, [musicEnabled]);
 
     useEffect(() => {
         // Load Images
@@ -98,6 +107,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     }, []);
 
     const playSound = (name) => {
+        if (!soundEnabled) return;
         const audio = AUDIOS.current[name];
         if (audio) {
             audio.currentTime = 0;

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { base44 } from '@/api/base44Client';
 import GameEngine from '@/components/game/GameEngine';
-import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap } from "lucide-react";
+import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap, Music, Music2, Volume2, VolumeX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -22,6 +22,8 @@ export default function Game() {
     const [saving, setSaving] = useState(false);
     const [gameConfig, setGameConfig] = useState({});
     const [skin, setSkin] = useState('default');
+    const [musicEnabled, setMusicEnabled] = useState(true);
+    const [soundEnabled, setSoundEnabled] = useState(true);
 
     useEffect(() => {
         const loadConfig = async () => {
@@ -171,6 +173,8 @@ export default function Game() {
                     ref={engineRef}
                     config={gameConfig}
                     skin={skin}
+                    musicEnabled={musicEnabled}
+                    soundEnabled={soundEnabled}
                     onGameOver={handleGameOver}
                     onScoreUpdate={(s, c) => { setScore(s); setCoins(c); }}
                     onHealthUpdate={setHealth}

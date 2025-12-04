@@ -46,8 +46,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         cop: new Image(),
         granny: new Image(),
         car: new Image(),
-        drone: new Image()
-    });
+        drone: new Image(),
+        dog: new Image()
+        });
 
     useEffect(() => {
         // Load Images
@@ -62,11 +63,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.granny.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4acddf445_Frnk-icon1.png";
         IMAGES.current.car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/29974cd32_Frnk-icon4.png";
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6e5167c95_FrnkdieTaubeicon8.png";
+        IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 11) assetsLoaded.current = true;
+            if (loadedCount >= 12) assetsLoaded.current = true;
         };
         Object.values(IMAGES.current).forEach(img => {
             img.onload = checkLoad;
@@ -563,6 +565,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'granny') useFullImage(IMAGES.current.granny);
                 else if (e.spriteType === 'car') useFullImage(IMAGES.current.car);
                 else if (e.spriteType === 'drone') useFullImage(IMAGES.current.drone);
+                else if (e.spriteType === 'dog') useFullImage(IMAGES.current.dog);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

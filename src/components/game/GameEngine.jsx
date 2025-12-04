@@ -195,13 +195,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         playSound('fart');
         state.currentPoops--;
         state.lastPoopTime = now;
-        state.poops.push({
-            x: state.player.x,
-            y: state.player.y + 20,
-            vx: 2, // slight forward momentum
-            vy: 5, // initial drop speed
-            active: true
-        });
+        
+        // Helper to push a poop
+        const pushPoop = () => {
+            state.poops.push({
+                x: state.player.x,
+                y: state.player.y + 20,
+                vx: 2,
+                vy: 5,
+                active: true
+            });
+        };
+
+        pushPoop();
+
+        // Rapid Fire / Burst Logic
+        if (now < state.rapidFireUntil) {
+            // Queue 2 more shots for burst effect
+            state.shotQueue.push(now + 100);
+            state.shotQueue.push(now + 200);
+        }
     };
 
     const spawnEnemy = (width, height) => {
@@ -325,6 +338,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.distance += (state.scrollSpeed / 10);
         state.animFrame++; // Tick animation
 
+        // Process Burst Fire Queue
+        const now = performance.now();
+        if (state.shotQueue.length > 0) {
+            // Find shots that are due
+            const dueShots = state.shotQueue.filter(t => t <= now);
+            // Keep shots that are future
+            state.shotQueue = state.shotQueue.filter(t => t > now);
+            
+            dueShots.forEach(() => {
+                 state.poops.push({
+                    x: state.player.x,
+                    y: state.player.y + 20,
+                    vx: 2,
+                    vy: 5,
+                    active: true
+                });
+            });
+        }
+
         // Player Physics
         // Gravity removed for direct control. Position is updated via movePlayer()
         // Decay visual velocity for smooth rotation return to 0
@@ -419,6 +451,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 playSound('ouch');
             } else {
                 playSound('explosion');
+            }
+
+            // Special Effect for Dog: Rapid Fire
+            if (e.spriteType === 'dog') {
+                state.rapidFireUntil = performance.now() + 5000;
+                createParticles(e.x + e.width/2, e.y + e.height/2, '#FF00FF', 15); // Special purple particles
             }
 
             // Combo Logic

@@ -272,9 +272,9 @@ export default function Game() {
                         <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
                             <div className="mb-6">
                                 <img 
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/afbb5dca0_ChatGPTImage3Dez202518_29_58.png" 
-                                    className="w-32 h-32 mx-auto object-cover object-[70%_0%] rounded-full border-4 border-teal-500 bg-cyan-400 mb-4" 
-                                    style={{ objectPosition: '66% 27%', width: '120px', height: '120px' }} // Crop to Fränk's face from Loading
+                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/0e73e32a1_frankbild.png" 
+                                    className="w-32 h-32 mx-auto object-cover rounded-full border-4 border-teal-500 bg-cyan-400 mb-4" 
+                                    style={{ width: '120px', height: '120px' }}
                                     alt="Fränk"
                                 />
                                 <p className="text-teal-300 font-bold mb-1">MISSION</p>

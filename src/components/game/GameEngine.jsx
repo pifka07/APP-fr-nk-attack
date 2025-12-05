@@ -32,7 +32,9 @@ const SPRITE_MAP = {
         drone_l2: [{ x: 0, y: 0, w: 1, h: 1 }],
         squirrel: [{ x: 0, y: 0, w: 1, h: 1 }],
         snail: [{ x: 0, y: 0, w: 1, h: 1 }],
-        fly: [{ x: 0, y: 0, w: 1, h: 1 }]
+        fly: [{ x: 0, y: 0, w: 1, h: 1 }],
+        raccoon: [{ x: 0, y: 0, w: 1, h: 1 }],
+        trash_can: [{ x: 0, y: 0, w: 1, h: 1 }]
         },
     powerups: {
         speed: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 }, // Placeholder: reuse poop shape but colored
@@ -72,6 +74,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         squirrel: new Image(),
         snail: new Image(),
         fly: new Image(),
+        raccoon: new Image(),
+        trash_can: new Image(),
         coin: new Image(),
         poopProjectile: new Image(),
         energyIcon: new Image()
@@ -116,6 +120,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.squirrel.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/34a772965_Level3sandy.png";
         IMAGES.current.snail.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/fbcc970e9_Level3Schnecke.png";
         IMAGES.current.fly.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e9811e48b_Level3wespe.png";
+        IMAGES.current.raccoon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/711808c42_Level3Waschbr.png";
+        IMAGES.current.trash_can.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/606803243_Level3Tonne.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5eaf86381_FrnkdieTaubeicon1.png";
         IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png";
@@ -335,7 +341,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 // PARK LEVEL ENEMIES
                 if (!isAir) {
                 // Ground
-                if (rand < 0.5) {
+                if (rand < 0.4) {
                     // Squirrel (Fast runner)
                     enemy.spriteType = 'squirrel';
                     enemy.isTarget = true;
@@ -344,6 +350,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = groundY - 60;
                     enemy.vx = -scrollSpeed * 1.5; // Fast!
                     enemy.scoreValue = 50;
+                } else if (rand < 0.7) {
+                    // Trash Can with Raccoon (Background/Obstacle)
+                    enemy.spriteType = 'trash_can';
+                    enemy.isTarget = true; 
+                    enemy.isObstacle = true;
+                    enemy.width = 50;
+                    enemy.height = 70;
+                    enemy.y = groundY - 70; // Slightly higher for "background" feel? Or just on ground.
+                    enemy.vx = -scrollSpeed; // Normal speed
+                    enemy.scoreValue = 40;
                 } else {
                     // Snail (Slow, obstacle mainly?)
                     enemy.spriteType = 'snail';
@@ -819,6 +835,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'squirrel') useFullImage(IMAGES.current.squirrel);
                 else if (e.spriteType === 'snail') useFullImage(IMAGES.current.snail);
                 else if (e.spriteType === 'fly') useFullImage(IMAGES.current.fly);
+                else if (e.spriteType === 'trash_can') useFullImage(IMAGES.current.trash_can);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -846,13 +863,43 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 } else if (e.spriteType === 'squirrel') {
                     // Hop
                     ctx.translate(0, Math.abs(Math.sin(state.animFrame * 0.4)) * -10);
-                }
-                // Chimney drawing removed for cat as requested (sitting on background chimney)
+                    }
+                    // Chimney drawing removed for cat as requested (sitting on background chimney)
 
-                // Draw Enemy Sprite
-                if (e.spriteType !== 'smoke') {
+                    // Special drawing for Trash Can (Raccoon jumping out)
+                    if (e.spriteType === 'trash_can') {
+                    // 1. Draw Raccoon jumping (behind the can effectively if we want it popping out, 
+                    // but since we can't clip easily without complex canvas, let's draw it BEHIND the can layer-wise or just on top moving up)
+                    // "Aus der Tonne springen" - best effect: Raccoon moves up/down relative to can.
+                    // We'll draw the raccoon first (behind), then the can? Or just on top?
+                    // Let's try: Draw Can. Draw Raccoon moving up/down *behind* the can's front? 
+                    // Simplest: Draw Raccoon behind can, moving Y.
+
+                    const jumpOffset = Math.abs(Math.sin(state.animFrame * 0.1)) * 40; // 0 to 40px up
+
+                    // Draw Raccoon
+                    if (IMAGES.current.raccoon) {
+                        const rW = 50; 
+                        const rH = 50;
+                        ctx.drawImage(
+                            IMAGES.current.raccoon, 
+                            -rW/2, 
+                            -e.height/2 - jumpOffset + 10, // Start slightly inside
+                            rW, 
+                            rH
+                        );
+                    }
+
+                    // Draw Can (Covering the bottom of raccoon?)
+                    // We need the raccoon to appear from *inside*.
+                    // So we draw the Can ON TOP of the lower part of the raccoon.
+                    // But the can image is the whole can. 
+                    // So simply drawing the can *after* the raccoon should hide the raccoon when it's "down" if the can image is opaque.
                     ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
-                } else {
+
+                    } else if (e.spriteType !== 'smoke') {
+                    ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+                    } else {
                     // Draw Smoke
                     ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';
                     ctx.beginPath();

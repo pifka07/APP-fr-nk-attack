@@ -106,7 +106,7 @@ export default function Leaderboard() {
                         </Card>
 
                         {/* Current User Stats Summary if not in top 10 */}
-                        {currentUser && !leaders.find(l => l.id === currentUser.id) && (
+                        {currentUser && !leaders.find(l => l.user_id === currentUser.id) && (
                             <motion.div 
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}

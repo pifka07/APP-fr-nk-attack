@@ -24,8 +24,13 @@ const SPRITE_MAP = {
         dog: [{ x: 0.05, y: 0.35, w: 0.2, h: 0.25 }],
         poop: [{ x: 0.1, y: 0.7, w: 0.2, h: 0.2 }],
         drone: [{ x: 0.4, y: 0.8, w: 0.25, h: 0.15 }],
-        eagle: [{ x: 0.6, y: 0.55, w: 0.35, h: 0.3 }]
-    },
+        eagle: [{ x: 0.6, y: 0.55, w: 0.35, h: 0.3 }],
+        worker: [{ x: 0, y: 0, w: 1, h: 1 }],
+        cat: [{ x: 0, y: 0, w: 1, h: 1 }],
+        ac_unit: [{ x: 0, y: 0, w: 1, h: 1 }],
+        seagull: [{ x: 0, y: 0, w: 1, h: 1 }],
+        drone_l2: [{ x: 0, y: 0, w: 1, h: 1 }]
+        },
     powerups: {
         speed: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 }, // Placeholder: reuse poop shape but colored
         shield: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 }
@@ -56,6 +61,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         car: new Image(),
         drone: new Image(),
         dog: new Image(),
+        worker: new Image(),
+        cat: new Image(),
+        ac_unit: new Image(),
+        seagull: new Image(),
+        drone_l2: new Image(),
         coin: new Image(),
         poopProjectile: new Image(),
         energyIcon: new Image()
@@ -90,6 +100,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6beb89d0d_Frnk-icon4.png";
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2661da5d3_Drone.png";
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
+        IMAGES.current.worker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
+        IMAGES.current.cat.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/527b8003b_Level1Gegner-Kopie4.png";
+        IMAGES.current.ac_unit.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a4450d5d4_Level1Gegner.png";
+        IMAGES.current.seagull.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
+        IMAGES.current.drone_l2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/0c1699d14_Level1Gegner-Kopie3.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4cb39be25_ChatGPTImage4Dez202512_15_08.png";
         IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png";
@@ -247,7 +262,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
-        
+
         let enemy = {
             x: width + 50,
             y: groundY - 50,
@@ -264,60 +279,114 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const rand = Math.random();
         const isAir = Math.random() > 0.6;
 
-        if (!isAir) {
-            // Ground
-            if (rand < 0.4) {
-                // Car
-                enemy.spriteType = 'car';
-                enemy.isTarget = true;
-                enemy.width = 90;
-                enemy.height = 70;
-                enemy.vx = -scrollSpeed - 2;
-                enemy.scoreValue = 30;
-            } else if (rand < 0.7) {
-                // Cop
-                enemy.spriteType = 'cop';
-                enemy.isTarget = true;
-                enemy.width = 50;
-                enemy.height = 80;
-                enemy.y = groundY - 70;
-                enemy.scoreValue = 50;
-            } else if (rand < 0.85) {
-                // Granny (Obstacle!)
-                enemy.spriteType = 'granny';
-                enemy.isTarget = true;
-                enemy.isObstacle = true;
-                enemy.width = 50;
-                enemy.height = 80;
-                enemy.y = groundY - 70;
+        if (level === 'rooftop') {
+            // ROOFTOP LEVEL ENEMIES
+            if (!isAir) {
+                // Ground (Rooftop surface)
+                if (rand < 0.4) {
+                    // Worker
+                    enemy.spriteType = 'worker';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                    enemy.scoreValue = 40;
+                } else if (rand < 0.7) {
+                    // Cat
+                    enemy.spriteType = 'cat';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 50;
+                    enemy.y = groundY - 40;
+                    enemy.scoreValue = 60;
+                } else {
+                    // AC Unit (Obstacle)
+                    enemy.spriteType = 'ac_unit';
+                    enemy.isTarget = false; // Can't poop on AC? Or maybe just obstacle. Let's make it obstacle.
+                    enemy.isObstacle = true;
+                    enemy.width = 70;
+                    enemy.height = 70;
+                    enemy.y = groundY - 60;
+                }
             } else {
-                // Dog
-                enemy.spriteType = 'dog';
-                enemy.isTarget = true; // Neutral/Obstacle
-                enemy.isObstacle = true;
-                enemy.width = 40;
-                enemy.height = 40;
-                enemy.y = groundY - 30;
+                // Air
+                if (Math.random() < 0.5) {
+                    // Seagull
+                    enemy.spriteType = 'seagull';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = 50 + Math.random() * (groundY - 250);
+                    enemy.width = 70;
+                    enemy.height = 60;
+                    enemy.vx = -scrollSpeed * 1.4;
+                } else {
+                    // Drone L2
+                    enemy.spriteType = 'drone_l2';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = Math.random() * (groundY - 150);
+                    enemy.width = 70;
+                    enemy.height = 50;
+                    enemy.vx = -scrollSpeed * 1.3;
+                }
             }
         } else {
-            // Air
-            if (Math.random() < 0.5) {
-                enemy.spriteType = 'eagle';
-                enemy.isTarget = true;
-                enemy.isObstacle = true;
-                // Spawn slightly lower (approx 1cm / 50px)
-                enemy.y = 50 + Math.random() * (groundY - 250);
-                enemy.width = 80;
-                enemy.height = 60;
-                enemy.vx = -scrollSpeed * 1.5;
+            // DOWNTOWN LEVEL ENEMIES (Original)
+            if (!isAir) {
+                // Ground
+                if (rand < 0.4) {
+                    // Car
+                    enemy.spriteType = 'car';
+                    enemy.isTarget = true;
+                    enemy.width = 90;
+                    enemy.height = 70;
+                    enemy.vx = -scrollSpeed - 2;
+                    enemy.scoreValue = 30;
+                } else if (rand < 0.7) {
+                    // Cop
+                    enemy.spriteType = 'cop';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                    enemy.scoreValue = 50;
+                } else if (rand < 0.85) {
+                    // Granny (Obstacle!)
+                    enemy.spriteType = 'granny';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                } else {
+                    // Dog
+                    enemy.spriteType = 'dog';
+                    enemy.isTarget = true; // Neutral/Obstacle
+                    enemy.isObstacle = true;
+                    enemy.width = 40;
+                    enemy.height = 40;
+                    enemy.y = groundY - 30;
+                }
             } else {
-                enemy.spriteType = 'drone';
-                enemy.isTarget = true;
-                enemy.isObstacle = true;
-                enemy.y = Math.random() * (groundY - 150);
-                enemy.width = 60;
-                enemy.height = 40;
-                enemy.vx = -scrollSpeed * 1.2;
+                // Air
+                if (Math.random() < 0.5) {
+                    enemy.spriteType = 'eagle';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    // Spawn slightly lower (approx 1cm / 50px)
+                    enemy.y = 50 + Math.random() * (groundY - 250);
+                    enemy.width = 80;
+                    enemy.height = 60;
+                    enemy.vx = -scrollSpeed * 1.5;
+                } else {
+                    enemy.spriteType = 'drone';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = Math.random() * (groundY - 150);
+                    enemy.width = 60;
+                    enemy.height = 40;
+                    enemy.vx = -scrollSpeed * 1.2;
+                }
             }
         }
 
@@ -671,6 +740,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'car') useFullImage(IMAGES.current.car);
                 else if (e.spriteType === 'drone') useFullImage(IMAGES.current.drone);
                 else if (e.spriteType === 'dog') useFullImage(IMAGES.current.dog);
+                else if (e.spriteType === 'worker') useFullImage(IMAGES.current.worker);
+                else if (e.spriteType === 'cat') useFullImage(IMAGES.current.cat);
+                else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
+                else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);
+                else if (e.spriteType === 'drone_l2') useFullImage(IMAGES.current.drone_l2);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

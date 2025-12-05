@@ -346,6 +346,23 @@ export default function Game() {
                                 <p className="text-white text-xl font-black uppercase">Poop on Everything</p>
                             </div>
 
+                            {/* Speed Selection */}
+                            <div className="bg-slate-900/50 p-2 rounded-xl mb-4 flex justify-between gap-1">
+                                {['slow', 'normal', 'quick'].map((speed) => (
+                                    <button
+                                        key={speed}
+                                        onClick={(e) => { e.stopPropagation(); setGameSpeed(speed); }}
+                                        className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                                            gameSpeed === speed 
+                                            ? 'bg-teal-500 text-white shadow-lg scale-105' 
+                                            : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                                        }`}
+                                    >
+                                        {speed}
+                                    </button>
+                                ))}
+                            </div>
+
                             <Button 
                                 size="lg" 
                                 className="w-full h-16 text-3xl font-titan bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"

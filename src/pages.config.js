@@ -4,6 +4,7 @@ import Missions from './pages/Missions';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Leaderboard from './pages/Leaderboard';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +15,7 @@ export const PAGES = {
     "Profile": Profile,
     "Game": Game,
     "PrivacyPolicy": PrivacyPolicy,
+    "Leaderboard": Leaderboard,
 }
 
 export const pagesConfig = {

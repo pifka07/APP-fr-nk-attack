@@ -54,9 +54,9 @@ export default function Home() {
 
             {/* Menu Buttons */}
             <div className="w-full max-w-xs space-y-4 z-10">
-                <Link to={createPageUrl('Game')}>
+                <Link to={createPageUrl('Missions')}>
                     <Button className="w-full h-16 text-2xl font-titan bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider">
-                        <Play className="mr-2 w-6 h-6 fill-current" /> PLAY
+                        <Target className="mr-2 w-6 h-6" /> MISSIONS
                     </Button>
                 </Link>
 
@@ -66,9 +66,9 @@ export default function Home() {
                             <ShoppingCart className="mr-2 w-5 h-5" /> Shop
                         </Button>
                     </Link>
-                    <Link to={createPageUrl('Missions')}>
+                    <Link to={createPageUrl('Leaderboard')}>
                         <Button className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                            <Target className="mr-2 w-5 h-5" /> Missions
+                            <Trophy className="mr-2 w-5 h-5" /> Highscore
                         </Button>
                     </Link>
                 </div>

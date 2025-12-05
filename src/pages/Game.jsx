@@ -95,7 +95,7 @@ export default function Game() {
 
         try {
             const user = await base44.auth.me();
-            
+
             // Create Run Record
             await base44.entities.Run.create({
                 score: stats.score,
@@ -104,14 +104,22 @@ export default function Game() {
                 mode: 'endless'
             });
 
+            const newBestScore = Math.max(user.best_score || 0, stats.score);
+
             // Update User Stats
             await base44.auth.updateMe({
                 total_coins: (user.total_coins || 0) + stats.coins,
-                best_score: Math.max(user.best_score || 0, stats.score),
+                best_score: newBestScore,
                 best_distance: Math.max(user.best_distance || 0, stats.distance)
             });
 
-            toast.success("Run saved!");
+            // Check for Top 10 locally to notify user immediately (optional UX)
+            // We'll rely on the Leaderboard page for the full list, but could toast here.
+            if (stats.score > (user.best_score || 0)) {
+                toast.success("New Personal Best!");
+            } else {
+                toast.success("Run saved!");
+            }
         } catch (error) {
             console.error("Failed to save run", error);
             toast.error("Failed to save stats");
@@ -316,6 +324,12 @@ export default function Game() {
                             <Link to={createPageUrl('Home')} className="block">
                                 <Button className="w-full h-12 font-titan text-xl bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
                                     MENU
+                                </Button>
+                            </Link>
+
+                            <Link to={createPageUrl('Leaderboard')} className="block mt-2">
+                                <Button className="w-full h-12 font-titan text-xl bg-yellow-600 hover:bg-yellow-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+                                    <Trophy className="w-5 h-5 mr-2" /> Highscores
                                 </Button>
                             </Link>
 

@@ -29,7 +29,10 @@ const SPRITE_MAP = {
         cat: [{ x: 0, y: 0, w: 1, h: 1 }],
         ac_unit: [{ x: 0, y: 0, w: 1, h: 1 }],
         seagull: [{ x: 0, y: 0, w: 1, h: 1 }],
-        drone_l2: [{ x: 0, y: 0, w: 1, h: 1 }]
+        drone_l2: [{ x: 0, y: 0, w: 1, h: 1 }],
+        squirrel: [{ x: 0, y: 0, w: 1, h: 1 }],
+        snail: [{ x: 0, y: 0, w: 1, h: 1 }],
+        fly: [{ x: 0, y: 0, w: 1, h: 1 }]
         },
     powerups: {
         speed: { x: 0.1, y: 0.7, w: 0.2, h: 0.2 }, // Placeholder: reuse poop shape but colored
@@ -107,6 +110,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.ac_unit.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a4450d5d4_Level1Gegner.png";
         IMAGES.current.seagull.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
         IMAGES.current.drone_l2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/61f1abf56_Level1Gegner-Kopie3.png";
+        IMAGES.current.squirrel.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/9908aebcb_ChatGPTImage5Dez202514_46_21-Kopie.png";
+        IMAGES.current.snail.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/eced10051_ChatGPTImage5Dez202514_46_21-Kopie2.png";
+        IMAGES.current.fly.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4087ccb87_ChatGPTImage5Dez202514_46_21-Kopie4.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4cb39be25_ChatGPTImage4Dez202512_15_08.png";
         IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png";
@@ -321,9 +327,42 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.width = 70;
                 enemy.height = 50;
                 enemy.vx = -scrollSpeed * 1.3;
-            }
-        } else {
-            // DOWNTOWN LEVEL ENEMIES (Original)
+                }
+                } else if (level === 'park') {
+                // PARK LEVEL ENEMIES
+                if (!isAir) {
+                // Ground
+                if (rand < 0.5) {
+                    // Squirrel (Fast runner)
+                    enemy.spriteType = 'squirrel';
+                    enemy.isTarget = true;
+                    enemy.width = 60;
+                    enemy.height = 60;
+                    enemy.y = groundY - 60;
+                    enemy.vx = -scrollSpeed * 1.5; // Fast!
+                    enemy.scoreValue = 50;
+                } else {
+                    // Snail (Slow, obstacle mainly?)
+                    enemy.spriteType = 'snail';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 40;
+                    enemy.y = groundY - 40;
+                    enemy.vx = -scrollSpeed * 0.8; // Slow
+                    enemy.scoreValue = 30;
+                }
+                } else {
+                // Air - Fly/Wasp (Erratic movement?)
+                enemy.spriteType = 'fly';
+                enemy.isTarget = true;
+                enemy.isObstacle = true;
+                enemy.y = Math.random() * (groundY - 150);
+                enemy.width = 40;
+                enemy.height = 40;
+                enemy.vx = -scrollSpeed * 1.2;
+                }
+                } else {
+                // DOWNTOWN LEVEL ENEMIES (Original)
             if (!isAir) {
                 // Ground
                 if (rand < 0.4) {
@@ -774,6 +813,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
                 else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);
                 else if (e.spriteType === 'drone_l2') useFullImage(IMAGES.current.drone_l2);
+                else if (e.spriteType === 'squirrel') useFullImage(IMAGES.current.squirrel);
+                else if (e.spriteType === 'snail') useFullImage(IMAGES.current.snail);
+                else if (e.spriteType === 'fly') useFullImage(IMAGES.current.fly);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -792,9 +834,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 if (e.spriteType === 'car' || e.spriteType === 'cop') {
                     // Bounce
                     ctx.translate(0, Math.sin(state.animFrame * 0.5) * 2);
-                } else if (e.spriteType === 'granny') {
-                    // Waddle
+                } else if (e.spriteType === 'granny' || e.spriteType === 'snail') {
+                    // Waddle / crawl
                     ctx.rotate(Math.sin(state.animFrame * 0.2) * 0.1);
+                } else if (e.spriteType === 'fly') {
+                    // Buzzing erratic
+                    ctx.translate(Math.sin(state.animFrame * 0.8) * 5, Math.cos(state.animFrame * 0.8) * 5);
+                } else if (e.spriteType === 'squirrel') {
+                    // Hop
+                    ctx.translate(0, Math.abs(Math.sin(state.animFrame * 0.4)) * -10);
                 }
                 // Chimney drawing removed for cat as requested (sitting on background chimney)
 

@@ -28,7 +28,7 @@ export default function Missions() {
             id: 'park',
             name: 'Park',
             description: 'Nature calls. Dogs and picnics everywhere.',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/563efe386_Park.png',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png',
             locked: false,
             difficulty: 'Hard'
         }

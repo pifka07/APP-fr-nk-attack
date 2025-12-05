@@ -1,30 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Target, Trophy, Lock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, Play, Lock, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Missions() {
-    const [missions, setMissions] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchMissions = async () => {
-            try {
-                const data = await base44.entities.Mission.list({ order: 1 }, 50);
-                setMissions(data);
-            } catch (error) {
-                console.error("Error fetching missions", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchMissions();
-    }, []);
+    const levels = [
+        {
+            id: 'downtown',
+            name: 'Downtown',
+            description: 'The busy streets. Perfect for dropping.',
+            image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=800&auto=format&fit=crop',
+            locked: false,
+            difficulty: 'Easy'
+        },
+        {
+            id: 'rooftop',
+            name: 'Rooftop',
+            description: 'High above the city. Watch out for drones!',
+            image: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?q=80&w=800&auto=format&fit=crop',
+            locked: false,
+            difficulty: 'Medium'
+        },
+        {
+            id: 'park',
+            name: 'Park',
+            description: 'Nature calls. Dogs and picnics everywhere.',
+            image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800&auto=format&fit=crop',
+            locked: false,
+            difficulty: 'Hard'
+        }
+    ];
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pb-20">
@@ -38,41 +46,52 @@ export default function Missions() {
                 <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">MISSIONS</h1>
             </div>
 
-            <div className="space-y-4">
-                {loading ? (
-                    <div className="text-center text-slate-500">Loading Missions...</div>
-                ) : (
-                    missions.map((mission, index) => (
-                        <Card key={mission.id} className="bg-slate-800 border-slate-700 relative overflow-hidden">
-                            {/* Decorative index number */}
-                            <div className="absolute -right-4 -top-4 text-6xl font-black text-slate-800/50 select-none">
-                                #{index + 1}
-                            </div>
-                            
-                            <CardHeader className="pb-2 relative z-10">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <CardTitle className="text-teal-300">{mission.title}</CardTitle>
-                                        <CardDescription className="text-slate-400">{mission.description}</CardDescription>
-                                    </div>
-                                    <Badge variant="outline" className="border-yellow-500 text-yellow-500 bg-yellow-500/10">
-                                        {mission.reward_coins} Coins
-                                    </Badge>
+            <div className="space-y-6">
+                {levels.map((level, index) => (
+                    <motion.div
+                        key={level.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                    >
+                        <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
+                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
+                                {/* Background Image */}
+                                <div className="absolute inset-0 z-0">
+                                    <img 
+                                        src={level.image} 
+                                        alt={level.name} 
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
                                 </div>
-                            </CardHeader>
-                            
-                            <CardFooter className="pt-2">
-                                <div className="w-full">
-                                    <div className="flex justify-between text-xs text-slate-500 mb-1">
-                                        <span>Progress</span>
-                                        <span>0 / {mission.goal_value}</span>
+
+                                <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <MapPin className="w-4 h-4 text-teal-400" />
+                                                <span className="text-teal-400 font-bold uppercase text-xs tracking-wider">{level.difficulty}</span>
+                                            </div>
+                                            <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
+                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">{level.description}</p>
+                                        </div>
+                                        
+                                        {level.locked ? (
+                                            <div className="bg-slate-900/80 p-3 rounded-full">
+                                                <Lock className="w-6 h-6 text-slate-500" />
+                                            </div>
+                                        ) : (
+                                            <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                                <Play className="w-6 h-6 text-white fill-current" />
+                                            </div>
+                                        )}
                                     </div>
-                                    <Progress value={0} className="h-2 bg-slate-900" indicatorClassName="bg-teal-500" />
-                                </div>
-                            </CardFooter>
-                        </Card>
-                    ))
-                )}
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </motion.div>
+                ))}
             </div>
         </div>
     );

@@ -196,7 +196,11 @@ export default function Game() {
                             {/* Health Bar with Icon */}
                             <div className="flex items-center gap-2">
                                 <div className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden relative bg-blue-400 flex items-center justify-center">
-                                    <ArrowUp className="w-6 h-6 text-white" />
+                                    <img 
+                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png" 
+                                        alt="Energy" 
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="w-32 h-4 bg-slate-800 rounded-full border-2 border-slate-600 overflow-hidden relative">
                                     <div 

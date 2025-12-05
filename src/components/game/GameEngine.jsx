@@ -57,7 +57,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         drone: new Image(),
         dog: new Image(),
         coin: new Image(),
-        poopProjectile: new Image()
+        poopProjectile: new Image(),
+        energyIcon: new Image()
         });
 
     useEffect(() => {
@@ -91,6 +92,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2ca5b9994_mnze.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4cb39be25_ChatGPTImage4Dez202512_15_08.png";
+        IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -712,16 +714,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(IMAGES.current.coin, -p.width/2, -p.height/2, p.width, p.height);
                 ctx.restore();
             }
-            // Use the new atlas if possible, or fallback colors
+            // Use separate images for specific powerups
+            else if (p.type === 'energy' && assetsLoaded.current) {
+                const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
+                ctx.save();
+                ctx.translate(p.x + p.width/2, p.y + p.height/2);
+                ctx.scale(scale, scale);
+                ctx.drawImage(IMAGES.current.energyIcon, -p.width/2, -p.height/2, p.width, p.height);
+                ctx.restore();
+            }
+            // Use the new atlas for others if possible
             else if (assetsLoaded.current && IMAGES.current.uiAtlas) {
                 // Guessing coordinates from the provided image structure (Middle row)
-                // Lightning, Poop, Coin
                 const atlas = IMAGES.current.uiAtlas;
                 let sx = 0, sy = atlas.height * 0.4, sw = atlas.width * 0.2, sh = atlas.height * 0.2;
 
-                if (p.type === 'energy') { sx = atlas.width * 0.05; } // Lightning
-                else if (p.type === 'ammo') { sx = atlas.width * 0.3; } // Poop
-                else if (p.type === 'coin') { sx = atlas.width * 0.55; } // Coin (fallback to atlas if we wanted, but 'coin' type handled above)
+                if (p.type === 'ammo') { sx = atlas.width * 0.3; } // Poop
 
                 // Pulse effect
                 const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;

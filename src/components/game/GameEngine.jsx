@@ -501,6 +501,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Update Enemies
+        const newEnemies = [];
         state.enemies.forEach(e => {
             e.x += e.vx;
 
@@ -509,7 +510,64 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 e.y += 50; // Drop approx 1cm
                 e.hasDropped = true;
             }
+
+            // Seagull (Chimney) Smoke Logic
+            if (e.spriteType === 'seagull') {
+                if (e.smokeTimer === undefined) e.smokeTimer = Math.random() * 2000;
+                e.smokeTimer += 16; // Approx deltaTime
+                if (e.smokeTimer > 2000) {
+                    if (Math.random() < 0.05) { // Chance per frame once timer ready
+                        newEnemies.push({
+                            x: e.x + 10,
+                            y: e.y - 50,
+                            width: 30,
+                            height: 30,
+                            vx: -state.scrollSpeed - 1,
+                            vy: -2,
+                            spriteType: 'smoke',
+                            isObstacle: true,
+                            isTarget: false, // Smoke is gas, can't be hit?
+                            hp: 1
+                        });
+                        e.smokeTimer = 0;
+                    }
+                }
+            }
+
+            // AC Unit Wind Logic
+            if (e.spriteType === 'ac_unit') {
+                if (e.windTimer === undefined) e.windTimer = Math.random() * 3000;
+                e.windTimer += 16;
+
+                if (e.isBlowing) {
+                    // Blowing for 2 seconds
+                    if (e.windTimer > 2000) {
+                        e.isBlowing = false;
+                        e.windTimer = 0;
+                    }
+                    // Apply Physics
+                    if (state.player.x > e.x - 30 && state.player.x < e.x + e.width + 30 &&
+                        state.player.y < e.y && state.player.y > e.y - 250) {
+                        state.player.vy -= 0.6; // Updraft force
+                    }
+                } else {
+                    // Idle for 3 seconds
+                    if (e.windTimer > 3000) {
+                        e.isBlowing = true;
+                        e.windTimer = 0;
+                    }
+                }
+            }
+
+            // Smoke Behavior
+            if (e.spriteType === 'smoke') {
+                e.y += e.vy;
+                e.width += 0.2;
+                e.height += 0.2;
+                e.vx *= 0.99; // Slow down horizontal drift? No, wind carries it.
+            }
         });
+        state.enemies.push(...newEnemies);
 
         // Update Powerups
         state.powerups.forEach(p => {
@@ -772,19 +830,43 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     const chimneyWidth = 40;
                     const chimneyHeight = 100; // enough to reach bottom
                     ctx.fillStyle = '#8B4513'; // SaddleBrown
-                    // Draw relative to seagull center (which is at 0,0 due to translate)
-                    // Seagull is w=70, h=60. 
-                    // Draw chimney below it.
                     ctx.fillRect(-chimneyWidth/2, e.height/2 - 10, chimneyWidth, chimneyHeight);
-
-                    // Chimney Top detail
                     ctx.fillStyle = '#A0522D';
                     ctx.fillRect(-chimneyWidth/2 - 5, e.height/2 - 10, chimneyWidth + 10, 15);
                 }
-                
-                ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+
+                // Draw Enemy Sprite
+                if (e.spriteType !== 'smoke') {
+                    ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+                } else {
+                    // Draw Smoke
+                    ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, e.width/2, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+                    ctx.beginPath();
+                    ctx.arc(5, -5, e.width/3, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
+                // Draw AC Wind Effects
+                if (e.spriteType === 'ac_unit' && e.isBlowing) {
+                    ctx.strokeStyle = 'rgba(200, 255, 255, 0.4)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    const t = state.animFrame * 0.2;
+                    for(let i=-1; i<=1; i++) {
+                        const xOff = i * 15 + Math.sin(t + i) * 5;
+                        const yOff = (state.animFrame * 2 + i * 20) % 100; // Moving up
+                        ctx.moveTo(xOff, -e.height/2 - yOff);
+                        ctx.lineTo(xOff, -e.height/2 - yOff - 30);
+                    }
+                    ctx.stroke();
+                }
+
                 ctx.restore();
-            } else {
+                } else {
                 ctx.font = '30px serif';
                 ctx.fillText('📦', e.x + e.width/2, e.y + e.height/2);
             }

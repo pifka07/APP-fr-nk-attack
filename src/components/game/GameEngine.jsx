@@ -42,7 +42,7 @@ const SPRITE_MAP = {
     }
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', level = 'downtown', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', level = 'downtown', gameSpeed = 'normal', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true }, ref) => {
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
     const AUDIOS = useRef({
@@ -89,6 +89,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
     }, [musicEnabled]);
+
+    // Music Selection
+    useEffect(() => {
+        let musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3"; // Default/Downtown
+
+        if (level === 'rooftop') {
+            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
+        } else if (level === 'park') {
+            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.mp3";
+        }
+
+        if (AUDIOS.current.bgm.src !== musicUrl) {
+            AUDIOS.current.bgm.src = musicUrl;
+            AUDIOS.current.bgm.load();
+            if (gameStateRef.current.isPlaying && musicEnabled) {
+                AUDIOS.current.bgm.play().catch(e => console.log("BGM Play prevented"));
+            }
+        }
+    }, [level]);
 
     useEffect(() => {
         // Load Images
@@ -188,12 +207,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         });
 
     // Apply config
-    const getEffectiveConfig = () => ({
+    const getEffectiveConfig = () => {
+    let speedMult = 1;
+    if (gameSpeed === 'slow') speedMult = 0.7;
+    if (gameSpeed === 'quick') speedMult = 1.4;
+
+    return {
         maxPoops: config.maxPoops || 3,
-        cooldown: Math.max(100, 500 - (config.cooldownReduction || 0) * 50), // Base 500ms
+        cooldown: Math.max(100, (500 - (config.cooldownReduction || 0) * 50) / speedMult), // Faster cooldown on high speed
         flapStrength: FLAP_STRENGTH * (config.agility || 1),
-        comboDuration: config.comboDuration || 2000
-    });
+        comboDuration: config.comboDuration || 2000,
+        speedMultiplier: speedMult
+    };
+    };
 
     // Expose methods to parent
     useImperativeHandle(ref, () => ({
@@ -211,6 +237,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.player.vy = 0;
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
+
+            // Reset/Set Initial Speed based on selection
+            const config = getEffectiveConfig();
+            gameStateRef.current.scrollSpeed = SCROLL_SPEED_INITIAL * config.speedMultiplier;
 
             AUDIOS.current.bgm.play().catch(e => console.error("BGM failed", e));
             requestRef.current = requestAnimationFrame(gameLoop);
@@ -479,8 +509,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const state = gameStateRef.current;
         if (!state.isPlaying) return;
 
-        // Increase difficulty
-        state.scrollSpeed += 0.0005;
+        const effectiveConfig = getEffectiveConfig();
+
+        // Increase difficulty (scaled by speed multiplier so quick doesn't get impossible too fast)
+        state.scrollSpeed += (0.0005 * effectiveConfig.speedMultiplier);
         state.distance += (state.scrollSpeed / 10);
         state.animFrame++; // Tick animation
 

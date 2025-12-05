@@ -24,6 +24,7 @@ export default function Game() {
     const [skin, setSkin] = useState('default');
     const [musicEnabled, setMusicEnabled] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
+    const [gameSpeed, setGameSpeed] = useState('normal'); // 'slow', 'normal', 'quick'
     
     // Get selected level from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -217,6 +218,7 @@ export default function Game() {
                     config={gameConfig}
                     skin={skin}
                     level={currentLevel}
+                    gameSpeed={gameSpeed}
                     musicEnabled={musicEnabled}
                     soundEnabled={soundEnabled}
                     onGameOver={handleGameOver}

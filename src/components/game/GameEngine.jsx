@@ -69,6 +69,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ac_unit: new Image(),
         seagull: new Image(),
         drone_l2: new Image(),
+        squirrel: new Image(),
+        snail: new Image(),
+        fly: new Image(),
         coin: new Image(),
         poopProjectile: new Image(),
         energyIcon: new Image()

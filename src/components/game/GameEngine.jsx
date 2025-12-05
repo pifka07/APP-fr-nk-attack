@@ -281,7 +281,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             height: 60,
             hp: 1,
             isTarget: true,
-            isObstacle: false,
+            isObstacle: true,
             scoreValue: 10,
             vx: -scrollSpeed,
             spriteType: 'car' // default

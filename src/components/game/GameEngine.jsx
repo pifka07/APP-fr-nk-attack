@@ -145,7 +145,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6fef2bdb0_Frnkkacke-Kopie-Kopie.png";
         IMAGES.current.poopTriple = new Image();
         IMAGES.current.poopTriple.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d851cff29_Frnkkacke-Kopie.png";
-        IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png";
+        IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/55c3a6a9f_FrnkdieTaubeicon9.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -483,8 +483,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         const typeRand = Math.random();
         let type = 'coin';
-        if (typeRand > 0.8) type = 'ammo'; // Poop refill
-        else if (typeRand > 0.9) type = 'energy'; // Speed/Invincibility
+        // Only coin and energy (new graphic)
+        if (typeRand > 0.9) type = 'energy'; 
 
         state.powerups.push({
             x: width + 50,

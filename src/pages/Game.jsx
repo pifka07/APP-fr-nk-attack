@@ -113,6 +113,37 @@ export default function Game() {
                 best_distance: Math.max(user.best_distance || 0, stats.distance)
             });
 
+            // Update Public Leaderboard
+            try {
+                // Find existing entry for this user (using created_by implicit filter or explicit user_id check if possible)
+                // Since we can only update our own records usually, checking specifically for my entry is safer via list filter
+                // However, the easiest way to maintain "one entry per user" without complex backend logic is to check if we have one.
+                // We'll search by user_id (which we'll store)
+                const existingEntries = await base44.entities.LeaderboardEntry.list({ 
+                    user_id: user.id 
+                }, 1);
+
+                if (existingEntries.length > 0) {
+                    const entry = existingEntries[0];
+                    if (stats.score > entry.score) {
+                        await base44.entities.LeaderboardEntry.update(entry.id, {
+                            score: stats.score,
+                            username: user.username || user.email?.split('@')[0] || 'Pilot',
+                            date: new Date().toISOString()
+                        });
+                    }
+                } else {
+                    await base44.entities.LeaderboardEntry.create({
+                        user_id: user.id,
+                        username: user.username || user.email?.split('@')[0] || 'Pilot',
+                        score: stats.score,
+                        date: new Date().toISOString()
+                    });
+                }
+            } catch (lbError) {
+                console.error("Failed to update leaderboard", lbError);
+            }
+
             // Check for Top 10 locally to notify user immediately (optional UX)
             // We'll rely on the Leaderboard page for the full list, but could toast here.
             if (stats.score > (user.best_score || 0)) {

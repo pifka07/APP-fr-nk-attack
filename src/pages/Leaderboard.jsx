@@ -15,13 +15,12 @@ export default function Leaderboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch top 10 users sorted by best_score descending
-                // Using list with sort param '-best_score' and limit 10
-                const [topPlayers, user] = await Promise.all([
-                    base44.entities.User.list('-best_score', 10),
+                // Fetch top 10 leaderboard entries sorted by score descending
+                const [topScores, user] = await Promise.all([
+                    base44.entities.LeaderboardEntry.list('-score', 10),
                     base44.auth.me().catch(() => null)
                 ]);
-                setLeaders(topPlayers);
+                setLeaders(topScores);
                 setCurrentUser(user);
             } catch (error) {
                 console.error("Failed to fetch leaderboard", error);
@@ -81,23 +80,23 @@ export default function Leaderboard() {
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: index * 0.05 }}
-                                                className={`flex items-center justify-between p-4 hover:bg-slate-700/30 transition-colors ${currentUser && player.id === currentUser.id ? 'bg-slate-700/40 border-l-4 border-teal-500' : ''}`}
+                                                className={`flex items-center justify-between p-4 hover:bg-slate-700/30 transition-colors ${currentUser && player.user_id === currentUser.id ? 'bg-slate-700/40 border-l-4 border-teal-500' : ''}`}
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className="flex-shrink-0 w-8 flex justify-center">
                                                         {getRankIcon(index)}
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className={`font-bold ${currentUser && player.id === currentUser.id ? 'text-teal-400' : 'text-white'}`}>
-                                                            {player.username || player.full_name || 'Anonymous Bird'}
+                                                        <span className={`font-bold ${currentUser && player.user_id === currentUser.id ? 'text-teal-400' : 'text-white'}`}>
+                                                            {player.username || 'Anonymous Bird'}
                                                         </span>
-                                                        {currentUser && player.id === currentUser.id && (
+                                                        {currentUser && player.user_id === currentUser.id && (
                                                             <span className="text-[10px] text-teal-500/70 uppercase font-bold">That's You!</span>
                                                         )}
                                                     </div>
                                                 </div>
                                                 <div className="font-mono font-black text-xl text-slate-200">
-                                                    {player.best_score?.toLocaleString() || 0}
+                                                    {player.score?.toLocaleString() || 0}
                                                 </div>
                                             </motion.div>
                                         ))}

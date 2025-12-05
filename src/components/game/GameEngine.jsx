@@ -672,8 +672,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 playSound('explosion');
             }
 
-            // Special Effect for Dog/Cat: Rapid Fire (Triple Shot)
-            if (e.spriteType === 'dog' || e.spriteType === 'cat') {
+            // Special Effect for Dog/Cat/Snail: Rapid Fire (Triple Shot)
+            if (e.spriteType === 'dog' || e.spriteType === 'cat' || e.spriteType === 'snail') {
                 state.rapidFireUntil = performance.now() + 5000;
                 createParticles(e.x + e.width/2, e.y + e.height/2, '#FF00FF', 15); // Special purple particles
             }

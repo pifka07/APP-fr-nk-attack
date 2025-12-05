@@ -12,7 +12,7 @@ export default function Missions() {
             id: 'downtown',
             name: 'Downtown',
             description: 'The busy streets. Perfect for dropping.',
-            image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=800&auto=format&fit=crop',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png',
             locked: false,
             difficulty: 'Easy'
         },
@@ -20,7 +20,7 @@ export default function Missions() {
             id: 'rooftop',
             name: 'Rooftop',
             description: 'High above the city. Watch out for drones!',
-            image: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?q=80&w=800&auto=format&fit=crop',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png',
             locked: false,
             difficulty: 'Medium'
         },

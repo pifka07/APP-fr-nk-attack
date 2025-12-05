@@ -310,17 +310,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             } else {
                 // Air
-                if (Math.random() < 0.5) {
-                    // Seagull
+                // Seagull (Sitting on chimney - stationary relative to ground)
+                if (Math.random() < 0.4) {
                     enemy.spriteType = 'seagull';
                     enemy.isTarget = true;
                     enemy.isObstacle = true;
-                    enemy.y = 50 + Math.random() * (groundY - 250);
                     enemy.width = 70;
                     enemy.height = 60;
-                    enemy.vx = -scrollSpeed * 1.4;
+                    // Position it as if sitting on a chimney (approx 80px high)
+                    enemy.y = groundY - 60 - 80; 
+                    enemy.vx = -scrollSpeed; // Moves with the ground
                 } else {
-                    // Drone L2
+                    // Drone L2 (Flying)
                     enemy.spriteType = 'drone_l2';
                     enemy.isTarget = true;
                     enemy.isObstacle = true;
@@ -766,6 +767,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 } else if (e.spriteType === 'granny') {
                     // Waddle
                     ctx.rotate(Math.sin(state.animFrame * 0.2) * 0.1);
+                } else if (e.spriteType === 'seagull') {
+                    // Draw Chimney under seagull
+                    const chimneyWidth = 40;
+                    const chimneyHeight = 100; // enough to reach bottom
+                    ctx.fillStyle = '#8B4513'; // SaddleBrown
+                    // Draw relative to seagull center (which is at 0,0 due to translate)
+                    // Seagull is w=70, h=60. 
+                    // Draw chimney below it.
+                    ctx.fillRect(-chimneyWidth/2, e.height/2 - 10, chimneyWidth, chimneyHeight);
+
+                    // Chimney Top detail
+                    ctx.fillStyle = '#A0522D';
+                    ctx.fillRect(-chimneyWidth/2 - 5, e.height/2 - 10, chimneyWidth + 10, 15);
                 }
                 
                 ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);

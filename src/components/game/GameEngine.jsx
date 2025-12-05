@@ -297,7 +297,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 50;
                     enemy.height = 50;
-                    enemy.y = groundY - 40;
+                    enemy.y = groundY - 50 - 80; // Sit on chimney
                     enemy.scoreValue = 60;
                 } else {
                     // AC Unit (Obstacle)
@@ -825,8 +825,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 } else if (e.spriteType === 'granny') {
                     // Waddle
                     ctx.rotate(Math.sin(state.animFrame * 0.2) * 0.1);
-                } else if (e.spriteType === 'seagull') {
-                    // Draw Chimney under seagull
+                } else if (e.spriteType === 'seagull' || e.spriteType === 'cat') {
+                    // Draw Chimney under seagull or cat
                     const chimneyWidth = 40;
                     const chimneyHeight = 100; // enough to reach bottom
                     ctx.fillStyle = '#8B4513'; // SaddleBrown

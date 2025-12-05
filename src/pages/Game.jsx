@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { base44 } from '@/api/base44Client';
 import GameEngine from '@/components/game/GameEngine';
-import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap, Music, Music2, Volume2, VolumeX } from "lucide-react";
+import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap, Music, Music2, Volume2, VolumeX, ArrowUp, Coins } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -195,15 +195,8 @@ export default function Game() {
                         <div className="space-y-2">
                             {/* Health Bar with Icon */}
                             <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden relative bg-blue-400">
-                                    {/* Cropped Energy Icon from Atlas */}
-                                    <div style={{
-                                        backgroundImage: `url(${UI_ATLAS})`,
-                                        backgroundPosition: '10% 45%', 
-                                        backgroundSize: '500%',
-                                        width: '100%',
-                                        height: '100%'
-                                    }} />
+                                <div className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden relative bg-blue-400 flex items-center justify-center">
+                                    <ArrowUp className="w-6 h-6 text-white" />
                                 </div>
                                 <div className="w-32 h-4 bg-slate-800 rounded-full border-2 border-slate-600 overflow-hidden relative">
                                     <div 
@@ -216,14 +209,8 @@ export default function Game() {
 
                             {/* Coins Display */}
                             <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 rounded-full border-2 border-yellow-400 shadow-md overflow-hidden relative bg-yellow-100">
-                                    <div style={{
-                                        backgroundImage: `url(${UI_ATLAS})`,
-                                        backgroundPosition: '60% 45%', 
-                                        backgroundSize: '500%',
-                                        width: '100%',
-                                        height: '100%'
-                                    }} />
+                                <div className="w-10 h-10 rounded-full border-2 border-yellow-400 shadow-md overflow-hidden relative bg-yellow-100 flex items-center justify-center">
+                                    <Coins className="w-6 h-6 text-yellow-600" />
                                 </div>
                                 <div className="bg-slate-900/80 px-3 py-1 rounded-xl border border-yellow-500/30">
                                     <div className="text-xl font-black text-yellow-400 tabular-nums">{coins}</div>

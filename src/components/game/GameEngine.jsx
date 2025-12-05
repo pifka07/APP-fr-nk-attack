@@ -101,7 +101,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2661da5d3_Drone.png";
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
         IMAGES.current.worker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
-        IMAGES.current.cat.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/527b8003b_Level1Gegner-Kopie4.png";
+        IMAGES.current.cat.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5b5df510c_Level1Gegner-Kopie4.png";
         IMAGES.current.ac_unit.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a4450d5d4_Level1Gegner.png";
         IMAGES.current.seagull.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
         IMAGES.current.drone_l2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/0c1699d14_Level1Gegner-Kopie3.png";
@@ -295,9 +295,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Cat
                     enemy.spriteType = 'cat';
                     enemy.isTarget = true;
-                    enemy.width = 50;
+                    enemy.width = 60;
                     enemy.height = 50;
-                    enemy.y = groundY - 50 - 80; // Sit on chimney
+                    enemy.y = groundY - 50; // On roof surface
+                    enemy.vx = -scrollSpeed - 1; // Running
                     enemy.scoreValue = 60;
                 } else {
                     // AC Unit (Obstacle)
@@ -310,26 +311,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             } else {
                 // Air
-                // Seagull (Sitting on chimney - stationary relative to ground)
-                if (Math.random() < 0.4) {
-                    enemy.spriteType = 'seagull';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.width = 70;
-                    enemy.height = 60;
-                    // Position it as if sitting on a chimney (approx 80px high)
-                    enemy.y = groundY - 60 - 80; 
-                    enemy.vx = -scrollSpeed; // Moves with the ground
-                } else {
-                    // Drone L2 (Flying)
-                    enemy.spriteType = 'drone_l2';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = Math.random() * (groundY - 150);
-                    enemy.width = 70;
-                    enemy.height = 50;
-                    enemy.vx = -scrollSpeed * 1.3;
-                }
+                // Drone L2 (Flying)
+                enemy.spriteType = 'drone_l2';
+                enemy.isTarget = true;
+                enemy.isObstacle = true;
+                enemy.y = Math.random() * (groundY - 150);
+                enemy.width = 70;
+                enemy.height = 50;
+                enemy.vx = -scrollSpeed * 1.3;
             }
         } else {
             // DOWNTOWN LEVEL ENEMIES (Original)
@@ -511,28 +500,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 e.hasDropped = true;
             }
 
-            // Seagull (Chimney) Smoke Logic
-            if (e.spriteType === 'seagull') {
-                if (e.smokeTimer === undefined) e.smokeTimer = Math.random() * 2000;
-                e.smokeTimer += 16; // Approx deltaTime
-                if (e.smokeTimer > 2000) {
-                    if (Math.random() < 0.05) { // Chance per frame once timer ready
-                        newEnemies.push({
-                            x: e.x + 10,
-                            y: e.y - 50,
-                            width: 30,
-                            height: 30,
-                            vx: -state.scrollSpeed - 1,
-                            vy: -2,
-                            spriteType: 'smoke',
-                            isObstacle: true,
-                            isTarget: false, // Smoke is gas, can't be hit?
-                            hp: 1
-                        });
-                        e.smokeTimer = 0;
-                    }
-                }
-            }
+
 
             // AC Unit Wind Logic
             if (e.spriteType === 'ac_unit') {
@@ -608,8 +576,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 playSound('explosion');
             }
 
-            // Special Effect for Dog: Rapid Fire
-            if (e.spriteType === 'dog') {
+            // Special Effect for Dog/Cat: Rapid Fire (Triple Shot)
+            if (e.spriteType === 'dog' || e.spriteType === 'cat') {
                 state.rapidFireUntil = performance.now() + 5000;
                 createParticles(e.x + e.width/2, e.y + e.height/2, '#FF00FF', 15); // Special purple particles
             }
@@ -825,15 +793,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 } else if (e.spriteType === 'granny') {
                     // Waddle
                     ctx.rotate(Math.sin(state.animFrame * 0.2) * 0.1);
-                } else if (e.spriteType === 'seagull' || e.spriteType === 'cat') {
-                    // Draw Chimney under seagull or cat
-                    const chimneyWidth = 40;
-                    const chimneyHeight = 100; // enough to reach bottom
-                    ctx.fillStyle = '#8B4513'; // SaddleBrown
-                    ctx.fillRect(-chimneyWidth/2, e.height/2 - 10, chimneyWidth, chimneyHeight);
-                    ctx.fillStyle = '#A0522D';
-                    ctx.fillRect(-chimneyWidth/2 - 5, e.height/2 - 10, chimneyWidth + 10, 15);
                 }
+                // Chimney drawing removed for cat as requested (sitting on background chimney)
 
                 // Draw Enemy Sprite
                 if (e.spriteType !== 'smoke') {

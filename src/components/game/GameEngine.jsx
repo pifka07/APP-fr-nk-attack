@@ -47,7 +47,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const assetsLoaded = useRef(false);
     const AUDIOS = useRef({
         bgm: new Audio("https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3"),
-        fart: new Audio("https://www.soundjay.com/human/sounds/fart-01.mp3"),
+        fart: new Audio("https://www.soundjay.com/human/sounds/fart-03.mp3"),
         explosion: new Audio("https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"),
         ouch: new Audio("https://www.myinstants.com/media/sounds/roblox-death-sound_1.mp3")
     });
@@ -161,7 +161,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Configure Audio
         AUDIOS.current.bgm.loop = true;
         AUDIOS.current.bgm.volume = 0.5;
-        AUDIOS.current.fart.volume = 0.8;
+        AUDIOS.current.fart.volume = 0.3;
         AUDIOS.current.explosion.volume = 0.6;
         AUDIOS.current.ouch.volume = 1.0;
 

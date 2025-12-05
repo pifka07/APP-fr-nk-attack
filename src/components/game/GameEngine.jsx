@@ -97,7 +97,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'rooftop') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
         } else if (level === 'park') {
-            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.mp3";
+            musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/soundtrack.mp3"; 
         }
 
         if (AUDIOS.current.bgm.src !== musicUrl) {
@@ -143,6 +143,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.trash_can.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/606803243_Level3Tonne.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6fef2bdb0_Frnkkacke-Kopie-Kopie.png";
+        IMAGES.current.poopTriple = new Image();
+        IMAGES.current.poopTriple.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d851cff29_Frnkkacke-Kopie.png";
         IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png";
 
         let loadedCount = 0;
@@ -286,24 +288,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.lastPoopTime = now;
         
         // Helper to push a poop
+        // Check if Rapid Fire is active
+        const isRapidFire = now < state.rapidFireUntil;
+
         const pushPoop = () => {
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
                 vx: 2,
                 vy: 5,
-                active: true
+                active: true,
+                type: isRapidFire ? 'triple' : 'normal',
+                width: isRapidFire ? 60 : 30,
+                height: isRapidFire ? 60 : 30
             });
         };
 
         pushPoop();
 
-        // Rapid Fire / Burst Logic
-        if (now < state.rapidFireUntil) {
-            // Queue 2 more shots for burst effect
-            state.shotQueue.push(now + 100);
-            state.shotQueue.push(now + 200);
-        }
+        // Rapid Fire Logic - Now uses special graphic instead of queueing multiple shots
+        // (Queue logic removed in favor of "Triple Poop" projectile)
     };
 
     const spawnEnemy = (width, height) => {
@@ -834,11 +838,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.rotate(state.animFrame * 0.2);
 
                     // Draw full image
-                    ctx.drawImage(img, -15, -15, 30, 30);
+                    if (p.type === 'triple' && IMAGES.current.poopTriple) {
+                        ctx.drawImage(IMAGES.current.poopTriple, -p.width/2, -p.height/2, p.width, p.height);
+                    } else {
+                        ctx.drawImage(img, -p.width/2, -p.height/2, p.width, p.height);
+                    }
                     ctx.restore();
-                 } else {
+                    } else {
                     ctx.fillText('💩', p.x, p.y);
-                 }
+                    }
             }
         });
 

@@ -24,6 +24,10 @@ export default function Game() {
     const [skin, setSkin] = useState('default');
     const [musicEnabled, setMusicEnabled] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
+    
+    // Get selected level from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentLevel = urlParams.get('level') || 'downtown';
 
     useEffect(() => {
         const loadConfig = async () => {
@@ -173,6 +177,7 @@ export default function Game() {
                     ref={engineRef}
                     config={gameConfig}
                     skin={skin}
+                    level={currentLevel}
                     musicEnabled={musicEnabled}
                     soundEnabled={soundEnabled}
                     onGameOver={handleGameOver}

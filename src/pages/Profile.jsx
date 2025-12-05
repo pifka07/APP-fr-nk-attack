@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon } from "lucide-react";
+import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X } from "lucide-react";
 
 export default function Profile() {
     const [user, setUser] = useState(null);
     const [runs, setRuns] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editName, setEditName] = useState("");
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -17,6 +20,7 @@ export default function Profile() {
                 const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.list({ sort: { score: -1 }, limit: 10 });
                 setUser(userData);
+                setEditName(userData.username || userData.email?.split('@')[0] || 'Pilot');
                 setRuns(runsData);
             } catch (error) {
                 console.error("Error fetching profile", error);
@@ -26,6 +30,16 @@ export default function Profile() {
         };
         fetchProfile();
     }, []);
+
+    const handleSaveName = async () => {
+        try {
+            await base44.auth.updateMe({ username: editName });
+            setUser({ ...user, username: editName });
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Failed to update name", error);
+        }
+    };
 
     if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-teal-400">Loading...</div>;
 
@@ -49,7 +63,28 @@ export default function Profile() {
                         className="w-full h-full object-cover"
                     />
                 </div>
-                <h2 className="text-xl font-bold text-white">{user?.email?.split('@')[0] || 'Pilot'}</h2>
+                {isEditing ? (
+                    <div className="flex items-center gap-2 mb-1">
+                        <Input 
+                            value={editName} 
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="bg-slate-800 border-slate-700 text-white text-center h-10 w-48"
+                        />
+                        <Button size="icon" variant="ghost" onClick={handleSaveName} className="h-10 w-10 text-green-400 hover:text-green-300 hover:bg-slate-800">
+                            <Check className="w-5 h-5" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={() => { setIsEditing(false); setEditName(user.username || user.email?.split('@')[0] || 'Pilot'); }} className="h-10 w-10 text-red-400 hover:text-red-300 hover:bg-slate-800">
+                            <X className="w-5 h-5" />
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2 mb-1">
+                        <h2 className="text-xl font-bold text-white">{user?.username || user?.email?.split('@')[0] || 'Pilot'}</h2>
+                        <Button size="icon" variant="ghost" onClick={() => setIsEditing(true)} className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800">
+                            <Pencil className="w-4 h-4" />
+                        </Button>
+                    </div>
+                )}
                 <p className="text-slate-400 text-sm">Level 1 Pigeon</p>
             </div>
 

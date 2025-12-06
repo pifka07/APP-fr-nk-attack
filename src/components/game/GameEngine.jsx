@@ -120,7 +120,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/59fa7a8db_FrnkdieTaube2-Kopie.png";
-        IMAGES.current.playerGlide.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png";
+        IMAGES.current.playerGlide.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8c5b63133_image.png";
         IMAGES.current.playerDead.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ae2c71989_FrnkdieTaube4-Kopie.png";
         IMAGES.current.playerGround.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dc76f3fcb_FrnkdieTaube5-Kopie.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
@@ -796,10 +796,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(deadImg, -playerSize/2, -playerSize/2, playerSize, playerSize);
                 ctx.restore();
             } else {
-                // Check if player is on ground
-                const groundY = height * GROUND_Y_PCT;
-                const isOnGround = state.player.y >= groundY - state.player.radius - 1; // Tolerance
-
+                // Always draw flying player
                 const playerSize = 90;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
@@ -815,22 +812,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.filter = 'hue-rotate(120deg) brightness(1.2)';
                 }
 
-                if (isOnGround) {
-                    // Draw Standing Player
-                    const groundImg = IMAGES.current.playerGround;
-                    ctx.drawImage(groundImg, -playerSize/2, -playerSize/2, playerSize, playerSize);
-                } else {
-                    // Draw Flying Player
-                    // Use glide image always for flying as requested
-                    const sheet = IMAGES.current.playerGlide;
+                // Draw Flying Player
+                const sheet = IMAGES.current.playerGlide;
 
-                    // Rotation based on vertical velocity
-                    const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);
-                    ctx.rotate(rotation);
+                // Rotation based on vertical velocity
+                const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);
+                ctx.rotate(rotation);
 
-                    // Use whole image as sprite for now since user provided single image for flying
-                    ctx.drawImage(sheet, -playerSize/2, -playerSize/2, playerSize, playerSize);
-                }
+                ctx.drawImage(sheet, -playerSize/2, -playerSize/2, playerSize, playerSize);
                 ctx.restore();
             }
         } else {

@@ -97,6 +97,19 @@ export default function Game() {
         try {
             const user = await base44.auth.me();
 
+            // Get or create PlayerStats
+            let playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
+            if (playerStats.length === 0) {
+                playerStats = [await base44.entities.PlayerStats.create({
+                    user_id: user.id,
+                    total_coins: 0,
+                    best_score: 0,
+                    best_distance: 0,
+                    total_runs: 0
+                })];
+            }
+            const currentStats = playerStats[0];
+
             // Create Run Record
             await base44.entities.Run.create({
                 score: stats.score,
@@ -105,13 +118,12 @@ export default function Game() {
                 mode: 'endless'
             });
 
-            const newBestScore = Math.max(user.best_score || 0, stats.score);
-
-            // Update User Stats
-            await base44.auth.updateMe({
-                total_coins: (user.total_coins || 0) + stats.coins,
-                best_score: newBestScore,
-                best_distance: Math.max(user.best_distance || 0, stats.distance)
+            // Update PlayerStats
+            await base44.entities.PlayerStats.update(currentStats.id, {
+                total_coins: (currentStats.total_coins || 0) + stats.coins,
+                best_score: Math.max(currentStats.best_score || 0, stats.score),
+                best_distance: Math.max(currentStats.best_distance || 0, stats.distance),
+                total_runs: (currentStats.total_runs || 0) + 1
             });
 
             // Update Public Leaderboard
@@ -147,7 +159,7 @@ export default function Game() {
 
             // Check for Top 10 locally to notify user immediately (optional UX)
             // We'll rely on the Leaderboard page for the full list, but could toast here.
-            if (stats.score > (user.best_score || 0)) {
+            if (stats.score > (currentStats.best_score || 0)) {
                 toast.success("New Personal Best!");
             } else {
                 toast.success("Run saved!");

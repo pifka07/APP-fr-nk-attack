@@ -19,7 +19,20 @@ export default function Profile() {
             try {
                 const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.list({ sort: { score: -1 }, limit: 10 });
-                setUser(userData);
+                
+                // Get or create PlayerStats
+                let statsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
+                if (statsData.length === 0) {
+                    statsData = [await base44.entities.PlayerStats.create({
+                        user_id: userData.id,
+                        total_coins: 0,
+                        best_score: 0,
+                        best_distance: 0,
+                        total_runs: 0
+                    })];
+                }
+                
+                setUser({ ...userData, stats: statsData[0] });
                 setEditName(userData.username || userData.email?.split('@')[0] || 'Pilot');
                 setRuns(runsData);
             } catch (error) {
@@ -102,28 +115,28 @@ export default function Profile() {
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Trophy className="w-8 h-8 text-yellow-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.best_score || 0}</div>
+                        <div className="text-2xl font-bold text-white">{user?.stats?.best_score || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">High Score</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <MapPin className="w-8 h-8 text-teal-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.best_distance || 0}m</div>
+                        <div className="text-2xl font-bold text-white">{user?.stats?.best_distance || 0}m</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Fartherst Flight</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Coins className="w-8 h-8 text-yellow-500 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.total_coins || 0}</div>
+                        <div className="text-2xl font-bold text-white">{user?.stats?.total_coins || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Total Coins</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Hash className="w-8 h-8 text-purple-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{runs.length}</div>
+                        <div className="text-2xl font-bold text-white">{user?.stats?.total_runs || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Total Runs</div>
                     </CardContent>
                 </Card>

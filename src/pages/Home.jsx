@@ -13,8 +13,20 @@ export default function Home() {
         const initUser = async () => {
             try {
                 const currentUser = await base44.auth.me();
-                setUser(currentUser);
-                // Initialize default user stats if they don't exist (handled by entity default, but good to ensure)
+
+                // Get or create PlayerStats
+                let statsData = await base44.entities.PlayerStats.filter({ user_id: currentUser.id });
+                if (statsData.length === 0) {
+                    statsData = [await base44.entities.PlayerStats.create({
+                        user_id: currentUser.id,
+                        total_coins: 0,
+                        best_score: 0,
+                        best_distance: 0,
+                        total_runs: 0
+                    })];
+                }
+
+                setUser({ ...currentUser, stats: statsData[0] });
             } catch (e) {
                 console.error("User not loaded", e);
             }
@@ -89,11 +101,11 @@ export default function Home() {
                 >
                     <div className="flex items-center">
                         <span className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>
-                        {user.total_coins || 0} Coins
+                        {user.stats?.total_coins || 0} Coins
                     </div>
                     <div className="flex items-center">
                         <Trophy className="w-3 h-3 mr-2 text-purple-400" />
-                        Highscore: {user.best_score || 0}
+                        Highscore: {user.stats?.best_score || 0}
                     </div>
                     </motion.div>
                     )}

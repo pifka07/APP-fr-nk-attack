@@ -319,7 +319,7 @@ export default function Game() {
                         onTouchEnd={(e) => e.stopPropagation()}
                     >
                          <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6fef2bdb0_Frnkkacke-Kopie-Kopie.png" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/1ebab497f_FrnkdieTaubeiconkake.png" 
                             className="w-full h-full object-contain"
                             alt="Poop"
                         />

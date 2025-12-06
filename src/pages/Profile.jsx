@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X } from "lucide-react";
+import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt } from "lucide-react";
 
 export default function Profile() {
     const [user, setUser] = useState(null);
@@ -86,6 +86,15 @@ export default function Profile() {
                     </div>
                 )}
                 <p className="text-slate-400 text-sm">Level 1 Pigeon</p>
+            </div>
+
+            {/* Skins Button */}
+            <div className="mb-8 px-8">
+                <Link to={createPageUrl('Skins')}>
+                    <Button className="w-full h-12 font-bold text-lg bg-purple-600 hover:bg-purple-500 text-white shadow-lg border-2 border-purple-400/50 rounded-xl uppercase tracking-wider">
+                        <Shirt className="mr-2 w-5 h-5" /> My Skins
+                    </Button>
+                </Link>
             </div>
 
             {/* Stats Grid */}

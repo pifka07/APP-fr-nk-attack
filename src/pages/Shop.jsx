@@ -27,7 +27,20 @@ export default function Shop() {
                 base44.entities.PlayerUpgrade.list(), // User security rule ensures we only see our own
                 base44.entities.PlayerSkin.list()
             ]);
-            setUser(userData);
+            
+            // Get PlayerStats
+            let statsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
+            if (statsData.length === 0) {
+                statsData = [await base44.entities.PlayerStats.create({
+                    user_id: userData.id,
+                    total_coins: 0,
+                    best_score: 0,
+                    best_distance: 0,
+                    total_runs: 0
+                })];
+            }
+            
+            setUser({ ...userData, stats: statsData[0] });
             setUpgrades(upgradesData);
             setSkins(skinsData);
             setPlayerUpgrades(pUpgradesData);
@@ -49,14 +62,14 @@ export default function Shop() {
 
         const cost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
 
-        if (user.total_coins < cost) {
+        if (user.stats.total_coins < cost) {
             toast.error("Not enough coins!");
             return;
         }
 
         try {
             // Deduct coins
-            await base44.auth.updateMe({ total_coins: user.total_coins - cost });
+            await base44.entities.PlayerStats.update(user.stats.id, { total_coins: user.stats.total_coins - cost });
             
             // Update or Create PlayerUpgrade
             const existingPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
@@ -75,13 +88,13 @@ export default function Shop() {
     };
 
     const handleBuySkin = async (skin) => {
-        if (user.total_coins < skin.cost_coins) {
+        if (user.stats.total_coins < skin.cost_coins) {
             toast.error("Not enough coins!");
             return;
         }
 
         try {
-            await base44.auth.updateMe({ total_coins: user.total_coins - skin.cost_coins });
+            await base44.entities.PlayerStats.update(user.stats.id, { total_coins: user.stats.total_coins - skin.cost_coins });
             await base44.entities.PlayerSkin.create({ skin_id: skin.id, owned: true });
             toast.success(`Unlocked ${skin.name}!`);
             fetchData();
@@ -116,7 +129,7 @@ export default function Shop() {
                 </div>
                 <div className="flex items-center bg-slate-800 px-3 py-1.5 rounded-full border border-yellow-500/30">
                     <div className="w-4 h-4 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                    <span className="font-mono font-bold text-yellow-400">{user?.total_coins || 0}</span>
+                    <span className="font-mono font-bold text-yellow-400">{user?.stats?.total_coins || 0}</span>
                 </div>
             </div>
 
@@ -136,7 +149,7 @@ export default function Shop() {
                         const currentLevel = currentPu?.level || 0;
                         const isMaxed = currentLevel >= upgrade.max_level;
                         const nextCost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
-                        const canAfford = user?.total_coins >= nextCost;
+                        const canAfford = user?.stats?.total_coins >= nextCost;
 
                         return (
                             <Card key={upgrade.id} className="bg-slate-800 border-slate-700">
@@ -180,13 +193,17 @@ export default function Shop() {
                     {skins.map(skin => {
                         const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
                         const isEquipped = user?.equipped_skin === skin.key;
-                        const canAfford = user?.total_coins >= skin.cost_coins;
+                        const canAfford = user?.stats?.total_coins >= skin.cost_coins;
 
                         return (
                             <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
                                 <Card className={`bg-slate-800 border-2 overflow-hidden h-full flex flex-col ${isEquipped ? 'border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'border-slate-700'}`}>
                                     <div className="h-24 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
-                                        <span className="text-4xl z-10">🐦</span>
+                                        <img 
+                                            src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
+                                            alt={skin.name}
+                                            className="w-16 h-16 object-contain z-10"
+                                        />
                                         {isEquipped && <div className="absolute top-2 right-2 bg-purple-600 text-xs px-2 py-1 rounded-full font-bold">EQUIPPED</div>}
                                     </div>
                                     <CardContent className="p-4 flex-grow">

@@ -935,7 +935,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.textAlign = 'center';
                         ctx.shadowColor = 'black';
                         ctx.shadowBlur = 2;
-                        ctx.fillText('Jan', 0, -e.height/2 - jumpOffset);
+                        ctx.fillText('Jan', 0, e.height/2 + 15); // Below the can
                         }
 
                     // Draw Can (Covering the bottom of raccoon?)
@@ -955,6 +955,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             ctx.shadowColor = 'black';
                             ctx.shadowBlur = 2;
                             ctx.fillText('Tim', 0, -e.height/2 - 5);
+                        } else if (e.spriteType === 'worker') {
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 10px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.shadowColor = 'black';
+                            ctx.shadowBlur = 2;
+                            ctx.fillText('Leon', 0, -e.height/2 - 5);
                         }
                         } else {
                     // Draw Smoke

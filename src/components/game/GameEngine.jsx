@@ -928,7 +928,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             rW, 
                             rH
                         );
-                    }
+
+                        // Label "Jan"
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 10px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.shadowColor = 'black';
+                        ctx.shadowBlur = 2;
+                        ctx.fillText('Jan', 0, -e.height/2 - jumpOffset);
+                        }
 
                     // Draw Can (Covering the bottom of raccoon?)
                     // We need the raccoon to appear from *inside*.
@@ -938,8 +946,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
 
                     } else if (e.spriteType !== 'smoke') {
-                    ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
-                    } else {
+                        ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+
+                        if (e.spriteType === 'cop') {
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 10px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.shadowColor = 'black';
+                            ctx.shadowBlur = 2;
+                            ctx.fillText('Tim', 0, -e.height/2 - 5);
+                        }
+                        } else {
                     // Draw Smoke
                     ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';
                     ctx.beginPath();

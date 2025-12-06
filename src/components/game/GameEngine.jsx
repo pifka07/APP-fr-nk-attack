@@ -804,6 +804,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
 
+                // Apply Skin Filters
+                if (skin === 'gold') {
+                    ctx.filter = 'sepia(1) saturate(3) brightness(1.1)';
+                } else if (skin === 'pink') {
+                    ctx.filter = 'hue-rotate(300deg) saturate(1.5)';
+                } else if (skin === 'dark') {
+                     ctx.filter = 'grayscale(1) brightness(0.6) contrast(1.2)';
+                } else if (skin === 'alien') {
+                    ctx.filter = 'hue-rotate(120deg) brightness(1.2)';
+                }
+
                 if (isOnGround) {
                     // Draw Standing Player
                     const groundImg = IMAGES.current.playerGround;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
-import { Play, ShoppingCart, Target, User as UserIcon, Trophy } from "lucide-react";
+import { Play, ShoppingCart, Target, User as UserIcon, Trophy, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {

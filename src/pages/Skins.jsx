@@ -100,7 +100,7 @@ export default function Skins() {
                                                         <img 
                                                             src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
                                                             alt={skin.name}
-                                                            className="w-20 h-20 object-contain"
+                                                            className="w-32 h-32 object-contain"
                                                         />
                                                     </div>
 

@@ -198,11 +198,11 @@ export default function Shop() {
                         return (
                             <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
                                 <Card className={`bg-slate-800 border-2 overflow-hidden h-full flex flex-col ${isEquipped ? 'border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'border-slate-700'}`}>
-                                    <div className="h-24 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
+                                    <div className="h-28 flex items-center justify-center relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
                                         <img 
                                             src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
                                             alt={skin.name}
-                                            className="w-32 h-32 object-contain z-10"
+                                            className="w-24 h-24 object-contain z-10"
                                         />
                                         {isEquipped && <div className="absolute top-2 right-2 bg-purple-600 text-xs px-2 py-1 rounded-full font-bold">EQUIPPED</div>}
                                     </div>

@@ -40,11 +40,17 @@ export default function Shop() {
                 })];
             }
             
+            // Flatten data structure
+            const flattenedUpgrades = upgradesData.map(u => ({ id: u.id, ...u.data }));
+            const flattenedSkins = skinsData.map(s => ({ id: s.id, ...s.data }));
+            const flattenedPUpgrades = pUpgradesData.map(pu => ({ id: pu.id, ...pu.data }));
+            const flattenedPSkins = pSkinsData.map(ps => ({ id: ps.id, ...ps.data }));
+            
             setUser({ ...userData, stats: statsData[0] });
-            setUpgrades(upgradesData);
-            setSkins(skinsData);
-            setPlayerUpgrades(pUpgradesData);
-            setPlayerSkins(pSkinsData);
+            setUpgrades(flattenedUpgrades);
+            setSkins(flattenedSkins);
+            setPlayerUpgrades(flattenedPUpgrades);
+            setPlayerSkins(flattenedPSkins);
         } catch (error) {
             console.error("Error fetching shop data", error);
         } finally {

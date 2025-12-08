@@ -22,8 +22,12 @@ export default function Skins() {
                     base44.entities.PlayerSkin.list(),
                     base44.auth.me()
                 ]);
-                setSkins(allSkins);
-                setPlayerSkins(mySkins);
+                // Flatten data structure
+                const flattenedSkins = allSkins.map(s => ({ id: s.id, ...s.data }));
+                const flattenedPlayerSkins = mySkins.map(ps => ({ id: ps.id, ...ps.data }));
+                
+                setSkins(flattenedSkins);
+                setPlayerSkins(flattenedPlayerSkins);
                 setUser(currentUser);
             } catch (error) {
                 console.error("Failed to fetch skins", error);

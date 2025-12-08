@@ -39,6 +39,8 @@ export default function Shop() {
                     total_runs: 0
                 })];
             }
+            // Flatten PlayerStats
+            const flattenedStats = statsData[0].data ? { id: statsData[0].id, ...statsData[0].data } : statsData[0];
             
             // Flatten data structure
             const flattenedUpgrades = upgradesData.map(u => ({ id: u.id, ...u.data }));
@@ -46,7 +48,7 @@ export default function Shop() {
             const flattenedPUpgrades = pUpgradesData.map(pu => ({ id: pu.id, ...pu.data }));
             const flattenedPSkins = pSkinsData.map(ps => ({ id: ps.id, ...ps.data }));
             
-            setUser({ ...userData, stats: statsData[0] });
+            setUser({ ...userData, stats: flattenedStats });
             setUpgrades(flattenedUpgrades);
             setSkins(flattenedSkins);
             setPlayerUpgrades(flattenedPUpgrades);

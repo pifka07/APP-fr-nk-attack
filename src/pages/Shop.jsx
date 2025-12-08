@@ -39,20 +39,12 @@ export default function Shop() {
                     total_runs: 0
                 })];
             }
-            // Flatten PlayerStats
-            const flattenedStats = statsData[0].data ? { id: statsData[0].id, ...statsData[0].data } : statsData[0];
             
-            // Flatten data structure
-            const flattenedUpgrades = upgradesData.map(u => ({ id: u.id, ...u.data }));
-            const flattenedSkins = skinsData.map(s => ({ id: s.id, ...s.data }));
-            const flattenedPUpgrades = pUpgradesData.map(pu => ({ id: pu.id, ...pu.data }));
-            const flattenedPSkins = pSkinsData.map(ps => ({ id: ps.id, ...ps.data }));
-            
-            setUser({ ...userData, stats: flattenedStats });
-            setUpgrades(flattenedUpgrades);
-            setSkins(flattenedSkins);
-            setPlayerUpgrades(flattenedPUpgrades);
-            setPlayerSkins(flattenedPSkins);
+            setUser({ ...userData, stats: statsData[0] });
+            setUpgrades(upgradesData);
+            setSkins(skinsData);
+            setPlayerUpgrades(pUpgradesData);
+            setPlayerSkins(pSkinsData);
         } catch (error) {
             console.error("Error fetching shop data", error);
         } finally {
@@ -206,7 +198,7 @@ export default function Shop() {
                         return (
                             <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
                                 <Card className={`bg-slate-800 border-2 overflow-hidden h-full flex flex-col ${isEquipped ? 'border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'border-slate-700'}`}>
-                                    <div className="h-28 flex items-center justify-center relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
+                                    <div className="h-24 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
                                         <img 
                                             src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
                                             alt={skin.name}

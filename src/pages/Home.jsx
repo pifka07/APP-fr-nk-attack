@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
-import { Play, ShoppingCart, Target, User as UserIcon, Trophy, MapPin } from "lucide-react";
+import { Play, ShoppingCart, Target, User as UserIcon, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -105,11 +105,7 @@ export default function Home() {
                     </div>
                     <div className="flex items-center">
                         <Trophy className="w-3 h-3 mr-2 text-purple-400" />
-                        {user.stats?.best_score || 0} Punkte
-                    </div>
-                    <div className="flex items-center">
-                        <MapPin className="w-3 h-3 mr-2 text-teal-400" />
-                        {user.stats?.best_distance || 0}m
+                        Highscore: {user.stats?.best_score || 0}
                     </div>
                     </motion.div>
                     )}

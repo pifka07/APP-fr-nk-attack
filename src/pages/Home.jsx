@@ -105,7 +105,11 @@ export default function Home() {
                     </div>
                     <div className="flex items-center">
                         <Trophy className="w-3 h-3 mr-2 text-purple-400" />
-                        Highscore: {user.stats?.best_score || 0}
+                        {user.stats?.best_score || 0} Punkte
+                    </div>
+                    <div className="flex items-center">
+                        <MapPin className="w-3 h-3 mr-2 text-teal-400" />
+                        {user.stats?.best_distance || 0}m
                     </div>
                     </motion.div>
                     )}

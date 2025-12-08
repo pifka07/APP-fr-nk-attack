@@ -202,7 +202,7 @@ export default function Shop() {
                                         <img 
                                             src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
                                             alt={skin.name}
-                                            className="w-16 h-16 object-contain z-10"
+                                            className="w-24 h-24 object-contain z-10"
                                         />
                                         {isEquipped && <div className="absolute top-2 right-2 bg-purple-600 text-xs px-2 py-1 rounded-full font-bold">EQUIPPED</div>}
                                     </div>

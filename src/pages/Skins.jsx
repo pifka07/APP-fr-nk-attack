@@ -87,19 +87,22 @@ export default function Skins() {
                                         <CardContent className="p-4 flex flex-col items-center flex-grow">
                                             {/* Preview Circle */}
                                             <div 
-                                                className="w-24 h-24 rounded-full mb-4 shadow-lg flex items-center justify-center relative"
-                                                style={{ 
-                                                    background: `linear-gradient(135deg, ${skin.color_primary || '#ccc'}, ${skin.color_secondary || '#666'})` 
-                                                }}
-                                            >
-                                                {!owned && (
-                                                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
-                                                        <Lock className="w-8 h-8 text-white/70" />
+                                                        className="w-24 h-24 rounded-full mb-4 shadow-lg flex items-center justify-center relative"
+                                                        style={{ 
+                                                            background: `linear-gradient(135deg, ${skin.color_primary || '#ccc'}, ${skin.color_secondary || '#666'})` 
+                                                        }}
+                                                    >
+                                                        {!owned && (
+                                                            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
+                                                                <Lock className="w-8 h-8 text-white/70" />
+                                                            </div>
+                                                        )}
+                                                        <img 
+                                                            src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
+                                                            alt={skin.name}
+                                                            className="w-20 h-20 object-contain"
+                                                        />
                                                     </div>
-                                                )}
-                                                {/* Simple Bird Representation */}
-                                                <div className="text-4xl">🐦</div>
-                                            </div>
 
                                             <h3 className="font-bold text-lg text-white mb-1 text-center">{skin.name}</h3>
                                             <p className="text-xs text-slate-400 text-center mb-4 line-clamp-2">{skin.description}</p>

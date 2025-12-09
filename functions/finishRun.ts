@@ -1,133 +1,114 @@
-export default async function finishRun({ run_session_id, score, coinsCollected, durationMs, missionId, difficulty }, { user, base44 }) {
-    // Check if user is logged in
+export default async function finishRun(
+    { run_session_id, score, coinsCollected, durationMs, missionId, difficulty },
+    { user, base44 }
+) {
+    // 1. User prüfen
     if (!user || !user.id) {
-        return {
-            success: false,
-            reason: "NOT_LOGGED_IN"
-        };
+        return { success: false, reason: "NOT_LOGGED_IN" };
     }
 
-    // Anti-cheat: Validate session exists and matches user
-    const pendingRuns = await base44.asServiceRole.entities.PendingRun.filter({
-        user_id: user.id
-    });
-    
-    const session = pendingRuns.find(pr => 
-        run_session_id && run_session_id.startsWith(`${pr.user_id}_`)
-    );
+    try {
+        // 2. PendingRun laden
+        const pendingRuns = await base44.asServiceRole.entities.PendingRun.filter({
+            id: run_session_id
+        });
 
-    if (!session) {
-        return {
-            success: false,
-            reason: "CHEAT_INVALID_SESSION"
-        };
-    }
+        const pending = pendingRuns.length > 0 ? pendingRuns[0] : null;
 
-    // Check if already used
-    if (session.used) {
-        return {
-            success: false,
-            reason: "CHEAT_REPLAY"
-        };
-    }
-
-    // Check expiration
-    if (new Date() > new Date(session.expires_at)) {
-        return {
-            success: false,
-            reason: "CHEAT_EXPIRED"
-        };
-    }
-
-    // Check mission/difficulty match
-    if (session.mission_id !== missionId || session.difficulty !== difficulty) {
-        return {
-            success: false,
-            reason: "CHEAT_INVALID_SESSION"
-        };
-    }
-
-    // Time validation (speedhack check)
-    const serverDuration = new Date() - new Date(session.started_at);
-    const timeDiff = Math.abs(serverDuration - durationMs);
-    
-    if (timeDiff > 10000) { // Allow 10 seconds tolerance
-        return {
-            success: false,
-            reason: "CHEAT_SPEEDHACK"
-        };
-    }
-
-    // Score validation (max reasonable score)
-    const maxScore = 100000;
-    const maxCoins = 10000;
-    const maxScorePerSecond = 200;
-
-    if (score > maxScore || coinsCollected > maxCoins) {
-        return {
-            success: false,
-            reason: "CHEAT_DETECTED"
-        };
-    }
-
-    if (durationMs > 0) {
-        const scorePerSecond = (score / durationMs) * 1000;
-        if (scorePerSecond > maxScorePerSecond) {
-            return {
-                success: false,
-                reason: "CHEAT_DETECTED"
-            };
+        if (!pending || pending.user_id !== user.id) {
+            return { success: false, reason: "CHEAT_INVALID_SESSION" };
         }
-    }
 
-    // Mark session as used
-    await base44.asServiceRole.entities.PendingRun.update(session.id, {
-        used: true
-    });
+        if (pending.used) {
+            return { success: false, reason: "CHEAT_REPLAY" };
+        }
 
-    // Save run
-    await base44.asServiceRole.entities.Run.create({
-        user_id: user.id,
-        score: score,
-        distance: 0,
-        coins_earned: coinsCollected,
-        combos_max: 0,
-        duration_ms: durationMs,
-        mission_id: missionId,
-        difficulty: difficulty,
-        mode: missionId ? 'mission' : 'endless'
-    });
+        if (new Date() > new Date(pending.expires_at)) {
+            return { success: false, reason: "CHEAT_EXPIRED" };
+        }
 
-    // Update PlayerStats
-    const stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
-    let playerStats;
-    
-    if (stats.length === 0) {
-        playerStats = await base44.asServiceRole.entities.PlayerStats.create({
+        // 3. Dauer checken (leichter Speedhack-Schutz)
+        const serverDuration = Date.now() - new Date(pending.started_at).getTime();
+        if (Math.abs(serverDuration - durationMs) > 3000) {
+            return { success: false, reason: "CHEAT_SPEEDHACK" };
+        }
+
+        // 4. Mission / Difficulty abgleichen
+        if (missionId !== pending.mission_id || difficulty !== pending.difficulty) {
+            return { success: false, reason: "CHEAT_WRONG_MISSION" };
+        }
+
+        // 5. Plausi-Checks (einfache Limits)
+        if (score < 0 || score > 500000) {
+            return { success: false, reason: "CHEAT_SCORE" };
+        }
+        if (coinsCollected < 0 || coinsCollected > 2000) {
+            return { success: false, reason: "CHEAT_COINS" };
+        }
+
+        if (durationMs > 0) {
+            const sps = score / (durationMs / 1000);
+            if (sps > 300) {
+                return { success: false, reason: "CHEAT_SPS" };
+            }
+        }
+
+        // 6. PendingRun als benutzt markieren
+        await base44.asServiceRole.entities.PendingRun.update(pending.id, {
+            used: true
+        });
+
+        // 7. Run speichern
+        await base44.asServiceRole.entities.Run.create({
             user_id: user.id,
-            total_coins: coinsCollected,
-            total_score: score,
-            best_score: score,
-            best_distance: 0,
-            total_runs: 1
-        });
-    } else {
-        playerStats = stats[0];
-        const isHighscore = score > (playerStats.best_score || 0);
-        
-        await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-            total_coins: (playerStats.total_coins || 0) + coinsCollected,
-            total_score: (playerStats.total_score || 0) + score,
-            best_score: isHighscore ? score : playerStats.best_score,
-            total_runs: (playerStats.total_runs || 0) + 1
+            score: score,
+            distance: 0,
+            coins_earned: coinsCollected,
+            combos_max: 0,
+            duration_ms: durationMs,
+            mission_id: missionId || null,
+            difficulty: difficulty || 'normal',
+            mode: missionId ? "mission" : "endless"
         });
 
-        // Update leaderboard if highscore
+        // 8. PlayerStats holen & updaten
+        let statsRecords = await base44.asServiceRole.entities.PlayerStats.filter({
+            user_id: user.id
+        });
+
+        let stats = statsRecords.length > 0 ? statsRecords[0] : null;
+
+        if (!stats) {
+            stats = await base44.asServiceRole.entities.PlayerStats.create({
+                user_id: user.id,
+                total_score: 0,
+                total_coins: 0,
+                total_runs: 0,
+                best_score: 0,
+                best_distance: 0
+            });
+        }
+
+        const newTotalScore = (stats.total_score || 0) + score;
+        const newCoins = (stats.total_coins || 0) + coinsCollected;
+        const newRuns = (stats.total_runs || 0) + 1;
+        const isHighscore = score > (stats.best_score || 0);
+
+        await base44.asServiceRole.entities.PlayerStats.update(stats.id, {
+            total_score: newTotalScore,
+            total_coins: newCoins,
+            total_runs: newRuns,
+            best_score: isHighscore ? score : stats.best_score
+        });
+
+        // 9. Leaderboard aktualisieren, falls Highscore
         if (isHighscore) {
-            const existingEntry = await base44.asServiceRole.entities.LeaderboardEntry.filter({ user_id: user.id });
-            
-            if (existingEntry.length > 0) {
-                await base44.asServiceRole.entities.LeaderboardEntry.update(existingEntry[0].id, {
+            const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({
+                user_id: user.id
+            });
+
+            if (existingEntries.length > 0) {
+                await base44.asServiceRole.entities.LeaderboardEntry.update(existingEntries[0].id, {
                     score: score,
                     date: new Date().toISOString()
                 });
@@ -141,19 +122,23 @@ export default async function finishRun({ run_session_id, score, coinsCollected,
             }
         }
 
+        // 10. Antwort an Client
         return {
             success: true,
-            isHighscore: isHighscore,
             stats: {
-                total_coins: (playerStats.total_coins || 0) + coinsCollected,
-                best_score: isHighscore ? score : playerStats.best_score
-            }
+                total_score: newTotalScore,
+                total_coins: newCoins,
+                total_runs: newRuns,
+                best_score: isHighscore ? score : stats.best_score
+            },
+            isHighscore: isHighscore
+        };
+    } catch (error) {
+        console.error("Error in finishRun:", error);
+        return {
+            success: false,
+            reason: "SERVER_ERROR",
+            error: error.message
         };
     }
-
-    return {
-        success: true,
-        isHighscore: true,
-        stats: playerStats
-    };
 }

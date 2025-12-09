@@ -33,30 +33,8 @@ export default function StartScreen() {
   if (loadingUser)
     return <div style={{ color: "white" }}>Loading...</div>;
 
-  // ========================
-  //  PLAY BUTTON (richtiger Login-Check)
-  // ========================
-  const handlePlay = async () => {
-    try {
-      const missionId = null; // Mission wird später im Missions-Screen gewählt.
-      const difficulty = null;
-
-      const res = await base44.functions.startRun({
-        missionId,
-        difficulty
-      });
-
-      // Nicht eingeloggt → Login Popup
-      if (!res.success && res.reason === "NOT_LOGGED_IN") {
-        setShowLoginModal(true);
-        return;
-      }
-
-      // StartRun erfolgreich → Mission-Auswahl öffnen
-      navigate(createPageUrl("Missions"));
-    } catch (err) {
-      console.error("startRun failed:", err);
-    }
+  const handlePlay = () => {
+    navigate(createPageUrl("Missions"));
   };
 
   return (

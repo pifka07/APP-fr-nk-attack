@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { base44 } from "@base44/sdk";
-import { createPageUrl, navigate } from "@base44/router";
+import { useNavigate } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
+import LoginModal from "../components/auth/LoginModal";
 
 export default function StartScreen() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // ========================
   //  USER LADEN
@@ -34,14 +38,14 @@ export default function StartScreen() {
       const missionId = null; // Mission wird später im Missions-Screen gewählt.
       const difficulty = null;
 
-      const res = await base44.actions.startRun({
+      const res = await base44.functions.startRun({
         missionId,
         difficulty
       });
 
       // Nicht eingeloggt → Login Popup
       if (!res.success && res.reason === "NOT_LOGGED_IN") {
-        navigate(createPageUrl("Login"));
+        setShowLoginModal(true);
         return;
       }
 
@@ -74,7 +78,7 @@ export default function StartScreen() {
       {/* HIGHSCORE */}
       <button
         style={styles.button}
-        onClick={() => navigate(createPageUrl("Highscore"))}
+        onClick={() => navigate(createPageUrl("Leaderboard"))}
       >
         🏆 HIGHSCORE
       </button>
@@ -83,7 +87,7 @@ export default function StartScreen() {
       {user && (
         <button
           style={styles.button}
-          onClick={() => navigate(createPageUrl("ProfileStats"))}
+          onClick={() => navigate(createPageUrl("Profile"))}
         >
           👤 PROFILE & STATS
         </button>
@@ -93,7 +97,7 @@ export default function StartScreen() {
       {!user && (
         <button
           style={styles.loginButton}
-          onClick={() => navigate(createPageUrl("Login"))}
+          onClick={() => setShowLoginModal(true)}
         >
           🔒 LOGIN
         </button>
@@ -103,6 +107,8 @@ export default function StartScreen() {
       <a href="/privacy" style={styles.privacy}>
         Datenschutz & Erklärung
       </a>
+
+      <LoginModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 }

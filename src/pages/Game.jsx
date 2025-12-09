@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -8,11 +8,13 @@ import GameEngine from '@/components/game/GameEngine';
 import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap, Music, Music2, Volume2, VolumeX, ArrowUp, Coins } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import LoginModal from "../components/auth/LoginModal";
 
 const UI_ATLAS = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
 
 export default function Game() {
     const engineRef = useRef(null);
+    const navigate = useNavigate();
     const [gameState, setGameState] = useState('start'); 
     const [score, setScore] = useState(0);
     const [coins, setCoins] = useState(0);
@@ -27,6 +29,7 @@ export default function Game() {
     const [gameSpeed, setGameSpeed] = useState('normal'); // 'slow', 'normal', 'quick'
     const [runSessionId, setRunSessionId] = useState(null);
     const [runStartTime, setRunStartTime] = useState(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     
     // Get selected level from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -78,6 +81,12 @@ export default function Game() {
                 missionId: null,
                 difficulty: gameSpeed
             });
+
+            // Check if user is not logged in
+            if (!response.success && response.reason === "NOT_LOGGED_IN") {
+                setShowLoginModal(true);
+                return;
+            }
 
             if (!response.success) {
                 toast.error("Failed to start run");
@@ -479,6 +488,11 @@ export default function Game() {
                     </motion.div>
                 </div>
             )}
+
+            <LoginModal open={showLoginModal} onClose={() => {
+                setShowLoginModal(false);
+                navigate(createPageUrl('Home'));
+            }} />
         </div>
     );
 }

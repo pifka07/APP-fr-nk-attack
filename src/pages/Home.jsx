@@ -39,11 +39,7 @@ export default function Home() {
                 }, []);
 
                 const handlePlayClick = () => {
-                if (!user) {
-                setShowLoginModal(true);
-                } else {
-                navigate(createPageUrl('Missions'));
-                }
+                    navigate(createPageUrl('Missions'));
                 };
 
     return (

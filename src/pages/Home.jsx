@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
 import { Play, ShoppingCart, Target, User as UserIcon, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import LoginModal from "../components/auth/LoginModal";
 
 export default function Home() {
@@ -38,8 +39,31 @@ export default function Home() {
                 initUser();
                 }, []);
 
-                const handlePlayClick = () => {
-                    navigate(createPageUrl('Missions'));
+                const handlePlayClick = async () => {
+                    try {
+                        // Rufe startRun auf, um Session zu erstellen
+                        const response = await base44.functions.startRun({
+                            missionId: null,
+                            difficulty: 'normal'
+                        });
+
+                        // Check if user is not logged in
+                        if (!response.success && response.reason === "NOT_LOGGED_IN") {
+                            setShowLoginModal(true);
+                            return;
+                        }
+
+                        if (!response.success) {
+                            toast.error("Failed to start game");
+                            return;
+                        }
+
+                        // Wenn erfolgreich, zur Missions-Seite navigieren
+                        navigate(createPageUrl('Missions'));
+                    } catch (error) {
+                        console.error("Failed to start game", error);
+                        toast.error("Failed to start game");
+                    }
                 };
 
     return (
@@ -92,13 +116,22 @@ export default function Home() {
                             <Trophy className="mr-2 w-5 h-5" /> Highscore
                         </Button>
                     </Link>
-                </div>
+                    </div>
 
-                <Link to={createPageUrl('Profile')}>
-                    <Button className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                        <UserIcon className="mr-2 w-5 h-5" /> Profile & Stats
+                    {user ? (
+                    <Link to={createPageUrl('Profile')}>
+                        <Button className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+                            <UserIcon className="mr-2 w-5 h-5" /> Profile & Stats
+                        </Button>
+                    </Link>
+                    ) : (
+                    <Button 
+                        onClick={() => setShowLoginModal(true)}
+                        className="w-full h-12 font-titan text-lg bg-teal-600 hover:bg-teal-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
+                    >
+                        <UserIcon className="mr-2 w-5 h-5" /> Login
                     </Button>
-                </Link>
+                    )}
             </div>
 
             {/* Footer Stats */}

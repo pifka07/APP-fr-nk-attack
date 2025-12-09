@@ -1,170 +1,159 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { Button } from "@/components/ui/button";
-import { base44 } from '@/api/base44Client';
-import { Play, ShoppingCart, Target, User as UserIcon, Trophy } from "lucide-react";
-import { motion } from "framer-motion";
-import { toast } from "sonner";
-import LoginModal from "../components/auth/LoginModal";
+import React, { useEffect, useState } from "react";
+import { base44 } from "@base44/sdk";
+import { createPageUrl, navigate } from "@base44/router";
 
-export default function Home() {
-    const [user, setUser] = useState(null);
-    const [showLoginModal, setShowLoginModal] = useState(false);
-    const navigate = useNavigate();
+export default function StartScreen() {
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
 
-    useEffect(() => {
-        const initUser = async () => {
-            try {
-                const currentUser = await base44.auth.me();
+  // ========================
+  //  USER LADEN
+  // ========================
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (e) {
+        setUser(null);
+      }
+      setLoadingUser(false);
+    };
 
-                // Get or create PlayerStats
-                let statsData = await base44.entities.PlayerStats.filter({ user_id: currentUser.id });
-                if (statsData.length === 0) {
-                    statsData = [await base44.entities.PlayerStats.create({
-                        user_id: currentUser.id,
-                        total_coins: 0,
-                        best_score: 0,
-                        best_distance: 0,
-                        total_runs: 0
-                    })];
-                }
+    loadUser();
+  }, []);
 
-                setUser({ ...currentUser, stats: statsData[0] });
-                } catch (e) {
-                console.error("User not loaded", e);
-                setUser(null);
-                }
-                };
-                initUser();
-                }, []);
+  if (loadingUser)
+    return <div style={{ color: "white" }}>Loading...</div>;
 
-                const handlePlayClick = async () => {
-                    try {
-                        // Rufe startRun auf, um Session zu erstellen
-                        const response = await base44.functions.startRun({
-                            missionId: null,
-                            difficulty: 'normal'
-                        });
+  // ========================
+  //  PLAY BUTTON (richtiger Login-Check)
+  // ========================
+  const handlePlay = async () => {
+    try {
+      const missionId = null; // Mission wird später im Missions-Screen gewählt.
+      const difficulty = null;
 
-                        // Check if user is not logged in
-                        if (!response.success && response.reason === "NOT_LOGGED_IN") {
-                            setShowLoginModal(true);
-                            return;
-                        }
+      const res = await base44.actions.startRun({
+        missionId,
+        difficulty
+      });
 
-                        if (!response.success) {
-                            toast.error("Failed to start game");
-                            return;
-                        }
+      // Nicht eingeloggt → Login Popup
+      if (!res.success && res.reason === "NOT_LOGGED_IN") {
+        navigate(createPageUrl("Login"));
+        return;
+      }
 
-                        // Wenn erfolgreich, zur Missions-Seite navigieren
-                        navigate(createPageUrl('Missions'));
-                    } catch (error) {
-                        console.error("Failed to start game", error);
-                        toast.error("Failed to start game");
-                    }
-                };
+      // StartRun erfolgreich → Mission-Auswahl öffnen
+      navigate(createPageUrl("Missions"));
+    } catch (err) {
+      console.error("startRun failed:", err);
+    }
+  };
 
-    return (
-        <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 relative overflow-hidden">
-            {/* Background Image */}
-            <div className="absolute inset-0 z-0">
-                <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b3b7d6b41_ChatGPTImage3Dez202518_19_15.png" 
-                    alt="Background" 
-                    className="w-full h-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
-            </div>
+  return (
+    <div style={styles.container}>
 
-            {/* Title Section */}
-            <div className="text-center mb-8 z-10 relative">
-                <motion.div
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="mb-4 flex flex-col items-center"
-                >
-                    <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/81c474281_FrnkdieTaube3-Kopie.png" 
-                        alt="Fränk Character" 
-                        className="w-40 h-40 object-contain mb-2 drop-shadow-2xl filter brightness-110"
-                    />
-                    <h1 className="text-6xl font-black text-white drop-shadow-[0_4px_0_#000] tracking-wider" style={{ fontFamily: 'Impact, sans-serif' }}>
-                        FRÄNK
-                    </h1>
-                </motion.div>
-            </div>
+      {/* GAME TITLE */}
+      <h1 style={styles.title}>FRÄNK</h1>
 
-            {/* Menu Buttons */}
-            <div className="w-full max-w-xs space-y-4 z-10">
-                <Button 
-                    onClick={handlePlayClick}
-                    className="w-full h-16 text-2xl font-titan bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
-                >
-                    <Play className="mr-2 w-6 h-6" /> PLAY
-                </Button>
+      {/* PLAY BUTTON */}
+      <button style={styles.playButton} onClick={handlePlay}>
+        ▶ PLAY
+      </button>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <Link to={createPageUrl('Shop')}>
-                        <Button className="w-full h-14 font-titan text-lg bg-purple-600 hover:bg-purple-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                            <ShoppingCart className="mr-2 w-5 h-5" /> Shop
-                        </Button>
-                    </Link>
-                    <Link to={createPageUrl('Leaderboard')}>
-                        <Button className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                            <Trophy className="mr-2 w-5 h-5" /> Highscore
-                        </Button>
-                    </Link>
-                    </div>
+      {/* SHOP */}
+      <button
+        style={styles.button}
+        onClick={() => navigate(createPageUrl("Shop"))}
+      >
+        🛒 SHOP
+      </button>
 
-                    {user ? (
-                    <Link to={createPageUrl('Profile')}>
-                        <Button className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                            <UserIcon className="mr-2 w-5 h-5" /> Profile & Stats
-                        </Button>
-                    </Link>
-                    ) : (
-                    <Button 
-                        onClick={() => setShowLoginModal(true)}
-                        className="w-full h-12 font-titan text-lg bg-teal-600 hover:bg-teal-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
-                    >
-                        <UserIcon className="mr-2 w-5 h-5" /> Login
-                    </Button>
-                    )}
-            </div>
+      {/* HIGHSCORE */}
+      <button
+        style={styles.button}
+        onClick={() => navigate(createPageUrl("Highscore"))}
+      >
+        🏆 HIGHSCORE
+      </button>
 
-            {/* Footer Stats */}
-            {user && (
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="absolute bottom-6 flex gap-6 text-sm font-medium text-slate-400"
-                >
-                    <div className="flex items-center">
-                        <span className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>
-                        {user.stats?.total_coins || 0} Coins
-                    </div>
-                    <div className="flex items-center">
-                        <Trophy className="w-3 h-3 mr-2 text-purple-400" />
-                        Highscore: {user.stats?.best_score || 0}
-                    </div>
-                    </motion.div>
-                    )}
+      {/* PROFILE & STATS → nur sichtbar wenn eingeloggt */}
+      {user && (
+        <button
+          style={styles.button}
+          onClick={() => navigate(createPageUrl("ProfileStats"))}
+        >
+          👤 PROFILE & STATS
+        </button>
+      )}
 
-                    <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-1">
-                        <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">
-                            by pifka07
-                        </a>
-                    </div>
+      {/* LOGIN BUTTON → wenn NICHT eingeloggt */}
+      {!user && (
+        <button
+          style={styles.loginButton}
+          onClick={() => navigate(createPageUrl("Login"))}
+        >
+          🔒 LOGIN
+        </button>
+      )}
 
-                    <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center">
-                        <Link to={createPageUrl('PrivacyPolicy')} className="text-[10px] text-slate-600 hover:text-slate-400 transition-colors uppercase tracking-widest font-bold">
-                            Datenschutzerklärung
-                        </Link>
-                    </div>
+      {/* Datenschutz */}
+      <a href="/privacy" style={styles.privacy}>
+        Datenschutz & Erklärung
+      </a>
+    </div>
+  );
+}
 
-                    <LoginModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
-                    </div>
-                    );
-                    }
+// ========================
+// STYLES
+// ========================
+const styles = {
+  container: {
+    textAlign: "center",
+    paddingTop: "40px",
+    color: "white",
+  },
+  title: {
+    fontSize: "48px",
+    marginBottom: "40px",
+  },
+  playButton: {
+    padding: "16px 32px",
+    backgroundColor: "#FFC04D",
+    color: "#000",
+    borderRadius: "12px",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "20px",
+    marginBottom: "12px",
+  },
+  button: {
+    padding: "14px 28px",
+    backgroundColor: "#444",
+    color: "white",
+    borderRadius: "10px",
+    border: "none",
+    cursor: "pointer",
+    marginBottom: "10px",
+    fontSize: "18px",
+  },
+  loginButton: {
+    padding: "14px 28px",
+    backgroundColor: "#6C63FF",
+    color: "white",
+    borderRadius: "10px",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "18px",
+    marginBottom: "20px",
+  },
+  privacy: {
+    marginTop: "30px",
+    color: "gray",
+    display: "block",
+    fontSize: "13px",
+  },
+};

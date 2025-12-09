@@ -1,12 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Play, Lock, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { base44 } from '@/api/base44Client';
+import LoginModal from "../components/auth/LoginModal";
 
 export default function Missions() {
+    const [user, setUser] = useState(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const currentUser = await base44.auth.me();
+                setUser(currentUser);
+            } catch (e) {
+                setUser(null);
+                setShowLoginModal(true);
+            }
+        };
+        checkAuth();
+    }, []);
+
+    const handleLevelClick = (e, level) => {
+        if (!user) {
+            e.preventDefault();
+            setShowLoginModal(true);
+        }
+    };
+
     const levels = [
         {
             id: 'downtown',
@@ -54,7 +80,10 @@ export default function Missions() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                     >
-                        <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
+                        <Link 
+                            to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}
+                            onClick={(e) => handleLevelClick(e, level)}
+                        >
                             <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
                                 {/* Background Image */}
                                 <div className="absolute inset-0 z-0">
@@ -98,6 +127,6 @@ export default function Missions() {
                 setShowLoginModal(false);
                 navigate(createPageUrl('Home'));
             }} />
-            </div>
-            );
-            }
+        </div>
+    );
+}

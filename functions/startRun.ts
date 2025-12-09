@@ -1,41 +1,28 @@
 export default async function startRun({ missionId, difficulty }, { user, base44 }) {
-    // 1. User prüfen
-    if (!user || !user.id) {
+    // Check if user is logged in
+    if (!user) {
         return {
             success: false,
             reason: "NOT_LOGGED_IN"
         };
     }
 
-    try {
-        // 2. run_session_id erzeugen (UUID-ähnlich)
-        const runSessionId = `${user.id}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const now = new Date();
-        const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 Minuten
+    // Create a new pending run session
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes expiry
 
-        // 3. PendingRun speichern (admin context via asServiceRole)
-        await base44.asServiceRole.entities.PendingRun.create({
-            id: runSessionId,
-            user_id: user.id,
-            mission_id: missionId || null,
-            difficulty: difficulty || 'normal',
-            started_at: now.toISOString(),
-            used: false,
-            expires_at: expiresAt.toISOString()
-        });
+    const pendingRun = await base44.asServiceRole.entities.PendingRun.create({
+        user_id: user.id,
+        mission_id: missionId || null,
+        difficulty: difficulty || 'normal',
+        started_at: now.toISOString(),
+        expires_at: expiresAt.toISOString(),
+        used: false
+    });
 
-        // 4. Antwort an Client
-        return {
-            success: true,
-            run_session_id: runSessionId,
-            started_at: now.toISOString()
-        };
-    } catch (error) {
-        console.error("Error in startRun:", error);
-        return {
-            success: false,
-            reason: "SERVER_ERROR",
-            error: error.message
-        };
-    }
+    return {
+        success: true,
+        run_session_id: pendingRun.id,
+        started_at: pendingRun.started_at
+    };
 }

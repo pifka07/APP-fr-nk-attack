@@ -77,24 +77,24 @@ export default function Game() {
     const startGame = async () => {
         try {
             // Call startRun server action to create session
-            const response = await base44.functions.startRun({
+            const response = await base44.functions.invoke('startRun', {
                 missionId: null,
                 difficulty: gameSpeed
             });
 
             // Check if user is not logged in
-            if (!response.success && response.reason === "NOT_LOGGED_IN") {
+            if (!response.data.success && response.data.reason === "NOT_LOGGED_IN") {
                 setShowLoginModal(true);
                 return;
             }
 
-            if (!response.success) {
+            if (!response.data.success) {
                 toast.error("Failed to start run");
                 return;
             }
 
-            setRunSessionId(response.run_session_id);
-            setRunStartTime(new Date(response.started_at));
+            setRunSessionId(response.data.run_session_id);
+            setRunStartTime(new Date(response.data.started_at));
 
             setGameState('playing');
             setScore(0);
@@ -136,7 +136,7 @@ export default function Game() {
             const durationMs = runStartTime ? now - runStartTime : stats.duration || 60000;
 
             // Call finishRun server action with anti-cheat protection
-            const response = await base44.functions.finishRun({
+            const response = await base44.functions.invoke('finishRun', {
                 run_session_id: runSessionId,
                 score: stats.score,
                 coinsCollected: stats.coins,
@@ -145,23 +145,23 @@ export default function Game() {
                 difficulty: gameSpeed
             });
 
-            if (!response.success) {
+            if (!response.data.success) {
                 // Handle cheat detection
-                if (response.reason === "CHEAT_DETECTED" || 
-                    response.reason === "CHEAT_REPLAY" || 
-                    response.reason === "CHEAT_SPEEDHACK" ||
-                    response.reason === "CHEAT_INVALID_SESSION" ||
-                    response.reason === "CHEAT_EXPIRED") {
+                if (response.data.reason === "CHEAT_DETECTED" || 
+                    response.data.reason === "CHEAT_REPLAY" || 
+                    response.data.reason === "CHEAT_SPEEDHACK" ||
+                    response.data.reason === "CHEAT_INVALID_SESSION" ||
+                    response.data.reason === "CHEAT_EXPIRED") {
                     toast.error("Invalid game session detected");
                 } else {
-                    toast.error("Failed to save run: " + response.reason);
+                    toast.error("Failed to save run: " + response.data.reason);
                 }
                 setSaving(false);
                 return;
             }
 
             // Success - show appropriate message
-            if (response.isHighscore) {
+            if (response.data.isHighscore) {
                 toast.success("🎉 New Personal Best!");
             } else {
                 toast.success("Run saved!");
@@ -170,7 +170,7 @@ export default function Game() {
             // Update local final stats with server stats
             setFinalStats({
                 ...stats,
-                serverStats: response.stats
+                serverStats: response.data.stats
             });
 
         } catch (error) {

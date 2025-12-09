@@ -1,7 +1,7 @@
 /**
  * Server Action: finishRun
  * 
- * Anti-Cheat enabled Run submission endpoint
+ * Anti-Cheat enabled Run submission endpoint with Replay Protection
  * Runs in admin context to prevent client manipulation
  * 
  * ANTI-CHEAT CONFIGURATION:
@@ -10,6 +10,7 @@
  * - MIN_RUN_DURATION = 5000 (5 seconds)
  * - MAX_RUN_DURATION = 1200000 (20 minutes)
  * - MAX_SCORE_PER_SECOND = 300
+ * - TIME_DRIFT_TOLERANCE = 3000 (3 seconds)
  */
 
 // Anti-Cheat Constants
@@ -18,8 +19,9 @@ const MAX_COINS_PER_RUN = 2000;
 const MIN_RUN_DURATION = 5000;
 const MAX_RUN_DURATION = 1200000;
 const MAX_SCORE_PER_SECOND = 300;
+const TIME_DRIFT_TOLERANCE = 3000;
 
-export default async function finishRun({ base44, user }, { score, coinsCollected, durationMs, missionId, difficulty }) {
+export default async function finishRun({ base44, user }, { run_session_id, score, coinsCollected, durationMs, missionId, difficulty }) {
     // Validate user is authenticated
     if (!user || !user.id) {
         return { 
@@ -28,49 +30,140 @@ export default async function finishRun({ base44, user }, { score, coinsCollecte
         };
     }
 
-    // Anti-Cheat Validation
-    
-    // Check score bounds
-    if (score < 0 || score > MAX_SCORE_PER_RUN) {
-        return { 
-            success: false, 
-            reason: "CHEAT_DETECTED",
-            details: "Invalid score range"
-        };
-    }
-
-    // Check coins bounds
-    if (coinsCollected < 0 || coinsCollected > MAX_COINS_PER_RUN) {
-        return { 
-            success: false, 
-            reason: "CHEAT_DETECTED",
-            details: "Invalid coins range"
-        };
-    }
-
-    // Check duration bounds
-    if (durationMs < MIN_RUN_DURATION || durationMs > MAX_RUN_DURATION) {
-        return { 
-            success: false, 
-            reason: "CHEAT_DETECTED",
-            details: "Invalid duration"
-        };
-    }
-
-    // Check score per second ratio
-    const scorePerSecond = score / (durationMs / 1000);
-    if (scorePerSecond > MAX_SCORE_PER_SECOND) {
-        return { 
-            success: false, 
-            reason: "CHEAT_DETECTED",
-            details: "Score rate too high"
-        };
-    }
-
-    // All checks passed - proceed with server-side operations
     try {
-        // Use admin context to bypass security rules
         const adminBase44 = base44.asServiceRole;
+
+        // ============================================
+        // REPLAY PROTECTION CHECKS
+        // ============================================
+
+        // 1. Check if run_session_id exists
+        if (!run_session_id) {
+            return {
+                success: false,
+                reason: "CHEAT_INVALID_SESSION",
+                details: "No run session ID provided"
+            };
+        }
+
+        // 2. Get PendingRun record
+        const pendingRuns = await adminBase44.entities.PendingRun.filter({ 
+            id: run_session_id,
+            user_id: user.id 
+        });
+
+        if (pendingRuns.length === 0) {
+            return {
+                success: false,
+                reason: "CHEAT_INVALID_SESSION",
+                details: "Run session not found"
+            };
+        }
+
+        const pendingRun = pendingRuns[0];
+
+        // 3. Check if already used (replay attack)
+        if (pendingRun.used === true) {
+            return {
+                success: false,
+                reason: "CHEAT_REPLAY",
+                details: "Run session already used"
+            };
+        }
+
+        // 4. Check if expired
+        const now = new Date();
+        const expiresAt = new Date(pendingRun.expires_at);
+        if (now > expiresAt) {
+            return {
+                success: false,
+                reason: "CHEAT_EXPIRED",
+                details: "Run session expired"
+            };
+        }
+
+        // 5. Check duration consistency (speedhack detection)
+        const startedAt = new Date(pendingRun.started_at);
+        const durationServer = now - startedAt;
+        const durationDiff = Math.abs(durationServer - durationMs);
+        
+        if (durationDiff > TIME_DRIFT_TOLERANCE) {
+            return {
+                success: false,
+                reason: "CHEAT_SPEEDHACK",
+                details: "Duration mismatch detected"
+            };
+        }
+
+        // 6. Check mission and difficulty consistency
+        if (missionId !== pendingRun.mission_id) {
+            return {
+                success: false,
+                reason: "CHEAT_DETECTED",
+                details: "Mission ID mismatch"
+            };
+        }
+
+        if (difficulty !== pendingRun.difficulty) {
+            return {
+                success: false,
+                reason: "CHEAT_DETECTED",
+                details: "Difficulty mismatch"
+            };
+        }
+
+        // ============================================
+        // STANDARD ANTI-CHEAT CHECKS
+        // ============================================
+
+        // Check score bounds
+        if (score < 0 || score > MAX_SCORE_PER_RUN) {
+            return { 
+                success: false, 
+                reason: "CHEAT_DETECTED",
+                details: "Invalid score range"
+            };
+        }
+
+        // Check coins bounds
+        if (coinsCollected < 0 || coinsCollected > MAX_COINS_PER_RUN) {
+            return { 
+                success: false, 
+                reason: "CHEAT_DETECTED",
+                details: "Invalid coins range"
+            };
+        }
+
+        // Check duration bounds
+        if (durationMs < MIN_RUN_DURATION || durationMs > MAX_RUN_DURATION) {
+            return { 
+                success: false, 
+                reason: "CHEAT_DETECTED",
+                details: "Invalid duration"
+            };
+        }
+
+        // Check score per second ratio
+        const scorePerSecond = score / (durationMs / 1000);
+        if (scorePerSecond > MAX_SCORE_PER_SECOND) {
+            return { 
+                success: false, 
+                reason: "CHEAT_DETECTED",
+                details: "Score rate too high"
+            };
+        }
+
+        // ============================================
+        // MARK SESSION AS USED
+        // ============================================
+        
+        await adminBase44.entities.PendingRun.update(pendingRun.id, {
+            used: true
+        });
+
+        // ============================================
+        // CREATE RUN AND UPDATE STATS
+        // ============================================
 
         // 1. Create Run record
         const newRun = await adminBase44.entities.Run.create({

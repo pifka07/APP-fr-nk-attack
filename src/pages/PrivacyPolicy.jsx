@@ -1,22 +1,26 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPolicy() {
     return (
         <>
             <style dangerouslySetInnerHTML={{__html: `
                 :root {
-                  --bg: #050816;
-                  --bg-card: #0b1020;
-                  --accent: #22c55e;
-                  --accent-soft: rgba(34, 197, 94, 0.15);
-                  --text: #f9fafb;
-                  --muted: #9ca3af;
-                  --border: rgba(148, 163, 184, 0.25);
-                  --danger: #f97373;
-                  --highlight: #38bdf8;
-                  --radius-lg: 18px;
+                  --bg: #0f172a;
+                  --bg-card: #1e293b;
+                  --accent: #2dd4bf;
+                  --accent-soft: rgba(45, 212, 191, 0.15);
+                  --text: #f1f5f9;
+                  --muted: #94a3b8;
+                  --border: rgba(148, 163, 184, 0.2);
+                  --danger: #f87171;
+                  --highlight: #a78bfa;
+                  --radius-lg: 16px;
                   --radius-pill: 999px;
-                  --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.85);
+                  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
                 }
 
                 .privacy-page * {
@@ -27,16 +31,30 @@ export default function PrivacyPolicy() {
 
                 .privacy-page {
                   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                  background: radial-gradient(circle at top, #0b1220 0, #020617 45%, #020617 100%);
+                  background: #0f172a;
                   color: var(--text);
                   line-height: 1.6;
-                  padding: 32px 16px 48px;
+                  padding: 0;
                   min-height: 100vh;
+                }
+                
+                .privacy-page .header-bar {
+                  position: sticky;
+                  top: 0;
+                  z-index: 50;
+                  background: rgba(15, 23, 42, 0.95);
+                  backdrop-filter: blur(12px);
+                  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+                  padding: 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
                 }
 
                 .privacy-page .page-wrapper {
                   max-width: 960px;
                   margin: 0 auto;
+                  padding: 24px 16px 64px;
                 }
 
                 .privacy-page .badge {
@@ -48,7 +66,7 @@ export default function PrivacyPolicy() {
                   border-radius: var(--radius-pill);
                   background: var(--accent-soft);
                   color: var(--accent);
-                  border: 1px solid rgba(34, 197, 94, 0.4);
+                  border: 1px solid rgba(45, 212, 191, 0.3);
                   margin-bottom: 12px;
                 }
 
@@ -96,22 +114,13 @@ export default function PrivacyPolicy() {
                 }
 
                 .privacy-page .card {
-                  background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+                  background: #1e293b;
                   border-radius: var(--radius-lg);
                   border: 1px solid var(--border);
                   padding: 18px 18px 16px;
                   box-shadow: var(--shadow-soft);
                   position: relative;
                   overflow: hidden;
-                }
-
-                .privacy-page .card::before {
-                  content: "";
-                  position: absolute;
-                  inset: -20%;
-                  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.06), transparent 55%);
-                  opacity: 0.8;
-                  pointer-events: none;
                 }
 
                 .privacy-page .card h2 {
@@ -139,9 +148,9 @@ export default function PrivacyPolicy() {
                 }
 
                 .privacy-page .pill--good {
-                  border-color: rgba(34, 197, 94, 0.6);
+                  border-color: rgba(45, 212, 191, 0.5);
                   color: var(--accent);
-                  background: rgba(22, 163, 74, 0.12);
+                  background: rgba(45, 212, 191, 0.1);
                 }
 
                 .privacy-page .pill--warn {
@@ -227,8 +236,8 @@ export default function PrivacyPolicy() {
                   align-items: center;
                   justify-content: center;
                   font-size: 11px;
-                  background: rgba(22, 163, 74, 0.15);
-                  border: 1px solid rgba(34, 197, 94, 0.7);
+                  background: rgba(45, 212, 191, 0.15);
+                  border: 1px solid rgba(45, 212, 191, 0.5);
                   color: var(--accent);
                   flex-shrink: 0;
                   margin-top: 1px;
@@ -250,6 +259,14 @@ export default function PrivacyPolicy() {
             `}} />
             
             <div className="privacy-page">
+                <div className="header-bar">
+                    <Link to={createPageUrl('Home')}>
+                        <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700">
+                            <ArrowLeft className="w-6 h-6" />
+                        </Button>
+                    </Link>
+                    <h1 style={{fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', margin: 0}}>Datenschutz & Sicherheit</h1>
+                </div>
                 <div className="page-wrapper">
                     <header>
                         <div className="badge">

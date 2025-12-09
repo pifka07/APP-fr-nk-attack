@@ -25,6 +25,8 @@ export default function Game() {
     const [musicEnabled, setMusicEnabled] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
     const [gameSpeed, setGameSpeed] = useState('normal'); // 'slow', 'normal', 'quick'
+    const [runSessionId, setRunSessionId] = useState(null);
+    const [runStartTime, setRunStartTime] = useState(null);
     
     // Get selected level from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -69,14 +71,33 @@ export default function Game() {
         loadConfig();
     }, []);
 
-    const startGame = () => {
-        setGameState('playing');
-        setScore(0);
-        setCoins(0);
-        setHealth(100);
-        setCombo(0);
-        setFinalStats(null);
-        if (engineRef.current) engineRef.current.start();
+    const startGame = async () => {
+        try {
+            // Call startRun server action to create session
+            const response = await base44.functions.startRun({
+                missionId: null,
+                difficulty: gameSpeed
+            });
+
+            if (!response.success) {
+                toast.error("Failed to start run");
+                return;
+            }
+
+            setRunSessionId(response.run_session_id);
+            setRunStartTime(new Date(response.started_at));
+
+            setGameState('playing');
+            setScore(0);
+            setCoins(0);
+            setHealth(100);
+            setCombo(0);
+            setFinalStats(null);
+            if (engineRef.current) engineRef.current.start();
+        } catch (error) {
+            console.error("Failed to start run", error);
+            toast.error("Failed to start game");
+        }
     };
 
     const pauseGame = () => {
@@ -95,75 +116,54 @@ export default function Game() {
         setSaving(true);
 
         try {
-            const user = await base44.auth.me();
-
-            // Get or create PlayerStats
-            let playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
-            if (playerStats.length === 0) {
-                playerStats = [await base44.entities.PlayerStats.create({
-                    user_id: user.id,
-                    total_coins: 0,
-                    best_score: 0,
-                    best_distance: 0,
-                    total_runs: 0
-                })];
+            if (!runSessionId) {
+                toast.error("Invalid game session");
+                setSaving(false);
+                return;
             }
-            const currentStats = playerStats[0];
 
-            // Create Run Record
-            await base44.entities.Run.create({
+            // Calculate run duration
+            const now = new Date();
+            const durationMs = runStartTime ? now - runStartTime : stats.duration || 60000;
+
+            // Call finishRun server action with anti-cheat protection
+            const response = await base44.functions.finishRun({
+                run_session_id: runSessionId,
                 score: stats.score,
-                distance: stats.distance,
-                coins_earned: stats.coins,
-                mode: 'endless'
+                coinsCollected: stats.coins,
+                durationMs: durationMs,
+                missionId: null,
+                difficulty: gameSpeed
             });
 
-            // Update PlayerStats
-            await base44.entities.PlayerStats.update(currentStats.id, {
-                total_coins: (currentStats.total_coins || 0) + stats.coins,
-                best_score: Math.max(currentStats.best_score || 0, stats.score),
-                best_distance: Math.max(currentStats.best_distance || 0, stats.distance),
-                total_runs: (currentStats.total_runs || 0) + 1
-            });
-
-            // Update Public Leaderboard
-            try {
-                // Find existing entry for this user (using created_by implicit filter or explicit user_id check if possible)
-                // Since we can only update our own records usually, checking specifically for my entry is safer via list filter
-                // However, the easiest way to maintain "one entry per user" without complex backend logic is to check if we have one.
-                // We'll search by user_id (which we'll store)
-                const existingEntries = await base44.entities.LeaderboardEntry.list({ 
-                    user_id: user.id 
-                }, 1);
-
-                if (existingEntries.length > 0) {
-                    const entry = existingEntries[0];
-                    if (stats.score > entry.score) {
-                        await base44.entities.LeaderboardEntry.update(entry.id, {
-                            score: stats.score,
-                            username: user.username || user.email?.split('@')[0] || 'Pilot',
-                            date: new Date().toISOString()
-                        });
-                    }
+            if (!response.success) {
+                // Handle cheat detection
+                if (response.reason === "CHEAT_DETECTED" || 
+                    response.reason === "CHEAT_REPLAY" || 
+                    response.reason === "CHEAT_SPEEDHACK" ||
+                    response.reason === "CHEAT_INVALID_SESSION" ||
+                    response.reason === "CHEAT_EXPIRED") {
+                    toast.error("Invalid game session detected");
                 } else {
-                    await base44.entities.LeaderboardEntry.create({
-                        user_id: user.id,
-                        username: user.username || user.email?.split('@')[0] || 'Pilot',
-                        score: stats.score,
-                        date: new Date().toISOString()
-                    });
+                    toast.error("Failed to save run: " + response.reason);
                 }
-            } catch (lbError) {
-                console.error("Failed to update leaderboard", lbError);
+                setSaving(false);
+                return;
             }
 
-            // Check for Top 10 locally to notify user immediately (optional UX)
-            // We'll rely on the Leaderboard page for the full list, but could toast here.
-            if (stats.score > (currentStats.best_score || 0)) {
-                toast.success("New Personal Best!");
+            // Success - show appropriate message
+            if (response.isHighscore) {
+                toast.success("🎉 New Personal Best!");
             } else {
                 toast.success("Run saved!");
             }
+
+            // Update local final stats with server stats
+            setFinalStats({
+                ...stats,
+                serverStats: response.stats
+            });
+
         } catch (error) {
             console.error("Failed to save run", error);
             toast.error("Failed to save stats");

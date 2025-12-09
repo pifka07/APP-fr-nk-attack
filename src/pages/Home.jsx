@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
 import { Play, ShoppingCart, Target, User as UserIcon, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
+import LoginModal from "../components/auth/LoginModal";
 
 export default function Home() {
     const [user, setUser] = useState(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const initUser = async () => {
@@ -27,12 +30,21 @@ export default function Home() {
                 }
 
                 setUser({ ...currentUser, stats: statsData[0] });
-            } catch (e) {
+                } catch (e) {
                 console.error("User not loaded", e);
-            }
-        };
-        initUser();
-    }, []);
+                setUser(null);
+                }
+                };
+                initUser();
+                }, []);
+
+                const handlePlayClick = () => {
+                if (!user) {
+                setShowLoginModal(true);
+                } else {
+                navigate(createPageUrl('Missions'));
+                }
+                };
 
     return (
         <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 relative overflow-hidden">
@@ -66,11 +78,12 @@ export default function Home() {
 
             {/* Menu Buttons */}
             <div className="w-full max-w-xs space-y-4 z-10">
-                <Link to={createPageUrl('Missions')}>
-                    <Button className="w-full h-16 text-2xl font-titan bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider">
-                        <Target className="mr-2 w-6 h-6" /> MISSIONS
-                    </Button>
-                </Link>
+                <Button 
+                    onClick={handlePlayClick}
+                    className="w-full h-16 text-2xl font-titan bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
+                >
+                    <Play className="mr-2 w-6 h-6" /> PLAY
+                </Button>
 
                 <div className="grid grid-cols-2 gap-4">
                     <Link to={createPageUrl('Shop')}>
@@ -121,6 +134,8 @@ export default function Home() {
                             Datenschutzerklärung
                         </Link>
                     </div>
+
+                    <LoginModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
                     </div>
                     );
                     }

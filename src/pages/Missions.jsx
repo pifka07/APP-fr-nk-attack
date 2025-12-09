@@ -93,6 +93,11 @@ export default function Missions() {
                     </motion.div>
                 ))}
             </div>
-        </div>
-    );
-}
+
+            <LoginModal open={showLoginModal} onClose={() => {
+                setShowLoginModal(false);
+                navigate(createPageUrl('Home'));
+            }} />
+            </div>
+            );
+            }

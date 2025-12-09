@@ -410,7 +410,10 @@ export default function PrivacyPolicy() {
                     <footer>
                         <p>
                             Fragen zu Sicherheit oder Datenschutz in <strong>Fränk</strong>?<br />
-                            Melde dich gerne über die Kontaktmöglichkeiten in der App oder auf unserer Webseite.
+                            Melde dich gerne per Mail: <a href="mailto:umdieecke7@gmail.com" style={{color: 'var(--accent)', textDecoration: 'none'}}>umdieecke7@gmail.com</a>
+                        </p>
+                        <p style={{marginTop: '12px', opacity: '0.6'}}>
+                            © 2025 pifka07
                         </p>
                     </footer>
                 </div>

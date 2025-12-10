@@ -99,6 +99,7 @@ export default function Profile() {
                     </div>
                 )}
                 <p className="text-slate-400 text-sm">Level 1 Pigeon</p>
+                <p className="text-slate-500 text-[10px] mt-1">ID: {user?.id}</p>
             </div>
 
             {/* Skins Button */}

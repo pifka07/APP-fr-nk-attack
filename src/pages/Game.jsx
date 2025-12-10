@@ -173,12 +173,13 @@ export default function Game() {
 
             if (!response.data.success) {
                 // Handle cheat detection
+                console.error("Failed to save run - Reason:", response.data.reason);
                 if (response.data.reason === "CHEAT_DETECTED" || 
                     response.data.reason === "CHEAT_REPLAY" || 
                     response.data.reason === "CHEAT_SPEEDHACK" ||
                     response.data.reason === "CHEAT_INVALID_SESSION" ||
                     response.data.reason === "CHEAT_EXPIRED") {
-                    toast.error("Invalid game session detected");
+                    toast.error("Session Error: " + response.data.reason);
                 } else {
                     toast.error("Failed to save run: " + response.data.reason);
                 }
@@ -201,7 +202,8 @@ export default function Game() {
 
         } catch (error) {
             console.error("Failed to save run", error);
-            toast.error("Failed to save stats");
+            console.error("Error details:", error.response?.data);
+            toast.error("Failed to save stats: " + (error.response?.data?.reason || error.message));
         } finally {
             setSaving(false);
         }

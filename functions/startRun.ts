@@ -22,6 +22,15 @@ Deno.serve(async (req) => {
         const now = new Date();
         const expiresAt = new Date(now.getTime() + 30 * 60 * 1000);
 
+        console.log("About to create PendingRun with data:", {
+            user_id: user.id,
+            mission_id: missionId || null,
+            difficulty: difficulty || 'normal',
+            started_at: now.toISOString(),
+            expires_at: expiresAt.toISOString(),
+            used: false
+        });
+
         const pendingRun = await base44.asServiceRole.entities.PendingRun.create({
             user_id: user.id,
             mission_id: missionId || null,
@@ -31,14 +40,17 @@ Deno.serve(async (req) => {
             used: false
         });
 
-        console.log("PendingRun created:", pendingRun.id);
+        console.log("PendingRun created successfully:", JSON.stringify(pendingRun));
 
         // Verify it was actually created
         const verify = await base44.asServiceRole.entities.PendingRun.filter({ id: pendingRun.id });
         console.log("Verification - found runs with this ID:", verify?.length || 0);
-        
-        const allRuns = await base44.asServiceRole.entities.PendingRun.filter({ user_id: user.id });
-        console.log("All runs for user after creation:", allRuns?.length || 0);
+        if (verify.length > 0) {
+            console.log("Verified run data:", JSON.stringify(verify[0]));
+        }
+
+        const allRuns = await base44.asServiceRole.entities.PendingRun.list();
+        console.log("Total runs in database after creation:", allRuns?.length || 0);
 
         return Response.json({
             success: true,

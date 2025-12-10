@@ -76,11 +76,15 @@ export default function Game() {
 
     const startGame = async () => {
         try {
+            console.log("startGame called with gameSpeed:", gameSpeed);
+            
             // Call startRun server action to create session
             const response = await base44.functions.invoke('startRun', {
                 missionId: null,
                 difficulty: gameSpeed
             });
+
+            console.log("startRun response:", response.data);
 
             // Check if user is not logged in
             if (!response.data.success && response.data.reason === "NOT_LOGGED_IN") {
@@ -93,8 +97,14 @@ export default function Game() {
                 return;
             }
 
-            setRunSessionId(response.data.run_session_id);
-            setRunStartTime(new Date(response.data.started_at));
+            const sessionId = response.data.run_session_id;
+            const startTime = new Date(response.data.started_at);
+            
+            console.log("Setting runSessionId:", sessionId);
+            console.log("Setting runStartTime:", startTime);
+            
+            setRunSessionId(sessionId);
+            setRunStartTime(startTime);
 
             setGameState('playing');
             setScore(0);

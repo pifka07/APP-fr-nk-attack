@@ -27,8 +27,8 @@ export default function Game() {
     const [musicEnabled, setMusicEnabled] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
     const [gameSpeed, setGameSpeed] = useState('normal'); // 'slow', 'normal', 'quick'
-    const [runSessionId, setRunSessionId] = useState(null);
-    const [runStartTime, setRunStartTime] = useState(null);
+    const runSessionIdRef = useRef(null);
+    const runStartTimeRef = useRef(null);
     const [showLoginModal, setShowLoginModal] = useState(false);
     
     // Get selected level from URL
@@ -103,8 +103,8 @@ export default function Game() {
             console.log("Setting runSessionId:", sessionId);
             console.log("Setting runStartTime:", startTime);
             
-            setRunSessionId(sessionId);
-            setRunStartTime(startTime);
+            runSessionIdRef.current = sessionId;
+            runStartTimeRef.current = startTime;
 
             setGameState('playing');
             setScore(0);
@@ -131,7 +131,7 @@ export default function Game() {
 
     const handleGameOver = async (stats) => {
         console.log("handleGameOver called with stats:", stats);
-        console.log("runSessionId:", runSessionId);
+        console.log("runSessionId from ref:", runSessionIdRef.current);
         console.log("gameSpeed:", gameSpeed);
         
         setGameState('gameover');
@@ -139,7 +139,7 @@ export default function Game() {
         setSaving(true);
 
         try {
-            if (!runSessionId) {
+            if (!runSessionIdRef.current) {
                 console.error("runSessionId is null - cannot save run");
                 toast.error("Invalid game session");
                 setSaving(false);
@@ -148,10 +148,10 @@ export default function Game() {
 
             // Calculate run duration
             const now = new Date();
-            const durationMs = runStartTime ? now - runStartTime : stats.duration || 60000;
+            const durationMs = runStartTimeRef.current ? now - runStartTimeRef.current : stats.duration || 60000;
 
             console.log("Calling finishRun with payload:", {
-                run_session_id: runSessionId,
+                run_session_id: runSessionIdRef.current,
                 score: stats.score,
                 coinsCollected: stats.coins,
                 durationMs: durationMs,
@@ -161,7 +161,7 @@ export default function Game() {
 
             // Call finishRun server action with anti-cheat protection
             const response = await base44.functions.invoke('finishRun', {
-                run_session_id: runSessionId,
+                run_session_id: runSessionIdRef.current,
                 score: stats.score,
                 coinsCollected: stats.coins,
                 durationMs: durationMs,

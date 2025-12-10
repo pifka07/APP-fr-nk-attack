@@ -106,29 +106,42 @@ Deno.serve(async (req) => {
             mode: missionId ? 'mission' : 'endless'
         });
 
+        // Load PlayerStats for this user
         const playerStatsList = await base44.asServiceRole.entities.PlayerStats.filter({
             user_id: user.id
         });
 
         let playerStats;
+        // Create PlayerStats if doesn't exist yet (first game)
         if (playerStatsList.length === 0) {
             playerStats = await base44.asServiceRole.entities.PlayerStats.create({
                 user_id: user.id,
-                total_coins: coinsCollected,
-                total_score: score,
-                best_score: score,
-                best_distance: 0,
-                total_runs: 1
+                total_score: 0,
+                total_coins: 0,
+                total_distance: 0,
+                total_runs: 0,
+                best_score: 0,
+                best_distance: 0
             });
         } else {
             playerStats = playerStatsList[0];
-            await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-                total_coins: playerStats.total_coins + coinsCollected,
-                total_score: playerStats.total_score + score,
-                best_score: Math.max(playerStats.best_score, score),
-                total_runs: playerStats.total_runs + 1
-            });
         }
+
+        // Calculate updated values
+        const newTotalScore = playerStats.total_score + score;
+        const newTotalCoins = playerStats.total_coins + coinsCollected;
+        const newTotalDistance = playerStats.total_distance + 0; // distance not yet implemented
+        const newTotalRuns = playerStats.total_runs + 1;
+        const newBestScore = Math.max(playerStats.best_score, score);
+
+        // Update PlayerStats
+        await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
+            total_score: newTotalScore,
+            total_coins: newTotalCoins,
+            total_distance: newTotalDistance,
+            total_runs: newTotalRuns,
+            best_score: newBestScore
+        });
 
         await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: (user.total_coins || 0) + coinsCollected

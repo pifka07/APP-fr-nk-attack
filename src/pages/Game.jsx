@@ -120,12 +120,17 @@ export default function Game() {
     };
 
     const handleGameOver = async (stats) => {
+        console.log("handleGameOver called with stats:", stats);
+        console.log("runSessionId:", runSessionId);
+        console.log("gameSpeed:", gameSpeed);
+        
         setGameState('gameover');
         setFinalStats(stats);
         setSaving(true);
 
         try {
             if (!runSessionId) {
+                console.error("runSessionId is null - cannot save run");
                 toast.error("Invalid game session");
                 setSaving(false);
                 return;
@@ -134,6 +139,15 @@ export default function Game() {
             // Calculate run duration
             const now = new Date();
             const durationMs = runStartTime ? now - runStartTime : stats.duration || 60000;
+
+            console.log("Calling finishRun with payload:", {
+                run_session_id: runSessionId,
+                score: stats.score,
+                coinsCollected: stats.coins,
+                durationMs: durationMs,
+                missionId: null,
+                difficulty: gameSpeed
+            });
 
             // Call finishRun server action with anti-cheat protection
             const response = await base44.functions.invoke('finishRun', {
@@ -144,6 +158,8 @@ export default function Game() {
                 missionId: null,
                 difficulty: gameSpeed
             });
+            
+            console.log("finishRun response:", response.data);
 
             if (!response.data.success) {
                 // Handle cheat detection

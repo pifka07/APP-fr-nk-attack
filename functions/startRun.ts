@@ -33,6 +33,13 @@ Deno.serve(async (req) => {
 
         console.log("PendingRun created:", pendingRun.id);
 
+        // Verify it was actually created
+        const verify = await base44.asServiceRole.entities.PendingRun.filter({ id: pendingRun.id });
+        console.log("Verification - found runs with this ID:", verify?.length || 0);
+        
+        const allRuns = await base44.asServiceRole.entities.PendingRun.filter({ user_id: user.id });
+        console.log("All runs for user after creation:", allRuns?.length || 0);
+
         return Response.json({
             success: true,
             run_session_id: pendingRun.id,

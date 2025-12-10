@@ -5,21 +5,29 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
 
+        console.log("finishRun called - User:", user?.email);
+
         if (!user) {
+            console.log("User not logged in");
             return Response.json({
                 success: false,
                 reason: "NOT_LOGGED_IN"
             }, { status: 401 });
         }
 
-        const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty } = await req.json();
+        const body = await req.json();
+        console.log("finishRun request body:", JSON.stringify(body));
+        const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty } = body;
 
         const pendingRuns = await base44.asServiceRole.entities.PendingRun.filter({
             id: run_session_id,
             user_id: user.id
         });
 
+        console.log("Found pending runs:", pendingRuns?.length || 0);
+
         if (!pendingRuns || pendingRuns.length === 0) {
+            console.log("No pending run found for session:", run_session_id);
             return Response.json({
                 success: false,
                 reason: "CHEAT_INVALID_SESSION"

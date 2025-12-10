@@ -5,14 +5,19 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
 
+        console.log("startRun called - User:", user?.email);
+
         if (!user) {
+            console.log("User not logged in");
             return Response.json({
                 success: false,
                 reason: "NOT_LOGGED_IN"
             }, { status: 401 });
         }
 
-        const { missionId, difficulty } = await req.json();
+        const body = await req.json();
+        console.log("startRun request body:", JSON.stringify(body));
+        const { missionId, difficulty } = body;
 
         const now = new Date();
         const expiresAt = new Date(now.getTime() + 30 * 60 * 1000);
@@ -25,6 +30,8 @@ Deno.serve(async (req) => {
             expires_at: expiresAt.toISOString(),
             used: false
         });
+
+        console.log("PendingRun created:", pendingRun.id);
 
         return Response.json({
             success: true,

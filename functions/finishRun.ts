@@ -19,22 +19,24 @@ Deno.serve(async (req) => {
         console.log("finishRun request body:", JSON.stringify(body));
         const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty } = body;
 
-        const pendingRuns = await base44.asServiceRole.entities.PendingRun.filter({
-            id: run_session_id,
+        // Get all pending runs for this user
+        const allPendingRuns = await base44.asServiceRole.entities.PendingRun.filter({
             user_id: user.id
         });
 
-        console.log("Found pending runs:", pendingRuns?.length || 0);
+        console.log("All pending runs for user:", allPendingRuns?.length || 0);
 
-        if (!pendingRuns || pendingRuns.length === 0) {
+        // Find the specific session
+        const pendingRun = allPendingRuns.find(pr => pr.id === run_session_id);
+
+        if (!pendingRun) {
             console.log("No pending run found for session:", run_session_id);
+            console.log("Available sessions:", allPendingRuns.map(pr => pr.id));
             return Response.json({
                 success: false,
                 reason: "CHEAT_INVALID_SESSION"
             }, { status: 400 });
         }
-
-        const pendingRun = pendingRuns[0];
 
         if (pendingRun.used) {
             return Response.json({

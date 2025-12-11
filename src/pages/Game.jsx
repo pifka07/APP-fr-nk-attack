@@ -510,7 +510,7 @@ export default function Game() {
                         className="w-full max-w-sm"
                     >
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5d016fe2b_Gameover1.png" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a5592cad8_Gameover1.png" 
                             alt="Game Over" 
                             className="w-full h-auto drop-shadow-2xl"
                         />
@@ -541,7 +541,7 @@ export default function Game() {
                         className="w-full max-w-sm relative mt-4"
                     >
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/862f9f226_gameover2.png" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/1962860d7_gameover4.png" 
                             alt="Fränk Game Over" 
                             className="w-full h-auto drop-shadow-2xl"
                         />

@@ -354,8 +354,25 @@ export default function Game() {
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none flex justify-between items-end">
-                     <div className="text-white/50 text-sm font-bold animate-pulse pointer-events-none ml-4 mb-4">
-                        TAP SCREEN TO FLY
+                     <div className="flex flex-col items-center gap-3 pointer-events-none ml-4 mb-4">
+                        <motion.div
+                            initial={{ y: 0 }}
+                            animate={{ y: -10 }}
+                            transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                            className="text-white/70 flex items-center gap-2"
+                        >
+                            <ArrowUp className="w-6 h-6" />
+                            <span className="text-sm font-bold">SWIPE UP</span>
+                        </motion.div>
+                        <motion.div
+                            initial={{ y: 0 }}
+                            animate={{ y: 10 }}
+                            transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                            className="text-white/70 flex items-center gap-2"
+                        >
+                            <ArrowUp className="w-6 h-6 rotate-180" />
+                            <span className="text-sm font-bold">SWIPE DOWN</span>
+                        </motion.div>
                     </div>
 
                     {/* Poop Button with Ammo */}

@@ -47,7 +47,9 @@ export default function Skins() {
     };
 
     const isOwned = (skinId) => {
-        return playerSkins.some(ps => ps.skin_id === skinId) || skinId === 'default'; // Assuming default is always owned
+        // Check if default skin by key
+        const defaultSkin = skins.find(s => s.id === skinId && s.key === 'default');
+        return playerSkins.some(ps => ps.skin_id === skinId) || defaultSkin;
     };
 
     return (

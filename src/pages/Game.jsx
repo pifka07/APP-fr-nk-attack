@@ -510,7 +510,7 @@ export default function Game() {
                         className="w-full max-w-sm"
                     >
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a5592cad8_Gameover1.png" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/f9fab063b_Gameover1.png" 
                             alt="Game Over" 
                             className="w-full h-auto drop-shadow-2xl"
                         />

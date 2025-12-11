@@ -503,42 +503,57 @@ export default function Game() {
 
             {/* Game Over Screen */}
             {gameState === 'gameover' && finalStats && (
-                <div className="absolute inset-0 z-50 bg-slate-900/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
+                <div className="absolute inset-0 z-50 bg-slate-900/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 gap-6">
                     <motion.div 
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="w-full max-w-sm relative"
+                        initial={{ scale: 0.8, opacity: 0, y: -20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        className="w-full max-w-sm"
                     >
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c9b686995_gameover.png" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5d016fe2b_Gameover1.png" 
                             alt="Game Over" 
                             className="w-full h-auto drop-shadow-2xl"
                         />
+                    </motion.div>
 
-                        {/* Stats Overlay */}
-                        <div className="absolute top-[34%] left-0 right-0 flex justify-center gap-4 z-10">
-                             <div className="text-center transform -rotate-3">
-                                 <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Score</div>
-                                 <div className="text-2xl font-black text-slate-900">{finalStats.score}</div>
-                             </div>
-                             <div className="text-center">
-                                 <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Distance</div>
-                                 <div className="text-2xl font-black text-slate-900">{finalStats.distance}m</div>
-                             </div>
-                             <div className="text-center transform rotate-3">
-                                 <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Coins</div>
-                                 <div className="text-2xl font-black text-slate-900">{finalStats.coins}</div>
-                             </div>
+                    {/* Stats */}
+                    <motion.div 
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="flex justify-center gap-8"
+                    >
+                        <div className="text-center">
+                            <div className="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">Score</div>
+                            <div className="text-4xl font-black text-white drop-shadow-lg">{finalStats.score}</div>
                         </div>
+                        <div className="text-center">
+                            <div className="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">Coins</div>
+                            <div className="text-4xl font-black text-yellow-400 drop-shadow-lg">{finalStats.coins}</div>
+                        </div>
+                    </motion.div>
 
-                        {/* Invisible Buttons Overlay */}
-                        <div className="absolute bottom-[8%] left-[8%] w-[38%] h-[12%]">
+                    {/* Taube mit Buttons */}
+                    <motion.div 
+                        initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="w-full max-w-sm relative mt-4"
+                    >
+                        <img 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/862f9f226_gameover2.png" 
+                            alt="Fränk Game Over" 
+                            className="w-full h-auto drop-shadow-2xl"
+                        />
+
+                        {/* Invisible Button Overlays */}
+                        <div className="absolute bottom-[8%] left-[7%] w-[38%] h-[18%]">
                             <button 
                               onClick={(e) => { e.stopPropagation(); startGame(); }}
                               className="w-full h-full rounded-full active:bg-white/20 transition-colors"
                             />
                         </div>
-                        <div className="absolute bottom-[8%] right-[8%] w-[38%] h-[12%]">
+                        <div className="absolute bottom-[8%] right-[7%] w-[38%] h-[18%]">
                             <Link to={createPageUrl('Home')} className="block w-full h-full">
                               <button className="w-full h-full rounded-full active:bg-white/20 transition-colors" />
                             </Link>

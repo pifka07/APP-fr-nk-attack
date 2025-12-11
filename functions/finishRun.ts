@@ -144,7 +144,8 @@ Deno.serve(async (req) => {
         });
 
         await base44.asServiceRole.entities.User.update(user.id, {
-            total_coins: (user.total_coins || 0) + coinsCollected
+            total_coins: (user.total_coins || 0) + coinsCollected,
+            total_runs: (user.total_runs || 0) + 1
         });
 
         const isHighscore = score > (playerStats.best_score || 0);

@@ -176,7 +176,7 @@ export default function Profile() {
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Hash className="w-8 h-8 text-purple-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{stats?.total_runs || 0}</div>
+                        <div className="text-2xl font-bold text-white">{user?.total_runs || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Total Runs</div>
                     </CardContent>
                 </Card>

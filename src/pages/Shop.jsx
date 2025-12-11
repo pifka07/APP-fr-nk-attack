@@ -107,7 +107,8 @@ export default function Shop() {
             toast.success(`Unlocked ${skin.name}!`);
             fetchData();
         } catch (error) {
-            toast.error("Purchase failed.");
+            console.error("Skin purchase error:", error);
+            toast.error("Purchase failed: " + (error.message || "Unknown error"));
         }
     };
 

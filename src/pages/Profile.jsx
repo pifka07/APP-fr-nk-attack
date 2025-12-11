@@ -224,7 +224,7 @@ export default function Profile() {
 
                     {/* Delete Confirmation Dialog */}
                     <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                        <AlertDialogContent className="bg-slate-800 border-slate-700 max-w-[90vw] w-full mx-4">
+                        <AlertDialogContent className="bg-slate-800 border-slate-700 max-w-sm w-full mx-4">
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="text-white">Are you sure?</AlertDialogTitle>
                                 <AlertDialogDescription className="text-slate-400">

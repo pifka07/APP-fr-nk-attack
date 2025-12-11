@@ -76,7 +76,11 @@ export default function Shop() {
             if (existingPu) {
                 await base44.entities.PlayerUpgrade.update(existingPu.id, { level: existingPu.level + 1 });
             } else {
-                await base44.entities.PlayerUpgrade.create({ upgrade_id: upgrade.id, level: 1 });
+                await base44.entities.PlayerUpgrade.create({ 
+                    upgrade_id: upgrade.id, 
+                    user_id: user.id,
+                    level: 1 
+                });
             }
 
             toast.success(`Upgraded ${upgrade.name}!`);
@@ -95,7 +99,11 @@ export default function Shop() {
 
         try {
             await base44.auth.updateMe({ total_coins: (user.total_coins || 0) - skin.cost_coins });
-            await base44.entities.PlayerSkin.create({ skin_id: skin.id, owned: true });
+            await base44.entities.PlayerSkin.create({ 
+                skin_id: skin.id, 
+                user_id: user.id,
+                owned: true 
+            });
             toast.success(`Unlocked ${skin.name}!`);
             fetchData();
         } catch (error) {

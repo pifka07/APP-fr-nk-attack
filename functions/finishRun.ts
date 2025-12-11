@@ -143,9 +143,14 @@ Deno.serve(async (req) => {
             best_score: newBestScore
         });
 
+        const newBestScore = Math.max(user.best_score || 0, score);
+        const newBestDistance = Math.max(user.best_distance || 0, 0); // distance noch nicht implementiert
+        
         await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: (user.total_coins || 0) + coinsCollected,
-            total_runs: (user.total_runs || 0) + 1
+            total_runs: (user.total_runs || 0) + 1,
+            best_score: newBestScore,
+            best_distance: newBestDistance
         });
 
         const isHighscore = score > (playerStats.best_score || 0);

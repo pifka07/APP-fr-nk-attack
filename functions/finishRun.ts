@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
 
         const body = await req.json();
         console.log("finishRun request body:", JSON.stringify(body));
-        const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty } = body;
+        const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty, distance } = body;
 
         // Get all pending runs (no filter to see everything)
         const allPendingRunsGlobal = await base44.asServiceRole.entities.PendingRun.list();
@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
         const run = await base44.asServiceRole.entities.Run.create({
             user_id: user.id,
             score: score,
-            distance: 0,
+            distance: distance || 0,
             coins_earned: coinsCollected,
             combos_max: 0,
             duration_ms: durationMs,
@@ -130,9 +130,10 @@ Deno.serve(async (req) => {
         // Calculate updated values
         const newTotalScore = playerStats.total_score + score;
         const newTotalCoins = playerStats.total_coins + coinsCollected;
-        const newTotalDistance = playerStats.total_distance + 0; // distance not yet implemented
+        const newTotalDistance = playerStats.total_distance + (distance || 0);
         const newTotalRuns = playerStats.total_runs + 1;
         const newBestScore = Math.max(playerStats.best_score, score);
+        const newBestDistance = Math.max(playerStats.best_distance || 0, distance || 0);
 
         // Update PlayerStats
         await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
@@ -140,7 +141,8 @@ Deno.serve(async (req) => {
             total_coins: newTotalCoins,
             total_distance: newTotalDistance,
             total_runs: newTotalRuns,
-            best_score: newBestScore
+            best_score: newBestScore,
+            best_distance: newBestDistance
         });
 
         // Update User Entity
@@ -148,7 +150,7 @@ Deno.serve(async (req) => {
             total_coins: (user.total_coins || 0) + coinsCollected,
             total_runs: (user.total_runs || 0) + 1,
             best_score: newBestScore,
-            best_distance: playerStats.best_distance || 0
+            best_distance: newBestDistance
         });
 
         const isHighscore = score > (playerStats.best_score || 0);

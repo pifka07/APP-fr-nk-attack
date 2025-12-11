@@ -691,7 +691,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             createParticles(e.x + e.width/2, e.y + e.height/2, '#FFFF00', 10); // Sparkles
 
             // Notify React
-            onScoreUpdate(state.score, state.coins);
+            onScoreUpdate(state.score, state.coins, Math.floor(state.distance));
             }
             });
         });
@@ -712,7 +712,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
                     createParticles(state.player.x, state.player.y, '#FF0000', 10);
                     onHealthUpdate(state.health);
-                    onScoreUpdate(state.score, state.coins); // Update score display
+                    onScoreUpdate(state.score, state.coins, Math.floor(state.distance)); // Update score display
 
                     if (state.health <= 0) {
                         state.isPlaying = false;
@@ -746,7 +746,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     onHealthUpdate(state.health);
                     createParticles(state.player.x, state.player.y, '#00FFFF', 8);
                 }
-                onScoreUpdate(state.score, state.coins);
+                onScoreUpdate(state.score, state.coins, Math.floor(state.distance));
             }
         });
 

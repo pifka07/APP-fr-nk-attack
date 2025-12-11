@@ -19,6 +19,7 @@ export default function Game() {
     const [score, setScore] = useState(0);
     const [coins, setCoins] = useState(0);
     const [health, setHealth] = useState(100);
+    const [distance, setDistance] = useState(0);
     const [combo, setCombo] = useState(0);
     const [finalStats, setFinalStats] = useState(null);
     const [saving, setSaving] = useState(false);
@@ -110,6 +111,7 @@ export default function Game() {
             setScore(0);
             setCoins(0);
             setHealth(100);
+            setDistance(0);
             setCombo(0);
             setFinalStats(null);
             if (engineRef.current) engineRef.current.start();
@@ -154,6 +156,7 @@ export default function Game() {
                 run_session_id: runSessionIdRef.current,
                 score: stats.score,
                 coinsCollected: stats.coins,
+                distance: stats.distance,
                 durationMs: durationMs,
                 missionId: null,
                 difficulty: gameSpeed
@@ -164,6 +167,7 @@ export default function Game() {
                 run_session_id: runSessionIdRef.current,
                 score: stats.score,
                 coinsCollected: stats.coins,
+                distance: stats.distance,
                 durationMs: durationMs,
                 missionId: null,
                 difficulty: gameSpeed
@@ -271,7 +275,7 @@ export default function Game() {
                     musicEnabled={musicEnabled}
                     soundEnabled={soundEnabled}
                     onGameOver={handleGameOver}
-                    onScoreUpdate={(s, c) => { setScore(s); setCoins(c); }}
+                    onScoreUpdate={(s, c, d) => { setScore(s); setCoins(c); setDistance(d); }}
                     onHealthUpdate={setHealth}
                     onComboUpdate={setCombo}
                 />
@@ -318,6 +322,11 @@ export default function Game() {
                             <div className="bg-slate-900/50 backdrop-blur-sm px-3 py-1 rounded-lg border border-slate-700 inline-block ml-1">
                                 <div className="text-xl font-black text-white tabular-nums tracking-wider">{score}</div>
                                 <div className="text-[10px] text-slate-400 font-bold">SCORE</div>
+                            </div>
+
+                            <div className="bg-slate-900/50 backdrop-blur-sm px-3 py-1 rounded-lg border border-slate-700 inline-block ml-1 mt-2">
+                                <div className="text-lg font-black text-teal-400 tabular-nums tracking-wider">{Math.floor(distance)}m</div>
+                                <div className="text-[10px] text-slate-400 font-bold">DISTANCE</div>
                             </div>
                         </div>
 
@@ -507,10 +516,14 @@ export default function Game() {
                         />
 
                         {/* Stats Overlay */}
-                        <div className="absolute top-[34%] left-0 right-0 flex justify-center gap-8 z-10">
+                        <div className="absolute top-[34%] left-0 right-0 flex justify-center gap-4 z-10">
                              <div className="text-center transform -rotate-3">
                                  <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Score</div>
                                  <div className="text-2xl font-black text-slate-900">{finalStats.score}</div>
+                             </div>
+                             <div className="text-center">
+                                 <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Distance</div>
+                                 <div className="text-2xl font-black text-slate-900">{finalStats.distance}m</div>
                              </div>
                              <div className="text-center transform rotate-3">
                                  <div className="text-[10px] font-black text-slate-900/60 uppercase tracking-widest">Coins</div>

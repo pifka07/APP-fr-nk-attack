@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { toast } from 'sonner';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt } from "lucide-react";
+import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, Trash2 } from "lucide-react";
 
 export default function Profile() {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [runs, setRuns] = useState([]);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [editName, setEditName] = useState("");
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -49,6 +52,45 @@ export default function Profile() {
             setIsEditing(false);
         } catch (error) {
             console.error("Failed to update name", error);
+        }
+    };
+
+    const handleLogout = () => {
+        base44.auth.logout(createPageUrl('Home'));
+    };
+
+    const handleDeleteUser = async () => {
+        if (!confirm('Bist du sicher? Alle deine Daten werden gelöscht! Dies kann nicht rückgängig gemacht werden.')) {
+            return;
+        }
+        
+        setDeleting(true);
+        try {
+            // Lösche alle User-Daten (außer User selbst)
+            const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
+            const runs = await base44.entities.Run.filter({ user_id: user.id });
+            const skins = await base44.entities.PlayerSkin.filter({ user_id: user.id });
+            const upgrades = await base44.entities.PlayerUpgrade.filter({ user_id: user.id });
+            const missions = await base44.entities.PlayerMission.filter({ user_id: user.id });
+            const leaderboard = await base44.entities.LeaderboardEntry.filter({ user_id: user.id });
+
+            // Lösche alles
+            for (const stat of playerStats) await base44.entities.PlayerStats.delete(stat.id);
+            for (const run of runs) await base44.entities.Run.delete(run.id);
+            for (const skin of skins) await base44.entities.PlayerSkin.delete(skin.id);
+            for (const upgrade of upgrades) await base44.entities.PlayerUpgrade.delete(upgrade.id);
+            for (const mission of missions) await base44.entities.PlayerMission.delete(mission.id);
+            for (const entry of leaderboard) await base44.entities.LeaderboardEntry.delete(entry.id);
+
+            // Setze User Coins zurück
+            await base44.auth.updateMe({ total_coins: 0 });
+
+            toast.success('Alle Daten gelöscht!');
+            navigate(createPageUrl('Home'));
+        } catch (error) {
+            console.error('Error deleting user data:', error);
+            toast.error('Fehler beim Löschen der Daten');
+            setDeleting(false);
         }
     };
 
@@ -139,6 +181,25 @@ export default function Profile() {
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Total Runs</div>
                     </CardContent>
                 </Card>
+            </div>
+
+            {/* Account Actions */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+                <Button 
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="h-12 font-bold border-slate-600 bg-slate-800 hover:bg-slate-700 text-slate-200"
+                >
+                    <LogOut className="mr-2 w-5 h-5" /> Logout
+                </Button>
+                <Button 
+                    onClick={handleDeleteUser}
+                    disabled={deleting}
+                    variant="outline"
+                    className="h-12 font-bold border-red-900 bg-red-950/50 hover:bg-red-900/50 text-red-400"
+                >
+                    <Trash2 className="mr-2 w-5 h-5" /> {deleting ? 'Lösche...' : 'Delete User'}
+                </Button>
             </div>
 
             {/* Recent Runs */}

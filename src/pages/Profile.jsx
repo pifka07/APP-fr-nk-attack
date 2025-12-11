@@ -192,7 +192,7 @@ export default function Profile() {
                     <LogOut className="mr-2 w-5 h-5" /> Logout
                 </Button>
                 <Button 
-                    onClick={handleDeleteUser}
+                    onClick={() => setShowDeleteDialog(true)}
                     disabled={deleting}
                     variant="outline"
                     className="h-12 font-bold border-red-900 bg-red-950/50 hover:bg-red-900/50 text-red-400"

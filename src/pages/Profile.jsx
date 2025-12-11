@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, Trash2 } from "lucide-react";
 
@@ -17,6 +18,7 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [editName, setEditName] = useState("");
     const [deleting, setDeleting] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -60,11 +62,8 @@ export default function Profile() {
     };
 
     const handleDeleteUser = async () => {
-        if (!confirm('Bist du sicher? Alle deine Daten werden gelöscht! Dies kann nicht rückgängig gemacht werden.')) {
-            return;
-        }
-        
         setDeleting(true);
+        setShowDeleteDialog(false);
         try {
             // Lösche alle User-Daten (außer User selbst)
             const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
@@ -156,14 +155,14 @@ export default function Profile() {
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Trophy className="w-8 h-8 text-yellow-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{stats?.best_score || 0}</div>
+                        <div className="text-2xl font-bold text-white">{user?.best_score || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">High Score</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <MapPin className="w-8 h-8 text-teal-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{stats?.best_distance || 0}m</div>
+                        <div className="text-2xl font-bold text-white">{user?.best_distance || 0}m</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Fartherst Flight</div>
                     </CardContent>
                 </Card>
@@ -220,8 +219,31 @@ export default function Profile() {
                             </div>
                         </div>
                     ))
-                )}
-            </div>
-        </div>
-    );
-}
+                    )}
+                    </div>
+
+                    {/* Delete Confirmation Dialog */}
+                    <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                    <AlertDialogContent className="bg-slate-800 border-slate-700">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-white">Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-slate-400">
+                            Alle deine Daten werden gelöscht! Dies kann nicht rückgängig gemacht werden.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-slate-700 hover:bg-slate-600 text-white border-slate-600">
+                            ESC
+                        </AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={handleDeleteUser}
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                            DEL
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                    </AlertDialogContent>
+                    </AlertDialog>
+                    </div>
+                    );
+                    }

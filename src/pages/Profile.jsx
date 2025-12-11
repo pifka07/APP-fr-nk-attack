@@ -224,25 +224,25 @@ export default function Profile() {
 
                     {/* Delete Confirmation Dialog */}
                     <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                    <AlertDialogContent className="bg-slate-800 border-slate-700">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="text-white">Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-slate-400">
-                            Alle deine Daten werden gelöscht! Dies kann nicht rückgängig gemacht werden.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-slate-700 hover:bg-slate-600 text-white border-slate-600">
-                            ESC
-                        </AlertDialogCancel>
-                        <AlertDialogAction 
-                            onClick={handleDeleteUser}
-                            className="bg-red-600 hover:bg-red-700 text-white"
-                        >
-                            DEL
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                    </AlertDialogContent>
+                        <AlertDialogContent className="bg-slate-800 border-slate-700 max-w-[90vw] w-full mx-4">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="text-white">Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription className="text-slate-400">
+                                    Alle deine Daten werden gelöscht! Dies kann nicht rückgängig gemacht werden.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="bg-slate-700 hover:bg-slate-600 text-white border-slate-600">
+                                    ESC
+                                </AlertDialogCancel>
+                                <AlertDialogAction 
+                                    onClick={handleDeleteUser}
+                                    className="bg-red-600 hover:bg-red-700 text-white"
+                                >
+                                    DEL
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
                     </AlertDialog>
                     </div>
                     );

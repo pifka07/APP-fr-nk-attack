@@ -24,23 +24,17 @@ export default function Shop() {
                 base44.auth.me(),
                 base44.entities.Upgrade.list(),
                 base44.entities.Skin.list(),
-                base44.entities.PlayerUpgrade.list(), // User security rule ensures we only see our own
+                base44.entities.PlayerUpgrade.list(),
                 base44.entities.PlayerSkin.list()
             ]);
             
-            // Get PlayerStats
-            let statsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
-            if (statsData.length === 0) {
-                statsData = [await base44.entities.PlayerStats.create({
-                    user_id: userData.id,
-                    total_coins: 0,
-                    best_score: 0,
-                    best_distance: 0,
-                    total_runs: 0
-                })];
+            // Initialize total_coins if undefined
+            if (userData.total_coins === undefined || userData.total_coins === null) {
+                await base44.auth.updateMe({ total_coins: 0 });
+                userData.total_coins = 0;
             }
             
-            setUser({ ...userData, stats: statsData[0] });
+            setUser(userData);
             setUpgrades(upgradesData);
             setSkins(skinsData);
             setPlayerUpgrades(pUpgradesData);

@@ -65,27 +65,15 @@ export default function Profile() {
         setDeleting(true);
         setShowDeleteDialog(false);
         try {
-            // Lösche alle User-Daten (außer User selbst)
-            const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
-            const runs = await base44.entities.Run.filter({ user_id: user.id });
-            const skins = await base44.entities.PlayerSkin.filter({ user_id: user.id });
-            const upgrades = await base44.entities.PlayerUpgrade.filter({ user_id: user.id });
-            const missions = await base44.entities.PlayerMission.filter({ user_id: user.id });
-            const leaderboard = await base44.entities.LeaderboardEntry.filter({ user_id: user.id });
-
-            // Lösche alles
-            for (const stat of playerStats) await base44.entities.PlayerStats.delete(stat.id);
-            for (const run of runs) await base44.entities.Run.delete(run.id);
-            for (const skin of skins) await base44.entities.PlayerSkin.delete(skin.id);
-            for (const upgrade of upgrades) await base44.entities.PlayerUpgrade.delete(upgrade.id);
-            for (const mission of missions) await base44.entities.PlayerMission.delete(mission.id);
-            for (const entry of leaderboard) await base44.entities.LeaderboardEntry.delete(entry.id);
-
-            // Setze User Coins zurück
-            await base44.auth.updateMe({ total_coins: 0 });
-
-            toast.success('Alle Daten gelöscht!');
-            navigate(createPageUrl('Home'));
+            const response = await base44.functions.invoke('deleteUserData');
+            
+            if (response.data.success) {
+                toast.success('Alle Daten gelöscht!');
+                navigate(createPageUrl('Home'));
+            } else {
+                toast.error('Fehler beim Löschen der Daten');
+                setDeleting(false);
+            }
         } catch (error) {
             console.error('Error deleting user data:', error);
             toast.error('Fehler beim Löschen der Daten');

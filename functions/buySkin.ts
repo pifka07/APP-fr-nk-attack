@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
 
         // Deduct coins
         await base44.auth.updateMe({
-            total_coins: currentCoins - skin.cost_coins
+            total_coins: currentCoins - skinPrice
         });
 
         // Create PlayerSkin
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
 
         return Response.json({ 
             success: true,
-            coins_remaining: currentCoins - skin.cost_coins
+            coins_remaining: currentCoins - skinPrice
         });
 
     } catch (error) {

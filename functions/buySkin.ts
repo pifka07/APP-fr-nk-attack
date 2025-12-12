@@ -4,25 +4,31 @@ Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         
-        // Parse request body
-        const body = await req.json();
-        const { skin_id } = body;
-
-        if (!skin_id) {
-            return Response.json({ 
-                success: false, 
-                reason: 'INVALID_REQUEST'
-            }, { status: 400 });
-        }
-
-        // Authenticate user
+        // Authenticate user first
         const user = await base44.auth.me();
         if (!user) {
+            console.log('User not authenticated');
             return Response.json({ 
                 success: false, 
                 reason: 'NOT_LOGGED_IN' 
             }, { status: 401 });
         }
+
+        // Parse request body
+        const body = await req.json();
+        console.log('Received body:', JSON.stringify(body));
+        const { skin_id } = body;
+
+        if (!skin_id) {
+            console.log('Missing skin_id');
+            return Response.json({ 
+                success: false, 
+                reason: 'INVALID_REQUEST',
+                body: body
+            }, { status: 400 });
+        }
+
+        console.log('Processing skin purchase for user:', user.id, 'skin:', skin_id);
 
         // Get skin
         const allSkins = await base44.asServiceRole.entities.Skin.list();

@@ -3,9 +3,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-
-        // 1. User authentication
         const user = await base44.auth.me();
+
         if (!user) {
             return Response.json({ 
                 success: false, 
@@ -13,7 +12,6 @@ Deno.serve(async (req) => {
             }, { status: 401 });
         }
 
-        // Parse request body
         const { skin_id } = await req.json();
 
         if (!skin_id) {
@@ -23,8 +21,8 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // 2. Load skin
-        const skins = await base44.entities.Skin.filter({ id: skin_id });
+        // Get skin
+        const skins = await base44.asServiceRole.entities.Skin.filter({ id: skin_id });
         if (skins.length === 0) {
             return Response.json({ 
                 success: false, 
@@ -33,8 +31,8 @@ Deno.serve(async (req) => {
         }
         const skin = skins[0];
 
-        // 3. Check if already owned
-        const existingSkins = await base44.entities.PlayerSkin.filter({ 
+        // Check if already owned
+        const existingSkins = await base44.asServiceRole.entities.PlayerSkin.filter({ 
             user_id: user.id, 
             skin_id: skin_id 
         });
@@ -46,7 +44,7 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // 4. Check coins from User entity
+        // Check coins
         const currentCoins = user.total_coins || 0;
         if (currentCoins < skin.cost_coins) {
             return Response.json({ 
@@ -57,19 +55,18 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // 5. Deduct coins from User entity
+        // Deduct coins
         await base44.auth.updateMe({
             total_coins: currentCoins - skin.cost_coins
         });
 
-        // 6. Create PlayerSkin (use service role)
+        // Create PlayerSkin
         await base44.asServiceRole.entities.PlayerSkin.create({
             user_id: user.id,
             skin_id: skin_id,
             owned: true
         });
 
-        // 7. Success response
         return Response.json({ 
             success: true,
             coins_remaining: currentCoins - skin.cost_coins

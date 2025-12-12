@@ -3,8 +3,20 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-        const user = await base44.auth.me();
+        
+        // Parse body first
+        let body;
+        try {
+            body = await req.json();
+        } catch (e) {
+            return Response.json({ 
+                success: false, 
+                reason: 'INVALID_JSON',
+                error: e.message
+            }, { status: 400 });
+        }
 
+        const user = await base44.auth.me();
         if (!user) {
             return Response.json({ 
                 success: false, 
@@ -12,12 +24,8 @@ Deno.serve(async (req) => {
             }, { status: 401 });
         }
 
-        const body = await req.json();
-        console.log('Request body:', body);
         const { skin_id } = body;
-
         if (!skin_id) {
-            console.log('Missing skin_id in request');
             return Response.json({ 
                 success: false, 
                 reason: 'INVALID_REQUEST',

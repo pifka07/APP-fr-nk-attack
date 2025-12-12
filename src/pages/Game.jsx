@@ -517,6 +517,24 @@ export default function Game() {
                                 <HomeIcon className="mr-2 w-5 h-5" /> QUIT
                             </Button>
                         </Link>
+                        
+                        <div className="flex justify-center gap-4 mt-6">
+                            <Button
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); setMusicEnabled(!musicEnabled); }}
+                                className={`w-14 h-14 rounded-full border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all ${musicEnabled ? 'bg-teal-500 hover:bg-teal-400' : 'bg-slate-600 hover:bg-slate-500'}`}
+                            >
+                                {musicEnabled ? <Music className="w-7 h-7 text-white" /> : <div className="relative"><Music className="w-7 h-7 text-slate-400" /><div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-1 bg-red-500 rotate-45 transform scale-110 rounded-full"></div></div></div>}
+                            </Button>
+
+                            <Button
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); setSoundEnabled(!soundEnabled); }}
+                                className={`w-14 h-14 rounded-full border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all ${soundEnabled ? 'bg-purple-500 hover:bg-purple-400' : 'bg-slate-600 hover:bg-slate-500'}`}
+                            >
+                                {soundEnabled ? <Volume2 className="w-7 h-7 text-white" /> : <div className="relative"><VolumeX className="w-7 h-7 text-slate-400" /><div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-1 bg-red-500 rotate-45 transform scale-110 rounded-full"></div></div></div>}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             )}

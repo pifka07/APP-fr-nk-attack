@@ -82,12 +82,18 @@ export default function Shop() {
 
     const handleBuySkin = async (skin) => {
         try {
+            console.log('Calling buySkin with skin:', skin);
+            console.log('Skin ID:', skin.id);
+            
             const response = await base44.functions.invoke('buySkin', { 
                 skin_id: skin.id 
             });
 
+            console.log('buySkin response:', response);
+
             if (!response.data.success) {
                 const reason = response.data.reason;
+                console.log('Purchase failed with reason:', reason);
                 if (reason === 'NOT_ENOUGH_COINS') {
                     toast.error("Not enough coins!");
                 } else if (reason === 'SKIN_ALREADY_OWNED') {
@@ -102,6 +108,7 @@ export default function Shop() {
             fetchData();
         } catch (error) {
             console.error("Skin purchase error:", error);
+            console.error("Error response:", error.response);
             toast.error("Purchase failed: " + (error.message || "Unknown error"));
         }
     };

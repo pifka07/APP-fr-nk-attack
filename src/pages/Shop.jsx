@@ -20,20 +20,19 @@ export default function Shop() {
 
     const fetchData = async () => {
         try {
-            const [userData, upgradesData, skinsData, pUpgradesData, pSkinsData] = await Promise.all([
+            const [userData, upgradesData, skinsData, pUpgradesData, pSkinsData, statsData] = await Promise.all([
                 base44.auth.me(),
                 base44.entities.Upgrade.list(),
                 base44.entities.Skin.list(),
                 base44.entities.PlayerUpgrade.list(),
-                base44.entities.PlayerSkin.list()
+                base44.entities.PlayerSkin.list(),
+                base44.entities.PlayerStats.filter({ user_id: (await base44.auth.me()).id })
             ]);
-            
-            // Initialize total_coins if undefined
-            if (userData.total_coins === undefined || userData.total_coins === null) {
-                await base44.auth.updateMe({ total_coins: 0 });
-                userData.total_coins = 0;
-            }
-            
+
+            // Get coins from PlayerStats
+            const playerStats = statsData.length > 0 ? statsData[0] : { total_coins: 0 };
+            userData.total_coins = playerStats.total_coins || 0;
+
             setUser(userData);
             setUpgrades(upgradesData);
             setSkins(skinsData);
@@ -86,18 +85,23 @@ export default function Shop() {
     };
 
     const handleBuySkin = async (skin) => {
-        if ((user.total_coins || 0) < skin.cost_coins) {
-            toast.error("Not enough coins!");
-            return;
-        }
-
         try {
-            await base44.auth.updateMe({ total_coins: (user.total_coins || 0) - skin.cost_coins });
-            await base44.entities.PlayerSkin.create({ 
-                skin_id: skin.id, 
-                user_id: user.id,
-                owned: true 
+            const response = await base44.functions.invoke('buySkin', { 
+                skin_id: skin.id 
             });
+
+            if (!response.data.success) {
+                const reason = response.data.reason;
+                if (reason === 'NOT_ENOUGH_COINS') {
+                    toast.error("Not enough coins!");
+                } else if (reason === 'SKIN_ALREADY_OWNED') {
+                    toast.error("You already own this skin!");
+                } else {
+                    toast.error("Purchase failed: " + reason);
+                }
+                return;
+            }
+
             toast.success(`Unlocked ${skin.name}!`);
             fetchData();
         } catch (error) {

@@ -89,9 +89,14 @@ Deno.serve(async (req) => {
             playerStats = playerStatsList[0];
         }
 
-        // Check coins
-        const currentCoins = playerStats.total_coins || 0;
-        console.log('Player coins:', currentCoins, 'required:', skinPrice);
+        // Check coins from both User and PlayerStats (use the max value)
+        const userCoins = user.total_coins || 0;
+        const statsCoins = playerStats.total_coins || 0;
+        const currentCoins = Math.max(userCoins, statsCoins);
+        
+        console.log('User coins:', userCoins);
+        console.log('PlayerStats coins:', statsCoins);
+        console.log('Using max coins:', currentCoins, 'required:', skinPrice);
         
         if (currentCoins < skinPrice) {
             console.log('Not enough coins');

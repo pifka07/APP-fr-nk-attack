@@ -22,19 +22,16 @@ export default function Shop() {
         try {
             const userData = await base44.auth.me();
             
-            const [upgradesData, skinsData, pUpgradesData, pSkinsData, statsData] = await Promise.all([
+            const [upgradesData, skinsData, pUpgradesData, pSkinsData, coinsResponse] = await Promise.all([
                 base44.entities.Upgrade.list(),
                 base44.entities.Skin.list(),
                 base44.entities.PlayerUpgrade.list(),
                 base44.entities.PlayerSkin.list(),
-                base44.entities.PlayerStats.filter({ user_id: userData.id })
+                base44.functions.invoke('getPlayerCoins')
             ]);
 
-            // Get coins from PlayerStats
-            console.log("PlayerStats data:", statsData);
-            const playerStats = statsData.length > 0 ? statsData[0] : { total_coins: 0 };
-            console.log("Player coins:", playerStats.total_coins);
-            userData.total_coins = playerStats.total_coins || 0;
+            // Get coins from server function
+            userData.total_coins = coinsResponse.data.success ? coinsResponse.data.coins : 0;
 
             setUser(userData);
             setUpgrades(upgradesData);
@@ -43,7 +40,6 @@ export default function Shop() {
             setPlayerSkins(pSkinsData);
         } catch (error) {
             console.error("Error fetching shop data", error);
-            console.error("Error details:", error);
         } finally {
             setLoading(false);
         }

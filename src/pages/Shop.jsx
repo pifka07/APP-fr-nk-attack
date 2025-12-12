@@ -57,12 +57,10 @@ export default function Shop() {
         }
 
         try {
-            // Deduct coins from User entity
             await base44.auth.updateMe({ 
                 total_coins: (user.total_coins || 0) - cost 
             });
             
-            // Update or Create PlayerUpgrade
             const existingPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
             if (existingPu) {
                 await base44.entities.PlayerUpgrade.update(existingPu.id, { level: existingPu.level + 1 });
@@ -75,7 +73,7 @@ export default function Shop() {
             }
 
             toast.success(`Upgraded ${upgrade.name}!`);
-            fetchData(); // Refresh data
+            fetchData();
         } catch (error) {
             console.error("Purchase failed", error);
             toast.error("Purchase failed. Try again.");
@@ -84,18 +82,12 @@ export default function Shop() {
 
     const handleBuySkin = async (skin) => {
         try {
-            console.log('Calling buySkin with skin:', skin);
-            console.log('Skin ID:', skin.id);
-            
             const response = await base44.functions.invoke('buySkin', { 
                 skin_id: skin.id 
             });
 
-            console.log('buySkin response:', response);
-
             if (!response.data.success) {
                 const reason = response.data.reason;
-                console.log('Purchase failed with reason:', reason);
                 if (reason === 'NOT_ENOUGH_COINS') {
                     toast.error("Not enough coins!");
                 } else if (reason === 'SKIN_ALREADY_OWNED') {
@@ -110,7 +102,6 @@ export default function Shop() {
             fetchData();
         } catch (error) {
             console.error("Skin purchase error:", error);
-            console.error("Error response:", error.response);
             toast.error("Purchase failed: " + (error.message || "Unknown error"));
         }
     };
@@ -129,7 +120,6 @@ export default function Shop() {
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pb-20">
-            {/* Header */}
             <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <div className="flex items-center gap-2">
                     <Link to={createPageUrl('Home')}>
@@ -185,7 +175,7 @@ export default function Shop() {
                                             >
                                                 {isEquipped ? <><Check className="w-3 h-3 mr-1" /> Active</> : "Equip"}
                                             </Button>
-                                            ) : (
+                                        ) : (
                                             <Button 
                                                 onClick={() => handleBuySkin(skin)}
                                                 disabled={!canAfford}
@@ -193,7 +183,7 @@ export default function Shop() {
                                             >
                                                 <Coins className="w-3 h-3 mr-1" /> {skin.cost_coins}
                                             </Button>
-                                            )}
+                                        )}
                                     </CardFooter>
                                 </Card>
                             </motion.div>
@@ -230,17 +220,17 @@ export default function Shop() {
                                 </CardContent>
                                 <CardFooter>
                                     {isMaxed ? (
-                                            <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-titan tracking-wide uppercase">Maxed</Button>
-                                        ) : (
-                                            <Button 
-                                                onClick={() => handleBuyUpgrade(upgrade)}
-                                                disabled={!canAfford}
-                                                className={`w-full h-12 font-titan tracking-wide border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
-                                            >
-                                                <Coins className="w-4 h-4 mr-2" /> 
-                                                Upgrade ({nextCost})
-                                            </Button>
-                                        )}
+                                        <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-titan tracking-wide uppercase">Maxed</Button>
+                                    ) : (
+                                        <Button 
+                                            onClick={() => handleBuyUpgrade(upgrade)}
+                                            disabled={!canAfford}
+                                            className={`w-full h-12 font-titan tracking-wide border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
+                                        >
+                                            <Coins className="w-4 h-4 mr-2" /> 
+                                            Upgrade ({nextCost})
+                                        </Button>
+                                    )}
                                 </CardFooter>
                             </Card>
                         );

@@ -12,12 +12,16 @@ Deno.serve(async (req) => {
             }, { status: 401 });
         }
 
-        const { skin_id } = await req.json();
+        const body = await req.json();
+        console.log('Request body:', body);
+        const { skin_id } = body;
 
         if (!skin_id) {
+            console.log('Missing skin_id in request');
             return Response.json({ 
                 success: false, 
-                reason: 'INVALID_REQUEST' 
+                reason: 'INVALID_REQUEST',
+                received: body
             }, { status: 400 });
         }
 

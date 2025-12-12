@@ -69,48 +69,24 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // Get or create PlayerStats
-        const playerStatsList = await base44.asServiceRole.entities.PlayerStats.filter({
-            user_id: user.id
-        });
-
-        let playerStats;
-        if (playerStatsList.length === 0) {
-            playerStats = await base44.asServiceRole.entities.PlayerStats.create({
-                user_id: user.id,
-                total_score: 0,
-                total_coins: 0,
-                total_distance: 0,
-                total_runs: 0,
-                best_score: 0,
-                best_distance: 0
-            });
-        } else {
-            playerStats = playerStatsList[0];
-        }
-
-        // Check coins from both User and PlayerStats (use the max value)
+        // Check coins from User
         const userCoins = user.total_coins || 0;
-        const statsCoins = playerStats.total_coins || 0;
-        const currentCoins = Math.max(userCoins, statsCoins);
         
-        console.log('User coins:', userCoins);
-        console.log('PlayerStats coins:', statsCoins);
-        console.log('Using max coins:', currentCoins, 'required:', skinPrice);
+        console.log('User coins:', userCoins, 'required:', skinPrice);
         
-        if (currentCoins < skinPrice) {
+        if (userCoins < skinPrice) {
             console.log('Not enough coins');
             return Response.json({ 
                 success: false, 
                 reason: 'NOT_ENOUGH_COINS',
                 required: skinPrice,
-                available: currentCoins
+                available: userCoins
             }, { status: 400 });
         }
 
-        // Deduct coins from PlayerStats only
-        await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-            total_coins: currentCoins - skinPrice
+        // Deduct coins from User
+        const updatedUser = await base44.asServiceRole.users.update(user.id, {
+            total_coins: userCoins - skinPrice
         });
 
         // Create PlayerSkin
@@ -119,15 +95,10 @@ Deno.serve(async (req) => {
             skin_id: skin_id,
             owned: true
         });
-        await db.PlayerSkin.create({
-             user_id: user.id,
-             skin_id: skin_id,
-             owned: true
-            });
 
         return Response.json({ 
             success: true,
-            coins_remaining: currentCoins - skinPrice
+            coins_remaining: userCoins - skinPrice
         });
 
     } catch (error) {

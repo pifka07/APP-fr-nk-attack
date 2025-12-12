@@ -20,13 +20,14 @@ export default function Shop() {
 
     const fetchData = async () => {
         try {
-            const [userData, upgradesData, skinsData, pUpgradesData, pSkinsData, statsData] = await Promise.all([
-                base44.auth.me(),
+            const userData = await base44.auth.me();
+            
+            const [upgradesData, skinsData, pUpgradesData, pSkinsData, statsData] = await Promise.all([
                 base44.entities.Upgrade.list(),
                 base44.entities.Skin.list(),
                 base44.entities.PlayerUpgrade.list(),
                 base44.entities.PlayerSkin.list(),
-                base44.entities.PlayerStats.filter({ user_id: (await base44.auth.me()).id })
+                base44.entities.PlayerStats.filter({ user_id: userData.id })
             ]);
 
             // Get coins from PlayerStats

@@ -22,22 +22,31 @@ Deno.serve(async (req) => {
         }
 
         // Get skin
-        const skins = await base44.asServiceRole.entities.Skin.filter({ id: skin_id });
-        if (skins.length === 0) {
+        const allSkins = await base44.asServiceRole.entities.Skin.list();
+        const skin = allSkins.find(s => s.id === skin_id);
+        
+        if (!skin) {
             return Response.json({ 
                 success: false, 
                 reason: 'SKIN_NOT_FOUND' 
             }, { status: 404 });
         }
-        const skin = skins[0];
+
+        // Get skin price (handle different field names)
+        const skinPrice = skin.cost_coins ?? skin.price ?? skin.cost ?? 0;
+        
+        if (skinPrice <= 0) {
+            return Response.json({ 
+                success: false, 
+                reason: 'INVALID_SKIN_PRICE' 
+            }, { status: 400 });
+        }
 
         // Check if already owned
-        const existingSkins = await base44.asServiceRole.entities.PlayerSkin.filter({ 
-            user_id: user.id, 
-            skin_id: skin_id 
-        });
+        const ownedSkins = await base44.asServiceRole.entities.PlayerSkin.list();
+        const alreadyOwned = ownedSkins.find(ps => ps.user_id === user.id && ps.skin_id === skin_id);
 
-        if (existingSkins.length > 0) {
+        if (alreadyOwned) {
             return Response.json({ 
                 success: false, 
                 reason: 'SKIN_ALREADY_OWNED' 
@@ -46,11 +55,11 @@ Deno.serve(async (req) => {
 
         // Check coins
         const currentCoins = user.total_coins || 0;
-        if (currentCoins < skin.cost_coins) {
+        if (currentCoins < skinPrice) {
             return Response.json({ 
                 success: false, 
                 reason: 'NOT_ENOUGH_COINS',
-                required: skin.cost_coins,
+                required: skinPrice,
                 available: currentCoins
             }, { status: 400 });
         }

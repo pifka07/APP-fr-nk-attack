@@ -4,33 +4,24 @@ Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         
-        // Parse body first
-        let body;
-        try {
-            body = await req.json();
-        } catch (e) {
+        // Parse request body
+        const body = await req.json();
+        const { skin_id } = body;
+
+        if (!skin_id) {
             return Response.json({ 
                 success: false, 
-                reason: 'INVALID_JSON',
-                error: e.message
+                reason: 'INVALID_REQUEST'
             }, { status: 400 });
         }
 
+        // Authenticate user
         const user = await base44.auth.me();
         if (!user) {
             return Response.json({ 
                 success: false, 
                 reason: 'NOT_LOGGED_IN' 
             }, { status: 401 });
-        }
-
-        const { skin_id } = body;
-        if (!skin_id) {
-            return Response.json({ 
-                success: false, 
-                reason: 'INVALID_REQUEST',
-                received: body
-            }, { status: 400 });
         }
 
         // Get skin
@@ -44,9 +35,8 @@ Deno.serve(async (req) => {
             }, { status: 404 });
         }
 
-        // Get skin price (handle different field names)
-        const skinPrice = skin.cost_coins ?? skin.price ?? skin.cost ?? 0;
-        
+        // Get skin price
+        const skinPrice = skin.cost_coins ?? 0;
         if (skinPrice <= 0) {
             return Response.json({ 
                 success: false, 
@@ -55,10 +45,12 @@ Deno.serve(async (req) => {
         }
 
         // Check if already owned
-        const ownedSkins = await base44.asServiceRole.entities.PlayerSkin.list();
-        const alreadyOwned = ownedSkins.find(ps => ps.user_id === user.id && ps.skin_id === skin_id);
+        const ownedSkins = await base44.asServiceRole.entities.PlayerSkin.filter({
+            user_id: user.id,
+            skin_id: skin_id
+        });
 
-        if (alreadyOwned) {
+        if (ownedSkins.length > 0) {
             return Response.json({ 
                 success: false, 
                 reason: 'SKIN_ALREADY_OWNED' 
@@ -85,7 +77,7 @@ Deno.serve(async (req) => {
             playerStats = playerStatsList[0];
         }
 
-        // Check coins from PlayerStats
+        // Check coins
         const currentCoins = playerStats.total_coins || 0;
         if (currentCoins < skinPrice) {
             return Response.json({ 
@@ -101,7 +93,7 @@ Deno.serve(async (req) => {
             total_coins: currentCoins - skinPrice
         });
 
-        // Update User entity too (for consistency)
+        // Update User entity for consistency
         await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: currentCoins - skinPrice
         });
@@ -119,13 +111,11 @@ Deno.serve(async (req) => {
         });
 
     } catch (error) {
-        console.error('Error in buySkin:', error);
-        console.error('Error stack:', error.stack);
+        console.error('buySkin error:', error);
         return Response.json({ 
             success: false, 
             reason: 'SERVER_ERROR',
-            message: error.message,
-            stack: error.stack
+            message: error.message
         }, { status: 500 });
     }
 });

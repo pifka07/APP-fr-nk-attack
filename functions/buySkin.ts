@@ -83,10 +83,12 @@ Deno.serve(async (req) => {
 
     } catch (error) {
         console.error('Error in buySkin:', error);
+        console.error('Error stack:', error.stack);
         return Response.json({ 
             success: false, 
             reason: 'SERVER_ERROR',
-            message: error.message 
+            message: error.message,
+            stack: error.stack
         }, { status: 500 });
     }
 });

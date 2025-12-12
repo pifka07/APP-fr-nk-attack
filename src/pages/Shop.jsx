@@ -60,8 +60,10 @@ export default function Shop() {
         }
 
         try {
-            // Deduct coins from User entity
-            await base44.auth.updateMe({ total_coins: (user.total_coins || 0) - cost });
+            // Deduct coins from PlayerStats
+            await base44.entities.PlayerStats.update(playerStats.id, { 
+                total_coins: playerStats.total_coins - cost 
+            });
             
             // Update or Create PlayerUpgrade
             const existingPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);

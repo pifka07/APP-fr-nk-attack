@@ -155,52 +155,6 @@ export default function Shop() {
 
                 <TabsContent value="skins" className="grid grid-cols-2 gap-4">
                     {skins.map(skin => {
-                        const currentPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
-                        const currentLevel = currentPu?.level || 0;
-                        const isMaxed = currentLevel >= upgrade.max_level;
-                        const nextCost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
-                        const canAfford = (user?.total_coins || 0) >= nextCost;
-
-                        return (
-                            <Card key={upgrade.id} className="bg-slate-800 border-slate-700">
-                                <CardHeader className="pb-2">
-                                    <div className="flex justify-between">
-                                        <CardTitle className="text-lg font-bold text-teal-300">{upgrade.name}</CardTitle>
-                                        <Badge variant={isMaxed ? "default" : "outline"} className={isMaxed ? "bg-teal-500" : "text-teal-400 border-teal-400"}>
-                                            Lvl {currentLevel} / {upgrade.max_level}
-                                        </Badge>
-                                    </div>
-                                    <CardDescription className="text-slate-400">{upgrade.description}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
-                                        <div 
-                                            className="h-full bg-teal-500 transition-all duration-500" 
-                                            style={{ width: `${(currentLevel / upgrade.max_level) * 100}%` }}
-                                        />
-                                    </div>
-                                </CardContent>
-                                <CardFooter>
-                                    {isMaxed ? (
-                                            <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-titan tracking-wide uppercase">Maxed</Button>
-                                        ) : (
-                                            <Button 
-                                                onClick={() => handleBuyUpgrade(upgrade)}
-                                                disabled={!canAfford}
-                                                className={`w-full h-12 font-titan tracking-wide border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
-                                            >
-                                                <Coins className="w-4 h-4 mr-2" /> 
-                                                Upgrade ({nextCost})
-                                            </Button>
-                                        )}
-                                </CardFooter>
-                            </Card>
-                        );
-                    })}
-                    </TabsContent>
-
-                    <TabsContent value="upgrades" className="space-y-4">
-                    {upgrades.map(upgrade => {
                         const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
                         const isEquipped = user?.equipped_skin === skin.key;
                         const canAfford = (user?.total_coins || 0) >= skin.cost_coins;
@@ -241,6 +195,52 @@ export default function Shop() {
                                     </CardFooter>
                                 </Card>
                             </motion.div>
+                        );
+                    })}
+                </TabsContent>
+
+                <TabsContent value="upgrades" className="space-y-4">
+                    {upgrades.map(upgrade => {
+                        const currentPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
+                        const currentLevel = currentPu?.level || 0;
+                        const isMaxed = currentLevel >= upgrade.max_level;
+                        const nextCost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
+                        const canAfford = (user?.total_coins || 0) >= nextCost;
+
+                        return (
+                            <Card key={upgrade.id} className="bg-slate-800 border-slate-700">
+                                <CardHeader className="pb-2">
+                                    <div className="flex justify-between">
+                                        <CardTitle className="text-lg font-bold text-teal-300">{upgrade.name}</CardTitle>
+                                        <Badge variant={isMaxed ? "default" : "outline"} className={isMaxed ? "bg-teal-500" : "text-teal-400 border-teal-400"}>
+                                            Lvl {currentLevel} / {upgrade.max_level}
+                                        </Badge>
+                                    </div>
+                                    <CardDescription className="text-slate-400">{upgrade.description}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-teal-500 transition-all duration-500" 
+                                            style={{ width: `${(currentLevel / upgrade.max_level) * 100}%` }}
+                                        />
+                                    </div>
+                                </CardContent>
+                                <CardFooter>
+                                    {isMaxed ? (
+                                            <Button disabled className="w-full h-12 border-4 border-slate-800 bg-slate-800 text-slate-500 rounded-full font-titan tracking-wide uppercase">Maxed</Button>
+                                        ) : (
+                                            <Button 
+                                                onClick={() => handleBuyUpgrade(upgrade)}
+                                                disabled={!canAfford}
+                                                className={`w-full h-12 font-titan tracking-wide border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase ${canAfford ? 'bg-yellow-500 hover:bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-500'}`}
+                                            >
+                                                <Coins className="w-4 h-4 mr-2" /> 
+                                                Upgrade ({nextCost})
+                                            </Button>
+                                        )}
+                                </CardFooter>
+                            </Card>
                         );
                     })}
                 </TabsContent>

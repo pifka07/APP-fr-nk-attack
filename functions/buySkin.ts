@@ -46,18 +46,8 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // 4. Load PlayerStats
-        const statsData = await base44.entities.PlayerStats.filter({ user_id: user.id });
-        if (statsData.length === 0) {
-            return Response.json({ 
-                success: false, 
-                reason: 'STATS_NOT_FOUND' 
-            }, { status: 404 });
-        }
-        const stats = statsData[0];
-
-        // 5. Check coins
-        const currentCoins = stats.total_coins || 0;
+        // 4. Check coins from User entity
+        const currentCoins = user.total_coins || 0;
         if (currentCoins < skin.cost_coins) {
             return Response.json({ 
                 success: false, 
@@ -67,8 +57,8 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // 6. Deduct coins (use service role for admin access)
-        await base44.asServiceRole.entities.PlayerStats.update(stats.id, {
+        // 5. Deduct coins from User entity
+        await base44.auth.updateMe({
             total_coins: currentCoins - skin.cost_coins
         });
 

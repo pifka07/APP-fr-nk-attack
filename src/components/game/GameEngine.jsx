@@ -58,6 +58,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         playerGlide: new Image(), // Gliding (input active)
         playerDead: new Image(),
         playerGround: new Image(), // Standing
+        customSkin: new Image(), // Custom equipped skin
         enemiesSheet: new Image(),
         uiAtlas: new Image(),
         eagle: new Image(),
@@ -108,6 +109,24 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
     }, [level]);
+
+    // Load custom skin when skin prop changes
+    useEffect(() => {
+        const loadCustomSkin = async () => {
+            if (skin && skin !== 'default') {
+                try {
+                    const { base44 } = await import('@/api/base44Client');
+                    const skins = await base44.entities.Skin.filter({ key: skin });
+                    if (skins.length > 0 && skins[0].image_url) {
+                        IMAGES.current.customSkin.src = skins[0].image_url;
+                    }
+                } catch (error) {
+                    console.error('Failed to load custom skin:', error);
+                }
+            }
+        };
+        loadCustomSkin();
+    }, [skin]);
 
     useEffect(() => {
         // Load Images
@@ -801,25 +820,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
 
-                // Apply Skin Filters
-                if (skin === 'gold') {
-                    ctx.filter = 'sepia(1) saturate(3) brightness(1.1)';
-                } else if (skin === 'pink') {
-                    ctx.filter = 'hue-rotate(300deg) saturate(1.5)';
-                } else if (skin === 'dark') {
-                     ctx.filter = 'grayscale(1) brightness(0.6) contrast(1.2)';
-                } else if (skin === 'alien') {
-                    ctx.filter = 'hue-rotate(120deg) brightness(1.2)';
-                }
-
-                // Draw Flying Player
-                const sheet = IMAGES.current.playerGlide;
-
                 // Rotation based on vertical velocity
                 const rotation = Math.min(Math.max(state.player.vy * 0.05, -0.4), 0.4);
                 ctx.rotate(rotation);
 
-                ctx.drawImage(sheet, -playerSize/2, -playerSize/2, playerSize, playerSize);
+                // Use custom skin if available, otherwise default
+                const playerImage = (skin && skin !== 'default' && IMAGES.current.customSkin.complete && IMAGES.current.customSkin.src) 
+                    ? IMAGES.current.customSkin 
+                    : IMAGES.current.playerGlide;
+
+                ctx.drawImage(playerImage, -playerSize/2, -playerSize/2, playerSize, playerSize);
                 ctx.restore();
             }
         } else {

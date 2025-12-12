@@ -114,11 +114,11 @@ Deno.serve(async (req) => {
         });
 
         // Create PlayerSkin
-     //   await base44.asServiceRole.entities.PlayerSkin.create({
-     //       user_id: user.id,
-     //       skin_id: skin_id,
-     //       owned: true
-     //   });
+        await base44.asServiceRole.entities.PlayerSkin.create({
+            user_id: user.id,
+            skin_id: skin_id,
+            owned: true
+        });
         await db.PlayerSkin.create({
              user_id: user.id,
              skin_id: skin_id,

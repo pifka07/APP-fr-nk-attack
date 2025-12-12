@@ -31,7 +31,9 @@ export default function Shop() {
             ]);
 
             // Get coins from PlayerStats
+            console.log("PlayerStats data:", statsData);
             const playerStats = statsData.length > 0 ? statsData[0] : { total_coins: 0 };
+            console.log("Player coins:", playerStats.total_coins);
             userData.total_coins = playerStats.total_coins || 0;
 
             setUser(userData);
@@ -41,6 +43,7 @@ export default function Shop() {
             setPlayerSkins(pSkinsData);
         } catch (error) {
             console.error("Error fetching shop data", error);
+            console.error("Error details:", error);
         } finally {
             setLoading(false);
         }

@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
         }
 
         // Deduct coins from User
-        const updatedUser = await base44.asServiceRole.users.update(user.id, {
+        await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: userCoins - skinPrice
         });
 

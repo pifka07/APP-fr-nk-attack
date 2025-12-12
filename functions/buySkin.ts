@@ -108,13 +108,8 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // Deduct coins from PlayerStats
+        // Deduct coins from PlayerStats only
         await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-            total_coins: currentCoins - skinPrice
-        });
-
-        // Update User entity for consistency
-        await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: currentCoins - skinPrice
         });
 

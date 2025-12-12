@@ -91,7 +91,10 @@ Deno.serve(async (req) => {
 
         // Check coins
         const currentCoins = playerStats.total_coins || 0;
+        console.log('Player coins:', currentCoins, 'required:', skinPrice);
+        
         if (currentCoins < skinPrice) {
+            console.log('Not enough coins');
             return Response.json({ 
                 success: false, 
                 reason: 'NOT_ENOUGH_COINS',

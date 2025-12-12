@@ -363,26 +363,46 @@ export default function Game() {
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none flex justify-between items-end">
-                     <div className="flex flex-col items-center gap-3 pointer-events-none ml-4 mb-4">
+                     <AnimatePresence>
                         <motion.div
-                            initial={{ y: 0 }}
-                            animate={{ y: -10 }}
-                            transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
-                            className="text-white/70 flex items-center gap-2"
+                            initial={{ opacity: 1 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ delay: 3, duration: 0.5 }}
+                            onAnimationComplete={() => {
+                                setTimeout(() => {
+                                    document.getElementById('swipe-hints')?.style.setProperty('display', 'none');
+                                }, 3000);
+                            }}
+                            id="swipe-hints"
+                            className="flex flex-col items-center gap-3 pointer-events-none ml-4 mb-4"
                         >
-                            <ArrowUp className="w-6 h-6" />
-                            <span className="text-sm font-bold">SWIPE UP</span>
+                            <motion.div
+                                initial={{ y: 0 }}
+                                animate={{ y: -10 }}
+                                transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                                className="flex items-center gap-2"
+                            >
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
+                                    <ArrowUp className="w-8 h-8 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                </div>
+                                <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE UP</span>
+                            </motion.div>
+                            <motion.div
+                                initial={{ y: 0 }}
+                                animate={{ y: 10 }}
+                                transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                                className="flex items-center gap-2"
+                            >
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
+                                    <ArrowUp className="w-8 h-8 rotate-180 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                </div>
+                                <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE DOWN</span>
+                            </motion.div>
                         </motion.div>
-                        <motion.div
-                            initial={{ y: 0 }}
-                            animate={{ y: 10 }}
-                            transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
-                            className="text-white/70 flex items-center gap-2"
-                        >
-                            <ArrowUp className="w-6 h-6 rotate-180" />
-                            <span className="text-sm font-bold">SWIPE DOWN</span>
-                        </motion.div>
-                    </div>
+                    </AnimatePresence>
 
                     {/* Poop Button with Ammo */}
                     <motion.button 

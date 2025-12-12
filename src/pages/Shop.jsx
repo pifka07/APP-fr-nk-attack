@@ -143,18 +143,18 @@ export default function Shop() {
                 </div>
             </div>
 
-            <Tabs defaultValue="upgrades" className="w-full">
+            <Tabs defaultValue="skins" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-slate-800 mb-6">
-                    <TabsTrigger value="upgrades" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
-                        <Zap className="w-4 h-4 mr-2" /> Upgrades
-                    </TabsTrigger>
                     <TabsTrigger value="skins" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
                         <Palette className="w-4 h-4 mr-2" /> Skins
                     </TabsTrigger>
+                    <TabsTrigger value="upgrades" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
+                        <Zap className="w-4 h-4 mr-2" /> Upgrades
+                    </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="upgrades" className="space-y-4">
-                    {upgrades.map(upgrade => {
+                <TabsContent value="skins" className="grid grid-cols-2 gap-4">
+                    {skins.map(skin => {
                         const currentPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
                         const currentLevel = currentPu?.level || 0;
                         const isMaxed = currentLevel >= upgrade.max_level;
@@ -197,10 +197,10 @@ export default function Shop() {
                             </Card>
                         );
                     })}
-                </TabsContent>
+                    </TabsContent>
 
-                <TabsContent value="skins" className="grid grid-cols-2 gap-4">
-                    {skins.map(skin => {
+                    <TabsContent value="upgrades" className="space-y-4">
+                    {upgrades.map(upgrade => {
                         const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
                         const isEquipped = user?.equipped_skin === skin.key;
                         const canAfford = (user?.total_coins || 0) >= skin.cost_coins;

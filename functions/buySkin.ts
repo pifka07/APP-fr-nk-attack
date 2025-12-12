@@ -62,14 +62,14 @@ Deno.serve(async (req) => {
             total_coins: currentCoins - skin.cost_coins
         });
 
-        // 7. Create PlayerSkin (use service role)
+        // 6. Create PlayerSkin (use service role)
         await base44.asServiceRole.entities.PlayerSkin.create({
             user_id: user.id,
             skin_id: skin_id,
             owned: true
         });
 
-        // 8. Success response
+        // 7. Success response
         return Response.json({ 
             success: true,
             coins_remaining: currentCoins - skin.cost_coins

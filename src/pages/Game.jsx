@@ -362,7 +362,7 @@ export default function Game() {
 
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
-                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none flex justify-between items-end">
+                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none">
                      <AnimatePresence>
                         <motion.div
                             initial={{ opacity: 1 }}
@@ -375,7 +375,7 @@ export default function Game() {
                                 }, 3000);
                             }}
                             id="swipe-hints"
-                            className="flex flex-col items-center gap-3 pointer-events-none ml-4 mb-4"
+                            className="absolute left-10 bottom-10 flex flex-col items-center gap-3 pointer-events-none"
                         >
                             <motion.div
                                 initial={{ y: 0 }}

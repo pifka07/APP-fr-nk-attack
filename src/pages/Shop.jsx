@@ -22,16 +22,12 @@ export default function Shop() {
         try {
             const userData = await base44.auth.me();
             
-            const [upgradesData, skinsData, pUpgradesData, pSkinsData, coinsResponse] = await Promise.all([
+            const [upgradesData, skinsData, pUpgradesData, pSkinsData] = await Promise.all([
                 base44.entities.Upgrade.list(),
                 base44.entities.Skin.list(),
                 base44.entities.PlayerUpgrade.list(),
-                base44.entities.PlayerSkin.list(),
-                base44.functions.invoke('getPlayerCoins')
+                base44.entities.PlayerSkin.list()
             ]);
-
-            // Get coins from server function
-            userData.total_coins = coinsResponse.data.success ? coinsResponse.data.coins : 0;
 
             setUser(userData);
             setUpgrades(upgradesData);

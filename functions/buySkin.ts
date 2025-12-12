@@ -64,8 +64,8 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // Deduct coins
-        await base44.auth.updateMe({
+        // Deduct coins from User entity using service role
+        await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: currentCoins - skinPrice
         });
 

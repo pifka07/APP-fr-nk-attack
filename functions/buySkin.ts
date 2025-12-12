@@ -53,8 +53,28 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // Check coins
-        const currentCoins = user.total_coins || 0;
+        // Get or create PlayerStats
+        const playerStatsList = await base44.asServiceRole.entities.PlayerStats.filter({
+            user_id: user.id
+        });
+
+        let playerStats;
+        if (playerStatsList.length === 0) {
+            playerStats = await base44.asServiceRole.entities.PlayerStats.create({
+                user_id: user.id,
+                total_score: 0,
+                total_coins: 0,
+                total_distance: 0,
+                total_runs: 0,
+                best_score: 0,
+                best_distance: 0
+            });
+        } else {
+            playerStats = playerStatsList[0];
+        }
+
+        // Check coins from PlayerStats
+        const currentCoins = playerStats.total_coins || 0;
         if (currentCoins < skinPrice) {
             return Response.json({ 
                 success: false, 
@@ -64,7 +84,12 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // Deduct coins from User entity using service role
+        // Deduct coins from PlayerStats
+        await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
+            total_coins: currentCoins - skinPrice
+        });
+
+        // Update User entity too (for consistency)
         await base44.asServiceRole.entities.User.update(user.id, {
             total_coins: currentCoins - skinPrice
         });

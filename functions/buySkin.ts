@@ -32,21 +32,27 @@ Deno.serve(async (req) => {
 
         // Get skin
         const allSkins = await base44.asServiceRole.entities.Skin.list();
+        console.log('Found skins:', allSkins.length);
         const skin = allSkins.find(s => s.id === skin_id);
         
         if (!skin) {
+            console.log('Skin not found:', skin_id);
             return Response.json({ 
                 success: false, 
                 reason: 'SKIN_NOT_FOUND' 
             }, { status: 404 });
         }
 
+        console.log('Skin found:', skin.name, 'price:', skin.cost_coins);
+
         // Get skin price
         const skinPrice = skin.cost_coins ?? 0;
         if (skinPrice <= 0) {
+            console.log('Invalid skin price:', skinPrice);
             return Response.json({ 
                 success: false, 
-                reason: 'INVALID_SKIN_PRICE' 
+                reason: 'INVALID_SKIN_PRICE',
+                price: skinPrice
             }, { status: 400 });
         }
 

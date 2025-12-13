@@ -54,14 +54,14 @@ export default function Shop() {
 
         const cost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
 
-        if ((user?.total_coins || 0) < cost) {
+        if ((playerStats?.total_coins || 0) < cost) {
             toast.error("Not enough coins!");
             return;
         }
 
         try {
-            await base44.auth.updateMe({ 
-                total_coins: (user.total_coins || 0) - cost 
+            await base44.entities.PlayerStats.update(playerStats.id, { 
+                total_coins: playerStats.total_coins - cost 
             });
             
             const existingPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);

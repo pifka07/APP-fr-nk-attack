@@ -16,17 +16,19 @@ export default function Shop() {
     const [skins, setSkins] = useState([]);
     const [playerUpgrades, setPlayerUpgrades] = useState([]);
     const [playerSkins, setPlayerSkins] = useState([]);
+    const [playerStats, setPlayerStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try {
             const userData = await base44.auth.me();
             
-            const [upgradesData, skinsData, pUpgradesData, pSkinsData] = await Promise.all([
+            const [upgradesData, skinsData, pUpgradesData, pSkinsData, statsData] = await Promise.all([
                 base44.entities.Upgrade.list(),
                 base44.entities.Skin.list(),
                 base44.entities.PlayerUpgrade.list(),
-                base44.entities.PlayerSkin.list()
+                base44.entities.PlayerSkin.list(),
+                base44.entities.PlayerStats.filter({ user_id: userData.id })
             ]);
 
             setUser(userData);
@@ -34,6 +36,7 @@ export default function Shop() {
             setSkins(skinsData);
             setPlayerUpgrades(pUpgradesData);
             setPlayerSkins(pSkinsData);
+            setPlayerStats(statsData[0] || { total_coins: 0 });
         } catch (error) {
             console.error("Error fetching shop data", error);
         } finally {
@@ -131,7 +134,7 @@ export default function Shop() {
                 </div>
                 <div className="flex items-center bg-slate-800 px-4 py-2 rounded-full border-2 border-yellow-500/50 shadow-lg">
                     <Coins className="w-5 h-5 text-yellow-400 mr-2" />
-                    <span className="font-mono font-bold text-xl text-yellow-400">{user?.total_coins || 0}</span>
+                    <span className="font-mono font-bold text-xl text-yellow-400">{playerStats?.total_coins || 0}</span>
                 </div>
             </div>
 
@@ -149,7 +152,7 @@ export default function Shop() {
                     {skins.map(skin => {
                         const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
                         const isEquipped = user?.equipped_skin === skin.key;
-                        const canAfford = (user?.total_coins || 0) >= skin.cost_coins;
+                        const canAfford = (playerStats?.total_coins || 0) >= skin.cost_coins;
 
                         return (
                             <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
@@ -197,7 +200,7 @@ export default function Shop() {
                         const currentLevel = currentPu?.level || 0;
                         const isMaxed = currentLevel >= upgrade.max_level;
                         const nextCost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
-                        const canAfford = (user?.total_coins || 0) >= nextCost;
+                        const canAfford = (playerStats?.total_coins || 0) >= nextCost;
 
                         return (
                             <Card key={upgrade.id} className="bg-slate-800 border-slate-700">

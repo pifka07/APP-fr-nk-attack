@@ -407,7 +407,7 @@ export default function Game() {
                     {/* Poop Button with Ammo */}
                     <motion.button 
                         whileTap={{ scale: 0.9 }}
-                        className="pointer-events-auto w-28 h-28 rounded-full shadow-[0_8px_0_#0f5d55] active:shadow-none active:translate-y-2 transition-all relative overflow-hidden bg-transparent border-0 p-0 absolute right-6 bottom-6"
+                        className="pointer-events-auto w-28 h-28 rounded-full shadow-[0_8px_0_#0f5d55] active:shadow-none active:translate-y-2 transition-all relative overflow-hidden bg-transparent border-0 p-0 fixed right-6 bottom-6 z-50"
                         onClick={handlePoop}
                         onTouchStart={handlePoop}
                         onMouseUp={(e) => e.stopPropagation()}

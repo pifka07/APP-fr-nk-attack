@@ -14,7 +14,7 @@ export default function StartScreen() {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // ========================
-  //  USER LADEN
+  //  USER LADEN (OPTIONAL - NO BLOCKING)
   // ========================
   useEffect(() => {
     const loadUser = async () => {
@@ -30,8 +30,10 @@ export default function StartScreen() {
     loadUser();
   }, []);
 
-  if (loadingUser)
-    return <div style={{ color: "white" }}>Loading...</div>;
+  // Don't block UI - show immediately
+  if (loadingUser && !user) {
+    setLoadingUser(false);
+  }
 
   const handlePlay = () => {
     navigate(createPageUrl("Missions"));

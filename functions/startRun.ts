@@ -3,16 +3,26 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-        const user = await base44.auth.me();
+        
+        // Check if user is authenticated
+        let user = null;
+        try {
+            user = await base44.auth.me();
+        } catch (e) {
+            // User not logged in
+        }
 
-        console.log("startRun called - User:", user?.email);
+        console.log("startRun called - User:", user?.email || "GUEST");
 
+        // Allow guest mode - don't require login for playing
         if (!user) {
-            console.log("User not logged in");
+            console.log("Guest mode - allowing play without login");
             return Response.json({
-                success: false,
-                reason: "NOT_LOGGED_IN"
-            }, { status: 401 });
+                success: true,
+                guest_mode: true,
+                run_session_id: "guest_" + Date.now(),
+                started_at: new Date().toISOString()
+            });
         }
 
         const body = await req.json();

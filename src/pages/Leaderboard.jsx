@@ -16,10 +16,15 @@ export default function Leaderboard() {
         const fetchData = async () => {
             try {
                 // Fetch top 10 leaderboard entries sorted by score descending
-                const [topScores, user] = await Promise.all([
-                    base44.entities.LeaderboardEntry.list('-score', 10),
-                    base44.auth.me().catch(() => null)
-                ]);
+                // Leaderboard is public - don't require login
+                const topScores = await base44.entities.LeaderboardEntry.list('-score', 10);
+                // Try to get user if logged in
+                let user = null;
+                try {
+                    user = await base44.auth.me();
+                } catch (e) {
+                    // User not logged in - that's fine
+                }
                 setLeaders(topScores);
                 setCurrentUser(user);
             } catch (error) {

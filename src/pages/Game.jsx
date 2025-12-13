@@ -87,10 +87,9 @@ export default function Game() {
 
             console.log("startRun response:", response.data);
 
-            // Check if user is not logged in
-            if (!response.data.success && response.data.reason === "NOT_LOGGED_IN") {
-                setShowLoginModal(true);
-                return;
+            // Guest mode is allowed - continue playing
+            if (response.data.guest_mode) {
+                console.log("Playing in guest mode - scores won't be saved");
             }
 
             if (!response.data.success) {
@@ -192,7 +191,14 @@ export default function Game() {
             }
 
             // Success - show appropriate message
-            if (response.data.isHighscore) {
+            if (response.data.guest_mode) {
+                toast("Login to save your scores!", {
+                    action: {
+                        label: 'Login',
+                        onClick: () => base44.auth.redirectToLogin(window.location.pathname + window.location.search)
+                    }
+                });
+            } else if (response.data.isHighscore) {
                 toast.success("🎉 New Personal Best!");
             } else {
                 toast.success("Run saved!");

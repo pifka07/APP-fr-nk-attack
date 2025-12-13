@@ -84,12 +84,12 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        // Deduct coins from User
-        await base44.asServiceRole.entities.User.update(user.id, {
+        // Deduct coins from User (using auth context for the logged-in user)
+        await base44.auth.updateMe({
             total_coins: userCoins - skinPrice
         });
 
-        // Create PlayerSkin
+        // Create PlayerSkin (service role needed to bypass RLS)
         await base44.asServiceRole.entities.PlayerSkin.create({
             user_id: user.id,
             skin_id: skin_id,

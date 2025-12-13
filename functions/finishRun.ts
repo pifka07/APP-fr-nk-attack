@@ -3,16 +3,25 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-        const user = await base44.auth.me();
+        
+        // Check if user is authenticated
+        let user = null;
+        try {
+            user = await base44.auth.me();
+        } catch (e) {
+            // User not logged in
+        }
 
-        console.log("finishRun called - User:", user?.email);
+        console.log("finishRun called - User:", user?.email || "GUEST");
 
+        // Allow guest mode - don't save scores for guests
         if (!user) {
-            console.log("User not logged in");
-            return Response.json({
-                success: false,
-                reason: "NOT_LOGGED_IN"
-            }, { status: 401 });
+            console.log("Guest mode - not saving score");
+            return Response.json({ 
+                success: true, 
+                guest_mode: true,
+                message: "Score not saved - login to save your progress"
+            });
         }
 
         const body = await req.json();

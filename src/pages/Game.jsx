@@ -362,52 +362,54 @@ export default function Game() {
 
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
-                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none">
-                     <AnimatePresence>
-                        <motion.div
-                            initial={{ opacity: 1 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ delay: 3, duration: 0.5 }}
-                            onAnimationComplete={() => {
-                                setTimeout(() => {
-                                    document.getElementById('swipe-hints')?.style.setProperty('display', 'none');
-                                }, 3000);
-                            }}
-                            id="swipe-hints"
-                            className="absolute left-10 bottom-10 flex flex-col items-center gap-3 pointer-events-none"
-                        >
+                <>
+                    <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none">
+                         <AnimatePresence>
                             <motion.div
-                                initial={{ y: 0 }}
-                                animate={{ y: -10 }}
-                                transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
-                                className="flex items-center gap-2"
+                                initial={{ opacity: 1 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ delay: 3, duration: 0.5 }}
+                                onAnimationComplete={() => {
+                                    setTimeout(() => {
+                                        document.getElementById('swipe-hints')?.style.setProperty('display', 'none');
+                                    }, 3000);
+                                }}
+                                id="swipe-hints"
+                                className="absolute left-10 bottom-10 flex flex-col items-center gap-3 pointer-events-none"
                             >
-                                <div className="relative">
-                                    <div className="absolute inset-0 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
-                                    <ArrowUp className="w-8 h-8 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
-                                </div>
-                                <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE UP</span>
+                                <motion.div
+                                    initial={{ y: 0 }}
+                                    animate={{ y: -10 }}
+                                    transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                                    className="flex items-center gap-2"
+                                >
+                                    <div className="relative">
+                                        <div className="absolute inset-0 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
+                                        <ArrowUp className="w-8 h-8 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                    </div>
+                                    <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE UP</span>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ y: 0 }}
+                                    animate={{ y: 10 }}
+                                    transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                                    className="flex items-center gap-2"
+                                >
+                                    <div className="relative">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
+                                        <ArrowUp className="w-8 h-8 rotate-180 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                    </div>
+                                    <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE DOWN</span>
+                                </motion.div>
                             </motion.div>
-                            <motion.div
-                                initial={{ y: 0 }}
-                                animate={{ y: 10 }}
-                                transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
-                                className="flex items-center gap-2"
-                            >
-                                <div className="relative">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
-                                    <ArrowUp className="w-8 h-8 rotate-180 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
-                                </div>
-                                <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE DOWN</span>
-                            </motion.div>
-                        </motion.div>
-                    </AnimatePresence>
+                        </AnimatePresence>
+                    </div>
 
                     {/* Poop Button with Ammo */}
                     <motion.button 
                         whileTap={{ scale: 0.9 }}
-                        className="pointer-events-auto w-28 h-28 rounded-full shadow-[0_8px_0_#0f5d55] active:shadow-none active:translate-y-2 transition-all relative overflow-hidden bg-transparent border-0 p-0 fixed right-6 bottom-6 z-50"
+                        className="pointer-events-auto w-28 h-28 rounded-full shadow-[0_8px_0_#0f5d55] active:shadow-none active:translate-y-2 transition-all overflow-hidden bg-transparent border-0 p-0 fixed right-6 bottom-6 z-50"
                         onClick={handlePoop}
                         onTouchStart={handlePoop}
                         onMouseUp={(e) => e.stopPropagation()}
@@ -419,7 +421,7 @@ export default function Game() {
                             alt="Poop"
                         />
                     </motion.button>
-                </div>
+                </>
             )}
 
             {/* Start Screen */}

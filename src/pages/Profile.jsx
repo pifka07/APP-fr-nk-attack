@@ -25,8 +25,8 @@ export default function Profile() {
             try {
                 const userData = await base44.auth.me();
                 if (!userData) {
-                    // Redirect to login if not authenticated
-                    base44.auth.redirectToLogin(window.location.pathname + window.location.search);
+                    // Redirect to home if not authenticated
+                    navigate(createPageUrl('Home'));
                     return;
                 }
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });

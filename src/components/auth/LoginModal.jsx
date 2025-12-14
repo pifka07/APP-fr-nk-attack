@@ -6,8 +6,9 @@ import { base44 } from '@/api/base44Client';
 
 export default function LoginModal({ open, onClose }) {
     const handleLogin = () => {
-        // Redirect to Base44's built-in login
-        base44.auth.redirectToLogin(window.location.pathname + window.location.search);
+        // For mobile APK compatibility - use direct login URL
+        const currentUrl = window.location.pathname + window.location.search;
+        window.location.href = `https://base44.app/login?next=${encodeURIComponent(window.location.origin + currentUrl)}`;
     };
 
     return (

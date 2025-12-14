@@ -195,7 +195,7 @@ export default function Game() {
                 toast("Login to save your scores!", {
                     action: {
                         label: 'Login',
-                        onClick: () => base44.auth.redirectToLogin(window.location.pathname + window.location.search)
+                        onClick: () => setShowLoginModal(true)
                     }
                 });
             } else if (response.data.isHighscore) {

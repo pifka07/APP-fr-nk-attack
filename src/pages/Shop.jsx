@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 export default function Shop() {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [upgrades, setUpgrades] = useState([]);
     const [skins, setSkins] = useState([]);
@@ -22,6 +23,10 @@ export default function Shop() {
     const fetchData = async () => {
         try {
             const userData = await base44.auth.me();
+            if (!userData) {
+                navigate(createPageUrl('Home'));
+                return;
+            }
             
             const [upgradesData, skinsData, pUpgradesData, pSkinsData, statsData] = await Promise.all([
                 base44.entities.Upgrade.list(),

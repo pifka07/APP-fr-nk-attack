@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 export default function Skins() {
+    const navigate = useNavigate();
     const [skins, setSkins] = useState([]);
     const [playerSkins, setPlayerSkins] = useState([]);
     const [user, setUser] = useState(null);
@@ -17,10 +18,15 @@ export default function Skins() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [allSkins, mySkins, currentUser] = await Promise.all([
+                const currentUser = await base44.auth.me();
+                if (!currentUser) {
+                    navigate(createPageUrl('Home'));
+                    return;
+                }
+                
+                const [allSkins, mySkins] = await Promise.all([
                     base44.entities.Skin.list(),
-                    base44.entities.PlayerSkin.list(),
-                    base44.auth.me()
+                    base44.entities.PlayerSkin.list()
                 ]);
                 setSkins(allSkins);
                 setPlayerSkins(mySkins);

@@ -9,6 +9,7 @@ import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Coins, Zap, Palette, Lock, Check } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import LoginModal from "../components/auth/LoginModal";
 
 export default function Shop() {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function Shop() {
     const [playerSkins, setPlayerSkins] = useState([]);
     const [playerStats, setPlayerStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -30,7 +32,7 @@ export default function Shop() {
             }
 
             if (!userData) {
-                navigate(createPageUrl('LoginGate'));
+                setShowLoginModal(true);
                 return;
             }
             

@@ -7,6 +7,7 @@ import { ArrowLeft, Check, Lock, ShoppingBag } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import LoginModal from "../components/auth/LoginModal";
 
 export default function Skins() {
     const navigate = useNavigate();
@@ -14,13 +15,20 @@ export default function Skins() {
     const [playerSkins, setPlayerSkins] = useState([]);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const currentUser = await base44.auth.me();
+                let currentUser = null;
+                try {
+                    currentUser = await base44.auth.me();
+                } catch (e) {
+                    console.log("Not authenticated");
+                }
+                
                 if (!currentUser) {
-                    navigate(createPageUrl('Home'));
+                    setShowLoginModal(true);
                     return;
                 }
                 
@@ -143,6 +151,8 @@ export default function Skins() {
                     </div>
                 )}
             </div>
+
+            <LoginModal open={showLoginModal} onClose={() => { setShowLoginModal(false); navigate(createPageUrl('Home')); }} />
         </div>
     );
 }

@@ -31,8 +31,8 @@ export default function Profile() {
                 }
 
                 if (!userData) {
-                    // Redirect to LoginGate if not authenticated
-                    navigate(createPageUrl('LoginGate'));
+                    // Redirect to Home if not authenticated
+                    navigate(createPageUrl('Home'));
                     return;
                 }
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });

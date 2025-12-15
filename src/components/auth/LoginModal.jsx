@@ -1,16 +1,13 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Lock, LogIn } from "lucide-react";
 
 export default function LoginModal({ open, onClose }) {
-    const navigate = useNavigate();
-    
     const handleLogin = () => {
-        navigate(createPageUrl('LoginGate'));
-        onClose();
+        // Direct login URL - after login return to Home
+        const returnUrl = window.location.origin;
+        window.location.href = `https://base44.app/login?next=${encodeURIComponent(returnUrl)}`;
     };
 
     return (

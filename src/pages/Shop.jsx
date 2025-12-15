@@ -253,6 +253,8 @@ export default function Shop() {
                     })}
                 </TabsContent>
             </Tabs>
+
+            <LoginModal open={showLoginModal} onClose={() => { setShowLoginModal(false); navigate(createPageUrl('Home')); }} />
         </div>
     );
 }

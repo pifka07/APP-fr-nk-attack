@@ -78,19 +78,7 @@ export default function StartScreen() {
           <Play className="mr-2 w-6 h-6" /> PLAY
         </Button>
 
-        <Link to={createPageUrl('Leaderboard')}>
-          <Button className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-            <Trophy className="mr-2 w-5 h-5" /> Highscore
-          </Button>
-        </Link>
-
-        {user ? (
-          <Link to={createPageUrl('Profile')}>
-            <Button className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-              <UserIcon className="mr-2 w-5 h-5" /> Profile & Stats
-            </Button>
-          </Link>
-        ) : (
+        {!user && (
           <Button 
             onClick={() => setShowLoginModal(true)}
             className="w-full h-12 font-titan text-lg bg-teal-600 hover:bg-teal-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"

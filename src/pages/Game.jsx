@@ -39,13 +39,15 @@ export default function Game() {
     useEffect(() => {
         const loadConfig = async () => {
             try {
-                const [user, playerUpgrades, upgrades] = await Promise.all([
-                    base44.auth.me(),
-                    base44.entities.PlayerUpgrade.list(),
-                    base44.entities.Upgrade.list()
-                ]);
+                // Try to get user, but don't block if not logged in
+                let user = null;
+                try {
+                    user = await base44.auth.me();
+                } catch (e) {
+                    console.log("Playing in guest mode");
+                }
                 
-                setSkin(user.equipped_skin || 'default');
+                setSkin(user?.equipped_skin || 'default');
 
                 // Default config
                 let config = {
@@ -55,21 +57,41 @@ export default function Game() {
                     comboDuration: 2000
                 };
 
-                playerUpgrades.forEach(pu => {
-                    const upgrade = upgrades.find(u => u.id === pu.upgrade_id);
-                    if (upgrade) {
-                        const totalEffect = upgrade.effect_per_level * pu.level;
-                        switch(upgrade.key) {
-                            case 'poop_tank': config.maxPoops += Math.floor(totalEffect); break;
-                            case 'poop_cooldown': config.cooldownReduction += totalEffect; break;
-                            case 'wing_speed': config.agility += totalEffect; break;
-                            case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;
-                        }
+                // Only load upgrades if user is logged in
+                if (user) {
+                    try {
+                        const [playerUpgrades, upgrades] = await Promise.all([
+                            base44.entities.PlayerUpgrade.list(),
+                            base44.entities.Upgrade.list()
+                        ]);
+
+                        playerUpgrades.forEach(pu => {
+                            const upgrade = upgrades.find(u => u.id === pu.upgrade_id);
+                            if (upgrade) {
+                                const totalEffect = upgrade.effect_per_level * pu.level;
+                                switch(upgrade.key) {
+                                    case 'poop_tank': config.maxPoops += Math.floor(totalEffect); break;
+                                    case 'poop_cooldown': config.cooldownReduction += totalEffect; break;
+                                    case 'wing_speed': config.agility += totalEffect; break;
+                                    case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        console.log("Using default config");
                     }
-                });
+                }
+                
                 setGameConfig(config);
             } catch (e) {
                 console.error("Failed to load game config", e);
+                // Set default config anyway
+                setGameConfig({
+                    maxPoops: 3,
+                    cooldownReduction: 0,
+                    agility: 1,
+                    comboDuration: 2000
+                });
             }
         };
         loadConfig();

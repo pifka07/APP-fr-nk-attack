@@ -39,6 +39,14 @@ export default function StartScreen() {
     navigate(createPageUrl("Missions"));
   };
 
+  const handleProtectedAction = (pageName) => {
+    if (user) {
+      navigate(createPageUrl(pageName));
+    } else {
+      navigate(createPageUrl('LoginGate'));
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 relative overflow-hidden">
       {/* Background Image */}

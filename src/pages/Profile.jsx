@@ -23,10 +23,16 @@ export default function Profile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const userData = await base44.auth.me();
+                let userData = null;
+                try {
+                    userData = await base44.auth.me();
+                } catch (e) {
+                    console.log("Not authenticated");
+                }
+
                 if (!userData) {
-                    // Redirect to home if not authenticated
-                    navigate(createPageUrl('Home'));
+                    // Redirect to LoginGate if not authenticated
+                    navigate(createPageUrl('LoginGate'));
                     return;
                 }
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });

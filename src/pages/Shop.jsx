@@ -22,9 +22,15 @@ export default function Shop() {
 
     const fetchData = async () => {
         try {
-            const userData = await base44.auth.me();
+            let userData = null;
+            try {
+                userData = await base44.auth.me();
+            } catch (e) {
+                console.log("Not authenticated");
+            }
+
             if (!userData) {
-                navigate(createPageUrl('Home'));
+                navigate(createPageUrl('LoginGate'));
                 return;
             }
             

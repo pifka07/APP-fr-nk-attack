@@ -1,14 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Lock, LogIn } from "lucide-react";
-import { base44 } from '@/api/base44Client';
 
 export default function LoginModal({ open, onClose }) {
+    const navigate = useNavigate();
+    
     const handleLogin = () => {
-        // For mobile APK compatibility - use direct login URL
-        const currentUrl = window.location.pathname + window.location.search;
-        window.location.href = `https://base44.app/login?next=${encodeURIComponent(window.location.origin + currentUrl)}`;
+        navigate(createPageUrl('LoginGate'));
+        onClose();
     };
 
     return (

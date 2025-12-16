@@ -2,12 +2,12 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Lock, LogIn } from "lucide-react";
+import { base44 } from '@/api/base44Client';
 
 export default function LoginModal({ open, onClose }) {
     const handleLogin = () => {
-        // Direct login URL - after login return to Home
-        const returnUrl = window.location.origin;
-        window.location.href = `https://base44.app/login?next=${encodeURIComponent(returnUrl)}`;
+        // Redirect to Base44's built-in login
+        base44.auth.redirectToLogin(window.location.pathname + window.location.search);
     };
 
     return (

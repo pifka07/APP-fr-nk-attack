@@ -15,9 +15,8 @@ Deno.serve(async (req) => {
       return Response.json({ success: false, reason: 'INVALID_REQUEST' }, { status: 400 });
     }
 
-    // 2️⃣ Skin laden - Liste alle und finde den richtigen
-    const skins = await base44.asServiceRole.entities.Skin.list();
-    const skin = skins.find(s => s.id === skin_id);
+    // 2️⃣ Skin laden (Admin → OK)
+    const skin = (await base44.asServiceRole.entities.Skin.get(skin_id));
     if (!skin) {
       return Response.json({ success: false, reason: 'SKIN_NOT_FOUND' }, { status: 404 });
     }

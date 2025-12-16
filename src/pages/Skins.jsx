@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,34 +7,20 @@ import { ArrowLeft, Check, Lock, ShoppingBag } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import LoginModal from "../components/auth/LoginModal";
 
 export default function Skins() {
-    const navigate = useNavigate();
     const [skins, setSkins] = useState([]);
     const [playerSkins, setPlayerSkins] = useState([]);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [showLoginModal, setShowLoginModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let currentUser = null;
-                try {
-                    currentUser = await base44.auth.me();
-                } catch (e) {
-                    console.log("Not authenticated");
-                }
-                
-                if (!currentUser) {
-                    setShowLoginModal(true);
-                    return;
-                }
-                
-                const [allSkins, mySkins] = await Promise.all([
+                const [allSkins, mySkins, currentUser] = await Promise.all([
                     base44.entities.Skin.list(),
-                    base44.entities.PlayerSkin.list()
+                    base44.entities.PlayerSkin.list(),
+                    base44.auth.me()
                 ]);
                 setSkins(allSkins);
                 setPlayerSkins(mySkins);
@@ -151,8 +137,6 @@ export default function Skins() {
                     </div>
                 )}
             </div>
-
-            <LoginModal open={showLoginModal} onClose={() => { setShowLoginModal(false); navigate(createPageUrl('Home')); }} />
         </div>
     );
 }

@@ -39,15 +39,13 @@ export default function Game() {
     useEffect(() => {
         const loadConfig = async () => {
             try {
-                // Try to get user, but don't block if not logged in
-                let user = null;
-                try {
-                    user = await base44.auth.me();
-                } catch (e) {
-                    console.log("Playing in guest mode");
-                }
+                const [user, playerUpgrades, upgrades] = await Promise.all([
+                    base44.auth.me(),
+                    base44.entities.PlayerUpgrade.list(),
+                    base44.entities.Upgrade.list()
+                ]);
                 
-                setSkin(user?.equipped_skin || 'default');
+                setSkin(user.equipped_skin || 'default');
 
                 // Default config
                 let config = {
@@ -57,41 +55,21 @@ export default function Game() {
                     comboDuration: 2000
                 };
 
-                // Only load upgrades if user is logged in
-                if (user) {
-                    try {
-                        const [playerUpgrades, upgrades] = await Promise.all([
-                            base44.entities.PlayerUpgrade.list(),
-                            base44.entities.Upgrade.list()
-                        ]);
-
-                        playerUpgrades.forEach(pu => {
-                            const upgrade = upgrades.find(u => u.id === pu.upgrade_id);
-                            if (upgrade) {
-                                const totalEffect = upgrade.effect_per_level * pu.level;
-                                switch(upgrade.key) {
-                                    case 'poop_tank': config.maxPoops += Math.floor(totalEffect); break;
-                                    case 'poop_cooldown': config.cooldownReduction += totalEffect; break;
-                                    case 'wing_speed': config.agility += totalEffect; break;
-                                    case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;
-                                }
-                            }
-                        });
-                    } catch (e) {
-                        console.log("Using default config");
+                playerUpgrades.forEach(pu => {
+                    const upgrade = upgrades.find(u => u.id === pu.upgrade_id);
+                    if (upgrade) {
+                        const totalEffect = upgrade.effect_per_level * pu.level;
+                        switch(upgrade.key) {
+                            case 'poop_tank': config.maxPoops += Math.floor(totalEffect); break;
+                            case 'poop_cooldown': config.cooldownReduction += totalEffect; break;
+                            case 'wing_speed': config.agility += totalEffect; break;
+                            case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;
+                        }
                     }
-                }
-                
+                });
                 setGameConfig(config);
             } catch (e) {
                 console.error("Failed to load game config", e);
-                // Set default config anyway
-                setGameConfig({
-                    maxPoops: 3,
-                    cooldownReduction: 0,
-                    agility: 1,
-                    comboDuration: 2000
-                });
             }
         };
         loadConfig();
@@ -109,9 +87,10 @@ export default function Game() {
 
             console.log("startRun response:", response.data);
 
-            // Guest mode is allowed - continue playing
-            if (response.data.guest_mode) {
-                console.log("Playing in guest mode - scores won't be saved");
+            // Check if user is not logged in
+            if (!response.data.success && response.data.reason === "NOT_LOGGED_IN") {
+                setShowLoginModal(true);
+                return;
             }
 
             if (!response.data.success) {
@@ -213,14 +192,7 @@ export default function Game() {
             }
 
             // Success - show appropriate message
-            if (response.data.guest_mode) {
-                toast("Login to save your scores!", {
-                    action: {
-                        label: 'Login',
-                        onClick: () => setShowLoginModal(true)
-                    }
-                });
-            } else if (response.data.isHighscore) {
+            if (response.data.isHighscore) {
                 toast.success("🎉 New Personal Best!");
             } else {
                 toast.success("Run saved!");

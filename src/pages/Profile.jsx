@@ -23,18 +23,7 @@ export default function Profile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                let userData = null;
-                try {
-                    userData = await base44.auth.me();
-                } catch (e) {
-                    console.log("Not authenticated");
-                }
-
-                if (!userData) {
-                    // Redirect to Home if not authenticated
-                    navigate(createPageUrl('Home'));
-                    return;
-                }
+                const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });
                 
                 // Get PlayerStats (created by server on first game)

@@ -14,7 +14,7 @@ export default function StartScreen() {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // ========================
-  //  USER LADEN (OPTIONAL - NO BLOCKING)
+  //  USER LADEN
   // ========================
   useEffect(() => {
     const loadUser = async () => {
@@ -30,21 +30,11 @@ export default function StartScreen() {
     loadUser();
   }, []);
 
-  // Don't block UI - show immediately
-  if (loadingUser && !user) {
-    setLoadingUser(false);
-  }
+  if (loadingUser)
+    return <div style={{ color: "white" }}>Loading...</div>;
 
   const handlePlay = () => {
     navigate(createPageUrl("Missions"));
-  };
-
-  const handleProtectedAction = (pageName) => {
-    if (user) {
-      navigate(createPageUrl(pageName));
-    } else {
-      navigate(createPageUrl('LoginGate'));
-    }
   };
 
   return (
@@ -86,19 +76,33 @@ export default function StartScreen() {
           <Play className="mr-2 w-6 h-6" /> PLAY
         </Button>
 
-        <Button 
-          onClick={() => handleProtectedAction('Leaderboard')}
-          className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
-        >
-          <Trophy className="mr-2 w-5 h-5" /> Highscore
-        </Button>
+        <div className="grid grid-cols-2 gap-4">
+          <Link to={createPageUrl('Shop')}>
+            <Button className="w-full h-14 font-titan text-lg bg-purple-600 hover:bg-purple-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+              <ShoppingCart className="mr-2 w-5 h-5" /> Shop
+            </Button>
+          </Link>
+          <Link to={createPageUrl('Leaderboard')}>
+            <Button className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+              <Trophy className="mr-2 w-5 h-5" /> Highscore
+            </Button>
+          </Link>
+        </div>
 
-        <Button 
-          onClick={() => handleProtectedAction('Profile')}
-          className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
-        >
-          <UserIcon className="mr-2 w-5 h-5" /> {user ? 'Profile' : 'Login'}
-        </Button>
+        {user ? (
+          <Link to={createPageUrl('Profile')}>
+            <Button className="w-full h-12 font-titan text-lg bg-slate-700 hover:bg-slate-600 text-slate-200 border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+              <UserIcon className="mr-2 w-5 h-5" /> Profile & Stats
+            </Button>
+          </Link>
+        ) : (
+          <Button 
+            onClick={() => setShowLoginModal(true)}
+            className="w-full h-12 font-titan text-lg bg-teal-600 hover:bg-teal-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
+          >
+            <UserIcon className="mr-2 w-5 h-5" /> Login
+          </Button>
+        )}
       </div>
 
       {/* Footer */}

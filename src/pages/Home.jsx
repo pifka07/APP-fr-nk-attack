@@ -84,7 +84,7 @@ export default function StartScreen() {
           </Link>
           <Link to={createPageUrl('Leaderboard')}>
             <Button className="w-full h-14 font-titan text-lg bg-teal-500 hover:bg-teal-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-              <Trophy className="mr-2 w-5 h-5" /> Highscore
+              <Trophy className="mr-2 w-5 h-5" /> Score
             </Button>
           </Link>
         </div>

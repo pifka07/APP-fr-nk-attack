@@ -6,8 +6,9 @@ import { base44 } from '@/api/base44Client';
 
 export default function LoginModal({ open, onClose }) {
     const handleLogin = () => {
-        // Redirect to Base44's built-in login
-        base44.auth.redirectToLogin(window.location.pathname + window.location.search);
+        // Redirect to Base44's built-in login with proper next URL
+        const nextUrl = window.location.pathname + window.location.search;
+        base44.auth.redirectToLogin(nextUrl);
     };
 
     return (

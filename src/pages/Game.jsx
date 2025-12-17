@@ -79,6 +79,13 @@ export default function Game() {
         try {
             console.log("startGame called with gameSpeed:", gameSpeed);
             
+            // Check if user is logged in first
+            const isAuth = await base44.auth.isAuthenticated();
+            if (!isAuth) {
+                setShowLoginModal(true);
+                return;
+            }
+            
             // Call startRun server action to create session
             const response = await base44.functions.invoke('startRun', {
                 missionId: null,
@@ -87,14 +94,8 @@ export default function Game() {
 
             console.log("startRun response:", response.data);
 
-            // Check if user is not logged in
-            if (!response.data.success && response.data.reason === "NOT_LOGGED_IN") {
-                setShowLoginModal(true);
-                return;
-            }
-
             if (!response.data.success) {
-                toast.error("Failed to start run");
+                toast.error("Failed to start run: " + (response.data.reason || "Unknown error"));
                 return;
             }
 

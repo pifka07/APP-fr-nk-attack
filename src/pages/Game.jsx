@@ -79,34 +79,26 @@ export default function Game() {
         try {
             console.log("startGame called with gameSpeed:", gameSpeed);
             
-            // Check if user is logged in first
+            // Try to create session if logged in
             const isAuth = await base44.auth.isAuthenticated();
-            if (!isAuth) {
-                setShowLoginModal(true);
-                return;
+            if (isAuth) {
+                const response = await base44.functions.invoke('startRun', {
+                    missionId: null,
+                    difficulty: gameSpeed
+                });
+
+                console.log("startRun response:", response.data);
+
+                if (response.data.success) {
+                    runSessionIdRef.current = response.data.run_session_id;
+                    runStartTimeRef.current = new Date(response.data.started_at);
+                    console.log("Session created:", runSessionIdRef.current);
+                }
+            } else {
+                // Allow playing without login
+                runSessionIdRef.current = null;
+                runStartTimeRef.current = new Date();
             }
-            
-            // Call startRun server action to create session
-            const response = await base44.functions.invoke('startRun', {
-                missionId: null,
-                difficulty: gameSpeed
-            });
-
-            console.log("startRun response:", response.data);
-
-            if (!response.data.success) {
-                toast.error("Failed to start run: " + (response.data.reason || "Unknown error"));
-                return;
-            }
-
-            const sessionId = response.data.run_session_id;
-            const startTime = new Date(response.data.started_at);
-            
-            console.log("Setting runSessionId:", sessionId);
-            console.log("Setting runStartTime:", startTime);
-            
-            runSessionIdRef.current = sessionId;
-            runStartTimeRef.current = startTime;
 
             setGameState('playing');
             setScore(0);
@@ -139,6 +131,15 @@ export default function Game() {
         
         setGameState('gameover');
         setFinalStats(stats);
+
+        // Check if user is logged in
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) {
+            console.log("Not logged in - showing login modal");
+            setShowLoginModal(true);
+            return;
+        }
+
         setSaving(true);
 
         try {

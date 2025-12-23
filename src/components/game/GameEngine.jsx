@@ -79,7 +79,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         trash_can: new Image(),
         coin: new Image(),
         poopProjectile: new Image(),
-        energyIcon: new Image()
+        energyIcon: new Image(),
+        laserProjectile: new Image()
         });
 
     useEffect(() => {
@@ -165,6 +166,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.poopTriple = new Image();
         IMAGES.current.poopTriple.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d851cff29_Frnkkacke-Kopie.png";
         IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/55c3a6a9f_FrnkdieTaubeicon9.png";
+        IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -311,15 +313,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const isRapidFire = now < state.rapidFireUntil;
 
         const pushPoop = () => {
+            const isLaser = skin === 'neon';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: 2,
-                vy: 5,
+                vx: isLaser ? 8 : 2,
+                vy: isLaser ? 0 : 5,
                 active: true,
-                type: isRapidFire ? 'triple' : 'normal',
-                width: isRapidFire ? 60 : 30,
-                height: isRapidFire ? 60 : 30
+                type: isLaser ? 'laser' : (isRapidFire ? 'triple' : 'normal'),
+                width: isLaser ? 40 : (isRapidFire ? 60 : 30),
+                height: isLaser ? 10 : (isRapidFire ? 60 : 30)
             });
         };
 
@@ -580,7 +583,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            p.vy += GRAVITY * 0.5; // accelerate down
+            if (p.type !== 'laser') {
+                p.vy += GRAVITY * 0.5; // accelerate down (not for laser)
+            }
         });
 
         // Combo Timer
@@ -840,18 +845,29 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             if (p.active) {
                  if (assetsLoaded.current) {
-                    const img = IMAGES.current.poopProjectile;
-
                     ctx.save();
                     ctx.translate(p.x, p.y);
-                    // Spin the poop!
-                    ctx.rotate(state.animFrame * 0.2);
 
-                    // Draw full image
-                    if (p.type === 'triple' && IMAGES.current.poopTriple) {
-                        ctx.drawImage(IMAGES.current.poopTriple, -p.width/2, -p.height/2, p.width, p.height);
+                    if (p.type === 'laser') {
+                        // Draw laser beam
+                        ctx.shadowColor = '#ff00ff';
+                        ctx.shadowBlur = 15;
+                        ctx.fillStyle = '#ff00ff';
+                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(-p.width/2 + 5, -p.height/2 + 2, p.width - 10, p.height - 4);
+                        ctx.shadowBlur = 0;
                     } else {
-                        ctx.drawImage(img, -p.width/2, -p.height/2, p.width, p.height);
+                        const img = IMAGES.current.poopProjectile;
+                        // Spin the poop!
+                        ctx.rotate(state.animFrame * 0.2);
+
+                        // Draw full image
+                        if (p.type === 'triple' && IMAGES.current.poopTriple) {
+                            ctx.drawImage(IMAGES.current.poopTriple, -p.width/2, -p.height/2, p.width, p.height);
+                        } else {
+                            ctx.drawImage(img, -p.width/2, -p.height/2, p.width, p.height);
+                        }
                     }
                     ctx.restore();
                     } else {

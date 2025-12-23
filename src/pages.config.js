@@ -1,22 +1,22 @@
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import Missions from './pages/Missions';
-import Profile from './pages/Profile';
 import Game from './pages/Game';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+import Home from './pages/Home';
 import Leaderboard from './pages/Leaderboard';
+import Missions from './pages/Missions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Profile from './pages/Profile';
+import Shop from './pages/Shop';
 import Skins from './pages/Skins';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "Shop": Shop,
-    "Missions": Missions,
-    "Profile": Profile,
     "Game": Game,
-    "PrivacyPolicy": PrivacyPolicy,
+    "Home": Home,
     "Leaderboard": Leaderboard,
+    "Missions": Missions,
+    "PrivacyPolicy": PrivacyPolicy,
+    "Profile": Profile,
+    "Shop": Shop,
     "Skins": Skins,
 }
 

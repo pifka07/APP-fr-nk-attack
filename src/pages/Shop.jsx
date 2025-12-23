@@ -20,13 +20,23 @@ export default function Shop() {
 
     const fetchData = async () => {
         try {
-            const userData = await base44.auth.me();
+            // Check if logged in
+            const isAuth = await base44.auth.isAuthenticated();
+            let userData = null;
+            let pUpgradesData = [];
+            let pSkinsData = [];
+
+            if (isAuth) {
+                userData = await base44.auth.me();
+                [pUpgradesData, pSkinsData] = await Promise.all([
+                    base44.entities.PlayerUpgrade.list(),
+                    base44.entities.PlayerSkin.list()
+                ]);
+            }
             
-            const [upgradesData, skinsData, pUpgradesData, pSkinsData] = await Promise.all([
+            const [upgradesData, skinsData] = await Promise.all([
                 base44.entities.Upgrade.list(),
-                base44.entities.Skin.list(),
-                base44.entities.PlayerUpgrade.list(),
-                base44.entities.PlayerSkin.list()
+                base44.entities.Skin.list()
             ]);
 
             setUser(userData);
@@ -46,6 +56,11 @@ export default function Shop() {
     }, []);
 
     const handleBuyUpgrade = async (upgrade) => {
+        if (!user) {
+            toast.error("Please login to purchase!");
+            return;
+        }
+
         const currentLevel = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id)?.level || 0;
         if (currentLevel >= upgrade.max_level) return;
 
@@ -81,6 +96,11 @@ export default function Shop() {
     };
 
     const handleBuySkin = async (skin) => {
+        if (!user) {
+            toast.error("Please login to purchase!");
+            return;
+        }
+
         try {
             const response = await base44.functions.invoke('buySkin', { 
                 skin_id: skin.id 
@@ -107,6 +127,11 @@ export default function Shop() {
     };
 
     const handleEquipSkin = async (skinKey) => {
+        if (!user) {
+            toast.error("Please login to equip skins!");
+            return;
+        }
+
         try {
             await base44.auth.updateMe({ equipped_skin: skinKey });
             toast.success("Skin Equipped!");

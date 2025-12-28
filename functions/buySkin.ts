@@ -54,9 +54,14 @@ Deno.serve(async (req) => {
     }
 
     // 5️⃣ Coins abziehen
-    await base44.entities.PlayerStats.update(playerStats.id, {
-      total_coins: playerStats.total_coins - price
-    });
+    const newCoinBalance = playerStats.total_coins - price;
+    
+    await Promise.all([
+      base44.entities.PlayerStats.update(playerStats.id, {
+        total_coins: newCoinBalance
+      }),
+      base44.auth.updateMe({ total_coins: newCoinBalance })
+    ]);
 
     // 6️⃣ Skin anlegen (mit Service Role)
     await base44.asServiceRole.entities.PlayerSkin.create({

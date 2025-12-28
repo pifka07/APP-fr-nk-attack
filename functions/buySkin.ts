@@ -58,8 +58,8 @@ Deno.serve(async (req) => {
       total_coins: playerStats.total_coins - price
     });
 
-    // 6️⃣ Skin anlegen (NORMAL!)
-    await base44.entities.PlayerSkin.create({
+    // 6️⃣ Skin anlegen (mit Service Role)
+    await base44.asServiceRole.entities.PlayerSkin.create({
       user_id: user.id,
       skin_id,
       owned: true

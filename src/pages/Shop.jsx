@@ -102,11 +102,12 @@ export default function Shop() {
         }
 
         try {
+            console.log('Calling buySkin with skin.id:', skin.id);
             const response = await base44.functions.invoke('buySkin', { 
                 skin_id: skin.id 
             });
 
-            console.log('Buy skin response:', response.data);
+            console.log('Buy skin response:', response);
 
             if (!response.data.success) {
                 const reason = response.data.reason;

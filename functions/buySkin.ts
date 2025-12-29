@@ -26,8 +26,8 @@ Deno.serve(async (req) => {
       return Response.json({ success: false, reason: 'INVALID_SKIN_PRICE' }, { status: 400 });
     }
 
-    // 3️⃣ PlayerStats laden (NORMAL, nicht Admin)
-    const stats = await base44.entities.PlayerStats.filter({ user_id: user.id });
+    // 3️⃣ PlayerStats laden (mit Service Role für Filter)
+    const stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
     if (stats.length === 0) {
       return Response.json({ success: false, reason: 'NO_PLAYER_STATS' }, { status: 400 });
     }
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
     }
 
     // 4️⃣ Bereits gekauft?
-    const owned = await base44.entities.PlayerSkin.filter({
+    const owned = await base44.asServiceRole.entities.PlayerSkin.filter({
       user_id: user.id,
       skin_id
     });

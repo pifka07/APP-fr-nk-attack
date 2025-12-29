@@ -19,11 +19,13 @@ Deno.serve(async (req) => {
 
     // 2️⃣ Skin laden (Admin → OK)
     const skin = (await base44.asServiceRole.entities.Skin.get(skin_id));
+    console.log('Skin:', skin);
     if (!skin) {
       return Response.json({ success: false, reason: 'SKIN_NOT_FOUND' }, { status: 404 });
     }
 
     const price = skin.cost_coins ?? 0;
+    console.log('Price:', price);
 
     // 3️⃣ PlayerStats laden oder erstellen
     let stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });

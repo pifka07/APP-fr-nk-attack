@@ -23,13 +23,24 @@ Deno.serve(async (req) => {
 
     const price = skin.cost_coins ?? 0;
 
-    // 3️⃣ PlayerStats laden (mit Service Role für Filter)
-    const stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
+    // 3️⃣ PlayerStats laden oder erstellen
+    let stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
+    let playerStats;
+    
     if (stats.length === 0) {
-      return Response.json({ success: false, reason: 'NO_PLAYER_STATS' }, { status: 400 });
+      // PlayerStats erstellen, falls nicht vorhanden
+      playerStats = await base44.asServiceRole.entities.PlayerStats.create({
+        user_id: user.id,
+        total_coins: 0,
+        total_score: 0,
+        total_distance: 0,
+        best_score: 0,
+        best_distance: 0,
+        total_runs: 0
+      });
+    } else {
+      playerStats = stats[0];
     }
-
-    const playerStats = stats[0];
 
     // Nur prüfen wenn Skin Coins kostet
     if (price > 0 && playerStats.total_coins < price) {

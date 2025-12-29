@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     const newCoinBalance = playerStats.total_coins - price;
     
     await Promise.all([
-      base44.entities.PlayerStats.update(playerStats.id, {
+      base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
         total_coins: newCoinBalance
       }),
       base44.auth.updateMe({ total_coins: newCoinBalance })

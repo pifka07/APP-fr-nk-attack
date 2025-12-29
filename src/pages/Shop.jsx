@@ -106,6 +106,8 @@ export default function Shop() {
                 skin_id: skin.id 
             });
 
+            console.log('Buy skin response:', response.data);
+
             if (!response.data.success) {
                 const reason = response.data.reason;
                 if (reason === 'NOT_ENOUGH_COINS') {

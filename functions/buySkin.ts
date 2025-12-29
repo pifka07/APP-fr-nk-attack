@@ -12,7 +12,8 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json();
-    const skin_id = payload?.body?.skin_id;
+    console.log('Raw payload:', JSON.stringify(payload));
+    const skin_id = payload?.skin_id;
     console.log('Skin ID:', skin_id);
     if (!skin_id) {
       return Response.json({ success: false, reason: 'INVALID_REQUEST' }, { status: 400 });

@@ -31,7 +31,8 @@ Deno.serve(async (req) => {
 
     const playerStats = stats[0];
 
-    if (playerStats.total_coins < price) {
+    // Nur prüfen wenn Skin Coins kostet
+    if (price > 0 && playerStats.total_coins < price) {
       return Response.json({
         success: false,
         reason: 'NOT_ENOUGH_COINS',

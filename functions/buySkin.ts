@@ -22,9 +22,6 @@ Deno.serve(async (req) => {
     }
 
     const price = skin.cost_coins ?? 0;
-    if (price <= 0) {
-      return Response.json({ success: false, reason: 'INVALID_SKIN_PRICE' }, { status: 400 });
-    }
 
     // 3️⃣ PlayerStats laden (mit Service Role für Filter)
     const stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });

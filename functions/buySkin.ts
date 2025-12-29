@@ -6,11 +6,13 @@ Deno.serve(async (req) => {
 
     // 1️⃣ User holen
     const user = await base44.auth.me();
+    console.log('User:', user?.id);
     if (!user) {
       return Response.json({ success: false, reason: 'NOT_LOGGED_IN' }, { status: 401 });
     }
 
     const { skin_id } = await req.json();
+    console.log('Skin ID:', skin_id);
     if (!skin_id) {
       return Response.json({ success: false, reason: 'INVALID_REQUEST' }, { status: 400 });
     }

@@ -14,25 +14,36 @@ export default function Skins() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const fetchData = async () => {
+        try {
+            const [allSkins, mySkins, currentUser] = await Promise.all([
+                base44.entities.Skin.list(),
+                base44.entities.PlayerSkin.list(),
+                base44.auth.me()
+            ]);
+            setSkins(allSkins);
+            setPlayerSkins(mySkins);
+            setUser(currentUser);
+        } catch (error) {
+            console.error("Failed to fetch skins", error);
+            toast.error("Could not load skins");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [allSkins, mySkins, currentUser] = await Promise.all([
-                    base44.entities.Skin.list(),
-                    base44.entities.PlayerSkin.list(),
-                    base44.auth.me()
-                ]);
-                setSkins(allSkins);
-                setPlayerSkins(mySkins);
-                setUser(currentUser);
-            } catch (error) {
-                console.error("Failed to fetch skins", error);
-                toast.error("Could not load skins");
-            } finally {
-                setLoading(false);
+        fetchData();
+        
+        // Reload data when page becomes visible (user returns from shop)
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                fetchData();
             }
         };
-        fetchData();
+        
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
     }, []);
 
     const handleEquip = async (skin) => {

@@ -84,11 +84,13 @@ Deno.serve(async (req) => {
     }
 
     // 6️⃣ Skin anlegen (mit Service Role)
-    await base44.asServiceRole.entities.PlayerSkin.create({
+    console.log('Erstelle PlayerSkin...');
+    const newPlayerSkin = await base44.asServiceRole.entities.PlayerSkin.create({
       user_id: user.id,
       skin_id,
       owned: true
     });
+    console.log('PlayerSkin erstellt:', newPlayerSkin);
 
     return Response.json({
       success: true,

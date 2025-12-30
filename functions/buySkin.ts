@@ -13,11 +13,10 @@ Deno.serve(async (req) => {
 
     const payload = await req.json();
     console.log('=== RAW PAYLOAD ===', JSON.stringify(payload, null, 2));
-    console.log('=== PAYLOAD TYPE ===', typeof payload);
-    console.log('=== PAYLOAD KEYS ===', Object.keys(payload));
     
-    const skin_id = payload?.skin_id;
-    console.log('=== EXTRACTED SKIN_ID ===', skin_id, typeof skin_id);
+    // Robust: Unterstützt beide Varianten { skin_id } und { body: { skin_id } }
+    const skin_id = payload?.body?.skin_id || payload?.skin_id;
+    console.log('=== EXTRACTED SKIN_ID ===', skin_id);
     
     if (!skin_id) {
       console.log('❌ INVALID_REQUEST - skin_id fehlt!');

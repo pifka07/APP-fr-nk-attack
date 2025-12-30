@@ -179,7 +179,7 @@ export default function Shop() {
                 </TabsList>
 
                 <TabsContent value="skins" className="grid grid-cols-2 gap-4">
-                    {skins.sort((a, b) => b.cost_coins - a.cost_coins).map(skin => {
+                    {skins.sort((a, b) => a.cost_coins - b.cost_coins).map(skin => {
                         const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
                         const isEquipped = user?.equipped_skin === skin.key;
                         const canAfford = (user?.total_coins || 0) >= skin.cost_coins;

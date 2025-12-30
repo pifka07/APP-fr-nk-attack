@@ -337,8 +337,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : 5))),
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isRapidFire ? 'triple' : 'normal')))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 50 : (isRapidFire ? 60 : 30)))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 30 : (isRapidFire ? 60 : 30))))
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 20 : (isRapidFire ? 60 : 30)))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 12 : (isRapidFire ? 60 : 30))))
             });
         };
 
@@ -896,24 +896,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.stroke();
                         ctx.shadowBlur = 0;
                         } else if (p.type === 'goldbar') {
-                        // Draw gold bar
-                        ctx.shadowColor = '#ffd700';
-                        ctx.shadowBlur = 15;
+                            // Draw gold bar with rotation
+                            ctx.rotate(state.animFrame * 0.15);
+                            ctx.shadowColor = '#ffd700';
+                            ctx.shadowBlur = 15;
 
-                        // Outer gold bar
-                        ctx.fillStyle = '#ffd700';
-                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+                            // Outer gold bar
+                            ctx.fillStyle = '#ffd700';
+                            ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
 
-                        // Inner highlight
-                        ctx.fillStyle = '#ffed4e';
-                        ctx.fillRect(-p.width/2 + 5, -p.height/2 + 5, p.width - 10, p.height - 10);
+                            // Inner highlight
+                            ctx.fillStyle = '#ffed4e';
+                            ctx.fillRect(-p.width/2 + 2, -p.height/2 + 2, p.width - 4, p.height - 4);
 
-                        // Dark edge for depth
-                        ctx.fillStyle = '#b8860b';
-                        ctx.fillRect(p.width/2 - 3, -p.height/2, 3, p.height);
-                        ctx.fillRect(-p.width/2, p.height/2 - 3, p.width, 3);
+                            // Dark edge for depth
+                            ctx.fillStyle = '#b8860b';
+                            ctx.fillRect(p.width/2 - 2, -p.height/2, 2, p.height);
+                            ctx.fillRect(-p.width/2, p.height/2 - 2, p.width, 2);
 
-                        ctx.shadowBlur = 0;
+                            ctx.shadowBlur = 0;
                         } else if (p.type === 'shuriken') {
                         // Draw ninja star (shuriken)
                         ctx.rotate(state.animFrame * 0.3);

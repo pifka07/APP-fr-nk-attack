@@ -318,8 +318,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 8 : 2),
-                vy: isLaser ? 4 : (isNinja ? 8 : 5),
+                vx: isLaser ? 8 : (isNinja ? 6 : 2),
+                vy: isLaser ? 4 : (isNinja ? 12 : 5),
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isRapidFire ? 'triple' : 'normal')),
                 width: isLaser ? 40 : (isNinja ? 35 : (isRapidFire ? 60 : 30)),
@@ -861,11 +861,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (p.type === 'shuriken') {
                         // Draw ninja star (shuriken)
                         ctx.rotate(state.animFrame * 0.3);
-                        ctx.shadowColor = '#dc2626';
-                        ctx.shadowBlur = 8;
+                        ctx.shadowColor = '#94a3b8';
+                        ctx.shadowBlur = 10;
                         
                         // Draw 4-pointed star
-                        ctx.fillStyle = '#1a1a1a';
+                        ctx.fillStyle = '#cbd5e1';
                         ctx.beginPath();
                         for (let i = 0; i < 4; i++) {
                             const angle = (i * Math.PI / 2) - Math.PI / 4;
@@ -876,8 +876,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.closePath();
                         ctx.fill();
                         
-                        // Red center
-                        ctx.fillStyle = '#dc2626';
+                        // Bright silver center
+                        ctx.fillStyle = '#f1f5f9';
                         ctx.beginPath();
                         ctx.arc(0, 0, p.width / 6, 0, Math.PI * 2);
                         ctx.fill();

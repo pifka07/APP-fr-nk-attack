@@ -70,16 +70,11 @@ Deno.serve(async (req) => {
     console.log('PlayerSkin erstellt:', newPlayerSkin);
 
     // 6️⃣ Coins abziehen (nur wenn Skin Coins kostet)
-    let newCoinBalance = playerStats.total_coins;
+    let newCoinBalance = currentCoins;
     if (price > 0) {
-      newCoinBalance = playerStats.total_coins - price;
-      
-      await Promise.all([
-        base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-          total_coins: newCoinBalance
-        }),
-        base44.asServiceRole.entities.User.update(user.id, { total_coins: newCoinBalance })
-      ]);
+      newCoinBalance = currentCoins - price;
+      await base44.asServiceRole.entities.User.update(user.id, { total_coins: newCoinBalance });
+      console.log('Coins abgezogen. Neuer Stand:', newCoinBalance);
     }
 
     return Response.json({

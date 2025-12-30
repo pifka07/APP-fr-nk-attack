@@ -61,7 +61,7 @@ export default function Game() {
                     if (upgrade) {
                         const totalEffect = upgrade.effect_per_level * pu.level;
                         switch(upgrade.key) {
-                            case 'poop_tank': config.poopTankCapacity = 10 + Math.floor(totalEffect); break;
+                            case 'poop_tank': config.poopTankCapacity = 10 + (pu.level * 3); break;
                             case 'poop_cooldown': config.cooldownReduction = pu.level * 0.1; break;
                             case 'wing_speed': config.agility += totalEffect; break;
                             case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;

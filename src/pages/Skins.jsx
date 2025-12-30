@@ -16,14 +16,23 @@ export default function Skins() {
 
     const fetchData = async () => {
         try {
-            const [allSkins, mySkins, currentUser] = await Promise.all([
-                base44.entities.Skin.list(),
-                base44.entities.PlayerSkin.list(),
-                base44.auth.me()
-            ]);
+            const allSkins = await base44.entities.Skin.list();
             setSkins(allSkins);
-            setPlayerSkins(mySkins);
-            setUser(currentUser);
+
+            // Check if logged in for user-specific data
+            const isAuth = await base44.auth.isAuthenticated();
+            if (isAuth) {
+                try {
+                    const [mySkins, currentUser] = await Promise.all([
+                        base44.entities.PlayerSkin.list(),
+                        base44.auth.me()
+                    ]);
+                    setPlayerSkins(mySkins);
+                    setUser(currentUser);
+                } catch (e) {
+                    console.log("Not logged in");
+                }
+            }
         } catch (error) {
             console.error("Failed to fetch skins", error);
             toast.error("Could not load skins");
@@ -47,6 +56,10 @@ export default function Skins() {
     }, []);
 
     const handleEquip = async (skin) => {
+        if (!user) {
+            toast.error("Please login to equip skins!");
+            return;
+        }
         try {
             await base44.auth.updateMe({ equipped_skin: skin.key });
             setUser({ ...user, equipped_skin: skin.key });

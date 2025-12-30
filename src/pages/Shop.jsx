@@ -20,24 +20,29 @@ export default function Shop() {
 
     const fetchData = async () => {
         try {
-            // Check if logged in
+            // Load shop data (always visible)
+            const [upgradesData, skinsData] = await Promise.all([
+                base44.entities.Upgrade.list(),
+                base44.entities.Skin.list()
+            ]);
+
+            // Check if logged in for user-specific data
             const isAuth = await base44.auth.isAuthenticated();
             let userData = null;
             let pUpgradesData = [];
             let pSkinsData = [];
 
             if (isAuth) {
-                userData = await base44.auth.me();
-                [pUpgradesData, pSkinsData] = await Promise.all([
-                    base44.entities.PlayerUpgrade.list(),
-                    base44.entities.PlayerSkin.list()
-                ]);
+                try {
+                    userData = await base44.auth.me();
+                    [pUpgradesData, pSkinsData] = await Promise.all([
+                        base44.entities.PlayerUpgrade.list(),
+                        base44.entities.PlayerSkin.list()
+                    ]);
+                } catch (e) {
+                    console.log("Not logged in");
+                }
             }
-            
-            const [upgradesData, skinsData] = await Promise.all([
-                base44.entities.Upgrade.list(),
-                base44.entities.Skin.list()
-            ]);
 
             setUser(userData);
             setUpgrades(upgradesData);

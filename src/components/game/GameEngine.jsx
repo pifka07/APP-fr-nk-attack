@@ -318,7 +318,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 x: state.player.x,
                 y: state.player.y + 20,
                 vx: isLaser ? 8 : 2,
-                vy: isLaser ? 0 : 5,
+                vy: isLaser ? 4 : 5,
                 active: true,
                 type: isLaser ? 'laser' : (isRapidFire ? 'triple' : 'normal'),
                 width: isLaser ? 40 : (isRapidFire ? 60 : 30),

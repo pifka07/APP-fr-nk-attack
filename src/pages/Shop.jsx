@@ -225,7 +225,7 @@ export default function Shop() {
                 </TabsContent>
 
                 <TabsContent value="upgrades" className="space-y-4">
-                    {upgrades.map(upgrade => {
+                    {upgrades.filter(u => u.key === 'poop_tank' || u.key === 'poop_cooldown').map(upgrade => {
                         const currentPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
                         const currentLevel = currentPu?.level || 0;
                         const isMaxed = currentLevel >= upgrade.max_level;

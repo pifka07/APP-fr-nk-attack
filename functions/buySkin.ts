@@ -33,37 +33,18 @@ Deno.serve(async (req) => {
     const price = skin.cost_coins ?? 0;
     console.log('Price:', price);
 
-    // 3️⃣ PlayerStats laden oder erstellen
-    let stats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
-    console.log('PlayerStats gefunden:', stats.length);
-    let playerStats;
-    
-    if (stats.length === 0) {
-      // PlayerStats erstellen, falls nicht vorhanden
-      console.log('Erstelle neue PlayerStats...');
-      playerStats = await base44.asServiceRole.entities.PlayerStats.create({
-        user_id: user.id,
-        total_coins: 0,
-        total_score: 0,
-        total_distance: 0,
-        best_score: 0,
-        best_distance: 0,
-        total_runs: 0
-      });
-      console.log('PlayerStats erstellt:', playerStats);
-    } else {
-      playerStats = stats[0];
-      console.log('PlayerStats vorhanden:', playerStats.total_coins, 'coins');
-    }
+    // 3️⃣ Coins von User holen (primäre Quelle)
+    const currentCoins = user.total_coins ?? 0;
+    console.log('User Coins:', currentCoins);
 
     // Nur prüfen wenn Skin Coins kostet
-    if (price > 0 && playerStats.total_coins < price) {
-      console.log('❌ NOT_ENOUGH_COINS - Benötigt:', price, 'Verfügbar:', playerStats.total_coins);
+    if (price > 0 && currentCoins < price) {
+      console.log('❌ NOT_ENOUGH_COINS - Benötigt:', price, 'Verfügbar:', currentCoins);
       return Response.json({
         success: false,
         reason: 'NOT_ENOUGH_COINS',
         required: price,
-        available: playerStats.total_coins
+        available: currentCoins
       }, { status: 400 });
     }
 

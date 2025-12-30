@@ -16,24 +16,21 @@ export default function Missions() {
             name: 'Downtown',
             description: 'The busy streets. Perfect for dropping.',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png',
-            locked: false,
-            difficulty: 'Easy'
+            locked: false
         },
         {
             id: 'rooftop',
             name: 'Rooftop',
             description: 'High above the city. Watch out for drones!',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png',
-            locked: false,
-            difficulty: 'Medium'
+            locked: false
         },
         {
             id: 'park',
             name: 'Park',
             description: 'Nature calls. Dogs and picnics everywhere.',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png',
-            locked: false,
-            difficulty: 'Hard'
+            locked: false
         }
     ];
 
@@ -74,10 +71,6 @@ export default function Missions() {
                                 <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
                                     <div className="flex justify-between items-end">
                                         <div>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <MapPin className="w-4 h-4 text-teal-400" />
-                                                <span className="text-teal-400 font-bold uppercase text-xs tracking-wider">{level.difficulty}</span>
-                                            </div>
                                             <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
                                             <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">{level.description}</p>
                                         </div>

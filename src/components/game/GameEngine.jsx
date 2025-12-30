@@ -236,8 +236,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     if (gameSpeed === 'quick') speedMult = 1.4;
 
     return {
-        maxPoops: config.maxPoops || 3,
-        cooldown: Math.max(100, (500 - (config.cooldownReduction || 0) * 50) / speedMult), // Faster cooldown on high speed
+        maxPoops: config.poopTankCapacity || 10,
+        cooldown: Math.max(100, (500 - (config.cooldownReduction || 0) * 50) / speedMult),
         flapStrength: FLAP_STRENGTH * (config.agility || 1),
         comboDuration: config.comboDuration || 2000,
         speedMultiplier: speedMult
@@ -256,13 +256,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.enemies = [];
             gameStateRef.current.poops = [];
             gameStateRef.current.particles = [];
-            gameStateRef.current.player.y = 2000; // Start on ground (clamped later)
+            gameStateRef.current.player.y = 2000;
             gameStateRef.current.player.vy = 0;
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
 
-            // Reset/Set Initial Speed based on selection
+            // Initialize Poop Tank
             const config = getEffectiveConfig();
+            gameStateRef.current.currentPoops = config.maxPoops;
+            gameStateRef.current.maxPoops = config.maxPoops;
             gameStateRef.current.scrollSpeed = SCROLL_SPEED_INITIAL * config.speedMultiplier;
 
             AUDIOS.current.bgm.play().catch(e => console.error("BGM failed", e));
@@ -502,12 +504,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     const spawnPowerup = (width, height) => {
         const state = gameStateRef.current;
-        if (Math.random() > 0.01) return; // 1% chance per frame
+        if (Math.random() > 0.01) return;
 
         const typeRand = Math.random();
         let type = 'coin';
-        // Only coin and energy (new graphic)
-        if (typeRand > 0.9) type = 'energy'; 
+        if (typeRand > 0.85) type = 'energy';
+        else if (typeRand > 0.7) type = 'ammo';
 
         state.powerups.push({
             x: width + 50,
@@ -605,10 +607,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
         spawnPowerup(width, height);
 
-        // Reload Ammo slowly
-        if (frameRef.current % 60 === 0 && state.currentPoops < getEffectiveConfig().maxPoops) {
-            state.currentPoops++;
-        }
+        // Natural Reload (disabled - only pickup refills now)
+        // Poop must be collected, not auto-regenerate
 
         // Update Enemies
         const newEnemies = [];
@@ -755,16 +755,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const dx = state.player.x - (p.x + p.width/2);
             const dy = state.player.y - (p.y + p.height/2);
             const dist = Math.sqrt(dx*dx + dy*dy);
-            
+
             if (dist < state.player.radius + (p.width/2)) {
                 p.active = false;
                 createParticles(p.x, p.y, '#FFFFFF', 5);
-                
+
                 if (p.type === 'coin') {
                     state.coins += 5;
                     state.score += 50;
                 } else if (p.type === 'ammo') {
-                    state.currentPoops = getEffectiveConfig().maxPoops; // Refill
+                    const effectiveConfig = getEffectiveConfig();
+                    const toAdd = Math.min(3, effectiveConfig.maxPoops - state.currentPoops);
+                    state.currentPoops = Math.min(effectiveConfig.maxPoops, state.currentPoops + toAdd);
                     createParticles(state.player.x, state.player.y, '#8B4513', 8);
                 } else if (p.type === 'energy') {
                     state.health = Math.min(100, state.health + 20);

@@ -12,11 +12,16 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json();
-    console.log('Raw payload:', JSON.stringify(payload));
+    console.log('=== RAW PAYLOAD ===', JSON.stringify(payload, null, 2));
+    console.log('=== PAYLOAD TYPE ===', typeof payload);
+    console.log('=== PAYLOAD KEYS ===', Object.keys(payload));
+    
     const skin_id = payload?.skin_id;
-    console.log('Skin ID:', skin_id);
+    console.log('=== EXTRACTED SKIN_ID ===', skin_id, typeof skin_id);
+    
     if (!skin_id) {
-      return Response.json({ success: false, reason: 'INVALID_REQUEST' }, { status: 400 });
+      console.log('❌ INVALID_REQUEST - skin_id fehlt!');
+      return Response.json({ success: false, reason: 'INVALID_REQUEST', payload_received: payload }, { status: 400 });
     }
 
     // 2️⃣ Skin laden (Admin → OK)

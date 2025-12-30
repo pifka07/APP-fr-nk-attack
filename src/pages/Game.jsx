@@ -288,50 +288,63 @@ export default function Game() {
 
             {/* HUD */}
             {gameState !== 'start' && (
-                <div className="absolute top-0 left-0 right-0 p-4 z-10 pointer-events-none">
+                <div className="absolute top-0 left-0 right-0 p-3 z-10 pointer-events-none">
                     <div className="flex justify-between items-start">
                         {/* Health & Score */}
-                        <div className="space-y-2">
-                            {/* Health Bar with Icon */}
+                        <div className="space-y-1.5">
+                            {/* Health Bar */}
                             <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden relative bg-blue-400 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-full border-2 border-white shadow-md overflow-hidden bg-blue-400 flex items-center justify-center">
                                     <img 
                                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b686e47c1_FrnkdieTaubeicon9.png" 
                                         alt="Energy" 
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
-                                <div className="w-32 h-4 bg-slate-800 rounded-full border-2 border-slate-600 overflow-hidden relative">
+                                <div className="w-24 h-3 bg-slate-800 rounded-full border border-slate-600 overflow-hidden">
                                     <div 
                                         className="h-full bg-gradient-to-r from-teal-400 to-teal-300 transition-all duration-300" 
                                         style={{ width: `${health}%` }}
                                     />
-                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow-md">ENERGY</div>
                                 </div>
                             </div>
 
-                            {/* Coins Display */}
+                            {/* Poop Tank */}
                             <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 rounded-full border-2 border-yellow-400 shadow-md overflow-hidden relative bg-yellow-100 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-full border-2 border-amber-400 shadow-md overflow-hidden bg-amber-100 flex items-center justify-center">
+                                    <span className="text-lg">💩</span>
+                                </div>
+                                <div className="w-24 h-3 bg-slate-800 rounded-full border border-slate-600 overflow-hidden">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-300"
+                                        style={{ width: `${(ammo / gameConfig.poopTankCapacity) * 100}%` }}
+                                    />
+                                </div>
+                                <span className="text-[10px] text-white font-bold">{ammo}/{gameConfig.poopTankCapacity}</span>
+                            </div>
+
+                            {/* Coins */}
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-full border-2 border-yellow-400 shadow-md overflow-hidden bg-yellow-100 flex items-center justify-center">
                                     <img 
                                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png" 
                                         alt="Coin" 
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
-                                <div className="bg-slate-900/80 px-3 py-1 rounded-xl border border-yellow-500/30">
-                                    <div className="text-xl font-black text-yellow-400 tabular-nums">{coins}</div>
+                                <div className="bg-slate-900/80 px-2 py-0.5 rounded-lg border border-yellow-500/30">
+                                    <div className="text-base font-black text-yellow-400 tabular-nums">{coins}</div>
                                 </div>
                             </div>
 
-                            <div className="bg-slate-900/50 backdrop-blur-sm px-3 py-1 rounded-lg border border-slate-700 inline-block ml-1">
-                                <div className="text-xl font-black text-white tabular-nums tracking-wider">{score}</div>
-                                <div className="text-[10px] text-slate-400 font-bold">SCORE</div>
+                            <div className="bg-slate-900/50 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-slate-700 inline-block ml-1">
+                                <div className="text-base font-black text-white tabular-nums">{score}</div>
+                                <div className="text-[8px] text-slate-400 font-bold">SCORE</div>
                             </div>
 
-                            <div className="bg-slate-900/50 backdrop-blur-sm px-3 py-1 rounded-lg border border-slate-700 inline-block ml-1 mt-2">
-                                <div className="text-lg font-black text-teal-400 tabular-nums tracking-wider">{Math.floor(distance)}m</div>
-                                <div className="text-[10px] text-slate-400 font-bold">DISTANCE</div>
+                            <div className="bg-slate-900/50 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-slate-700 inline-block ml-1">
+                                <div className="text-sm font-black text-teal-400 tabular-nums">{Math.floor(distance)}m</div>
+                                <div className="text-[8px] text-slate-400 font-bold">DISTANCE</div>
                             </div>
                         </div>
 
@@ -368,22 +381,6 @@ export default function Game() {
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
                 <>
-                    <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
-                        {/* Poop Tank Display */}
-                        <div className="flex items-center gap-2 bg-slate-800/90 px-4 py-2 rounded-full border-2 border-amber-500/50">
-                            <span className="text-xs font-bold text-amber-400">💩</span>
-                            <div className="flex flex-col">
-                                <div className="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
-                                    <div 
-                                        className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-300"
-                                        style={{ width: `${(ammo / gameConfig.poopTankCapacity) * 100}%` }}
-                                    />
-                                </div>
-                                <span className="text-[8px] text-slate-400 text-center mt-0.5">{ammo}/{gameConfig.poopTankCapacity}</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none">
                          <AnimatePresence>
                             <motion.div

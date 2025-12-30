@@ -42,7 +42,7 @@ const SPRITE_MAP = {
     }
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, config = {}, skin = 'default', level = 'downtown', gameSpeed = 'normal', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, onAmmoUpdate, config = {}, skin = 'default', level = 'downtown', gameSpeed = 'normal', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true }, ref) => {
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
     const AUDIOS = useRef({
@@ -302,12 +302,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Cooldown check
         if (now - state.lastPoopTime < effectiveConfig.cooldown) return;
-        
+
         // Ammo check (reloading mechanism)
         if (state.currentPoops <= 0) return; // Out of ammo
 
         playSound('fart');
         state.currentPoops--;
+        if (onAmmoUpdate) onAmmoUpdate(state.currentPoops);
         state.lastPoopTime = now;
         
         // Helper to push a poop
@@ -767,6 +768,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     const effectiveConfig = getEffectiveConfig();
                     const toAdd = Math.min(3, effectiveConfig.maxPoops - state.currentPoops);
                     state.currentPoops = Math.min(effectiveConfig.maxPoops, state.currentPoops + toAdd);
+                    if (onAmmoUpdate) onAmmoUpdate(state.currentPoops);
                     createParticles(state.player.x, state.player.y, '#8B4513', 8);
                 } else if (p.type === 'energy') {
                     state.health = Math.min(100, state.health + 20);

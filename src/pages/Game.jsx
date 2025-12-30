@@ -23,7 +23,8 @@ export default function Game() {
     const [combo, setCombo] = useState(0);
     const [finalStats, setFinalStats] = useState(null);
     const [saving, setSaving] = useState(false);
-    const [gameConfig, setGameConfig] = useState({});
+    const [gameConfig, setGameConfig] = useState({ poopTankCapacity: 10 });
+    const [ammo, setAmmo] = useState(10);
     const [skin, setSkin] = useState('default');
     const [musicEnabled, setMusicEnabled] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
@@ -49,7 +50,7 @@ export default function Game() {
 
                 // Default config
                 let config = {
-                    maxPoops: 3,
+                    poopTankCapacity: 10,
                     cooldownReduction: 0,
                     agility: 1,
                     comboDuration: 2000
@@ -60,7 +61,7 @@ export default function Game() {
                     if (upgrade) {
                         const totalEffect = upgrade.effect_per_level * pu.level;
                         switch(upgrade.key) {
-                            case 'poop_tank': config.maxPoops += Math.floor(totalEffect); break;
+                            case 'poop_tank': config.poopTankCapacity = 10 + Math.floor(totalEffect); break;
                             case 'poop_cooldown': config.cooldownReduction += totalEffect; break;
                             case 'wing_speed': config.agility += totalEffect; break;
                             case 'combo_booster': config.comboDuration += (totalEffect * 1000); break;
@@ -68,6 +69,7 @@ export default function Game() {
                     }
                 });
                 setGameConfig(config);
+                setAmmo(config.poopTankCapacity);
             } catch (e) {
                 console.error("Failed to load game config", e);
             }
@@ -280,6 +282,7 @@ export default function Game() {
                     onScoreUpdate={(s, c, d) => { setScore(s); setCoins(c); setDistance(d); }}
                     onHealthUpdate={setHealth}
                     onComboUpdate={setCombo}
+                    onAmmoUpdate={setAmmo}
                 />
             </div>
 
@@ -365,6 +368,22 @@ export default function Game() {
             {/* Controls Overlay (Mobile friendly) */}
             {gameState === 'playing' && (
                 <>
+                    <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
+                        {/* Poop Tank Display */}
+                        <div className="flex items-center gap-2 bg-slate-800/90 px-4 py-2 rounded-full border-2 border-amber-500/50">
+                            <span className="text-xs font-bold text-amber-400">💩</span>
+                            <div className="flex flex-col">
+                                <div className="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-300"
+                                        style={{ width: `${(ammo / gameConfig.poopTankCapacity) * 100}%` }}
+                                    />
+                                </div>
+                                <span className="text-[8px] text-slate-400 text-center mt-0.5">{ammo}/{gameConfig.poopTankCapacity}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none">
                          <AnimatePresence>
                             <motion.div

@@ -49,6 +49,17 @@ Deno.serve(async (req) => {
       return Response.json({ success: false, reason: 'SKIN_ALREADY_OWNED' }, { status: 400 });
     }
 
+    // Coin-Check HIER durchführen (nachdem wir wissen, dass der Skin nicht bereits owned ist)
+    if (price > 0 && currentCoins < price) {
+      console.log('❌ NOT_ENOUGH_COINS - Benötigt:', price, 'Verfügbar:', currentCoins);
+      return Response.json({
+        success: false,
+        reason: 'NOT_ENOUGH_COINS',
+        required: price,
+        available: currentCoins
+      }, { status: 400 });
+    }
+
     // 5️⃣ Skin anlegen (mit Service Role)
     console.log('Erstelle PlayerSkin...');
     const newPlayerSkin = await base44.asServiceRole.entities.PlayerSkin.create({

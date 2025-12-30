@@ -858,6 +858,31 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(-p.width/2 + 5, -p.height/2 + 2, p.width - 10, p.height - 4);
                         ctx.shadowBlur = 0;
+                    } else if (p.type === 'shuriken') {
+                        // Draw ninja star (shuriken)
+                        ctx.rotate(state.animFrame * 0.3);
+                        ctx.shadowColor = '#dc2626';
+                        ctx.shadowBlur = 8;
+                        
+                        // Draw 4-pointed star
+                        ctx.fillStyle = '#1a1a1a';
+                        ctx.beginPath();
+                        for (let i = 0; i < 4; i++) {
+                            const angle = (i * Math.PI / 2) - Math.PI / 4;
+                            const r = p.width / 2;
+                            ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                            ctx.lineTo(Math.cos(angle + Math.PI / 4) * (r * 0.4), Math.sin(angle + Math.PI / 4) * (r * 0.4));
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        // Red center
+                        ctx.fillStyle = '#dc2626';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.width / 6, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.shadowBlur = 0;
                     } else {
                         const img = IMAGES.current.poopProjectile;
                         // Spin the poop!

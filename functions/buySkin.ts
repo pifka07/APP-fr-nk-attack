@@ -29,7 +29,8 @@ Deno.serve(async (req) => {
     if (skins.length === 0) {
       return Response.json({ success: false, reason: 'SKIN_NOT_FOUND' }, { status: 404 });
     }
-    const skin = skins[0];
+    const skinRecord = skins[0];
+    const skin = skinRecord.data || skinRecord;
     console.log('Skin:', skin);
 
     const price = skin.cost_coins ?? 0;

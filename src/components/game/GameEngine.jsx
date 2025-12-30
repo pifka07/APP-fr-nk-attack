@@ -237,9 +237,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     if (gameSpeed === 'slow') speedMult = 0.7;
     if (gameSpeed === 'quick') speedMult = 1.4;
 
+    // Cooldown Curve: Level 0-10 (3.0s → 1.0s)
+    const cooldownLevels = [3000, 2700, 2400, 2100, 1900, 1700, 1500, 1300, 1200, 1100, 1000];
+    const cooldownLevel = Math.round((config.cooldownReduction || 0) * 10);
+    const baseCooldown = cooldownLevels[Math.min(cooldownLevel, 10)];
+
     return {
         maxPoops: config.poopTankCapacity || 10,
-        cooldown: Math.max(100, (500 - (config.cooldownReduction || 0) * 50) / speedMult),
+        cooldown: baseCooldown / speedMult,
         flapStrength: FLAP_STRENGTH * (config.agility || 1),
         comboDuration: config.comboDuration || 2000,
         speedMultiplier: speedMult

@@ -329,15 +329,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isLaser = skin === 'neon';
             const isNinja = skin === 'ninja';
             const isAlien = skin === 'alien';
+            const isGold = skin === 'gold';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : 2)),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : 5)),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : 2))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : 5))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isRapidFire ? 'triple' : 'normal'))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isRapidFire ? 60 : 30))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isRapidFire ? 60 : 30)))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isRapidFire ? 'triple' : 'normal')))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 50 : (isRapidFire ? 60 : 30)))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 30 : (isRapidFire ? 60 : 30))))
             });
         };
 
@@ -598,8 +599,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning') {
-                p.vy += GRAVITY * 0.5; // accelerate down (not for laser, shuriken or lightning)
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar') {
+                p.vy += GRAVITY * 0.5; // accelerate down (not for laser, shuriken, lightning or goldbar)
             }
         });
 
@@ -894,7 +895,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.lineTo(p.width/2, p.height/2);
                         ctx.stroke();
                         ctx.shadowBlur = 0;
-                    } else if (p.type === 'shuriken') {
+                        } else if (p.type === 'goldbar') {
+                        // Draw gold bar
+                        ctx.shadowColor = '#ffd700';
+                        ctx.shadowBlur = 15;
+
+                        // Outer gold bar
+                        ctx.fillStyle = '#ffd700';
+                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+
+                        // Inner highlight
+                        ctx.fillStyle = '#ffed4e';
+                        ctx.fillRect(-p.width/2 + 5, -p.height/2 + 5, p.width - 10, p.height - 10);
+
+                        // Dark edge for depth
+                        ctx.fillStyle = '#b8860b';
+                        ctx.fillRect(p.width/2 - 3, -p.height/2, 3, p.height);
+                        ctx.fillRect(-p.width/2, p.height/2 - 3, p.width, 3);
+
+                        ctx.shadowBlur = 0;
+                        } else if (p.type === 'shuriken') {
                         // Draw ninja star (shuriken)
                         ctx.rotate(state.animFrame * 0.3);
                         ctx.shadowColor = '#94a3b8';

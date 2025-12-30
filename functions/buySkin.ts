@@ -73,19 +73,7 @@ Deno.serve(async (req) => {
       return Response.json({ success: false, reason: 'SKIN_ALREADY_OWNED' }, { status: 400 });
     }
 
-    // 5️⃣ Coins abziehen (nur wenn Skin Coins kostet)
-    if (price > 0) {
-      const newCoinBalance = playerStats.total_coins - price;
-      
-      await Promise.all([
-        base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-          total_coins: newCoinBalance
-        }),
-        base44.auth.updateMe({ total_coins: newCoinBalance })
-      ]);
-    }
-
-    // 6️⃣ Skin anlegen (mit Service Role)
+    // 5️⃣ Skin anlegen (mit Service Role)
     console.log('Erstelle PlayerSkin...');
     const newPlayerSkin = await base44.asServiceRole.entities.PlayerSkin.create({
       user_id: user.id,
@@ -94,9 +82,22 @@ Deno.serve(async (req) => {
     });
     console.log('PlayerSkin erstellt:', newPlayerSkin);
 
+    // 6️⃣ Coins abziehen (nur wenn Skin Coins kostet)
+    let newCoinBalance = playerStats.total_coins;
+    if (price > 0) {
+      newCoinBalance = playerStats.total_coins - price;
+      
+      await Promise.all([
+        base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
+          total_coins: newCoinBalance
+        }),
+        base44.asServiceRole.auth.updateUser(user.id, { total_coins: newCoinBalance })
+      ]);
+    }
+
     return Response.json({
       success: true,
-      coins_remaining: playerStats.total_coins - price
+      coins_remaining: newCoinBalance
     });
 
   } catch (err) {

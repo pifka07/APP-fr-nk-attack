@@ -328,15 +328,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const pushPoop = () => {
             const isLaser = skin === 'neon';
             const isNinja = skin === 'ninja';
+            const isAlien = skin === 'alien';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : 2),
-                vy: isLaser ? 4 : (isNinja ? 12 : 5),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : 2)),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : 5)),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isRapidFire ? 'triple' : 'normal')),
-                width: isLaser ? 40 : (isNinja ? 35 : (isRapidFire ? 60 : 30)),
-                height: isLaser ? 10 : (isNinja ? 35 : (isRapidFire ? 60 : 30))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isRapidFire ? 'triple' : 'normal'))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isRapidFire ? 60 : 30))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isRapidFire ? 60 : 30)))
             });
         };
 
@@ -597,8 +598,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken') {
-                p.vy += GRAVITY * 0.5; // accelerate down (not for laser or shuriken)
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning') {
+                p.vy += GRAVITY * 0.5; // accelerate down (not for laser, shuriken or lightning)
             }
         });
 
@@ -871,6 +872,27 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(-p.width/2 + 5, -p.height/2 + 2, p.width - 10, p.height - 4);
+                        ctx.shadowBlur = 0;
+                    } else if (p.type === 'lightning') {
+                        // Draw lightning bolt
+                        ctx.shadowColor = '#00ffff';
+                        ctx.shadowBlur = 20;
+                        ctx.strokeStyle = '#00ffff';
+                        ctx.lineWidth = 4;
+                        ctx.beginPath();
+                        ctx.moveTo(-p.width/2, -p.height/2);
+                        ctx.lineTo(-p.width/4, 0);
+                        ctx.lineTo(p.width/4, -p.height/4);
+                        ctx.lineTo(p.width/2, p.height/2);
+                        ctx.stroke();
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(-p.width/2, -p.height/2);
+                        ctx.lineTo(-p.width/4, 0);
+                        ctx.lineTo(p.width/4, -p.height/4);
+                        ctx.lineTo(p.width/2, p.height/2);
+                        ctx.stroke();
                         ctx.shadowBlur = 0;
                     } else if (p.type === 'shuriken') {
                         // Draw ninja star (shuriken)

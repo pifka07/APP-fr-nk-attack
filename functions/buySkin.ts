@@ -37,17 +37,6 @@ Deno.serve(async (req) => {
     const currentCoins = user.total_coins ?? 0;
     console.log('User Coins:', currentCoins);
 
-    // Nur prüfen wenn Skin Coins kostet
-    if (price > 0 && currentCoins < price) {
-      console.log('❌ NOT_ENOUGH_COINS - Benötigt:', price, 'Verfügbar:', currentCoins);
-      return Response.json({
-        success: false,
-        reason: 'NOT_ENOUGH_COINS',
-        required: price,
-        available: currentCoins
-      }, { status: 400 });
-    }
-
     // 4️⃣ Bereits gekauft?
     const owned = await base44.asServiceRole.entities.PlayerSkin.filter({
       user_id: user.id,

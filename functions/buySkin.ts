@@ -76,6 +76,7 @@ Deno.serve(async (req) => {
     console.log('Bereits gekauft?', owned.length > 0);
 
     if (owned.length > 0) {
+      console.log('❌ SKIN_ALREADY_OWNED');
       return Response.json({ success: false, reason: 'SKIN_ALREADY_OWNED' }, { status: 400 });
     }
 

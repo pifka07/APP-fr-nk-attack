@@ -99,7 +99,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'rooftop') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
         } else if (level === 'park') {
-            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3"; 
+            musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/soundtrack.mp3"; 
         }
 
         if (AUDIOS.current.bgm.src !== musicUrl) {

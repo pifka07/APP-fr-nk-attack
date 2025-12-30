@@ -584,8 +584,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser') {
-                p.vy += GRAVITY * 0.5; // accelerate down (not for laser)
+            if (p.type !== 'laser' && p.type !== 'shuriken') {
+                p.vy += GRAVITY * 0.5; // accelerate down (not for laser or shuriken)
             }
         });
 

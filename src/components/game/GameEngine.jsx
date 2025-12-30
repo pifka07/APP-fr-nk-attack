@@ -167,6 +167,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.poopTriple.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d851cff29_Frnkkacke-Kopie.png";
         IMAGES.current.energyIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/55c3a6a9f_FrnkdieTaubeicon9.png";
         IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
+        IMAGES.current.ammoIcon = new Image();
+        IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/18a5f342d_Frnkkacke.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -1065,7 +1067,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(IMAGES.current.coin, -p.width/2, -p.height/2, p.width, p.height);
                 ctx.restore();
             }
-            // Use separate images for specific powerups
             else if (p.type === 'energy' && assetsLoaded.current) {
                 const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
                 ctx.save();
@@ -1074,23 +1075,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(IMAGES.current.energyIcon, -p.width/2, -p.height/2, p.width, p.height);
                 ctx.restore();
             }
-            // Use the new atlas for others if possible
-            else if (assetsLoaded.current && IMAGES.current.uiAtlas) {
-                // Guessing coordinates from the provided image structure (Middle row)
-                const atlas = IMAGES.current.uiAtlas;
-                let sx = 0, sy = atlas.height * 0.4, sw = atlas.width * 0.2, sh = atlas.height * 0.2;
-
-                if (p.type === 'ammo') { sx = atlas.width * 0.3; } // Poop
-
-                // Pulse effect
+            else if (p.type === 'ammo' && assetsLoaded.current) {
                 const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
-
                 ctx.save();
                 ctx.translate(p.x + p.width/2, p.y + p.height/2);
                 ctx.scale(scale, scale);
-                ctx.drawImage(atlas, sx, sy, sw, sh, -p.width/2, -p.height/2, p.width, p.height);
+                ctx.drawImage(IMAGES.current.ammoIcon, -p.width/2, -p.height/2, p.width, p.height);
                 ctx.restore();
-            } else {
+            }
+            else {
                 ctx.fillStyle = p.type === 'coin' ? 'gold' : (p.type === 'ammo' ? 'brown' : 'cyan');
                 ctx.beginPath();
                 ctx.arc(p.x + p.width/2, p.y + p.height/2, p.width/2, 0, Math.PI*2);

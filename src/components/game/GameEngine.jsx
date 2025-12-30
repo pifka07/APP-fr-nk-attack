@@ -318,8 +318,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 10 : 2),
-                vy: isLaser ? 4 : (isNinja ? 0 : 5),
+                vx: isLaser ? 8 : (isNinja ? 8 : 2),
+                vy: isLaser ? 4 : (isNinja ? 8 : 5),
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isRapidFire ? 'triple' : 'normal')),
                 width: isLaser ? 40 : (isNinja ? 35 : (isRapidFire ? 60 : 30)),

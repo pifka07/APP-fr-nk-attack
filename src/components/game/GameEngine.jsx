@@ -237,8 +237,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     if (gameSpeed === 'slow') speedMult = 0.7;
     if (gameSpeed === 'quick') speedMult = 1.4;
 
-    // Cooldown Curve: Level 0-10 (3.0s → 1.0s)
-    const cooldownLevels = [3000, 2700, 2400, 2100, 1900, 1700, 1500, 1300, 1200, 1100, 1000];
+    // Cooldown Curve: Level 0-10 (1.5s → 0.5s)
+    const cooldownLevels = [1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500];
     const cooldownLevel = Math.round((config.cooldownReduction || 0) * 10);
     const baseCooldown = cooldownLevels[Math.min(cooldownLevel, 10)];
 
@@ -273,6 +273,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.currentPoops = config.maxPoops;
             gameStateRef.current.maxPoops = config.maxPoops;
             gameStateRef.current.scrollSpeed = SCROLL_SPEED_INITIAL * config.speedMultiplier;
+
+            // Update UI ammo display
+            if (onAmmoUpdate) onAmmoUpdate(config.maxPoops);
 
             AUDIOS.current.bgm.play().catch(e => console.error("BGM failed", e));
             requestRef.current = requestAnimationFrame(gameLoop);

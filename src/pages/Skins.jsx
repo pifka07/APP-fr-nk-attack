@@ -98,7 +98,7 @@ export default function Skins() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 gap-4">
-                        {skins.map((skin) => {
+                        {skins.sort((a, b) => (a.cost_coins || 0) - (b.cost_coins || 0)).map((skin) => {
                             const owned = isOwned(skin.id);
                             const equipped = user?.equipped_skin === skin.key;
 

@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
         base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
           total_coins: newCoinBalance
         }),
-        base44.asServiceRole.auth.updateUser(user.id, { total_coins: newCoinBalance })
+        base44.asServiceRole.entities.User.update(user.id, { total_coins: newCoinBalance })
       ]);
     }
 

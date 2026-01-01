@@ -110,7 +110,7 @@ export default function StartScreen() {
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5170c24a3_FRNKLogo.png"
           alt="FRNK Games"
-          className="h-5 w-auto opacity-30 hover:opacity-60 transition-opacity"
+          className="h-8 w-auto opacity-30 hover:opacity-60 transition-opacity"
         />
       </div>
 

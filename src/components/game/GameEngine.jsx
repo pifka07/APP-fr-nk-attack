@@ -339,8 +339,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : 5))),
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isRapidFire ? 'triple' : 'normal')))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 20 : (isRapidFire ? 60 : 30)))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 12 : (isRapidFire ? 60 : 30))))
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isRapidFire ? 60 : 30)))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isRapidFire ? 60 : 30))))
             });
         };
 
@@ -540,21 +540,24 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnMilestoneCoins = (width, height, numRows) => {
         const state = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
-        const spacing = 60; // Vertical spacing between coins
-        const startY = 50; // Start from top
+        const spacing = 70; // Vertical spacing between coins
+        const startY = 80; // Start from top
 
-        for (let row = 0; row < numRows; row++) {
-            const y = startY + (row * spacing);
-            if (y < groundY - 50) { // Don't spawn too close to ground
-                state.powerups.push({
-                    x: width + 50 + (row * 30), // Slight horizontal offset
-                    y: y,
-                    width: 40,
-                    height: 40,
-                    type: 'coin',
-                    vx: -state.scrollSpeed,
-                    active: true
-                });
+        // Spawn multiple columns for visibility
+        for (let col = 0; col < 3; col++) {
+            for (let row = 0; row < numRows; row++) {
+                const y = startY + (row * spacing);
+                if (y < groundY - 50) { // Don't spawn too close to ground
+                    state.powerups.push({
+                        x: width - 100 + (col * 60), // Spawn closer, spread horizontally
+                        y: y,
+                        width: 45,
+                        height: 45,
+                        type: 'coin',
+                        vx: -state.scrollSpeed * 0.8, // Slower than enemies
+                        active: true
+                    });
+                }
             }
         }
     };

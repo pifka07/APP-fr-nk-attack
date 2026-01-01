@@ -114,7 +114,7 @@ export default function StartScreen() {
 
       <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center">
         <Link to={createPageUrl('PrivacyPolicy')} className="text-[10px] text-slate-600 hover:text-slate-400 transition-colors uppercase tracking-widest font-bold">
-          Datenschutzerklärung
+          Privacy Policy
         </Link>
       </div>
 

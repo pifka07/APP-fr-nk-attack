@@ -1091,22 +1091,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
                     } else if (e.spriteType !== 'smoke') {
                         ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
-
-                        if (e.spriteType === 'cop') {
-                            ctx.fillStyle = 'white';
-                            ctx.font = 'bold 10px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.shadowColor = 'black';
-                            ctx.shadowBlur = 2;
-                            ctx.fillText('Tim', 0, -e.height/2 - 5);
-                        } else if (e.spriteType === 'worker') {
-                            ctx.fillStyle = 'white';
-                            ctx.font = 'bold 10px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.shadowColor = 'black';
-                            ctx.shadowBlur = 2;
-                            ctx.fillText('Leon', 0, -e.height/2 - 5);
-                        }
                         } else {
                     // Draw Smoke
                     ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';

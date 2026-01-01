@@ -265,123 +265,123 @@ export default function PrivacyPolicy() {
                             <ArrowLeft className="w-6 h-6" />
                         </Button>
                     </Link>
-                    <h1 style={{fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', margin: 0}}>Datenschutz & Sicherheit</h1>
+                    <h1 style={{fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', margin: 0}}>Privacy & Security</h1>
                 </div>
                 <div className="page-wrapper">
                     <header>
                         <div className="badge">
                             <span className="badge-dot"></span>
-                            Fair Play & Datenschutz in <strong>Fränk</strong>
+                            Fair Play & Privacy in <strong>Fränk</strong>
                         </div>
-                        <h1><span>Wie Fränk</span> deine Spielstände schützt</h1>
+                        <h1><span>How Fränk</span> Protects Your Game Progress</h1>
                         <p className="subtitle">
-                            Wir wollen, dass sich jede Runde fair anfühlt – ohne Cheater, ohne gefälschte Highscores und ohne unnötige Datensammelei.
-                            Hier erklären wir dir, wie das technisch funktioniert.
+                            We want every round to feel fair – without cheaters, fake highscores, or unnecessary data collection.
+                            Here's how we make that happen technically.
                         </p>
                     </header>
 
                     <main>
                         <div className="grid">
                             <section className="card">
-                                <h2>🎮 Fair Play für alle</h2>
+                                <h2>🎮 Fair Play for Everyone</h2>
                                 <div className="pill-row">
-                                    <span className="pill pill--good">Serverseitige Auswertung</span>
-                                    <span className="pill">Keine Client-Manipulation</span>
+                                    <span className="pill pill--good">Server-Side Validation</span>
+                                    <span className="pill">No Client Manipulation</span>
                                 </div>
                                 <p>
-                                    Punkte, Münzen und Highscores können in <strong>Fränk</strong> nicht einfach „hochgedreht"
-                                    werden. Alle wichtigen Werte werden ausschließlich auf dem Server geprüft und gespeichert – nicht in der App.
+                                    Points, coins, and highscores in <strong>Fränk</strong> cannot be simply "boosted".
+                                    All critical values are verified and stored exclusively on the server – not in the app.
                                 </p>
                                 <ul className="list">
-                                    <li>Kein direkter Schreibzugriff des Clients auf Spielstände</li>
-                                    <li>Alle Runs werden serverseitig validiert</li>
-                                    <li>Leaderboard-Einträge können nicht gefälscht werden</li>
+                                    <li>No direct client write access to game progress</li>
+                                    <li>All runs are validated server-side</li>
+                                    <li>Leaderboard entries cannot be faked</li>
                                 </ul>
                                 <p className="muted">
-                                    Ergebnis: Wer oben steht, hat sich das auch wirklich erspielt.
+                                    Result: If you're at the top, you actually earned it.
                                 </p>
                             </section>
 
                             <section className="card">
-                                <h2>🔐 Deine Daten, dein Spiel</h2>
+                                <h2>🔐 Your Data, Your Game</h2>
                                 <div className="pill-row">
-                                    <span className="pill pill--good">Datensparsam</span>
-                                    <span className="pill">Keine Standortdaten</span>
+                                    <span className="pill pill--good">Minimal Data</span>
+                                    <span className="pill">No Location Data</span>
                                 </div>
                                 <p>
-                                    Wir speichern nur das, was für das Spiel wirklich nötig ist: deine Runs, deine Münzen, deine
-                                    Highscores und welche Skins du freigeschaltet hast.
+                                    We only store what's really necessary for the game: your runs, your coins, your
+                                    highscores, and which skins you've unlocked.
                                 </p>
                                 <p className="kv">
-                                    <strong>Wir sammeln NICHT:</strong> Kontakte, Standort, Adressbuch, sensible oder persönliche Inhalte.
+                                    <strong>We DO NOT collect:</strong> Contacts, location, address book, sensitive or personal content.
                                 </p>
                                 <div className="key-points">
                                     <div className="key-point">
                                         <span className="icon">✓</span>
-                                        <span>Spielerdaten wie Coins, Highscores und Skins sind privat und nur dir zugeordnet.</span>
+                                        <span>Player data like coins, highscores, and skins are private and linked only to you.</span>
                                     </div>
                                     <div className="key-point">
                                         <span className="icon">✓</span>
-                                        <span>Keine Weitergabe an Dritte, keine Werbung mit deinen Daten.</span>
+                                        <span>No sharing with third parties, no ads using your data.</span>
                                     </div>
                                 </div>
                             </section>
                         </div>
 
-                        <div className="section-kicker">Technische Umsetzung</div>
-                        <h2 className="section-title">🛡️ Anti-Cheat & Replay-Schutz</h2>
+                        <div className="section-kicker">Technical Implementation</div>
+                        <h2 className="section-title">🛡️ Anti-Cheat & Replay Protection</h2>
 
                         <section>
                             <p>
-                                Damit Cheating keine Chance hat, nutzt <strong>Fränk</strong> mehrere Schutzschichten, die alle auf dem Server laufen.
+                                To prevent cheating, <strong>Fränk</strong> uses multiple security layers that all run on the server.
                             </p>
 
-                            <h3 className="section-title" style={{fontSize: '16px'}}>1. Einmalige Run-Sessions</h3>
+                            <h3 className="section-title" style={{fontSize: '16px'}}>1. One-Time Run Sessions</h3>
                             <p>
-                                Wenn du auf <strong>Play</strong> drückst, erzeugt der Server eine
-                                <span className="highlight"> einmalige Session-ID</span> (run_session_id). Diese ist:
+                                When you press <strong>Play</strong>, the server generates a
+                                <span className="highlight"> unique session ID</span> (run_session_id). This is:
                             </p>
                             <ul className="list">
-                                <li>nur für genau diesen Run gültig</li>
-                                <li>an deinen Account gebunden</li>
-                                <li>zeitlich begrenzt (z. B. 30 Minuten)</li>
-                                <li>nur einmal verwendbar</li>
+                                <li>valid only for this specific run</li>
+                                <li>linked to your account</li>
+                                <li>time-limited (e.g., 30 minutes)</li>
+                                <li>usable only once</li>
                             </ul>
                             <p className="muted">
-                                Wird dieselbe Session-ID mehrfach verwendet, blockt der Server den Versuch als Replay-Cheat.
+                                If the same session ID is used multiple times, the server blocks the attempt as a replay cheat.
                             </p>
 
-                            <h3 className="section-title" style={{fontSize: '16px'}}>2. Zeit-Validierung (Anti-Speedhack)</h3>
+                            <h3 className="section-title" style={{fontSize: '16px'}}>2. Time Validation (Anti-Speedhack)</h3>
                             <p>
-                                Der Server merkt sich den Startzeitpunkt deines Runs. Beim Spielende meldet die App die vergangene Zeit.
-                                Wir vergleichen:
+                                The server remembers your run's start time. At game end, the app reports the elapsed time.
+                                We compare:
                             </p>
                             <ul className="list">
-                                <li>gemeldete Dauer aus der App</li>
-                                <li>berechnete Dauer aus Server-Sicht</li>
+                                <li>reported duration from the app</li>
+                                <li>calculated duration from server perspective</li>
                             </ul>
                             <p>
-                                Weicht die Zeit zu stark ab (z. B. mehr als ein paar Sekunden), wird der Run als
-                                <span className="highlight"> Speedhack-Versuch</span> gewertet und nicht gezählt.
+                                If the time deviates too much (e.g., more than a few seconds), the run is marked as a
+                                <span className="highlight"> speedhack attempt</span> and not counted.
                             </p>
 
-                            <h3 className="section-title" style={{fontSize: '16px'}}>3. Logik-Checks für Score & Münzen</h3>
+                            <h3 className="section-title" style={{fontSize: '16px'}}>3. Logic Checks for Score & Coins</h3>
                             <p>
-                                Um unfaire Werte zu verhindern, gibt es serverseitige Obergrenzen und Plausibilitätsprüfungen.
+                                To prevent unfair values, there are server-side limits and plausibility checks.
                             </p>
                             <ul className="list">
-                                <li>Maximal erlaubter Score pro Run</li>
-                                <li>Maximale Münzanzahl pro Run</li>
-                                <li>Berechnung von Score pro Sekunde (Score / Spielzeit)</li>
+                                <li>Maximum allowed score per run</li>
+                                <li>Maximum coin count per run</li>
+                                <li>Calculation of score per second (score / playtime)</li>
                             </ul>
                             <p className="muted">
-                                Liegt ein Wert weit außerhalb des Erwartbaren, wird der Run verworfen – bevor irgendetwas gespeichert wird.
+                                If a value is far outside the expected range, the run is rejected – before anything is saved.
                             </p>
 
-                            <h3 className="section-title" style={{fontSize: '16px'}}>4. Mission & Schwierigkeitsprüfung</h3>
+                            <h3 className="section-title" style={{fontSize: '16px'}}>4. Mission & Difficulty Verification</h3>
                             <p>
-                                Die vom Client gemeldete Mission und Schwierigkeit müssen genau zu der Session passen, die beim Start erzeugt wurde.
-                                Wird versucht, dies nachträglich zu ändern, blockt der Server den Run.
+                                The mission and difficulty reported by the client must exactly match the session created at start.
+                                If someone tries to change this afterwards, the server blocks the run.
                             </p>
                         </section>
 
@@ -389,45 +389,69 @@ export default function PrivacyPolicy() {
 
                         <section>
                             <div className="section-kicker">Leaderboard & Fairness</div>
-                            <h2 className="section-title">🏆 Schutz des Leaderboards</h2>
+                            <h2 className="section-title">🏆 Leaderboard Protection</h2>
                             <p>
-                                Highscores im Leaderboard werden nur dann aktualisiert, wenn ein Run alle Sicherheitsprüfungen bestanden hat.
-                                Der Client kann Leaderboard-Einträge nicht direkt anlegen oder bearbeiten.
+                                Highscores in the leaderboard are only updated when a run passes all security checks.
+                                The client cannot directly create or edit leaderboard entries.
                             </p>
                             <ul className="list">
-                                <li>Leaderboard-Einträge werden ausschließlich serverseitig geschrieben</li>
-                                <li>Jeder neue Highscore wird auf Plausibilität geprüft</li>
-                                <li>Manipulation über Netzwerk-Tools oder Modifikationen der App führen nicht zu gültigen Einträgen</li>
+                                <li>Leaderboard entries are written exclusively server-side</li>
+                                <li>Each new highscore is checked for plausibility</li>
+                                <li>Manipulation via network tools or app modifications do not result in valid entries</li>
                             </ul>
                             <p className="muted">
-                                So bleibt der Wettbewerb fair – unabhängig davon, auf welchem Gerät du spielst.
+                                This keeps the competition fair – regardless of which device you play on.
                             </p>
                         </section>
 
                         <div className="divider"></div>
 
                         <section>
-                            <div className="section-kicker">Datenschutz</div>
-                            <h2 className="section-title">🌍 Was wir NICHT tun</h2>
+                            <div className="section-kicker">Privacy</div>
+                            <h2 className="section-title">🌍 What We DO NOT Do</h2>
                             <p>
-                                Uns interessiert, dass du Spaß im Spiel hast – nicht, wie dein Privatleben aussieht. Deshalb:
+                                We care about you having fun in the game – not about your private life. Therefore:
                             </p>
                             <ul className="list">
-                                <li>kein Zugriff auf deine Kontakte oder Fotos</li>
-                                <li>keine Standortverfolgung</li>
-                                <li>keine Analyse persönlicher Inhalte</li>
-                                <li>keine Weitergabe deiner Daten an Dritte</li>
+                                <li>no access to your contacts or photos</li>
+                                <li>no location tracking</li>
+                                <li>no analysis of personal content</li>
+                                <li>no sharing of your data with third parties</li>
                             </ul>
                             <p className="muted">
-                                Die Speicherung erfolgt auf sicheren Servern und nach dem Prinzip der Datensparsamkeit.
+                                Data is stored on secure servers following the principle of data minimization.
+                            </p>
+                        </section>
+
+                        <div className="divider"></div>
+
+                        <section>
+                            <div className="section-kicker">Child Safety</div>
+                            <h2 className="section-title">👶 Children's Privacy & Protection</h2>
+                            <p>
+                                <strong>Fränk</strong> is designed to be safe for all ages. We take children's privacy seriously and comply with international child protection standards.
+                            </p>
+                            <ul className="list">
+                                <li>No collection of personal information from children under 13</li>
+                                <li>No in-app purchases requiring payment methods</li>
+                                <li>No third-party advertising or tracking</li>
+                                <li>No social features that could expose children to strangers</li>
+                                <li>Parental oversight encouraged for younger players</li>
+                            </ul>
+                            <p className="muted">
+                                The game is free to play with optional cosmetic upgrades earned through gameplay. All player data is anonymized and secure.
+                            </p>
+                            <p>
+                                If you believe your child's information has been collected, please contact us at 
+                                <a href="mailto:umdieecke7@gmail.com" style={{color: 'var(--accent)', textDecoration: 'none'}}> umdieecke7@gmail.com</a> and we will promptly remove it.
                             </p>
                         </section>
                     </main>
 
                     <footer>
                         <p>
-                            Fragen zu Sicherheit oder Datenschutz in <strong>Fränk</strong>?<br />
-                            Melde dich gerne per Mail: <a href="mailto:umdieecke7@gmail.com" style={{color: 'var(--accent)', textDecoration: 'none'}}>umdieecke7@gmail.com</a>
+                            Questions about security or privacy in <strong>Fränk</strong>?<br />
+                            Feel free to contact us: <a href="mailto:umdieecke7@gmail.com" style={{color: 'var(--accent)', textDecoration: 'none'}}>umdieecke7@gmail.com</a>
                         </p>
                         <p style={{marginTop: '12px', opacity: '0.6'}}>
                             © 2025 pifka07

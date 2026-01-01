@@ -228,7 +228,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         currentPoops: 3,
         animFrame: 0, // Global animation tick
         rapidFireUntil: 0,
-        shotQueue: []
+        shotQueue: [],
+        lastMilestone: 0 // Track last milestone reached
         });
 
     // Apply config
@@ -267,6 +268,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.player.vy = 0;
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
+            gameStateRef.current.lastMilestone = 0;
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -535,6 +537,28 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         });
     };
 
+    const spawnMilestoneCoins = (width, height, numRows) => {
+        const state = gameStateRef.current;
+        const groundY = height * GROUND_Y_PCT;
+        const spacing = 60; // Vertical spacing between coins
+        const startY = 50; // Start from top
+
+        for (let row = 0; row < numRows; row++) {
+            const y = startY + (row * spacing);
+            if (y < groundY - 50) { // Don't spawn too close to ground
+                state.powerups.push({
+                    x: width + 50 + (row * 30), // Slight horizontal offset
+                    y: y,
+                    width: 40,
+                    height: 40,
+                    type: 'coin',
+                    vx: -state.scrollSpeed,
+                    active: true
+                });
+            }
+        }
+    };
+
     const createParticles = (x, y, color, count = 5) => {
         for (let i = 0; i < count; i++) {
             gameStateRef.current.particles.push({
@@ -557,6 +581,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.scrollSpeed += (0.0005 * effectiveConfig.speedMultiplier);
         state.distance += (state.scrollSpeed / 10);
         state.animFrame++; // Tick animation
+
+        // Check for distance milestones
+        const currentMilestone = Math.floor(state.distance / 1000);
+        if (currentMilestone > state.lastMilestone && currentMilestone <= 10) {
+            state.lastMilestone = currentMilestone;
+            spawnMilestoneCoins(width, height, currentMilestone);
+            createParticles(width/2, height/2, '#FFD700', 20); // Celebrate milestone
+        }
 
         // Process Burst Fire Queue
         const now = performance.now();

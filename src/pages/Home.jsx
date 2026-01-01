@@ -105,15 +105,6 @@ export default function StartScreen() {
         )}
       </div>
 
-      {/* Header */}
-      <div className="absolute top-4 left-4 z-20">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5170c24a3_FRNKLogo.png"
-          alt="FRNK Games"
-          className="h-24 w-auto opacity-30 hover:opacity-60 transition-opacity"
-        />
-      </div>
-
       {/* Footer */}
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-1">
         <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">

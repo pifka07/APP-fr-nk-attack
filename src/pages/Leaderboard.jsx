@@ -41,7 +41,7 @@ export default function Leaderboard() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] relative overflow-hidden">
+        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-[15px] relative overflow-hidden">
             {/* Header */}
             <div className="flex items-center gap-4 mb-8 relative z-10">
                 <Link to={createPageUrl('Home')}>

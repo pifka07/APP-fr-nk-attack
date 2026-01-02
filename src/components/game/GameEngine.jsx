@@ -333,15 +333,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isAlien = skin === 'alien';
             const isGold = skin === 'gold';
             const isChristmas = skin === 'christmas';
+            const isPink = skin === 'pink';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : 2)))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : 5)))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : 2))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : 5))))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isRapidFire ? 'triple' : 'normal'))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isRapidFire ? 60 : 30))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isRapidFire ? 60 : 30)))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isRapidFire ? 'triple' : 'normal')))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isRapidFire ? 60 : 30)))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isRapidFire ? 60 : 30))))))
             });
         };
 
@@ -635,8 +636,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar') {
-                p.vy += GRAVITY * 0.5; // accelerate down (not for laser, shuriken, lightning or goldbar)
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble') {
+                p.vy += GRAVITY * 0.5; // accelerate down (not for laser, shuriken, lightning, goldbar or bubble)
+            }
+            // Bubbles float slowly upward
+            if (p.type === 'bubble') {
+                p.vy -= 0.1;
             }
         });
 
@@ -977,6 +982,39 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             ctx.arc(-p.width/3, -p.height/2, p.width/5, 0, Math.PI * 2);
                             ctx.fillStyle = '#ffffff';
                             ctx.fill();
+
+                            ctx.shadowBlur = 0;
+                            } else if (p.type === 'bubble') {
+                            // Draw soap bubble with rainbow shimmer
+                            const bubbleScale = 1 + Math.sin(state.animFrame * 0.15) * 0.1;
+                            ctx.scale(bubbleScale, bubbleScale);
+
+                            // Outer bubble
+                            ctx.shadowColor = '#ec4899';
+                            ctx.shadowBlur = 15;
+                            ctx.fillStyle = 'rgba(236, 72, 153, 0.3)';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Inner lighter layer
+                            ctx.fillStyle = 'rgba(244, 114, 182, 0.5)';
+                            ctx.beginPath();
+                            ctx.arc(-p.width/8, -p.height/8, p.width/3, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Highlight shimmer
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                            ctx.beginPath();
+                            ctx.arc(-p.width/6, -p.height/6, p.width/6, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Outline
+                            ctx.strokeStyle = 'rgba(236, 72, 153, 0.6)';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
+                            ctx.stroke();
 
                             ctx.shadowBlur = 0;
                             } else if (p.type === 'shuriken') {

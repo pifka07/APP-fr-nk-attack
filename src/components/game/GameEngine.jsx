@@ -626,14 +626,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const groundY = height * GROUND_Y_PCT;
         const topMargin = 20;
         const bottomMargin = 20;
-        const deathZone = 20; // Bottom death zone
-
-        // Check death zone at bottom
-        if (state.player.y > height - deathZone) {
-            state.health = 0;
-            createParticles(state.player.x, state.player.y, '#FF0000', 20);
-            onHealthUpdate(0);
-        }
 
         if (state.player.y > groundY - state.player.radius - bottomMargin) {
             state.player.y = groundY - state.player.radius - bottomMargin;

@@ -167,7 +167,7 @@ Deno.serve(async (req) => {
             } else {
                 await base44.asServiceRole.entities.LeaderboardEntry.create({
                     user_id: user.id,
-                    username: user.full_name || user.email,
+                    username: user.username || user.full_name || user.email,
                     score: score,
                     date: new Date().toISOString()
                 });

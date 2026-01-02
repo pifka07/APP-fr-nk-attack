@@ -327,7 +327,7 @@ export default function Game() {
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full border-2 border-yellow-400 shadow-md overflow-hidden bg-yellow-100 flex items-center justify-center">
                                     <img 
-                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png" 
+                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/35c7b04b3_FrnkdieTaubeicon3.png" 
                                         alt="Coin" 
                                         className="w-full h-full object-cover"
                                     />

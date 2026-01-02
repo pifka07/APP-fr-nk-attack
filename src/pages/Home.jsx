@@ -68,7 +68,7 @@ export default function StartScreen() {
       </div>
 
       {/* Menu Buttons */}
-      <div className="w-full max-w-xs space-y-4 z-10">
+      <div className="w-full max-w-xs space-y-4 z-10 mb-5">
         <Button 
           onClick={handlePlay}
           className="w-full h-16 text-2xl font-titan bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"

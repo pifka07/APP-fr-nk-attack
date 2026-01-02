@@ -793,7 +793,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Deduct points as requested
                     state.score = Math.max(0, state.score - 50);
 
-                    createParticles(state.player.x, state.player.y, '#FF0000', 10);
+                    createParticles(state.player.x, state.player.y, '#FFFFFF', 10);
                     onHealthUpdate(state.health);
                     onScoreUpdate(state.score, state.coins, Math.floor(state.distance)); // Update score display
 

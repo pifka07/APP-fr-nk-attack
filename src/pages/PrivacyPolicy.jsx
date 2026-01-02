@@ -258,7 +258,7 @@ export default function PrivacyPolicy() {
                 }
             `}} />
             
-            <div className="privacy-page">
+            <div className="privacy-page" style={{paddingTop: '15px'}}>
                 <div className="header-bar">
                     <Link to={createPageUrl('Home')}>
                         <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700">

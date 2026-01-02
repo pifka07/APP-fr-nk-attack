@@ -35,7 +35,7 @@ export default function Missions() {
     ];
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pb-20">
+        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
             {/* Header */}
             <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <Link to={createPageUrl('Home')}>

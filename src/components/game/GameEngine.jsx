@@ -409,7 +409,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.spriteType = 'drone_l2';
                 enemy.isTarget = true;
                 enemy.isObstacle = true;
-                enemy.y = 15 + Math.random() * (groundY - 165);
+                enemy.y = 20 + Math.random() * (groundY - 170);
                 enemy.width = 70;
                 enemy.height = 50;
                 enemy.vx = -scrollSpeed * 1.3;
@@ -452,7 +452,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.spriteType = 'fly';
                 enemy.isTarget = true;
                 enemy.isObstacle = true;
-                enemy.y = 15 + Math.random() * (groundY - 165);
+                enemy.y = 20 + Math.random() * (groundY - 170);
                 enemy.width = 40;
                 enemy.height = 40;
                 enemy.vx = -scrollSpeed * 1.2;
@@ -501,7 +501,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.isObstacle = true;
                     // Spawn slightly lower (approx 1cm / 50px)
-                    enemy.y = 50 + Math.random() * (groundY - 265);
+                    enemy.y = 50 + Math.random() * (groundY - 270);
                     enemy.width = 80;
                     enemy.height = 60;
                     enemy.vx = -scrollSpeed * 1.5;
@@ -509,7 +509,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.spriteType = 'drone';
                     enemy.isTarget = true;
                     enemy.isObstacle = true;
-                    enemy.y = 15 + Math.random() * (groundY - 165);
+                    enemy.y = 20 + Math.random() * (groundY - 170);
                     enemy.width = 60;
                     enemy.height = 40;
                     enemy.vx = -scrollSpeed * 1.2;
@@ -531,7 +531,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         state.powerups.push({
             x: width + 50,
-            y: 15 + Math.random() * (height * 0.6 - 30) + 50,
+            y: 20 + Math.random() * (height * 0.6 - 40) + 50,
             width: 40,
             height: 40,
             type,
@@ -544,7 +544,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const state = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
         const spacing = 70; // Vertical spacing between coins
-        const startY = 95; // Start from top (80 + 15px margin)
+        const startY = 100; // Start from top (80 + 20px margin)
 
         // Spawn multiple columns for visibility
         for (let col = 0; col < 3; col++) {
@@ -624,8 +624,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Floor/Ceiling collision
         const groundY = height * GROUND_Y_PCT;
-        const topMargin = 15;
-        const bottomMargin = 15;
+        const topMargin = 20;
+        const bottomMargin = 20;
         
         if (state.player.y > groundY - state.player.radius - bottomMargin) {
             state.player.y = groundY - state.player.radius - bottomMargin;

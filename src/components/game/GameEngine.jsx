@@ -334,15 +334,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isGold = skin === 'gold';
             const isChristmas = skin === 'christmas';
             const isPink = skin === 'pink';
+            const isBat = skin === 'bat';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : 2))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : 5))))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : 2)))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : 5)))))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isRapidFire ? 'triple' : 'normal')))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isRapidFire ? 60 : 30)))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isRapidFire ? 60 : 30))))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isRapidFire ? 'triple' : 'normal'))))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isRapidFire ? 60 : 30))))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isRapidFire ? 60 : 30)))))))
             });
         };
 
@@ -636,8 +637,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble') {
-                p.vy += GRAVITY * 0.5; // accelerate down (not for laser, shuriken, lightning, goldbar or bubble)
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang') {
+                p.vy += GRAVITY * 0.5; // accelerate down
             }
             // Bubbles float slowly upward
             if (p.type === 'bubble') {
@@ -1017,31 +1018,66 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             ctx.stroke();
 
                             ctx.shadowBlur = 0;
+                            } else if (p.type === 'batarang') {
+                            // Draw batarang (Batman throwing knife)
+                            ctx.rotate(state.animFrame * 0.35);
+                            ctx.shadowColor = '#1f2937';
+                            ctx.shadowBlur = 12;
+
+                            // Bat wing shape
+                            ctx.fillStyle = '#1f2937';
+                            ctx.beginPath();
+                            // Left wing
+                            ctx.moveTo(0, 0);
+                            ctx.quadraticCurveTo(-p.width/2, -p.height/4, -p.width/2, p.height/3);
+                            ctx.quadraticCurveTo(-p.width/3, p.height/4, 0, 0);
+                            // Right wing
+                            ctx.moveTo(0, 0);
+                            ctx.quadraticCurveTo(p.width/2, -p.height/4, p.width/2, p.height/3);
+                            ctx.quadraticCurveTo(p.width/3, p.height/4, 0, 0);
+                            ctx.fill();
+
+                            // Yellow/gold accents
+                            ctx.fillStyle = '#fbbf24';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, p.width / 8, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Sharp edges highlight
+                            ctx.strokeStyle = '#4b5563';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(-p.width/2, p.height/3);
+                            ctx.lineTo(0, 0);
+                            ctx.lineTo(p.width/2, p.height/3);
+                            ctx.stroke();
+
+                            ctx.shadowBlur = 0;
                             } else if (p.type === 'shuriken') {
-                        // Draw ninja star (shuriken)
-                        ctx.rotate(state.animFrame * 0.3);
-                        ctx.shadowColor = '#94a3b8';
-                        ctx.shadowBlur = 10;
-                        
-                        // Draw 4-pointed star
-                        ctx.fillStyle = '#cbd5e1';
-                        ctx.beginPath();
-                        for (let i = 0; i < 4; i++) {
-                            const angle = (i * Math.PI / 2) - Math.PI / 4;
-                            const r = p.width / 2;
-                            ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-                            ctx.lineTo(Math.cos(angle + Math.PI / 4) * (r * 0.4), Math.sin(angle + Math.PI / 4) * (r * 0.4));
-                        }
-                        ctx.closePath();
-                        ctx.fill();
-                        
-                        // Bright silver center
-                        ctx.fillStyle = '#f1f5f9';
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width / 6, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        ctx.shadowBlur = 0;
+                            // Draw ninja star (shuriken)
+                            ctx.rotate(state.animFrame * 0.3);
+                            ctx.shadowColor = '#94a3b8';
+                            ctx.shadowBlur = 10;
+
+                            // Draw 4-pointed star
+                            ctx.fillStyle = '#cbd5e1';
+                            ctx.beginPath();
+                            for (let i = 0; i < 4; i++) {
+                                const angle = (i * Math.PI / 2) - Math.PI / 4;
+                                const r = p.width / 2;
+                                ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                                ctx.lineTo(Math.cos(angle + Math.PI / 4) * (r * 0.4), Math.sin(angle + Math.PI / 4) * (r * 0.4));
+                            }
+                            ctx.closePath();
+                            ctx.fill();
+
+                            // Bright silver center
+                            ctx.fillStyle = '#f1f5f9';
+                            ctx.beginPath();
+                            ctx.arc(0, 0, p.width / 6, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            ctx.shadowBlur = 0;
                     } else {
                         const img = IMAGES.current.poopProjectile;
                         // Spin the poop!

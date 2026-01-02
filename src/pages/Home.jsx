@@ -38,7 +38,7 @@ export default function StartScreen() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 pb-8 relative overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 

@@ -106,7 +106,7 @@ export default function StartScreen() {
       </div>
 
       {/* Footer */}
-      <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-1">
+      <div className="absolute top-[26px] right-4 z-20 flex flex-col items-end gap-1">
         <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">
           by pifka07
         </a>

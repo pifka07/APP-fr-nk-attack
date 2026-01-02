@@ -152,7 +152,7 @@ export default function Shop() {
     if (loading) return <div className="flex justify-center items-center h-screen text-teal-400">Loading Shop...</div>;
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pb-20">
+        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
             <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <div className="flex items-center gap-2">
                     <Link to={createPageUrl('Home')}>

@@ -332,15 +332,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isNinja = skin === 'ninja';
             const isAlien = skin === 'alien';
             const isGold = skin === 'gold';
+            const isChristmas = skin === 'christmas';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : 2))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : 5))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : 2)))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : 5)))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isRapidFire ? 'triple' : 'normal')))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isRapidFire ? 60 : 30)))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isRapidFire ? 60 : 30))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isRapidFire ? 'triple' : 'normal'))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 40 : (isRapidFire ? 60 : 30))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 10 : (isRapidFire ? 60 : 30)))))
             });
         };
 
@@ -950,7 +951,35 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             ctx.fillRect(-p.width/2, p.height/2 - 2, p.width, 2);
 
                             ctx.shadowBlur = 0;
-                        } else if (p.type === 'shuriken') {
+                            } else if (p.type === 'candycane') {
+                            // Draw rotating candy cane
+                            ctx.rotate(state.animFrame * 0.25);
+                            ctx.shadowColor = '#dc2626';
+                            ctx.shadowBlur = 10;
+
+                            // Red and white stripes
+                            ctx.fillStyle = '#dc2626';
+                            ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+
+                            // White stripes
+                            ctx.fillStyle = '#ffffff';
+                            for (let i = 0; i < 3; i++) {
+                                const offset = (i * p.width / 3) - p.width/2;
+                                ctx.fillRect(offset, -p.height/2, p.width/6, p.height);
+                            }
+
+                            // Curved top like candy cane
+                            ctx.beginPath();
+                            ctx.arc(-p.width/3, -p.height/2, p.width/4, 0, Math.PI * 2);
+                            ctx.fillStyle = '#dc2626';
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(-p.width/3, -p.height/2, p.width/5, 0, Math.PI * 2);
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fill();
+
+                            ctx.shadowBlur = 0;
+                            } else if (p.type === 'shuriken') {
                         // Draw ninja star (shuriken)
                         ctx.rotate(state.animFrame * 0.3);
                         ctx.shadowColor = '#94a3b8';

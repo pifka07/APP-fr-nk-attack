@@ -312,7 +312,11 @@ export default function Game() {
                             {/* Poop Tank */}
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full border-2 border-amber-400 shadow-md overflow-hidden bg-amber-100 flex items-center justify-center">
-                                    <span className="text-lg">💩</span>
+                                    <img 
+                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png" 
+                                        alt="Körner" 
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="w-24 h-3 bg-slate-800 rounded-full border border-slate-600 overflow-hidden">
                                     <div 

@@ -286,9 +286,7 @@ export default function Game() {
                 />
             </div>
 
-            {/* Black bars top and bottom */}
-            <div className="absolute top-0 left-0 right-0 h-[10px] bg-black z-[5] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 right-0 h-[30px] bg-black z-[5] pointer-events-none" />
+
 
             {/* HUD */}
             {gameState !== 'start' && (

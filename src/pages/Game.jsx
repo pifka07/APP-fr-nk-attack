@@ -400,7 +400,7 @@ export default function Game() {
                                     }, 3000);
                                 }}
                                 id="swipe-hints"
-                                className="absolute left-10 bottom-[80px] flex flex-col items-center gap-3 pointer-events-none"
+                                className="absolute left-10 bottom-[100px] flex flex-col items-center gap-3 pointer-events-none"
                             >
                                 <motion.div
                                     initial={{ y: 0 }}

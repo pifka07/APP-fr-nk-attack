@@ -259,7 +259,7 @@ export default function Game() {
 
     return (
         <div 
-            className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none pt-[20px] pb-[20px]"
+            className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none"
             onMouseDown={handleInputStart}
             onTouchStart={handleInputStart}
             onMouseMove={handleInputMove}
@@ -269,7 +269,7 @@ export default function Game() {
             onMouseLeave={handleInputEnd}
         >
             {/* Game Engine Canvas */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute top-[20px] bottom-[20px] left-0 right-0 z-0">
                 <GameEngine 
                     ref={engineRef}
                     config={gameConfig}

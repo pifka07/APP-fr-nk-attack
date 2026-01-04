@@ -1,3 +1,4 @@
+import Game from './pages/Game';
 import Home from './pages/Home';
 import Leaderboard from './pages/Leaderboard';
 import Missions from './pages/Missions';
@@ -5,11 +6,11 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
 import Shop from './pages/Shop';
 import Skins from './pages/Skins';
-import Game from './pages/Game';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Game": Game,
     "Home": Home,
     "Leaderboard": Leaderboard,
     "Missions": Missions,
@@ -17,7 +18,6 @@ export const PAGES = {
     "Profile": Profile,
     "Shop": Shop,
     "Skins": Skins,
-    "Game": Game,
 }
 
 export const pagesConfig = {

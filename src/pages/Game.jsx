@@ -269,7 +269,7 @@ export default function Game() {
             onMouseLeave={handleInputEnd}
         >
             {/* Game Engine Canvas */}
-            <div className="absolute top-[20px] bottom-[20px] left-0 right-0 z-0">
+            <div className="absolute top-[30px] bottom-[30px] left-0 right-0 z-0">
                 <GameEngine 
                     ref={engineRef}
                     config={gameConfig}
@@ -287,8 +287,8 @@ export default function Game() {
             </div>
 
             {/* Black bars top and bottom */}
-            <div className="absolute top-0 left-0 right-0 h-[20px] bg-black z-[5] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 right-0 h-[20px] bg-black z-[5] pointer-events-none" />
+            <div className="absolute top-0 left-0 right-0 h-[30px] bg-black z-[5] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-[30px] bg-black z-[5] pointer-events-none" />
 
             {/* HUD */}
             {gameState !== 'start' && (

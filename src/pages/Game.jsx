@@ -290,7 +290,7 @@ export default function Game() {
 
             {/* HUD */}
             {gameState !== 'start' && (
-                <div className="absolute top-0 left-0 right-0 p-3 z-10 pointer-events-none">
+                <div className="absolute top-[10px] left-0 right-0 p-3 z-10 pointer-events-none">
                     <div className="flex justify-between items-start">
                         {/* Health & Score */}
                         <div className="space-y-1.5">
@@ -450,7 +450,7 @@ export default function Game() {
 
             {/* Start Screen */}
             {gameState === 'start' && (
-                <div className="absolute top-[20px] left-0 right-0 bottom-0 z-50 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 pb-48">
+                <div className="absolute top-[30px] left-0 right-0 bottom-0 z-50 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 pb-48">
                     <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-purple-600 mb-8 drop-shadow-lg text-center">
                         READY TO POOP?
                     </h1>

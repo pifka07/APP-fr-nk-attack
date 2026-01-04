@@ -290,7 +290,7 @@ export default function Game() {
 
             {/* HUD */}
             {gameState !== 'start' && (
-                <div className="absolute top-[10px] left-0 right-0 p-3 z-10 pointer-events-none">
+                <div className="absolute top-[30px] left-0 right-0 p-3 z-10 pointer-events-none">
                     <div className="flex justify-between items-start">
                         {/* Health & Score */}
                         <div className="space-y-1.5">

@@ -31,6 +31,13 @@ export default function Missions() {
             description: 'Nature calls. Dogs and picnics everywhere.',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png',
             locked: false
+        },
+        {
+            id: 'london',
+            name: 'London',
+            description: 'Big Ben, Tower Bridge, and the Eye. Poop like royalty!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png',
+            locked: false
         }
     ];
 

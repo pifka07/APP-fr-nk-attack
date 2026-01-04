@@ -143,28 +143,28 @@ export default function Profile() {
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Trophy className="w-8 h-8 text-yellow-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.best_score || 0}</div>
+                        <div className="text-2xl font-bold text-white">{stats?.best_score || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">High Score</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <MapPin className="w-8 h-8 text-teal-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.best_distance || 0}m</div>
+                        <div className="text-2xl font-bold text-white">{stats?.best_distance || 0}m</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Fartherst Flight</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Coins className="w-8 h-8 text-yellow-500 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.total_coins || 0}</div>
+                        <div className="text-2xl font-bold text-white">{stats?.total_coins || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Total Coins</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Hash className="w-8 h-8 text-purple-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{user?.total_runs || 0}</div>
+                        <div className="text-2xl font-bold text-white">{stats?.total_runs || 0}</div>
                         <div className="text-xs text-slate-400 uppercase tracking-wider">Total Runs</div>
                     </CardContent>
                 </Card>

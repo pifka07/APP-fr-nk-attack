@@ -259,7 +259,7 @@ export default function Game() {
 
     return (
         <div 
-            className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none pt-[15px]"
+            className="relative w-full h-screen bg-slate-900 overflow-hidden select-none touch-none pt-[20px] pb-[20px]"
             onMouseDown={handleInputStart}
             onTouchStart={handleInputStart}
             onMouseMove={handleInputMove}

@@ -59,6 +59,13 @@ export default function Missions() {
             description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
             locked: false
+        },
+        {
+            id: 'berlin',
+            name: 'Berlin',
+            description: 'Brandenburger Tor, Fernsehturm, and currywurst!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png',
+            locked: false
         }
     ];
 

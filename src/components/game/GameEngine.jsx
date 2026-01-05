@@ -567,8 +567,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Car
                     enemy.spriteType = 'car';
                     enemy.isTarget = true;
-                    enemy.width = 90;
-                    enemy.height = 70;
+                    enemy.width = 180;
+                    enemy.height = 140;
                     enemy.vx = -scrollSpeed - 2;
                     enemy.scoreValue = 30;
                 } else if (rand < 0.7) {

@@ -45,6 +45,13 @@ export default function Missions() {
             description: 'The City of Light. Eiffel Tower, Notre-Dame, and croissants!',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8859d51a5_file_00000000f5c8722fbfc7d8fffaafeec6.png',
             locked: false
+        },
+        {
+            id: 'madrid',
+            name: 'Madrid',
+            description: 'Royal Palace, tapas, and Spanish flair. ¡Vamos!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png',
+            locked: false
         }
     ];
 

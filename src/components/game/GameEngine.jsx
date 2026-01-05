@@ -215,7 +215,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
         };
-    }, []);
+        }, [level]);
 
     const playSound = (name) => {
         if (!soundEnabled) return;

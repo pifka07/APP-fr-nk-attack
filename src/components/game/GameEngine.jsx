@@ -156,6 +156,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.granny.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4acddf445_Frnk-icon1.png";
         IMAGES.current.car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6beb89d0d_Frnk-icon4.png";
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2661da5d3_Drone.png";
+        IMAGES.current.sparrow = new Image();
+        IMAGES.current.sparrow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/afbd20aec_file_00000000f1c071f5983fd248d5c8ad94.png";
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
         IMAGES.current.worker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
         IMAGES.current.fruit_vendor = new Image();
@@ -620,13 +622,23 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 60;
                     enemy.vx = -scrollSpeed * 1.5;
                 } else {
-                    enemy.spriteType = 'drone';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = 20 + Math.random() * (groundY - 170);
-                    enemy.width = 60;
-                    enemy.height = 40;
-                    enemy.vx = -scrollSpeed * 1.2;
+                    // Spawn 3 sparrows in formation
+                    const baseY = 50 + Math.random() * (groundY - 250);
+                    for (let i = 0; i < 3; i++) {
+                        enemies.push({
+                            x: width + 50 + (i * 30),
+                            y: baseY + (i * 25),
+                            width: 20,
+                            height: 20,
+                            hp: 1,
+                            isTarget: true,
+                            isObstacle: true,
+                            scoreValue: 20,
+                            vx: -scrollSpeed * 1.3,
+                            spriteType: 'sparrow'
+                        });
+                    }
+                    return; // Skip adding the default enemy
                 }
             }
         }
@@ -1259,6 +1271,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'dog') useFullImage(IMAGES.current.dog);
                 else if (e.spriteType === 'worker') useFullImage(IMAGES.current.worker);
                 else if (e.spriteType === 'fruit_vendor') useFullImage(IMAGES.current.fruit_vendor);
+                else if (e.spriteType === 'sparrow') useFullImage(IMAGES.current.sparrow);
                 else if (e.spriteType === 'cat') useFullImage(IMAGES.current.cat);
                 else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
                 else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);

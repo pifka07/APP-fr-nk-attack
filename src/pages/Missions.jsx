@@ -52,6 +52,13 @@ export default function Missions() {
             description: 'Royal Palace, tapas, and Spanish flair. ¡Vamos!',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png',
             locked: false
+        },
+        {
+            id: 'rome',
+            name: 'Rom',
+            description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
+            locked: false
         }
     ];
 

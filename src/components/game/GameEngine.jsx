@@ -513,13 +513,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
                     enemy.scoreValue = 60;
                 } else if (rand < 0.9) {
-                    // Police Officer (rare)
-                    enemy.spriteType = 'cop';
+                    // Street Food Vendor
+                    enemy.spriteType = 'fruit_vendor';
                     enemy.isTarget = true;
                     enemy.width = 50;
                     enemy.height = 80;
                     enemy.y = groundY - 70;
-                    enemy.scoreValue = 80;
+                    enemy.vx = -scrollSpeed * 0.3;
+                    enemy.scoreValue = 70;
                 } else {
                     // Double-Decker Bus (Rare Event, big target)
                     enemy.spriteType = 'double_decker';

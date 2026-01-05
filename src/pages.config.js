@@ -6,6 +6,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
 import Shop from './pages/Shop';
 import Skins from './pages/Skins';
+import Europa from './pages/Europa';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +19,7 @@ export const PAGES = {
     "Profile": Profile,
     "Shop": Shop,
     "Skins": Skins,
+    "Europa": Europa,
 }
 
 export const pagesConfig = {

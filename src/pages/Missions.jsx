@@ -31,41 +31,6 @@ export default function Missions() {
             description: 'Nature calls. Dogs and picnics everywhere.',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png',
             locked: false
-        },
-        {
-            id: 'london',
-            name: 'London',
-            description: 'Big Ben, Tower Bridge, and the Eye. Poop like royalty!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png',
-            locked: false
-        },
-        {
-            id: 'paris',
-            name: 'Paris',
-            description: 'The City of Light. Eiffel Tower, Notre-Dame, and croissants!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8859d51a5_file_00000000f5c8722fbfc7d8fffaafeec6.png',
-            locked: false
-        },
-        {
-            id: 'madrid',
-            name: 'Madrid',
-            description: 'Royal Palace, tapas, and Spanish flair. ¡Vamos!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png',
-            locked: false
-        },
-        {
-            id: 'rome',
-            name: 'Rom',
-            description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
-            locked: false
-        },
-        {
-            id: 'berlin',
-            name: 'Berlin',
-            description: 'Brandenburger Tor, Fernsehturm, and currywurst!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png',
-            locked: false
         }
     ];
 
@@ -90,7 +55,7 @@ export default function Missions() {
                         transition={{ delay: index * 0.1 }}
                     >
                         <Link 
-                            to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}
+                            to={level.locked ? '#' : (level.id === 'europa' ? createPageUrl('Europa') : `${createPageUrl('Game')}?level=${level.id}`)}
                         >
                             <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
                                 {/* Background Image */}
@@ -125,7 +90,40 @@ export default function Missions() {
                         </Link>
                     </motion.div>
                 ))}
-            </div>
-        </div>
-    );
-}
+
+                        {/* Europa Mission Card */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: levels.length * 0.1 }}
+                        >
+                            <Link to={createPageUrl('Europa')}>
+                                <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]">
+                                    <div className="absolute inset-0 z-0">
+                                        <img 
+                                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/98fa42c68_file_000000001534722f810de02738a4050d.png" 
+                                            alt="Europa" 
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                                    </div>
+
+                                    <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
+                                        <div className="flex justify-between items-end">
+                                            <div>
+                                                <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">EUROPA</h2>
+                                                <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">5 legendary cities await you!</p>
+                                            </div>
+
+                                            <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                                <Play className="w-6 h-6 text-white fill-current" />
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        </motion.div>
+                    </div>
+                </div>
+                );
+                }

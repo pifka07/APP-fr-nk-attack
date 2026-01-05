@@ -193,7 +193,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
         IMAGES.current.ammoIcon = new Image();
         IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png";
-        IMAGES.current.londonForeground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/9b67f47fd_file_00000000912071f5a6264a8165194241.png";
+        IMAGES.current.londonForeground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7eca6c942_file_00000000912071f5a6264a8165194241.png";
 
         let loadedCount = 0;
         const checkLoad = () => {

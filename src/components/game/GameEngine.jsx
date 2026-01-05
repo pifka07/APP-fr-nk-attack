@@ -158,6 +158,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2661da5d3_Drone.png";
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
         IMAGES.current.worker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
+        IMAGES.current.fruit_vendor = new Image();
+        IMAGES.current.fruit_vendor.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/bbc312b5a_file_000000001e6871f596014c36e0d10aeb.png";
         IMAGES.current.cat.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5b5df510c_Level1Gegner-Kopie4.png";
         IMAGES.current.ac_unit.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a4450d5d4_Level1Gegner.png";
         IMAGES.current.seagull.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
@@ -579,7 +581,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 200;
                     enemy.y = groundY - 200;
                     enemy.scoreValue = 50;
-                } else if (rand < 0.85) {
+                } else if (rand < 0.75) {
                     // Granny (Obstacle!)
                     enemy.spriteType = 'granny';
                     enemy.isTarget = true;
@@ -587,6 +589,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 50;
                     enemy.height = 80;
                     enemy.y = groundY - 70;
+                } else if (rand < 0.9) {
+                    // Fruit Vendor
+                    enemy.spriteType = 'fruit_vendor';
+                    enemy.isTarget = true;
+                    enemy.width = 120;
+                    enemy.height = 120;
+                    enemy.y = groundY - 120;
+                    enemy.vx = -scrollSpeed * 0.5; // Slow moving
+                    enemy.scoreValue = 70;
                 } else {
                     // Dog
                     enemy.spriteType = 'dog';
@@ -1246,6 +1257,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'drone') useFullImage(IMAGES.current.drone);
                 else if (e.spriteType === 'dog') useFullImage(IMAGES.current.dog);
                 else if (e.spriteType === 'worker') useFullImage(IMAGES.current.worker);
+                else if (e.spriteType === 'fruit_vendor') useFullImage(IMAGES.current.fruit_vendor);
                 else if (e.spriteType === 'cat') useFullImage(IMAGES.current.cat);
                 else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
                 else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);

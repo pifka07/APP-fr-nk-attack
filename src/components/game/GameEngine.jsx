@@ -570,7 +570,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.spriteType = 'car';
                     enemy.isTarget = true;
                     enemy.width = 180;
-                    enemy.height = 140;
+                    enemy.height = 100;
+                    enemy.y = groundY - 100;
                     enemy.vx = -scrollSpeed - 2;
                     enemy.scoreValue = 30;
                 } else if (rand < 0.7) {
@@ -593,9 +594,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Fruit Vendor
                     enemy.spriteType = 'fruit_vendor';
                     enemy.isTarget = true;
-                    enemy.width = 120;
-                    enemy.height = 120;
-                    enemy.y = groundY - 120;
+                    enemy.width = 80;
+                    enemy.height = 80;
+                    enemy.y = groundY - 80;
                     enemy.vx = -scrollSpeed * 0.5; // Slow moving
                     enemy.scoreValue = 70;
                 } else {

@@ -133,7 +133,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     }, [skin]);
 
     useEffect(() => {
-        // Load Images
+        // Load Images - create new Image object to force reload
+        IMAGES.current.background = new Image();
         if (level === 'rooftop') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png";
         } else if (level === 'park') {

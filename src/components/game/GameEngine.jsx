@@ -138,7 +138,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'park') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png";
         } else if (level === 'london') {
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png";
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b271d1313_file_00000000f9cc722fa086f9efcd3e913b.png";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png";
         }
@@ -961,13 +961,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const w = bg.width * scale;
             const h = bg.height * scale;
             
-            // Scroll at game speed (10x distance unit)
-            const offset = (state.distance * 10) % w; 
+            // Scroll at game speed (10x distance unit) - except for London (static)
+            const offset = level === 'london' ? 0 : (state.distance * 10) % w; 
             
             ctx.drawImage(bg, -offset, 0, w, h);
-            ctx.drawImage(bg, w - offset, 0, w, h);
-            if (w - offset < width) {
-                ctx.drawImage(bg, (w * 2) - offset, 0, w, h);
+            if (level !== 'london') {
+                ctx.drawImage(bg, w - offset, 0, w, h);
+                if (w - offset < width) {
+                    ctx.drawImage(bg, (w * 2) - offset, 0, w, h);
+                }
             }
         } else {
             ctx.fillStyle = '#87CEEB';

@@ -576,8 +576,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.spriteType = 'cop';
                     enemy.isTarget = true;
                     enemy.width = 50;
-                    enemy.height = 80;
-                    enemy.y = groundY - 70;
+                    enemy.height = 100;
+                    enemy.y = groundY - 170;
                     enemy.scoreValue = 50;
                 } else if (rand < 0.85) {
                     // Granny (Obstacle!)

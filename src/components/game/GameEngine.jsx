@@ -54,6 +54,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     const IMAGES = useRef({
         background: new Image(),
+        londonForeground: new Image(), // London scrolling foreground
         playerSheet: new Image(), // Flying
         playerGlide: new Image(), // Gliding (input active)
         playerDead: new Image(),
@@ -187,6 +188,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
         IMAGES.current.ammoIcon = new Image();
         IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png";
+        IMAGES.current.londonForeground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/9b67f47fd_file_00000000912071f5a6264a8165194241.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -974,6 +976,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
+        }
+
+        // Draw London scrolling foreground
+        if (level === 'london' && IMAGES.current.londonForeground.complete) {
+            const fg = IMAGES.current.londonForeground;
+            const fgScale = height / fg.height; // Scale to screen height
+            const fgW = fg.width * fgScale;
+            const fgH = height;
+
+            // Scroll faster than normal (1.5x game speed)
+            const fgOffset = (state.distance * 15) % fgW;
+
+            // Draw at bottom of screen
+            const fgY = height - fgH;
+            ctx.drawImage(fg, -fgOffset, fgY, fgW, fgH);
+            ctx.drawImage(fg, fgW - fgOffset, fgY, fgW, fgH);
+            if (fgW - fgOffset < width) {
+                ctx.drawImage(fg, (fgW * 2) - fgOffset, fgY, fgW, fgH);
+            }
         }
 
         // Draw Player

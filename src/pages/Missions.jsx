@@ -38,6 +38,13 @@ export default function Missions() {
             description: 'Big Ben, Tower Bridge, and the Eye. Poop like royalty!',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png',
             locked: false
+        },
+        {
+            id: 'paris',
+            name: 'Paris',
+            description: 'The City of Light. Eiffel Tower, Notre-Dame, and croissants!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8859d51a5_file_00000000f5c8722fbfc7d8fffaafeec6.png',
+            locked: false
         }
     ];
 

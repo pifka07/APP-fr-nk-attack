@@ -100,6 +100,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
         } else if (level === 'park') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3"; 
+        } else if (level === 'london') {
+            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/sounddogs/soundtrack.mp3";
         }
 
         if (AUDIOS.current.bgm.src !== musicUrl) {
@@ -135,6 +137,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png";
         } else if (level === 'park') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png";
+        } else if (level === 'london') {
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png";
         }
@@ -161,6 +165,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.fly.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e9811e48b_Level3wespe.png";
         IMAGES.current.raccoon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8bbdd27ad_Level3Waschbr.png";
         IMAGES.current.trash_can.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/606803243_Level3Tonne.png";
+        
+        // London Assets
+        IMAGES.current.business_person = new Image();
+        IMAGES.current.business_person.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4acddf445_Frnk-icon1.png";
+        IMAGES.current.tourist = new Image();
+        IMAGES.current.tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3c287a339_Frnk-icon3.png";
+        IMAGES.current.street_musician = new Image();
+        IMAGES.current.street_musician.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
+        IMAGES.current.pigeon = new Image();
+        IMAGES.current.pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
+        IMAGES.current.double_decker = new Image();
+        IMAGES.current.double_decker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6beb89d0d_Frnk-icon4.png";
+        IMAGES.current.balloon = new Image();
+        IMAGES.current.balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/61f1abf56_Level1Gegner-Kopie3.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6fef2bdb0_Frnkkacke-Kopie-Kopie.png";
         IMAGES.current.poopTriple = new Image();
@@ -457,6 +475,87 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.height = 40;
                 enemy.vx = -scrollSpeed * 1.2;
                 }
+                } else if (level === 'london') {
+                // LONDON LEVEL ENEMIES
+                if (!isAir) {
+                // Ground (Pedestrians)
+                if (rand < 0.3) {
+                    // Business Person with Umbrella
+                    enemy.spriteType = 'business_person';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                    enemy.scoreValue = 40;
+                } else if (rand < 0.6) {
+                    // Tourist taking photos
+                    enemy.spriteType = 'tourist';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                    enemy.vx = -scrollSpeed * 0.7; // Slower, stopping to take photos
+                    enemy.scoreValue = 50;
+                } else if (rand < 0.8) {
+                    // Street Musician
+                    enemy.spriteType = 'street_musician';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                    enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
+                    enemy.scoreValue = 60;
+                } else if (rand < 0.9) {
+                    // Police Officer (rare)
+                    enemy.spriteType = 'cop';
+                    enemy.isTarget = true;
+                    enemy.width = 50;
+                    enemy.height = 80;
+                    enemy.y = groundY - 70;
+                    enemy.scoreValue = 80;
+                } else {
+                    // Double-Decker Bus (Rare Event, big target)
+                    enemy.spriteType = 'double_decker';
+                    enemy.isTarget = true;
+                    enemy.width = 120;
+                    enemy.height = 90;
+                    enemy.y = groundY - 80;
+                    enemy.vx = -scrollSpeed - 1.5;
+                    enemy.scoreValue = 150;
+                }
+                } else {
+                // Air
+                if (Math.random() < 0.5) {
+                    // Pigeon (erratic movement)
+                    enemy.spriteType = 'pigeon';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = 20 + Math.random() * (groundY - 170);
+                    enemy.width = 50;
+                    enemy.height = 40;
+                    enemy.vx = -scrollSpeed * 1.3;
+                    enemy.erratic = true; // Flag for erratic movement
+                } else if (Math.random() < 0.7) {
+                    // Drone (moving obstacle)
+                    enemy.spriteType = 'drone';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = 20 + Math.random() * (groundY - 170);
+                    enemy.width = 60;
+                    enemy.height = 40;
+                    enemy.vx = -scrollSpeed * 1.2;
+                } else {
+                    // Hot Air Balloon (slow, big hitbox)
+                    enemy.spriteType = 'balloon';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = 30 + Math.random() * 100; // High in sky
+                    enemy.width = 100;
+                    enemy.height = 120;
+                    enemy.vx = -scrollSpeed * 0.6; // Very slow
+                    enemy.scoreValue = 100;
+                }
+                }
                 } else {
                 // DOWNTOWN LEVEL ENEMIES (Original)
             if (!isAir) {
@@ -677,6 +776,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (e.spriteType === 'eagle' && !e.hasDropped && e.x < width / 2) {
                 e.y += 50; // Drop approx 1cm
                 e.hasDropped = true;
+            }
+
+            // Pigeon erratic movement (London)
+            if (e.spriteType === 'pigeon' && e.erratic) {
+                e.y += Math.sin(state.animFrame * 0.05 + e.x * 0.01) * 2;
             }
 
 
@@ -1126,6 +1230,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'snail') useFullImage(IMAGES.current.snail);
                 else if (e.spriteType === 'fly') useFullImage(IMAGES.current.fly);
                 else if (e.spriteType === 'trash_can') useFullImage(IMAGES.current.trash_can);
+                else if (e.spriteType === 'business_person') useFullImage(IMAGES.current.business_person);
+                else if (e.spriteType === 'tourist') useFullImage(IMAGES.current.tourist);
+                else if (e.spriteType === 'street_musician') useFullImage(IMAGES.current.street_musician);
+                else if (e.spriteType === 'pigeon') useFullImage(IMAGES.current.pigeon);
+                else if (e.spriteType === 'double_decker') useFullImage(IMAGES.current.double_decker);
+                else if (e.spriteType === 'balloon') useFullImage(IMAGES.current.balloon);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -1153,6 +1263,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 } else if (e.spriteType === 'squirrel') {
                     // Hop
                     ctx.translate(0, Math.abs(Math.sin(state.animFrame * 0.4)) * -10);
+                    } else if (e.spriteType === 'business_person' || e.spriteType === 'tourist') {
+                    // Walking animation
+                    ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
+                    } else if (e.spriteType === 'pigeon') {
+                    // Flapping wings
+                    ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
+                    } else if (e.spriteType === 'balloon') {
+                    // Gentle float
+                    ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);
                     }
                     // Chimney drawing removed for cat as requested (sitting on background chimney)
 

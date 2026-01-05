@@ -13,9 +13,9 @@ export default function Missions() {
     const levels = [
         {
             id: 'downtown',
-            name: 'Downtown',
+            name: 'Gelsenkirchen',
             description: 'The busy streets. Perfect for dropping.',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/cd46a805a_FrnkdieTaube6.png',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png',
             locked: false
         },
         {

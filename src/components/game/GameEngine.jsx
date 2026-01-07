@@ -1028,7 +1028,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (state.health <= 0) {
                 // Draw Dead Player
                 const deadImg = IMAGES.current.playerDead;
-                const playerSize = 90;
+                const playerSize = 80;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
                 ctx.rotate(Math.PI / 4); // Tilt down
@@ -1036,7 +1036,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.restore();
             } else {
                 // Always draw flying player
-                const playerSize = 90;
+                const playerSize = 80;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
 

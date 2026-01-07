@@ -106,18 +106,23 @@ Deno.serve(async (req) => {
             mode: missionId ? 'mission' : 'endless'
         });
 
+        // Load User entity to get player_stats_id
+        const userEntityList = await base44.asServiceRole.entities.User.filter({ id: user.id });
+        const userEntity = userEntityList[0];
+        console.log('User entity player_stats_id:', userEntity?.player_stats_id);
+        
         // Load or create PlayerStats for this user using player_stats_id from User
         let playerStats;
         let newTotalCoins, newBestScore;
         
-        if (user.player_stats_id) {
+        if (userEntity?.player_stats_id) {
             // User already has PlayerStats - load it by ID
-            console.log('Loading PlayerStats by ID:', user.player_stats_id);
+            console.log('Loading PlayerStats by ID:', userEntity.player_stats_id);
             try {
-                const statsList = await base44.asServiceRole.entities.PlayerStats.filter({ id: user.player_stats_id });
+                const statsList = await base44.asServiceRole.entities.PlayerStats.filter({ id: userEntity.player_stats_id });
                 if (statsList.length > 0) {
                     playerStats = statsList[0];
-                    console.log('Found PlayerStats by ID');
+                    console.log('Found PlayerStats by ID, current coins:', playerStats.total_coins);
                     
                     // Update existing stats
                     newTotalCoins = (playerStats.total_coins || 0) + coinsCollected;
@@ -131,6 +136,7 @@ Deno.serve(async (req) => {
                         best_score: newBestScore,
                         best_distance: Math.max(playerStats.best_distance || 0, distance || 0)
                     });
+                    console.log('Updated PlayerStats, new coins:', newTotalCoins);
                 } else {
                     throw new Error('PlayerStats not found');
                 }
@@ -160,7 +166,7 @@ Deno.serve(async (req) => {
             await base44.asServiceRole.entities.User.update(user.id, {
                 player_stats_id: playerStats.id
             });
-            console.log('Linked PlayerStats to User');
+            console.log('Linked PlayerStats to User, ID:', playerStats.id);
         }
 
         // Check existing leaderboard entries

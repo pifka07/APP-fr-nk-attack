@@ -58,6 +58,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         londonForeground1: new Image(), // London scrolling foreground 1
         londonForeground2: new Image(), // London scrolling foreground 2
         londonForeground3: new Image(), // London scrolling foreground 3
+        rooftopForeground1: new Image(), // Rooftop scrolling foreground 1
+        rooftopForeground2: new Image(), // Rooftop scrolling foreground 2
+        rooftopForeground3: new Image(), // Rooftop scrolling foreground 3
         playerSheet: new Image(), // Flying
         playerGlide: new Image(), // Gliding (input active)
         playerDead: new Image(),
@@ -138,12 +141,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     useEffect(() => {
         // Load Images - create new Image object to force reload
         IMAGES.current.background = new Image();
-        if (level === 'rooftop') {
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png";
-        } else if (level === 'park') {
+        if (level === 'park') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png";
         } else if (level === 'london') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7786d17f6_ChatGPTImage7Jan202610_45_40.png";
+        } else if (level === 'rooftop') {
+            // Rooftop uses foreground images instead
+            IMAGES.current.background.src = "";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png";
         }
@@ -208,6 +212,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/57b677041_Strasse-1.png";
         IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a85523873_Strasse-2.png";
         IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
+        IMAGES.current.rooftopForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51fb3855b_Rooftop1.png";
+        IMAGES.current.rooftopForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d3b217c6a_Rooftop2.png";
+        IMAGES.current.rooftopForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5358e6ade_Rooftop3.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -997,7 +1004,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'london' && assetsLoaded.current && IMAGES.current.background) {
+        if (level === 'rooftop') {
+            // Rooftop: Sky blue background
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, width, height);
+        } else if (level === 'london' && assetsLoaded.current && IMAGES.current.background) {
             // London: slow scrolling background (1/10 of foreground speed)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -1039,6 +1050,48 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
+        }
+
+        // Draw Rooftop scrolling foreground (3 images in sequence)
+        if (level === 'rooftop' && IMAGES.current.rooftopForeground1.complete && 
+            IMAGES.current.rooftopForeground2.complete && IMAGES.current.rooftopForeground3.complete) {
+
+            const fg1 = IMAGES.current.rooftopForeground1;
+            const fg2 = IMAGES.current.rooftopForeground2;
+            const fg3 = IMAGES.current.rooftopForeground3;
+
+            // Scale all to same height
+            const fgScale = height / fg1.height;
+            const fgW1 = fg1.width * fgScale;
+            const fgW2 = fg2.width * fgScale;
+            const fgW3 = fg3.width * fgScale;
+            const fgH = height;
+
+            // Total width of all 3 images
+            const totalWidth = fgW1 + fgW2 + fgW3;
+
+            // Scroll at game speed
+            const fgOffset = (state.distance * 10) % totalWidth;
+
+            // Draw at bottom
+            const fgY = 0;
+
+            // Determine which images to draw based on offset
+            if (fgOffset < fgW1) {
+                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
+                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
+                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
+            } else if (fgOffset < fgW1 + fgW2) {
+                const offset2 = fgOffset - fgW1;
+                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
+                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
+                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
+            } else {
+                const offset3 = fgOffset - fgW1 - fgW2;
+                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
+                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
+                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
+            }
         }
 
         // Draw London scrolling foreground (3 images in sequence)

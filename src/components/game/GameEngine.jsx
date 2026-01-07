@@ -195,7 +195,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
         IMAGES.current.ammoIcon = new Image();
         IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png";
-        IMAGES.current.londonForeground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7eca6c942_file_00000000912071f5a6264a8165194241.png";
+        IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/031ce7e40_ChatGPTImage7Jan202612_09_09.png";
+        IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/df73d1dd1_Strasse.png";
+        IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b9f69bcab_ChatGPTImage7Jan202612_03_21.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -1028,22 +1030,48 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             ctx.fillRect(0, 0, width, height);
         }
 
-        // Draw London scrolling foreground
-        if (level === 'london' && IMAGES.current.londonForeground.complete) {
-            const fg = IMAGES.current.londonForeground;
-            const fgScale = height / fg.height; // Scale to screen height
-            const fgW = fg.width * fgScale;
+        // Draw London scrolling foreground (3 images in sequence)
+        if (level === 'london' && IMAGES.current.londonForeground1.complete && 
+            IMAGES.current.londonForeground2.complete && IMAGES.current.londonForeground3.complete) {
+
+            const fg1 = IMAGES.current.londonForeground1;
+            const fg2 = IMAGES.current.londonForeground2;
+            const fg3 = IMAGES.current.londonForeground3;
+
+            // Scale all to same height
+            const fgScale = height / fg1.height;
+            const fgW1 = fg1.width * fgScale;
+            const fgW2 = fg2.width * fgScale;
+            const fgW3 = fg3.width * fgScale;
             const fgH = height;
 
-            // Scroll faster than normal (1.5x game speed)
-            const fgOffset = (state.distance * 15) % fgW;
+            // Total width of all 3 images
+            const totalWidth = fgW1 + fgW2 + fgW3;
 
-            // Draw at bottom of screen
-            const fgY = height - fgH;
-            ctx.drawImage(fg, -fgOffset, fgY, fgW, fgH);
-            ctx.drawImage(fg, fgW - fgOffset, fgY, fgW, fgH);
-            if (fgW - fgOffset < width) {
-                ctx.drawImage(fg, (fgW * 2) - fgOffset, fgY, fgW, fgH);
+            // Scroll faster than normal (1.5x game speed)
+            const fgOffset = (state.distance * 15) % totalWidth;
+
+            // Draw 40 pixels lower
+            const fgY = height - fgH + 40;
+
+            // Determine which images to draw based on offset
+            if (fgOffset < fgW1) {
+                // Show fg1, then fg2, then fg3
+                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
+                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
+                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
+            } else if (fgOffset < fgW1 + fgW2) {
+                // fg1 scrolled off, show fg2, fg3, then fg1
+                const offset2 = fgOffset - fgW1;
+                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
+                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
+                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
+            } else {
+                // fg1 and fg2 scrolled off, show fg3, then fg1, then fg2
+                const offset3 = fgOffset - fgW1 - fgW2;
+                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
+                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
+                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
             }
         }
 

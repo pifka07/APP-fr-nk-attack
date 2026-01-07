@@ -47,8 +47,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const assetsLoaded = useRef(false);
     const AUDIOS = useRef({
         bgm: new Audio("https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3"),
-        fart: new Audio("https://www.soundjay.com/human/sounds/fart-03.mp3"),
-        explosion: new Audio("https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"),
+        fart: new Audio("https://www.soundjay.com/birds/sounds/hawk-screech-1.mp3"),
+        explosion: new Audio("https://www.soundjay.com/nature/sounds/water-splash-1.mp3"),
         ouch: new Audio("https://www.myinstants.com/media/sounds/roblox-death-sound_1.mp3")
     });
 
@@ -442,7 +442,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 60;
                     enemy.height = 50;
                     enemy.y = walkingNpcY - 50;
-                    enemy.vx = -scrollSpeed - 1; // Running
+                    enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 60;
                 } else {
                     // AC Unit (Obstacle)

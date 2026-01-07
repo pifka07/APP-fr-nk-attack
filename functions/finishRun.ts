@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
             newBestScore = score;
             
             // Save PlayerStats ID to user
-            await base44.asServiceRole.users.update(user.id, {
+            await base44.asServiceRole.entities.User.update(user.id, {
                 player_stats_id: playerStats.id
             });
             console.log('Linked PlayerStats to User');

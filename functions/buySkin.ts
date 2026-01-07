@@ -38,30 +38,33 @@ Deno.serve(async (req) => {
     const price = skin.cost_coins ?? 0;
     console.log('💎 Skin:', skin.name, '| Price:', price);
 
-    // 3️⃣ Coins von PlayerStats holen (oder erstellen wenn nicht vorhanden)
+    // 3️⃣ Coins von PlayerStats holen
     const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
     console.log('🔍 Found PlayerStats entries:', statsResult.length);
     
     let playerStats;
     
     if (statsResult.length === 0) {
-        console.log('⚠️ No PlayerStats found - creating default entry');
-        playerStats = await base44.asServiceRole.entities.PlayerStats.create({
-            user_id: user.id,
-            total_coins: 0,
-            total_score: 0,
-            total_distance: 0,
-            total_runs: 0,
-            best_score: 0,
-            best_distance: 0
-        });
-        console.log('✅ Created new PlayerStats:', playerStats.id);
+        console.log('❌ No PlayerStats found for user');
+        return Response.json({ 
+            success: false, 
+            reason: 'NO_STATS_YET',
+            message: 'Play at least one game first to unlock the shop!'
+        }, { status: 200 });
     } else if (statsResult.length === 1) {
         playerStats = statsResult[0];
         console.log('✅ Using single PlayerStats entry');
     } else {
+        // Mehrere Einträge - Duplikate! Nutze den mit den meisten Coins
+        console.log('⚠️ WARNING: Multiple PlayerStats found - should not happen!');
         playerStats = statsResult.sort((a, b) => (b.total_coins || 0) - (a.total_coins || 0))[0];
-        console.log('⚠️ Multiple PlayerStats found, using one with most coins:', playerStats.total_coins);
+        console.log('⚠️ Using one with most coins:', playerStats.total_coins);
+        
+        // Lösche die anderen Duplikate
+        for (let i = 1; i < statsResult.length; i++) {
+            console.log('🗑️ Deleting duplicate PlayerStats:', statsResult[i].id);
+            await base44.asServiceRole.entities.PlayerStats.delete(statsResult[i].id);
+        }
     }
 
     const currentCoins = playerStats.total_coins ?? 0;

@@ -116,6 +116,7 @@ Deno.serve(async (req) => {
 
         if (playerStatsList.length === 0) {
             // First game ever - create new PlayerStats
+            console.log('📊 Creating first PlayerStats entry for user');
             playerStats = await base44.asServiceRole.entities.PlayerStats.create({
                 user_id: user.id,
                 total_score: score,
@@ -131,10 +132,11 @@ Deno.serve(async (req) => {
             newTotalRuns = 1;
             newBestScore = score;
             newBestDistance = distance || 0;
-        } else {
-            // Player already has stats - update them
+        } else if (playerStatsList.length === 1) {
+            // Player has stats - update them
             playerStats = playerStatsList[0];
-            
+            console.log('📊 Updating existing PlayerStats');
+
             newTotalScore = (playerStats.total_score || 0) + score;
             newTotalCoins = (playerStats.total_coins || 0) + coinsCollected;
             newTotalDistance = (playerStats.total_distance || 0) + (distance || 0);
@@ -150,6 +152,37 @@ Deno.serve(async (req) => {
                 best_score: newBestScore,
                 best_distance: newBestDistance
             });
+        } else {
+            // Multiple entries found - should not happen due to unique constraint!
+            console.error('⚠️ WARNING: Multiple PlayerStats found for user:', user.id);
+            console.error('Found entries:', playerStatsList.length);
+
+            // Use the one with most data/coins
+            playerStats = playerStatsList.sort((a, b) => (b.total_coins || 0) - (a.total_coins || 0))[0];
+            console.log('Using entry:', playerStats.id, 'with coins:', playerStats.total_coins);
+
+            // Update it
+            newTotalScore = (playerStats.total_score || 0) + score;
+            newTotalCoins = (playerStats.total_coins || 0) + coinsCollected;
+            newTotalDistance = (playerStats.total_distance || 0) + (distance || 0);
+            newTotalRuns = (playerStats.total_runs || 0) + 1;
+            newBestScore = Math.max(playerStats.best_score || 0, score);
+            newBestDistance = Math.max(playerStats.best_distance || 0, distance || 0);
+
+            await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
+                total_score: newTotalScore,
+                total_coins: newTotalCoins,
+                total_distance: newTotalDistance,
+                total_runs: newTotalRuns,
+                best_score: newBestScore,
+                best_distance: newBestDistance
+            });
+
+            // Delete duplicates
+            for (let i = 1; i < playerStatsList.length; i++) {
+                console.log('🗑️ Deleting duplicate PlayerStats:', playerStatsList[i].id);
+                await base44.asServiceRole.entities.PlayerStats.delete(playerStatsList[i].id);
+            }
         }
 
         // Check existing leaderboard entries

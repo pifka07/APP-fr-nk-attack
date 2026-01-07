@@ -404,7 +404,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
-        const walkingNpcY = groundY * 0.95; // NPCs that walk on the ground at 95% of groundY
+        const walkingNpcY = groundY * 0.98; // NPCs that walk on the ground at 98% of groundY
 
         let enemy = {
             x: width + 50,

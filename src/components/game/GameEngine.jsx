@@ -503,7 +503,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = londonGroundY - 140;
+                    enemy.y = londonGroundY - 165;
                     enemy.vx = -scrollSpeed * 0.7; // Slower, stopping for photos
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
@@ -512,7 +512,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = londonGroundY - 140;
+                    enemy.y = londonGroundY - 165;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.55) {
                     // London Bobby (Police)
@@ -520,7 +520,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = londonGroundY - 140;
+                    enemy.y = londonGroundY - 165;
                     enemy.scoreValue = 60;
                 } else if (rand < 0.62) {
                     // Street Vendor with food stall
@@ -528,7 +528,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 240;
                     enemy.height = 200;
-                    enemy.y = londonGroundY - 180;
+                    enemy.y = londonGroundY - 205;
                     enemy.vx = 0; // Stationary on foreground
                     enemy.scoreValue = 80;
                 } else if (rand < 0.85) {
@@ -537,7 +537,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 140;
                     enemy.height = 180;
-                    enemy.y = londonGroundY - 160;
+                    enemy.y = londonGroundY - 185;
                     enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
                     enemy.scoreValue = 70;
                 } else {
@@ -546,7 +546,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 200;
                     enemy.height = 120;
-                    enemy.y = londonGroundY - 50;
+                    enemy.y = londonGroundY - 75;
                     enemy.vx = -scrollSpeed - 1.5;
                     enemy.scoreValue = 100;
                 }

@@ -522,7 +522,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 160;
                     enemy.y = londonGroundY - 160;
                     enemy.scoreValue = 60;
-                } else if (rand < 0.7) {
+                } else if (rand < 0.62) {
                     // Street Vendor with food stall
                     enemy.spriteType = 'street_vendor';
                     enemy.isTarget = true;
@@ -546,7 +546,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 200;
                     enemy.height = 120;
-                    enemy.y = londonGroundY - 120;
+                    enemy.y = londonGroundY - 60;
                     enemy.vx = -scrollSpeed - 1.5;
                     enemy.scoreValue = 100;
                 }

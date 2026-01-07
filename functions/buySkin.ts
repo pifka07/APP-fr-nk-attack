@@ -38,32 +38,8 @@ Deno.serve(async (req) => {
     const price = skin.cost_coins ?? 0;
     console.log('💎 Skin:', skin.name, '| Price:', price);
 
-    // 3️⃣ Coins von PlayerStats holen (über User-Referenz)
-    if (!user.player_stats_id) {
-        console.log('❌ No PlayerStats linked to user');
-        return Response.json({ 
-            success: false, 
-            reason: 'NO_STATS_YET',
-            message: 'Play at least one game first to unlock the shop!'
-        }, { status: 200 });
-    }
-    
-    const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ id: user.player_stats_id });
-    console.log('🔍 Loading PlayerStats by ID:', user.player_stats_id);
-    
-    if (statsResult.length === 0) {
-        console.log('❌ PlayerStats not found');
-        return Response.json({ 
-            success: false, 
-            reason: 'NO_STATS_YET',
-            message: 'Play at least one game first to unlock the shop!'
-        }, { status: 200 });
-    }
-    
-    const playerStats = statsResult[0];
-    console.log('✅ Found PlayerStats with coins:', playerStats.total_coins);
-
-    const currentCoins = playerStats.total_coins ?? 0;
+    // 3️⃣ Coins vom User holen
+    const currentCoins = user.total_coins ?? 0;
     console.log('💰 Current coins:', currentCoins);
 
     // 4️⃣ Bereits gekauft?
@@ -104,7 +80,7 @@ Deno.serve(async (req) => {
     if (price > 0) {
       newCoinBalance = currentCoins - price;
       console.log('💸 Deducting coins:', currentCoins, '->', newCoinBalance);
-      await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, { total_coins: newCoinBalance });
+      await base44.asServiceRole.entities.User.update(user.id, { total_coins: newCoinBalance });
       console.log('✅ Coins updated');
     }
 

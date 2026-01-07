@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 
 export default function Shop() {
     const [user, setUser] = useState(null);
-    const [playerStats, setPlayerStats] = useState(null);
     const [upgrades, setUpgrades] = useState([]);
     const [skins, setSkins] = useState([]);
     const [playerUpgrades, setPlayerUpgrades] = useState([]);
@@ -32,20 +31,16 @@ export default function Shop() {
             let userData = null;
             let pUpgradesData = [];
             let pSkinsData = [];
-            let statsData = null;
 
             if (isAuth) {
                 try {
                     userData = await base44.auth.me();
                     const results = await Promise.all([
                         base44.entities.PlayerUpgrade.list(),
-                        base44.entities.PlayerSkin.list(),
-                        base44.entities.PlayerStats.filter({ user_id: userData.id })
+                        base44.entities.PlayerSkin.list()
                     ]);
                     pUpgradesData = results[0];
                     pSkinsData = results[1];
-                    statsData = results[2][0] || null;
-                    setPlayerStats(statsData);
                 } catch (e) {
                     console.log("Not logged in");
                 }
@@ -78,14 +73,14 @@ export default function Shop() {
 
         const cost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
 
-        if ((playerStats?.total_coins || 0) < cost) {
+        if ((user?.total_coins || 0) < cost) {
             toast.error("Not enough coins!");
             return;
         }
 
         try {
-            await base44.entities.PlayerStats.update(playerStats.id, { 
-                total_coins: (playerStats.total_coins || 0) - cost 
+            await base44.auth.updateMe({ 
+                total_coins: (user.total_coins || 0) - cost 
             });
             
             const existingPu = playerUpgrades.find(pu => pu.upgrade_id === upgrade.id);
@@ -183,7 +178,7 @@ export default function Shop() {
                 </div>
                 <div className="flex items-center bg-slate-800 px-4 py-2 rounded-full border-2 border-yellow-500/50 shadow-lg">
                     <Coins className="w-5 h-5 text-yellow-400 mr-2" />
-                    <span className="font-mono font-bold text-xl text-yellow-400">{playerStats?.total_coins || 0}</span>
+                    <span className="font-mono font-bold text-xl text-yellow-400">{user?.total_coins || 0}</span>
                 </div>
             </div>
 
@@ -201,7 +196,7 @@ export default function Shop() {
                     {skins.sort((a, b) => a.cost_coins - b.cost_coins).map(skin => {
                         const isOwned = playerSkins.some(ps => ps.skin_id === skin.id) || skin.key === 'default';
                         const isEquipped = user?.equipped_skin === skin.key;
-                        const canAfford = (playerStats?.total_coins || 0) >= skin.cost_coins;
+                        const canAfford = (user?.total_coins || 0) >= skin.cost_coins;
 
                         return (
                             <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
@@ -249,7 +244,7 @@ export default function Shop() {
                         const currentLevel = currentPu?.level || 0;
                         const isMaxed = currentLevel >= upgrade.max_level;
                         const nextCost = Math.floor(upgrade.base_cost * Math.pow(upgrade.cost_multiplier, currentLevel));
-                        const canAfford = (playerStats?.total_coins || 0) >= nextCost;
+                        const canAfford = (user?.total_coins || 0) >= nextCost;
 
                         return (
                             <Card key={upgrade.id} className="bg-slate-800 border-slate-700">

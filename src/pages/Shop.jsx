@@ -126,13 +126,13 @@ export default function Shop() {
                 const reason = response.data.reason;
                 const message = response.data.message;
                 console.log('❌ Purchase failed:', reason, message);
-                
+
                 if (reason === 'NOT_ENOUGH_COINS') {
                     toast.error(`Not enough coins! Need ${response.data.required}, have ${response.data.available}`);
                 } else if (reason === 'SKIN_ALREADY_OWNED') {
                     toast.error("You already own this skin!");
                 } else if (reason === 'NO_STATS_YET') {
-                    toast.error(message || "Play at least one game first!");
+                    toast.error("🎮 Play at least one game first to earn coins!", { duration: 4000 });
                 } else {
                     toast.error("Purchase failed: " + (message || reason));
                 }

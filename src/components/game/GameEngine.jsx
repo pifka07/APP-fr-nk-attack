@@ -430,7 +430,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Worker
                     enemy.spriteType = 'worker';
                     enemy.isTarget = true;
-                    enemy.width = 100;
+                    enemy.width = 150;
                     enemy.height = 160;
                     enemy.y = walkingNpcY - 160;
                     enemy.scoreValue = 40;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Play } from "lucide-react";
+import { ArrowLeft, Play, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Europa() {
@@ -18,30 +18,30 @@ export default function Europa() {
         {
             id: 'paris',
             name: 'Paris',
-            description: 'The City of Light. Eiffel Tower, Notre-Dame, and croissants!',
+            description: 'Coming Soon...',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8859d51a5_file_00000000f5c8722fbfc7d8fffaafeec6.png',
-            locked: false
+            locked: true
         },
         {
             id: 'madrid',
             name: 'Madrid',
-            description: 'Royal Palace, tapas, and Spanish flair. ¡Vamos!',
+            description: 'Coming Soon...',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png',
-            locked: false
+            locked: true
         },
         {
             id: 'rome',
             name: 'Rom',
-            description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
+            description: 'Coming Soon...',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
-            locked: false
+            locked: true
         },
         {
             id: 'berlin',
             name: 'Berlin',
-            description: 'Brandenburger Tor, Fernsehturm, and currywurst!',
+            description: 'Coming Soon...',
             image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png',
-            locked: false
+            locked: true
         }
     ];
 
@@ -65,8 +65,8 @@ export default function Europa() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                     >
-                        <Link to={`${createPageUrl('Game')}?level=${level.id}`}>
-                            <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]">
+                        <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
+                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
                                 {/* Background Image */}
                                 <div className="absolute inset-0 z-0">
                                     <img 
@@ -84,9 +84,15 @@ export default function Europa() {
                                             <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">{level.description}</p>
                                         </div>
                                         
-                                        <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                                            <Play className="w-6 h-6 text-white fill-current" />
-                                        </div>
+                                        {level.locked ? (
+                                            <div className="bg-slate-900/80 p-3 rounded-full">
+                                                <Lock className="w-6 h-6 text-slate-500" />
+                                            </div>
+                                        ) : (
+                                            <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                                <Play className="w-6 h-6 text-white fill-current" />
+                                            </div>
+                                        )}
                                     </div>
                                 </CardContent>
                             </Card>

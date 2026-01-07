@@ -193,6 +193,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
         IMAGES.current.balloon = new Image();
         IMAGES.current.balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/61f1abf56_Level1Gegner-Kopie3.png";
+        IMAGES.current.london_drone = new Image();
+        IMAGES.current.london_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
+        IMAGES.current.london_pigeon = new Image();
+        IMAGES.current.london_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba609c1c4_Taube1.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         IMAGES.current.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6fef2bdb0_Frnkkacke-Kopie-Kopie.png";
         IMAGES.current.poopTriple = new Image();
@@ -552,15 +556,39 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
                 } else {
                     // Air
-                    // Hot Air Balloon
-                    enemy.spriteType = 'balloon';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = 30 + Math.random() * 100;
-                    enemy.width = 100;
-                    enemy.height = 120;
-                    enemy.vx = -scrollSpeed * 0.6;
-                    enemy.scoreValue = 100;
+                    const airRand = Math.random();
+                    if (airRand < 0.4) {
+                        // London Drone
+                        enemy.spriteType = 'london_drone';
+                        enemy.isTarget = true;
+                        enemy.isObstacle = true;
+                        enemy.y = 20 + Math.random() * (groundY - 170);
+                        enemy.width = 70;
+                        enemy.height = 50;
+                        enemy.vx = -scrollSpeed * 1.2;
+                        enemy.scoreValue = 60;
+                    } else if (airRand < 0.7) {
+                        // London Pigeon
+                        enemy.spriteType = 'london_pigeon';
+                        enemy.isTarget = true;
+                        enemy.isObstacle = true;
+                        enemy.y = 20 + Math.random() * (groundY - 170);
+                        enemy.width = 60;
+                        enemy.height = 50;
+                        enemy.vx = -scrollSpeed * 1.3;
+                        enemy.erratic = true;
+                        enemy.scoreValue = 50;
+                    } else {
+                        // Hot Air Balloon
+                        enemy.spriteType = 'balloon';
+                        enemy.isTarget = true;
+                        enemy.isObstacle = true;
+                        enemy.y = 30 + Math.random() * 100;
+                        enemy.width = 100;
+                        enemy.height = 120;
+                        enemy.vx = -scrollSpeed * 0.6;
+                        enemy.scoreValue = 100;
+                    }
                 }
                 } else {
                 // DOWNTOWN LEVEL ENEMIES (Original)
@@ -805,7 +833,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
 
             // Pigeon erratic movement (London)
-            if (e.spriteType === 'pigeon' && e.erratic) {
+            if ((e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon') && e.erratic) {
                 e.y += Math.sin(state.animFrame * 0.05 + e.x * 0.01) * 2;
             }
 
@@ -1335,6 +1363,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'london_car') useFullImage(IMAGES.current.london_car);
                 else if (e.spriteType === 'pigeon') useFullImage(IMAGES.current.pigeon);
                 else if (e.spriteType === 'balloon') useFullImage(IMAGES.current.balloon);
+                else if (e.spriteType === 'london_drone') useFullImage(IMAGES.current.london_drone);
+                else if (e.spriteType === 'london_pigeon') useFullImage(IMAGES.current.london_pigeon);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -1365,12 +1395,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (e.spriteType === 'business_person' || e.spriteType === 'tourist') {
                     // Walking animation
                     ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
-                    } else if (e.spriteType === 'pigeon') {
+                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon') {
                     // Flapping wings
                     ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
                     } else if (e.spriteType === 'balloon') {
                     // Gentle float
                     ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);
+                    } else if (e.spriteType === 'london_drone') {
+                    // Drone hovering
+                    ctx.translate(0, Math.sin(state.animFrame * 0.3) * 2);
                     }
                     // Chimney drawing removed for cat as requested (sitting on background chimney)
 

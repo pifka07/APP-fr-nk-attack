@@ -500,52 +500,52 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Tourist with camera
                     enemy.spriteType = 'tourist';
                     enemy.isTarget = true;
-                    enemy.width = 60;
-                    enemy.height = 80;
-                    enemy.y = groundY - 80;
+                    enemy.width = 120;
+                    enemy.height = 160;
+                    enemy.y = groundY - 160;
                     enemy.vx = -scrollSpeed * 0.7; // Slower, stopping for photos
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
                     // Business Person with briefcase
                     enemy.spriteType = 'business_person';
                     enemy.isTarget = true;
-                    enemy.width = 60;
-                    enemy.height = 80;
-                    enemy.y = groundY - 80;
+                    enemy.width = 120;
+                    enemy.height = 160;
+                    enemy.y = groundY - 160;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.55) {
                     // London Bobby (Police)
                     enemy.spriteType = 'london_cop';
                     enemy.isTarget = true;
-                    enemy.width = 60;
-                    enemy.height = 80;
-                    enemy.y = groundY - 80;
+                    enemy.width = 120;
+                    enemy.height = 160;
+                    enemy.y = groundY - 160;
                     enemy.scoreValue = 60;
                 } else if (rand < 0.7) {
                     // Street Vendor with food stall
                     enemy.spriteType = 'street_vendor';
                     enemy.isTarget = true;
-                    enemy.width = 120;
-                    enemy.height = 100;
-                    enemy.y = groundY - 100;
+                    enemy.width = 240;
+                    enemy.height = 200;
+                    enemy.y = groundY - 200;
                     enemy.vx = -scrollSpeed * 0.5; // Stationary or slow
                     enemy.scoreValue = 80;
                 } else if (rand < 0.85) {
                     // Street Musician
                     enemy.spriteType = 'street_musician';
                     enemy.isTarget = true;
-                    enemy.width = 70;
-                    enemy.height = 90;
-                    enemy.y = groundY - 90;
+                    enemy.width = 140;
+                    enemy.height = 180;
+                    enemy.y = groundY - 180;
                     enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
                     enemy.scoreValue = 70;
                 } else {
                     // London Car
                     enemy.spriteType = 'london_car';
                     enemy.isTarget = true;
-                    enemy.width = 100;
-                    enemy.height = 60;
-                    enemy.y = groundY - 60;
+                    enemy.width = 200;
+                    enemy.height = 120;
+                    enemy.y = groundY - 120;
                     enemy.vx = -scrollSpeed - 1.5;
                     enemy.scoreValue = 100;
                 }

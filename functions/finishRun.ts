@@ -112,38 +112,45 @@ Deno.serve(async (req) => {
         });
 
         let playerStats;
-        // Create PlayerStats if doesn't exist yet (first game)
+        let newTotalScore, newTotalCoins, newTotalDistance, newTotalRuns, newBestScore, newBestDistance;
+
         if (playerStatsList.length === 0) {
+            // First game ever - create new PlayerStats
             playerStats = await base44.asServiceRole.entities.PlayerStats.create({
                 user_id: user.id,
-                total_score: 0,
-                total_coins: 0,
-                total_distance: 0,
-                total_runs: 0,
-                best_score: 0,
-                best_distance: 0
+                total_score: score,
+                total_coins: coinsCollected,
+                total_distance: distance || 0,
+                total_runs: 1,
+                best_score: score,
+                best_distance: distance || 0
             });
+            newTotalScore = score;
+            newTotalCoins = coinsCollected;
+            newTotalDistance = distance || 0;
+            newTotalRuns = 1;
+            newBestScore = score;
+            newBestDistance = distance || 0;
         } else {
+            // Player already has stats - update them
             playerStats = playerStatsList[0];
+            
+            newTotalScore = (playerStats.total_score || 0) + score;
+            newTotalCoins = (playerStats.total_coins || 0) + coinsCollected;
+            newTotalDistance = (playerStats.total_distance || 0) + (distance || 0);
+            newTotalRuns = (playerStats.total_runs || 0) + 1;
+            newBestScore = Math.max(playerStats.best_score || 0, score);
+            newBestDistance = Math.max(playerStats.best_distance || 0, distance || 0);
+
+            await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
+                total_score: newTotalScore,
+                total_coins: newTotalCoins,
+                total_distance: newTotalDistance,
+                total_runs: newTotalRuns,
+                best_score: newBestScore,
+                best_distance: newBestDistance
+            });
         }
-
-        // Calculate updated values
-        const newTotalScore = playerStats.total_score + score;
-        const newTotalCoins = playerStats.total_coins + coinsCollected;
-        const newTotalDistance = playerStats.total_distance + (distance || 0);
-        const newTotalRuns = playerStats.total_runs + 1;
-        const newBestScore = Math.max(playerStats.best_score, score);
-        const newBestDistance = Math.max(playerStats.best_distance || 0, distance || 0);
-
-        // Update PlayerStats
-        await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-            total_score: newTotalScore,
-            total_coins: newTotalCoins,
-            total_distance: newTotalDistance,
-            total_runs: newTotalRuns,
-            best_score: newBestScore,
-            best_distance: newBestDistance
-        });
 
         // Check existing leaderboard entries
         const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({

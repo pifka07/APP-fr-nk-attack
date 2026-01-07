@@ -32,18 +32,20 @@ export default function Shop() {
             let userData = null;
             let pUpgradesData = [];
             let pSkinsData = [];
+            let statsData = null;
 
             if (isAuth) {
                 try {
                     userData = await base44.auth.me();
-                    const [pUpgradesData, pSkinsData, statsData] = await Promise.all([
+                    const results = await Promise.all([
                         base44.entities.PlayerUpgrade.list(),
                         base44.entities.PlayerSkin.list(),
                         base44.entities.PlayerStats.filter({ user_id: userData.id })
                     ]);
-                    pUpgradesData = pUpgradesData;
-                    pSkinsData = pSkinsData;
-                    setPlayerStats(statsData[0] || null);
+                    pUpgradesData = results[0];
+                    pSkinsData = results[1];
+                    statsData = results[2][0] || null;
+                    setPlayerStats(statsData);
                 } catch (e) {
                     console.log("Not logged in");
                 }

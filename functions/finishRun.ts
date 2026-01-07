@@ -106,62 +106,59 @@ Deno.serve(async (req) => {
             mode: missionId ? 'mission' : 'endless'
         });
 
-        // Load User entity to get player_stats_id
-        const userEntityList = await base44.asServiceRole.entities.User.filter({ id: user.id });
-        const userEntity = userEntityList[0];
-        console.log('User entity player_stats_id:', userEntity?.player_stats_id);
-        
-        // Check for duplicate PlayerStats and clean them up
+        // ALWAYS load all PlayerStats for this user first
+        console.log('🔍 Checking for existing PlayerStats for user:', user.id);
         const allUserStats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
-        console.log('Found', allUserStats.length, 'PlayerStats entries for this user');
+        console.log('📊 Found', allUserStats.length, 'existing PlayerStats');
         
         let playerStats;
         let newTotalCoins, newBestScore;
         
-        if (allUserStats.length > 1) {
-            // Multiple entries found - merge and clean up
-            console.log('⚠️ Found duplicate PlayerStats, cleaning up...');
-            
-            // Find the one with highest values (most complete)
-            let bestStats = allUserStats[0];
-            for (const stats of allUserStats) {
-                if ((stats.total_coins || 0) > (bestStats.total_coins || 0)) {
-                    bestStats = stats;
-                }
-            }
-            
-            // Delete all others
-            for (const stats of allUserStats) {
-                if (stats.id !== bestStats.id) {
-                    console.log('Deleting duplicate PlayerStats:', stats.id);
-                    await base44.asServiceRole.entities.PlayerStats.delete(stats.id);
-                }
-            }
-            
-            playerStats = bestStats;
-            
-            // Link to user
-            await base44.asServiceRole.entities.User.update(user.id, {
-                player_stats_id: playerStats.id
-            });
-            console.log('Cleaned up duplicates, keeping:', playerStats.id);
-            
-        } else if (allUserStats.length === 1) {
-            // Exactly one entry - use it
+        if (allUserStats.length > 0) {
+            // Stats exist - use the first one (or merge if duplicates)
             playerStats = allUserStats[0];
-            console.log('Using existing PlayerStats:', playerStats.id);
+            console.log('✅ Using existing PlayerStats:', playerStats.id);
             
-            // Make sure it's linked to user
-            if (userEntity?.player_stats_id !== playerStats.id) {
+            // If duplicates exist, delete them
+            if (allUserStats.length > 1) {
+                console.log('⚠️ Cleaning up', allUserStats.length - 1, 'duplicate entries');
+                for (let i = 1; i < allUserStats.length; i++) {
+                    await base44.asServiceRole.entities.PlayerStats.delete(allUserStats[i].id);
+                    console.log('🗑️ Deleted duplicate:', allUserStats[i].id);
+                }
+            }
+            
+            // Update existing stats
+            newTotalCoins = (playerStats.total_coins || 0) + coinsCollected;
+            newBestScore = Math.max(playerStats.best_score || 0, score);
+            
+            console.log('💰 Updating coins:', playerStats.total_coins, '+', coinsCollected, '=', newTotalCoins);
+            
+            await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
+                total_score: (playerStats.total_score || 0) + score,
+                total_coins: newTotalCoins,
+                total_distance: (playerStats.total_distance || 0) + (distance || 0),
+                total_runs: (playerStats.total_runs || 0) + 1,
+                best_score: newBestScore,
+                best_distance: Math.max(playerStats.best_distance || 0, distance || 0)
+            });
+            
+            console.log('✅ PlayerStats updated successfully');
+            
+            // Make sure User has reference to this PlayerStats
+            try {
                 await base44.asServiceRole.entities.User.update(user.id, {
                     player_stats_id: playerStats.id
                 });
-                console.log('Linked PlayerStats to User');
+                console.log('🔗 Linked PlayerStats to User');
+            } catch (e) {
+                console.log('⚠️ Could not link to User:', e.message);
             }
             
         } else {
-            // No stats yet - create first one
-            console.log('Creating first PlayerStats for user');
+            // First run ever - create new PlayerStats
+            console.log('🆕 Creating first PlayerStats for user');
+            
             playerStats = await base44.asServiceRole.entities.PlayerStats.create({
                 user_id: user.id,
                 total_score: score,
@@ -175,27 +172,17 @@ Deno.serve(async (req) => {
             newTotalCoins = coinsCollected;
             newBestScore = score;
             
-            // Link to user
-            await base44.asServiceRole.entities.User.update(user.id, {
-                player_stats_id: playerStats.id
-            });
-            console.log('Created and linked PlayerStats:', playerStats.id);
-        }
-        
-        // Update stats (if not first run)
-        if (allUserStats.length > 0) {
-            newTotalCoins = (playerStats.total_coins || 0) + coinsCollected;
-            newBestScore = Math.max(playerStats.best_score || 0, score);
+            console.log('✅ Created PlayerStats:', playerStats.id);
             
-            await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, {
-                total_score: (playerStats.total_score || 0) + score,
-                total_coins: newTotalCoins,
-                total_distance: (playerStats.total_distance || 0) + (distance || 0),
-                total_runs: (playerStats.total_runs || 0) + 1,
-                best_score: newBestScore,
-                best_distance: Math.max(playerStats.best_distance || 0, distance || 0)
-            });
-            console.log('Updated PlayerStats, new coins:', newTotalCoins);
+            // Link to User
+            try {
+                await base44.asServiceRole.entities.User.update(user.id, {
+                    player_stats_id: playerStats.id
+                });
+                console.log('🔗 Linked PlayerStats to User');
+            } catch (e) {
+                console.log('⚠️ Could not link to User:', e.message);
+            }
         }
 
         // Check existing leaderboard entries

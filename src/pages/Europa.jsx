@@ -1,49 +1,83 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Play, Lock } from "lucide-react";
+import { ArrowLeft, Play, Lock, Trophy, Coins } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Europa() {
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const user = await base44.auth.me();
+                const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
+                setStats(playerStats.length > 0 ? playerStats[0] : { best_score: 0, total_coins: 0 });
+            } catch (error) {
+                setStats({ best_score: 0, total_coins: 0 });
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    const levelRequirements = {
+        london: { score: 0, coins: 0 },
+        paris: { score: 1000, coins: 500 },
+        madrid: { score: 3000, coins: 1500 },
+        rome: { score: 6000, coins: 3000 },
+        berlin: { score: 10000, coins: 5000 }
+    };
+
     const europeanLevels = [
         {
             id: 'london',
             name: 'London',
             description: 'Big Ben, Tower Bridge, and the Eye. Poop like royalty!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png',
-            locked: false
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/13caea1c7_file_0000000036c0722fb90be1d4f360a66d.png'
         },
         {
             id: 'paris',
             name: 'Paris',
-            description: 'Coming Soon...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8859d51a5_file_00000000f5c8722fbfc7d8fffaafeec6.png',
-            locked: true
+            description: 'The City of Light. Eiffel Tower, Notre-Dame, and croissants!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8859d51a5_file_00000000f5c8722fbfc7d8fffaafeec6.png'
         },
         {
             id: 'madrid',
             name: 'Madrid',
-            description: 'Coming Soon...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png',
-            locked: true
+            description: 'Royal Palace, tapas, and Spanish flair. ¡Vamos!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png'
         },
         {
             id: 'rome',
             name: 'Rom',
-            description: 'Coming Soon...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
-            locked: true
+            description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png'
         },
         {
             id: 'berlin',
             name: 'Berlin',
-            description: 'Coming Soon...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png',
-            locked: true
+            description: 'Brandenburger Tor, Fernsehturm, and currywurst!',
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png'
         }
-    ];
+    ].map(level => {
+        const req = levelRequirements[level.id];
+        const locked = !stats || stats.best_score < req.score || stats.total_coins < req.coins;
+        return { ...level, locked, requirements: req };
+    });
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center text-teal-400">
+                Loading...
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
@@ -79,9 +113,21 @@ export default function Europa() {
 
                                 <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
                                     <div className="flex justify-between items-end">
-                                        <div>
+                                        <div className="flex-1">
                                             <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
-                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">{level.description}</p>
+                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md">{level.description}</p>
+                                            {level.locked && (
+                                                <div className="mt-2 flex flex-col gap-1 text-xs text-slate-300">
+                                                    <div className="flex items-center gap-1">
+                                                        <Trophy className="w-3 h-3" />
+                                                        <span>Benötigt: {level.requirements.score} Score</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <Coins className="w-3 h-3" />
+                                                        <span>Benötigt: {level.requirements.coins} Coins</span>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                         
                                         {level.locked ? (

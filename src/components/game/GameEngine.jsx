@@ -580,7 +580,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 180;
                     enemy.height = 100;
-                    enemy.y = groundY - 100;
+                    enemy.y = groundY - 80;
                     enemy.vx = -scrollSpeed - 2;
                     enemy.scoreValue = 30;
                 } else if (rand < 0.7) {
@@ -589,7 +589,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 200;
                     enemy.height = 200;
-                    enemy.y = groundY - 200;
+                    enemy.y = groundY - 190;
                     enemy.scoreValue = 50;
                 } else if (rand < 0.75) {
                     // Granny (Obstacle!)
@@ -598,7 +598,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isObstacle = true;
                     enemy.width = 50;
                     enemy.height = 80;
-                    enemy.y = groundY - 70;
+                    enemy.y = groundY - 60;
                 } else if (rand < 0.9) {
                     // Fruit Vendor
                     enemy.spriteType = 'fruit_vendor';

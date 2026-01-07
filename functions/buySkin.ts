@@ -23,18 +23,20 @@ Deno.serve(async (req) => {
       return Response.json({ success: false, reason: 'INVALID_REQUEST', payload_received: payload }, { status: 200 });
     }
 
-    // 2️⃣ Skin laden (Admin → OK)
+    // 2️⃣ Skin laden
+    console.log('🔍 Searching for skin with ID:', skin_id);
     const skins = await base44.asServiceRole.entities.Skin.filter({ id: skin_id });
-    console.log('Skins gefunden:', skins.length);
+    console.log('📋 Skins found:', skins.length);
+    
     if (skins.length === 0) {
-      return Response.json({ success: false, reason: 'SKIN_NOT_FOUND' }, { status: 404 });
+      console.log('❌ Skin not found');
+      return Response.json({ success: false, reason: 'SKIN_NOT_FOUND' }, { status: 200 });
     }
+    
     const skinRecord = skins[0];
     const skin = skinRecord.data || skinRecord;
-    console.log('Skin:', skin);
-
     const price = skin.cost_coins ?? 0;
-    console.log('Price:', price);
+    console.log('💎 Skin:', skin.name, '| Price:', price);
 
     // 3️⃣ Coins von PlayerStats holen (primäre Quelle)
     const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });

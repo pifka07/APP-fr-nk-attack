@@ -623,23 +623,23 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 60;
                     enemy.vx = -scrollSpeed * 1.5;
                 } else {
-                    // Spawn 3 sparrows in formation
-                    const baseY = 50 + Math.random() * (groundY - 250);
-                    for (let i = 0; i < 3; i++) {
-                        enemies.push({
-                            x: width + 50 + (i * 30),
-                            y: baseY + (i * 25),
-                            width: 20,
-                            height: 20,
-                            hp: 1,
-                            isTarget: true,
-                            isObstacle: true,
-                            scoreValue: 20,
-                            vx: -scrollSpeed * 1.3,
-                            spriteType: 'sparrow'
-                        });
-                    }
-                    return; // Skip adding the default enemy
+                // Spawn 3 sparrows in formation
+                const baseY = 50 + Math.random() * (groundY - 250);
+                for (let i = 0; i < 3; i++) {
+                    enemies.push({
+                        x: width + 50 + (i * 30),
+                        y: baseY + (i * 25),
+                        width: 40,
+                        height: 40,
+                        hp: 1,
+                        isTarget: true,
+                        isObstacle: true,
+                        scoreValue: 20,
+                        vx: -scrollSpeed * 1.3,
+                        spriteType: 'sparrow'
+                    });
+                }
+                return; // Skip adding the default enemy
                 }
             }
         }

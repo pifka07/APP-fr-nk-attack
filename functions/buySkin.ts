@@ -38,24 +38,30 @@ Deno.serve(async (req) => {
 
     // 3️⃣ Coins von PlayerStats holen (primäre Quelle)
     const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
-    let playerStats = statsResult[0];
-
-    // Wenn keine PlayerStats existieren, erstelle sie mit 0 Coins
-    if (!playerStats) {
-        playerStats = await base44.asServiceRole.entities.PlayerStats.create({
-            user_id: user.id,
-            total_score: 0,
-            total_coins: 0,
-            total_distance: 0,
-            total_runs: 0,
-            best_score: 0,
-            best_distance: 0
-        });
-        console.log('Created new PlayerStats for user:', user.id);
+    console.log('🔍 Found PlayerStats entries:', statsResult.length);
+    
+    let playerStats;
+    
+    if (statsResult.length === 0) {
+        // Keine Stats gefunden - Fehler zurückgeben
+        console.log('❌ No PlayerStats found for user');
+        return Response.json({ 
+            success: false, 
+            reason: 'NO_STATS_YET',
+            message: 'Play at least one game first to unlock the shop!'
+        }, { status: 400 });
+    } else if (statsResult.length === 1) {
+        // Genau ein Eintrag - perfekt
+        playerStats = statsResult[0];
+        console.log('✅ Using single PlayerStats entry');
+    } else {
+        // Mehrere Einträge - nimm den mit den meisten Coins
+        playerStats = statsResult.sort((a, b) => (b.total_coins || 0) - (a.total_coins || 0))[0];
+        console.log('⚠️ Multiple PlayerStats found, using one with most coins:', playerStats.total_coins);
     }
 
     const currentCoins = playerStats.total_coins ?? 0;
-    console.log('PlayerStats Coins:', currentCoins);
+    console.log('💰 PlayerStats Coins:', currentCoins);
 
     // 4️⃣ Bereits gekauft?
     const owned = await base44.asServiceRole.entities.PlayerSkin.filter({

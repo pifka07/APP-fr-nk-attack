@@ -402,7 +402,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
-        const walkingNpcY = groundY * 0.6; // NPCs that walk on the ground at 60% of groundY
+        const walkingNpcY = groundY * 0.7; // NPCs that walk on the ground at 70% of groundY
 
         let enemy = {
             x: width + 50,
@@ -451,14 +451,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = groundY - 60;
                 }
             } else {
-                // Air - Seagull instead
-                enemy.spriteType = 'seagull';
-                enemy.isTarget = true;
-                enemy.isObstacle = true;
-                enemy.y = 20 + Math.random() * (groundY - 170);
-                enemy.width = 60;
-                enemy.height = 50;
-                enemy.vx = -scrollSpeed * 1.2;
+                // Air - skip spawning air enemies for rooftop
+                return;
                 }
                 } else if (level === 'park') {
                 // PARK LEVEL ENEMIES

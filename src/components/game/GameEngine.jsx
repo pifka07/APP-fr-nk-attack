@@ -551,27 +551,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.scoreValue = 100;
                 }
                 } else {
-                // Air
-                if (Math.random() < 0.6) {
-                    // Pigeon (erratic movement)
-                    enemy.spriteType = 'pigeon';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = 20 + Math.random() * (groundY - 170);
-                    enemy.width = 50;
-                    enemy.height = 40;
-                    enemy.vx = -scrollSpeed * 1.3;
-                    enemy.erratic = true;
-                } else if (Math.random() < 0.7) {
-                    // Drone
-                    enemy.spriteType = 'drone';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = 20 + Math.random() * (groundY - 170);
-                    enemy.width = 60;
-                    enemy.height = 40;
-                    enemy.vx = -scrollSpeed * 1.2;
-                } else {
+                    // Air
                     // Hot Air Balloon
                     enemy.spriteType = 'balloon';
                     enemy.isTarget = true;
@@ -581,7 +561,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 120;
                     enemy.vx = -scrollSpeed * 0.6;
                     enemy.scoreValue = 100;
-                }
                 }
                 } else {
                 // DOWNTOWN LEVEL ENEMIES (Original)

@@ -165,7 +165,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6beb89d0d_Frnk-icon4.png";
         IMAGES.current.drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d41521585_ChatGPTImage7Jan202612_01_33.png";
         IMAGES.current.sparrow = new Image();
-        IMAGES.current.sparrow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a97aa11bf_Spatz.png";
+        IMAGES.current.sparrow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06e3cfcff_Spatz.png";
+        IMAGES.current.rooftop_pigeon = new Image();
+        IMAGES.current.rooftop_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b0c727bde_Taube1.png";
         IMAGES.current.dog.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7aca9a3aa_Frnk-icon5.png";
         IMAGES.current.worker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
         IMAGES.current.fruit_vendor = new Image();
@@ -451,8 +453,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = groundY - 60;
                 }
             } else {
-                // Air - skip spawning air enemies for rooftop
-                return;
+                // Air - Sparrow or Pigeon
+                if (Math.random() < 0.5) {
+                    enemy.spriteType = 'rooftop_sparrow';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = 20 + Math.random() * (groundY - 170);
+                    enemy.width = 60;
+                    enemy.height = 50;
+                    enemy.vx = -scrollSpeed * 1.3;
+                    enemy.scoreValue = 40;
+                } else {
+                    enemy.spriteType = 'rooftop_pigeon';
+                    enemy.isTarget = true;
+                    enemy.isObstacle = true;
+                    enemy.y = 20 + Math.random() * (groundY - 170);
+                    enemy.width = 70;
+                    enemy.height = 60;
+                    enemy.vx = -scrollSpeed * 1.2;
+                    enemy.scoreValue = 50;
+                }
                 }
                 } else if (level === 'park') {
                 // PARK LEVEL ENEMIES
@@ -1384,6 +1404,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'worker') useFullImage(IMAGES.current.worker);
                 else if (e.spriteType === 'fruit_vendor') useFullImage(IMAGES.current.fruit_vendor);
                 else if (e.spriteType === 'sparrow') useFullImage(IMAGES.current.sparrow);
+                else if (e.spriteType === 'rooftop_sparrow') useFullImage(IMAGES.current.sparrow);
+                else if (e.spriteType === 'rooftop_pigeon') useFullImage(IMAGES.current.rooftop_pigeon);
                 else if (e.spriteType === 'cat') useFullImage(IMAGES.current.cat);
                 else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
                 else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);
@@ -1432,9 +1454,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (e.spriteType === 'business_person' || e.spriteType === 'tourist') {
                     // Walking animation
                     ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
-                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon') {
+                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon' || e.spriteType === 'rooftop_pigeon') {
                     // Flapping wings
                     ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
+                    } else if (e.spriteType === 'rooftop_sparrow') {
+                    // Sparrow fast flapping
+                    ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
                     } else if (e.spriteType === 'balloon') {
                     // Gentle float
                     ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);

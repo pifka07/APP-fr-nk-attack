@@ -516,9 +516,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Street Food Vendor
                     enemy.spriteType = 'fruit_vendor';
                     enemy.isTarget = true;
-                    enemy.width = 50;
+                    enemy.width = 80;
                     enemy.height = 80;
-                    enemy.y = groundY - 70;
+                    enemy.y = groundY - 80;
                     enemy.vx = -scrollSpeed * 0.3;
                     enemy.scoreValue = 70;
                 } else {

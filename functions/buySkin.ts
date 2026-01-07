@@ -45,64 +45,63 @@ Deno.serve(async (req) => {
     let playerStats;
     
     if (statsResult.length === 0) {
-        // Keine Stats gefunden - Fehler zurückgeben
         console.log('❌ No PlayerStats found for user');
         return Response.json({ 
             success: false, 
             reason: 'NO_STATS_YET',
             message: 'Play at least one game first to unlock the shop!'
-        }, { status: 400 });
+        }, { status: 200 });
     } else if (statsResult.length === 1) {
-        // Genau ein Eintrag - perfekt
         playerStats = statsResult[0];
         console.log('✅ Using single PlayerStats entry');
     } else {
-        // Mehrere Einträge - nimm den mit den meisten Coins
         playerStats = statsResult.sort((a, b) => (b.total_coins || 0) - (a.total_coins || 0))[0];
         console.log('⚠️ Multiple PlayerStats found, using one with most coins:', playerStats.total_coins);
     }
 
     const currentCoins = playerStats.total_coins ?? 0;
-    console.log('💰 PlayerStats Coins:', currentCoins);
+    console.log('💰 Current coins:', currentCoins);
 
     // 4️⃣ Bereits gekauft?
+    console.log('🔍 Checking if already owned...');
     const owned = await base44.asServiceRole.entities.PlayerSkin.filter({
       user_id: user.id,
       skin_id
     });
-    console.log('Bereits gekauft?', owned.length > 0);
+    console.log('👀 Already owned?', owned.length > 0);
 
     if (owned.length > 0) {
       console.log('❌ SKIN_ALREADY_OWNED');
-      return Response.json({ success: false, reason: 'SKIN_ALREADY_OWNED' }, { status: 400 });
+      return Response.json({ success: false, reason: 'SKIN_ALREADY_OWNED' }, { status: 200 });
     }
 
-    // Coin-Check HIER durchführen (nachdem wir wissen, dass der Skin nicht bereits owned ist)
+    // Coin-Check
     if (price > 0 && currentCoins < price) {
-      console.log('❌ NOT_ENOUGH_COINS - Benötigt:', price, 'Verfügbar:', currentCoins);
+      console.log('❌ NOT_ENOUGH_COINS - Required:', price, 'Available:', currentCoins);
       return Response.json({
         success: false,
         reason: 'NOT_ENOUGH_COINS',
         required: price,
         available: currentCoins
-      }, { status: 400 });
+      }, { status: 200 });
     }
 
-    // 5️⃣ Skin anlegen (mit Service Role)
-    console.log('Erstelle PlayerSkin...');
+    // 5️⃣ Skin anlegen
+    console.log('✅ Creating PlayerSkin...');
     const newPlayerSkin = await base44.asServiceRole.entities.PlayerSkin.create({
       user_id: user.id,
       skin_id,
       owned: true
     });
-    console.log('PlayerSkin erstellt:', newPlayerSkin);
+    console.log('✅ PlayerSkin created:', newPlayerSkin.id);
 
-    // 6️⃣ Coins abziehen (nur wenn Skin Coins kostet)
+    // 6️⃣ Coins abziehen
     let newCoinBalance = currentCoins;
     if (price > 0) {
       newCoinBalance = currentCoins - price;
+      console.log('💸 Deducting coins:', currentCoins, '->', newCoinBalance);
       await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, { total_coins: newCoinBalance });
-      console.log('Coins abgezogen. Neuer Stand:', newCoinBalance);
+      console.log('✅ Coins updated');
     }
 
     return Response.json({

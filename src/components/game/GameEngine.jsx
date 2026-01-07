@@ -573,8 +573,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.isTarget = true;
                         enemy.isObstacle = true;
                         enemy.y = 20 + Math.random() * (groundY - 170);
-                        enemy.width = 60;
-                        enemy.height = 50;
+                        enemy.width = 80;
+                        enemy.height = 70;
                         enemy.vx = -scrollSpeed * 1.3;
                         enemy.erratic = true;
                         enemy.scoreValue = 50;
@@ -1102,7 +1102,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (state.health <= 0) {
                 // Draw Dead Player
                 const deadImg = IMAGES.current.playerDead;
-                const playerSize = 40;
+                const playerSize = 55;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
                 ctx.rotate(Math.PI / 4); // Tilt down
@@ -1110,7 +1110,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.restore();
             } else {
                 // Always draw flying player
-                const playerSize = 40;
+                const playerSize = 55;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
 

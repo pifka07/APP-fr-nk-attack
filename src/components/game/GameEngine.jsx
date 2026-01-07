@@ -141,7 +141,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'park') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png";
         } else if (level === 'london') {
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5ab8dec39_Hintergrund.png";
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/84ec8ef9f_Hintergrund.png";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png";
         }
@@ -984,10 +984,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'london') {
-            // London: just sky color, no background image
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, width, height);
+        if (level === 'london' && assetsLoaded.current && IMAGES.current.background) {
+            // London: static background
+            const bg = IMAGES.current.background;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            ctx.drawImage(bg, 0, 0, w, h);
         } else if (assetsLoaded.current && IMAGES.current.background && IMAGES.current.background2) {
             const bg1 = IMAGES.current.background;
             const bg2 = IMAGES.current.background2;

@@ -145,14 +145,6 @@ Deno.serve(async (req) => {
             best_distance: newBestDistance
         });
 
-        // Update User Entity
-        await base44.asServiceRole.entities.User.update(user.id, {
-            total_coins: (user.total_coins || 0) + coinsCollected,
-            total_runs: (user.total_runs || 0) + 1,
-            best_score: newBestScore,
-            best_distance: newBestDistance
-        });
-
         // Check existing leaderboard entries
         const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({
             user_id: user.id
@@ -195,8 +187,8 @@ Deno.serve(async (req) => {
             success: true,
             isHighscore: isHighscore,
             stats: {
-                total_coins: (user.total_coins || 0) + coinsCollected,
-                best_score: Math.max(playerStats.best_score || 0, score)
+                total_coins: newTotalCoins,
+                best_score: newBestScore
             }
         });
     } catch (error) {

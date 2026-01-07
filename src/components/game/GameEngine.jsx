@@ -505,9 +505,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Tourist with camera
                     enemy.spriteType = 'tourist';
                     enemy.isTarget = true;
-                    enemy.width = 120;
-                    enemy.height = 160;
-                    enemy.y = londonGroundY - 165;
+                    enemy.width = 110;
+                    enemy.height = 150;
+                    enemy.y = londonGroundY - 155;
                     enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
@@ -539,9 +539,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Street Musician
                     enemy.spriteType = 'street_musician';
                     enemy.isTarget = true;
-                    enemy.width = 140;
-                    enemy.height = 180;
-                    enemy.y = londonGroundY - 185;
+                    enemy.width = 110;
+                    enemy.height = 150;
+                    enemy.y = londonGroundY - 155;
                     enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 70;
                 } else {

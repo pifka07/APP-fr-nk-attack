@@ -984,7 +984,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (assetsLoaded.current && IMAGES.current.background && IMAGES.current.background2) {
+        if (level === 'london') {
+            // London: just sky color, no background image
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, width, height);
+        } else if (assetsLoaded.current && IMAGES.current.background && IMAGES.current.background2) {
             const bg1 = IMAGES.current.background;
             const bg2 = IMAGES.current.background2;
 
@@ -996,25 +1000,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const w2 = bg2.width * scale2;
             const h2 = bg2.height * scale2;
 
-            if (level !== 'london') {
-                // Both backgrounds scroll at same speed, one after another
-                const totalWidth = w1 + w2;
-                const offset = (state.distance * 10) % totalWidth;
+            // Both backgrounds scroll at same speed, one after another
+            const totalWidth = w1 + w2;
+            const offset = (state.distance * 10) % totalWidth;
 
-                // Determine which background to show
-                if (offset < w1) {
-                    // Show bg1, then bg2 after it
-                    ctx.drawImage(bg1, -offset, 0, w1, h1);
-                    ctx.drawImage(bg2, w1 - offset, 0, w2, h2);
-                } else {
-                    // bg1 has scrolled off, show bg2, then bg1 after it
-                    const offset2 = offset - w1;
-                    ctx.drawImage(bg2, -offset2, 0, w2, h2);
-                    ctx.drawImage(bg1, w2 - offset2, 0, w1, h1);
-                }
+            // Determine which background to show
+            if (offset < w1) {
+                // Show bg1, then bg2 after it
+                ctx.drawImage(bg1, -offset, 0, w1, h1);
+                ctx.drawImage(bg2, w1 - offset, 0, w2, h2);
             } else {
-                // London: static background
-                ctx.drawImage(bg1, 0, 0, w1, h1);
+                // bg1 has scrolled off, show bg2, then bg1 after it
+                const offset2 = offset - w1;
+                ctx.drawImage(bg2, -offset2, 0, w2, h2);
+                ctx.drawImage(bg1, w2 - offset2, 0, w1, h1);
             }
         } else {
             ctx.fillStyle = '#87CEEB';

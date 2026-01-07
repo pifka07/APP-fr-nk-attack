@@ -195,7 +195,7 @@ Deno.serve(async (req) => {
 
         return Response.json({
             success: true,
-            isHighscore: isHighscore,
+            isHighscore,
             stats: {
                 total_coins: newTotalCoins,
                 best_score: newBestScore

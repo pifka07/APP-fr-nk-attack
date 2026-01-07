@@ -153,18 +153,26 @@ Deno.serve(async (req) => {
             best_distance: newBestDistance
         });
 
-        const isHighscore = score > (playerStats.best_score || 0);
-        if (isHighscore) {
-            const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({
-                user_id: user.id
-            });
+        // Check existing leaderboard entries
+        const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({
+            user_id: user.id
+        });
 
+        const isHighscore = score > (playerStats.best_score || 0);
+        
+        // Update or create leaderboard entry if it's a highscore OR if no entry exists yet
+        if (isHighscore || existingEntries.length === 0) {
             if (existingEntries.length > 0) {
-                await base44.asServiceRole.entities.LeaderboardEntry.update(existingEntries[0].id, {
-                    score: score,
-                    date: new Date().toISOString()
-                });
+                // Update existing entry only if new score is better
+                if (score > existingEntries[0].score) {
+                    await base44.asServiceRole.entities.LeaderboardEntry.update(existingEntries[0].id, {
+                        score: score,
+                        username: user.username || user.full_name || user.email,
+                        date: new Date().toISOString()
+                    });
+                }
             } else {
+                // Create new entry
                 await base44.asServiceRole.entities.LeaderboardEntry.create({
                     user_id: user.id,
                     username: user.username || user.full_name || user.email,

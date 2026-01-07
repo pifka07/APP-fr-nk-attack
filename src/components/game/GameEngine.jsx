@@ -197,9 +197,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
         IMAGES.current.ammoIcon = new Image();
         IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png";
-        IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/031ce7e40_ChatGPTImage7Jan202612_09_09.png";
-        IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/df73d1dd1_Strasse.png";
-        IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/b9f69bcab_ChatGPTImage7Jan202612_03_21.png";
+        IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3c9859338_Strasse-1.png";
+        IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/97947b9e5_Strasse-2.png";
+        IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8acd05788_Strasse-3.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -1053,8 +1053,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Scroll faster than normal (1.5x game speed)
             const fgOffset = (state.distance * 15) % totalWidth;
 
-            // Draw 40 pixels lower
-            const fgY = height - fgH + 40;
+            // Draw 20 pixels lower
+            const fgY = height - fgH + 20;
 
             // Determine which images to draw based on offset
             if (fgOffset < fgW1) {

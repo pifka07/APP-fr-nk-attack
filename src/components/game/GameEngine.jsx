@@ -518,8 +518,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 160;
                     enemy.height = 160;
-                    enemy.y = groundY - 160;
-                    enemy.vx = -scrollSpeed * 0.3;
+                    enemy.y = groundY - 180;
+                    enemy.vx = 0; // Stationary
                     enemy.scoreValue = 70;
                 } else {
                     // Double-Decker Bus (Rare Event, big target)
@@ -599,8 +599,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 160;
                     enemy.height = 160;
-                    enemy.y = groundY - 160;
-                    enemy.vx = -scrollSpeed * 0.5; // Slow moving
+                    enemy.y = groundY - 180;
+                    enemy.vx = 0; // Stationary
                     enemy.scoreValue = 70;
                 } else {
                     // Dog
@@ -1028,7 +1028,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (state.health <= 0) {
                 // Draw Dead Player
                 const deadImg = IMAGES.current.playerDead;
-                const playerSize = 80;
+                const playerSize = 60;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
                 ctx.rotate(Math.PI / 4); // Tilt down
@@ -1036,7 +1036,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.restore();
             } else {
                 // Always draw flying player
-                const playerSize = 80;
+                const playerSize = 60;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
 

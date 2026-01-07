@@ -519,7 +519,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 160;
                     enemy.height = 160;
                     enemy.y = groundY - 180;
-                    enemy.vx = 0; // Stationary
+                    enemy.vx = -scrollSpeed;
                     enemy.scoreValue = 70;
                 } else {
                     // Double-Decker Bus (Rare Event, big target)
@@ -600,7 +600,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 160;
                     enemy.height = 160;
                     enemy.y = groundY - 180;
-                    enemy.vx = 0; // Stationary
+                    enemy.vx = -scrollSpeed;
                     enemy.scoreValue = 70;
                 } else {
                     // Dog

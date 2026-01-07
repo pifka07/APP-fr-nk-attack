@@ -184,7 +184,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.london_cop = new Image();
         IMAGES.current.london_cop.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/683f0fef7_ChatGPTImage7Jan202610_45_15.png";
         IMAGES.current.street_vendor = new Image();
-        IMAGES.current.street_vendor.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7b411be40_ChatGPTImage7Jan202612_01_40.png";
+        IMAGES.current.street_vendor.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/9538a318e_ChatGPTImage7Jan202612_01_40.png";
         IMAGES.current.street_musician = new Image();
         IMAGES.current.street_musician.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/507d69cbc_Musiker.png";
         IMAGES.current.london_car = new Image();
@@ -529,7 +529,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 240;
                     enemy.height = 200;
                     enemy.y = londonGroundY - 200;
-                    enemy.vx = -scrollSpeed * 0.5; // Stationary or slow
+                    enemy.vx = 0; // Stationary on foreground
                     enemy.scoreValue = 80;
                 } else if (rand < 0.85) {
                     // Street Musician

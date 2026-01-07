@@ -38,14 +38,20 @@ Deno.serve(async (req) => {
 
     // 3️⃣ Coins von PlayerStats holen (primäre Quelle)
     const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
-    const playerStats = statsResult[0];
+    let playerStats = statsResult[0];
     
     if (!playerStats) {
-        return Response.json({ 
-            success: false, 
-            reason: 'NO_STATS_YET',
-            message: 'Please play at least one game first to initialize your account.'
-        }, { status: 400 });
+        // PlayerStats erstellen, falls noch nicht vorhanden
+        playerStats = await base44.asServiceRole.entities.PlayerStats.create({
+            user_id: user.id,
+            total_coins: 0,
+            total_score: 0,
+            total_distance: 0,
+            best_score: 0,
+            best_distance: 0,
+            total_runs: 0
+        });
+        console.log('PlayerStats erstellt für User:', user.id);
     }
     
     const currentCoins = playerStats.total_coins ?? 0;

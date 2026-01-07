@@ -494,7 +494,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
                 } else if (level === 'london') {
                 // LONDON LEVEL ENEMIES
-                const londonGroundY = height * 0.9; // London NPCs at 90% height
+                const londonGroundY = height * 0.95; // London NPCs at 95% height
                 if (!isAir) {
                 // Ground (Pedestrians & Vehicles)
                 if (rand < 0.2) {

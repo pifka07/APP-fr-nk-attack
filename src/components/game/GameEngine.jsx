@@ -433,6 +433,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 150;
                     enemy.height = 160;
                     enemy.y = walkingNpcY - 160;
+                    enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 40;
                 } else if (rand < 0.7) {
                     // Cat

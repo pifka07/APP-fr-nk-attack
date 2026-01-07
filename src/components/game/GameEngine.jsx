@@ -502,7 +502,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = groundY - 160;
+                    enemy.y = groundY - 120;
                     enemy.vx = -scrollSpeed * 0.7; // Slower, stopping for photos
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
@@ -511,7 +511,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = groundY - 160;
+                    enemy.y = groundY - 120;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.55) {
                     // London Bobby (Police)
@@ -519,7 +519,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = groundY - 160;
+                    enemy.y = groundY - 120;
                     enemy.scoreValue = 60;
                 } else if (rand < 0.7) {
                     // Street Vendor with food stall
@@ -527,7 +527,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 240;
                     enemy.height = 200;
-                    enemy.y = groundY - 200;
+                    enemy.y = groundY - 160;
                     enemy.vx = -scrollSpeed * 0.5; // Stationary or slow
                     enemy.scoreValue = 80;
                 } else if (rand < 0.85) {
@@ -536,7 +536,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 140;
                     enemy.height = 180;
-                    enemy.y = groundY - 180;
+                    enemy.y = groundY - 140;
                     enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
                     enemy.scoreValue = 70;
                 } else {
@@ -545,7 +545,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 200;
                     enemy.height = 120;
-                    enemy.y = groundY - 120;
+                    enemy.y = groundY - 80;
                     enemy.vx = -scrollSpeed - 1.5;
                     enemy.scoreValue = 100;
                 }

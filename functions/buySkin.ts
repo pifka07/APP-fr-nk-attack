@@ -36,9 +36,11 @@ Deno.serve(async (req) => {
     const price = skin.cost_coins ?? 0;
     console.log('Price:', price);
 
-    // 3️⃣ Coins von User holen (primäre Quelle)
-    const currentCoins = user.total_coins ?? 0;
-    console.log('User Coins:', currentCoins);
+    // 3️⃣ Coins von PlayerStats holen (primäre Quelle)
+    const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
+    const playerStats = statsResult[0];
+    const currentCoins = playerStats?.total_coins ?? 0;
+    console.log('PlayerStats Coins:', currentCoins);
 
     // 4️⃣ Bereits gekauft?
     const owned = await base44.asServiceRole.entities.PlayerSkin.filter({
@@ -76,7 +78,7 @@ Deno.serve(async (req) => {
     let newCoinBalance = currentCoins;
     if (price > 0) {
       newCoinBalance = currentCoins - price;
-      await base44.asServiceRole.entities.User.update(user.id, { total_coins: newCoinBalance });
+      await base44.asServiceRole.entities.PlayerStats.update(playerStats.id, { total_coins: newCoinBalance });
       console.log('Coins abgezogen. Neuer Stand:', newCoinBalance);
     }
 

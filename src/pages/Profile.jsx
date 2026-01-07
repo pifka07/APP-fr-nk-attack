@@ -45,6 +45,19 @@ export default function Profile() {
             }
         };
         fetchProfile();
+
+        // Refresh data when tab becomes visible
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                fetchProfile();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
     }, []);
 
     const handleSaveName = async () => {

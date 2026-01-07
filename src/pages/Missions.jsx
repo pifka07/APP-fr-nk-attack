@@ -89,10 +89,37 @@ export default function Missions() {
                             </Card>
                         </Link>
                     </motion.div>
-                ))}
+                    ))}
 
-                        {/* Europa Mission Card */}
-                        <motion.div
+                    {/* Training Mission Card */}
+                    <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: missions.length * 0.1 }}
+                    >
+                    <Link to={createPageUrl('Training')}>
+                        <div className="relative h-32 rounded-xl overflow-hidden border-2 border-yellow-500/50 hover:border-yellow-400 cursor-pointer transition-all">
+                            <div className="absolute inset-0">
+                                <img
+                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png"
+                                    alt="Training"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                            </div>
+                            <div className="relative z-10 p-4 flex flex-col justify-end h-full">
+                                <h3 className="text-xl font-bold text-white mb-1">Training</h3>
+                                <p className="text-sm text-slate-300">Practice makes perfect</p>
+                            </div>
+                            <div className="absolute top-4 right-4">
+                                <Play className="w-8 h-8 text-yellow-400" />
+                            </div>
+                        </div>
+                    </Link>
+                    </motion.div>
+
+                    {/* Europa Mission Card */}
+                    <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: levels.length * 0.1 }}

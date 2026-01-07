@@ -728,9 +728,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         const effectiveConfig = getEffectiveConfig();
 
-        // Increase difficulty (scaled by speed multiplier so quick doesn't get impossible too fast)
-        state.scrollSpeed += (0.0005 * effectiveConfig.speedMultiplier);
-        state.distance += (state.scrollSpeed / 10);
+        // Increase difficulty (scaled by speed multiplier and deltaTime for consistent speed)
+        state.scrollSpeed += (0.0005 * effectiveConfig.speedMultiplier * (deltaTime / 16));
+        state.distance += (state.scrollSpeed / 10) * (deltaTime / 16);
         state.animFrame++; // Tick animation
 
         // Check for distance milestones
@@ -1528,11 +1528,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const width = canvas.width;
         const height = canvas.height;
 
-        // Calculate delta time (capped)
-        // const deltaTime = time - gameStateRef.current.lastTime;
+        // Calculate delta time (capped to prevent huge jumps)
+        const deltaTime = Math.min(time - gameStateRef.current.lastTime, 32);
         gameStateRef.current.lastTime = time;
 
-        update(16, width, height); // Assume ~60fps for physics
+        update(deltaTime, width, height);
         draw(ctx, width, height);
 
         if (gameStateRef.current.isPlaying) {

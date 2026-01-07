@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
         });
 
         const isHighscore = score > (playerStats.best_score || 0);
-        
+
         // Update or create leaderboard entry if it's a highscore OR if no entry exists yet
         if (isHighscore || existingEntries.length === 0) {
             if (existingEntries.length > 0) {
@@ -179,6 +179,15 @@ Deno.serve(async (req) => {
                     score: score,
                     date: new Date().toISOString()
                 });
+            }
+        }
+
+        // Keep only top 10 entries
+        const allEntries = await base44.asServiceRole.entities.LeaderboardEntry.list('-score');
+        if (allEntries.length > 10) {
+            const toDelete = allEntries.slice(10);
+            for (const entry of toDelete) {
+                await base44.asServiceRole.entities.LeaderboardEntry.delete(entry.id);
             }
         }
 

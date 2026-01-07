@@ -55,7 +55,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const IMAGES = useRef({
         background: new Image(),
         background2: new Image(), // Second background layer
-        londonForeground: new Image(), // London scrolling foreground
+        londonForeground1: new Image(), // London scrolling foreground 1
+        londonForeground2: new Image(), // London scrolling foreground 2
+        londonForeground3: new Image(), // London scrolling foreground 3
         playerSheet: new Image(), // Flying
         playerGlide: new Image(), // Gliding (input active)
         playerDead: new Image(),

@@ -489,55 +489,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.vx = -scrollSpeed * 1.2;
                 }
                 } else if (level === 'london') {
-                // LONDON LEVEL ENEMIES
-                if (!isAir) {
-                // Ground (Pedestrians)
-                if (rand < 0.3) {
-                    // Business Person with Umbrella
-                    enemy.spriteType = 'business_person';
-                    enemy.isTarget = true;
-                    enemy.width = 50;
-                    enemy.height = 80;
-                    enemy.y = groundY - 70;
-                    enemy.scoreValue = 40;
-                } else if (rand < 0.6) {
-                    // Tourist taking photos
-                    enemy.spriteType = 'tourist';
-                    enemy.isTarget = true;
-                    enemy.width = 50;
-                    enemy.height = 80;
-                    enemy.y = groundY - 70;
-                    enemy.vx = -scrollSpeed * 0.7; // Slower, stopping to take photos
-                    enemy.scoreValue = 50;
-                } else if (rand < 0.8) {
-                    // Street Musician
-                    enemy.spriteType = 'street_musician';
-                    enemy.isTarget = true;
-                    enemy.width = 50;
-                    enemy.height = 80;
-                    enemy.y = groundY - 70;
-                    enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
-                    enemy.scoreValue = 60;
-                } else if (rand < 0.9) {
-                    // Street Food Vendor
-                    enemy.spriteType = 'fruit_vendor';
-                    enemy.isTarget = true;
-                    enemy.width = 160;
-                    enemy.height = 160;
-                    enemy.y = groundY - 180;
-                    enemy.vx = -scrollSpeed;
-                    enemy.scoreValue = 70;
-                } else {
-                    // Double-Decker Bus (Rare Event, big target)
-                    enemy.spriteType = 'double_decker';
-                    enemy.isTarget = true;
-                    enemy.width = 120;
-                    enemy.height = 90;
-                    enemy.y = groundY - 80;
-                    enemy.vx = -scrollSpeed - 1.5;
-                    enemy.scoreValue = 150;
-                }
-                } else {
+                // LONDON LEVEL ENEMIES - Air only
                 // Air
                 if (Math.random() < 0.5) {
                     // Pigeon (erratic movement)
@@ -568,7 +520,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 120;
                     enemy.vx = -scrollSpeed * 0.6; // Very slow
                     enemy.scoreValue = 100;
-                }
                 }
                 } else {
                 // DOWNTOWN LEVEL ENEMIES (Original)

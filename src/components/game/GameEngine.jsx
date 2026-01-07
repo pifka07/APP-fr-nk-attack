@@ -443,15 +443,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = groundY - 60;
                 }
             } else {
-                // Air
-                // Drone L2 (Flying)
-                enemy.spriteType = 'drone_l2';
+                // Air - Seagull instead
+                enemy.spriteType = 'seagull';
                 enemy.isTarget = true;
                 enemy.isObstacle = true;
                 enemy.y = 20 + Math.random() * (groundY - 170);
-                enemy.width = 70;
+                enemy.width = 60;
                 enemy.height = 50;
-                enemy.vx = -scrollSpeed * 1.3;
+                enemy.vx = -scrollSpeed * 1.2;
                 }
                 } else if (level === 'park') {
                 // PARK LEVEL ENEMIES
@@ -557,17 +556,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 } else {
                     // Air
                     const airRand = Math.random();
-                    if (airRand < 0.4) {
-                        // London Drone
-                        enemy.spriteType = 'london_drone';
-                        enemy.isTarget = true;
-                        enemy.isObstacle = true;
-                        enemy.y = 20 + Math.random() * (groundY - 170);
-                        enemy.width = 70;
-                        enemy.height = 50;
-                        enemy.vx = -scrollSpeed * 1.2;
-                        enemy.scoreValue = 60;
-                    } else if (airRand < 0.7) {
+                    if (airRand < 0.5) {
                         // London Pigeon
                         enemy.spriteType = 'london_pigeon';
                         enemy.isTarget = true;

@@ -178,15 +178,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         
         // London Assets
         IMAGES.current.business_person = new Image();
-        IMAGES.current.business_person.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4acddf445_Frnk-icon1.png";
+        IMAGES.current.business_person.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a7ef802e8_Buisnessman.png";
         IMAGES.current.tourist = new Image();
-        IMAGES.current.tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3c287a339_Frnk-icon3.png";
+        IMAGES.current.tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2c4aec8be_Tourist.png";
+        IMAGES.current.london_cop = new Image();
+        IMAGES.current.london_cop.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/683f0fef7_ChatGPTImage7Jan202610_45_15.png";
+        IMAGES.current.street_vendor = new Image();
+        IMAGES.current.street_vendor.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7b411be40_ChatGPTImage7Jan202612_01_40.png";
         IMAGES.current.street_musician = new Image();
-        IMAGES.current.street_musician.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/3131e260e_Level1Gegner-Kopie5.png";
+        IMAGES.current.street_musician.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/507d69cbc_Musiker.png";
+        IMAGES.current.london_car = new Image();
+        IMAGES.current.london_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51c40cf6b_FrnkdieTaube7-Kopie.png";
         IMAGES.current.pigeon = new Image();
         IMAGES.current.pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/88d04a76d_Level1Gegner-Kopie.png";
-        IMAGES.current.double_decker = new Image();
-        IMAGES.current.double_decker.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6beb89d0d_Frnk-icon4.png";
         IMAGES.current.balloon = new Image();
         IMAGES.current.balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/61f1abf56_Level1Gegner-Kopie3.png";
         IMAGES.current.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
@@ -489,9 +493,65 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.vx = -scrollSpeed * 1.2;
                 }
                 } else if (level === 'london') {
-                // LONDON LEVEL ENEMIES - Air only
+                // LONDON LEVEL ENEMIES
+                if (!isAir) {
+                // Ground (Pedestrians & Vehicles)
+                if (rand < 0.2) {
+                    // Tourist with camera
+                    enemy.spriteType = 'tourist';
+                    enemy.isTarget = true;
+                    enemy.width = 60;
+                    enemy.height = 80;
+                    enemy.y = groundY - 80;
+                    enemy.vx = -scrollSpeed * 0.7; // Slower, stopping for photos
+                    enemy.scoreValue = 50;
+                } else if (rand < 0.4) {
+                    // Business Person with briefcase
+                    enemy.spriteType = 'business_person';
+                    enemy.isTarget = true;
+                    enemy.width = 60;
+                    enemy.height = 80;
+                    enemy.y = groundY - 80;
+                    enemy.scoreValue = 40;
+                } else if (rand < 0.55) {
+                    // London Bobby (Police)
+                    enemy.spriteType = 'london_cop';
+                    enemy.isTarget = true;
+                    enemy.width = 60;
+                    enemy.height = 80;
+                    enemy.y = groundY - 80;
+                    enemy.scoreValue = 60;
+                } else if (rand < 0.7) {
+                    // Street Vendor with food stall
+                    enemy.spriteType = 'street_vendor';
+                    enemy.isTarget = true;
+                    enemy.width = 120;
+                    enemy.height = 100;
+                    enemy.y = groundY - 100;
+                    enemy.vx = -scrollSpeed * 0.5; // Stationary or slow
+                    enemy.scoreValue = 80;
+                } else if (rand < 0.85) {
+                    // Street Musician
+                    enemy.spriteType = 'street_musician';
+                    enemy.isTarget = true;
+                    enemy.width = 70;
+                    enemy.height = 90;
+                    enemy.y = groundY - 90;
+                    enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
+                    enemy.scoreValue = 70;
+                } else {
+                    // London Car
+                    enemy.spriteType = 'london_car';
+                    enemy.isTarget = true;
+                    enemy.width = 100;
+                    enemy.height = 60;
+                    enemy.y = groundY - 60;
+                    enemy.vx = -scrollSpeed - 1.5;
+                    enemy.scoreValue = 100;
+                }
+                } else {
                 // Air
-                if (Math.random() < 0.5) {
+                if (Math.random() < 0.6) {
                     // Pigeon (erratic movement)
                     enemy.spriteType = 'pigeon';
                     enemy.isTarget = true;
@@ -500,9 +560,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 50;
                     enemy.height = 40;
                     enemy.vx = -scrollSpeed * 1.3;
-                    enemy.erratic = true; // Flag for erratic movement
+                    enemy.erratic = true;
                 } else if (Math.random() < 0.7) {
-                    // Drone (moving obstacle)
+                    // Drone
                     enemy.spriteType = 'drone';
                     enemy.isTarget = true;
                     enemy.isObstacle = true;
@@ -511,15 +571,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.height = 40;
                     enemy.vx = -scrollSpeed * 1.2;
                 } else {
-                    // Hot Air Balloon (slow, big hitbox)
+                    // Hot Air Balloon
                     enemy.spriteType = 'balloon';
                     enemy.isTarget = true;
                     enemy.isObstacle = true;
-                    enemy.y = 30 + Math.random() * 100; // High in sky
+                    enemy.y = 30 + Math.random() * 100;
                     enemy.width = 100;
                     enemy.height = 120;
-                    enemy.vx = -scrollSpeed * 0.6; // Very slow
+                    enemy.vx = -scrollSpeed * 0.6;
                     enemy.scoreValue = 100;
+                }
                 }
                 } else {
                 // DOWNTOWN LEVEL ENEMIES (Original)
@@ -1288,9 +1349,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'trash_can') useFullImage(IMAGES.current.trash_can);
                 else if (e.spriteType === 'business_person') useFullImage(IMAGES.current.business_person);
                 else if (e.spriteType === 'tourist') useFullImage(IMAGES.current.tourist);
+                else if (e.spriteType === 'london_cop') useFullImage(IMAGES.current.london_cop);
+                else if (e.spriteType === 'street_vendor') useFullImage(IMAGES.current.street_vendor);
                 else if (e.spriteType === 'street_musician') useFullImage(IMAGES.current.street_musician);
+                else if (e.spriteType === 'london_car') useFullImage(IMAGES.current.london_car);
                 else if (e.spriteType === 'pigeon') useFullImage(IMAGES.current.pigeon);
-                else if (e.spriteType === 'double_decker') useFullImage(IMAGES.current.double_decker);
                 else if (e.spriteType === 'balloon') useFullImage(IMAGES.current.balloon);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)

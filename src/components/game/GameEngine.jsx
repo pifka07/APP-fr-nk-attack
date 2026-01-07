@@ -402,6 +402,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
+        const walkingNpcY = groundY * 0.6; // NPCs that walk on the ground at 60% of groundY
 
         let enemy = {
             x: width + 50,
@@ -429,7 +430,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 50;
                     enemy.height = 80;
-                    enemy.y = groundY - 70;
+                    enemy.y = walkingNpcY - 80;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.7) {
                     // Cat
@@ -437,7 +438,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 60;
                     enemy.height = 50;
-                    enemy.y = groundY - 50; // On roof surface
+                    enemy.y = walkingNpcY - 50;
                     enemy.vx = -scrollSpeed - 1; // Running
                     enemy.scoreValue = 60;
                 } else {
@@ -469,7 +470,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 60;
                     enemy.height = 60;
-                    enemy.y = groundY - 60;
+                    enemy.y = walkingNpcY - 60;
                     enemy.vx = -scrollSpeed * 1.5; // Fast!
                     enemy.scoreValue = 50;
                 } else if (rand < 0.7) {
@@ -479,7 +480,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isObstacle = true;
                     enemy.width = 50;
                     enemy.height = 70;
-                    enemy.y = groundY - 70; // Slightly higher for "background" feel? Or just on ground.
+                    enemy.y = walkingNpcY - 70;
                     enemy.vx = -scrollSpeed; // Normal speed
                     enemy.scoreValue = 40;
                 } else {
@@ -488,7 +489,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 50;
                     enemy.height = 40;
-                    enemy.y = groundY - 40;
+                    enemy.y = walkingNpcY - 40;
                     enemy.vx = -scrollSpeed * 0.4; // Very Slow
                     enemy.scoreValue = 30;
                 }
@@ -513,7 +514,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 110;
                     enemy.height = 150;
-                    enemy.y = londonGroundY - 155;
+                    enemy.y = walkingNpcY - 150;
                     enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
@@ -522,7 +523,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = londonGroundY - 165;
+                    enemy.y = walkingNpcY - 160;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.55) {
                     // London Bobby (Police)
@@ -530,7 +531,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 120;
                     enemy.height = 160;
-                    enemy.y = londonGroundY - 165;
+                    enemy.y = walkingNpcY - 160;
                     enemy.scoreValue = 60;
                 } else if (rand < 0.62) {
                     // Street Vendor with food stall
@@ -538,7 +539,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 240;
                     enemy.height = 200;
-                    enemy.y = londonGroundY - 205;
+                    enemy.y = walkingNpcY - 200;
                     enemy.vx = 0; // Stationary on foreground
                     enemy.scoreValue = 80;
                 } else if (rand < 0.85) {
@@ -547,7 +548,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 110;
                     enemy.height = 150;
-                    enemy.y = londonGroundY - 155;
+                    enemy.y = walkingNpcY - 150;
                     enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 70;
                 } else {
@@ -596,7 +597,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 180;
                     enemy.height = 100;
-                    enemy.y = groundY - 80;
+                    enemy.y = walkingNpcY - 100;
                     enemy.vx = -scrollSpeed - 2;
                     enemy.scoreValue = 30;
                 } else if (rand < 0.7) {
@@ -605,7 +606,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isTarget = true;
                     enemy.width = 200;
                     enemy.height = 200;
-                    enemy.y = groundY - 190;
+                    enemy.y = walkingNpcY - 200;
                     enemy.scoreValue = 50;
                 } else if (rand < 0.75) {
                     // Granny (Obstacle!)
@@ -614,14 +615,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isObstacle = true;
                     enemy.width = 50;
                     enemy.height = 80;
-                    enemy.y = groundY - 60;
+                    enemy.y = walkingNpcY - 80;
                 } else if (rand < 0.9) {
                     // Fruit Vendor
                     enemy.spriteType = 'fruit_vendor';
                     enemy.isTarget = true;
                     enemy.width = 160;
                     enemy.height = 160;
-                    enemy.y = groundY - 180;
+                    enemy.y = walkingNpcY - 160;
                     enemy.vx = -scrollSpeed;
                     enemy.scoreValue = 70;
                 } else {
@@ -631,7 +632,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.isObstacle = true;
                     enemy.width = 40;
                     enemy.height = 40;
-                    enemy.y = groundY - 30;
+                    enemy.y = walkingNpcY - 40;
                 }
             } else {
                 // Air

@@ -1038,8 +1038,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Scroll faster than normal (1.5x game speed)
             const fgOffset = (state.distance * 15) % fgW;
 
-            // Draw lower (pushed down by 150px)
-            const fgY = height - fgH + 150;
+            // Draw at bottom of screen
+            const fgY = height - fgH;
             ctx.drawImage(fg, -fgOffset, fgY, fgW, fgH);
             ctx.drawImage(fg, fgW - fgOffset, fgY, fgW, fgH);
             if (fgW - fgOffset < width) {

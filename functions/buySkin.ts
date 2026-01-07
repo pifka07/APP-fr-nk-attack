@@ -38,19 +38,24 @@ Deno.serve(async (req) => {
     const price = skin.cost_coins ?? 0;
     console.log('💎 Skin:', skin.name, '| Price:', price);
 
-    // 3️⃣ Coins von PlayerStats holen (primäre Quelle)
+    // 3️⃣ Coins von PlayerStats holen (oder erstellen wenn nicht vorhanden)
     const statsResult = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
     console.log('🔍 Found PlayerStats entries:', statsResult.length);
     
     let playerStats;
     
     if (statsResult.length === 0) {
-        console.log('❌ No PlayerStats found for user');
-        return Response.json({ 
-            success: false, 
-            reason: 'NO_STATS_YET',
-            message: 'Play at least one game first to unlock the shop!'
-        }, { status: 200 });
+        console.log('⚠️ No PlayerStats found - creating default entry');
+        playerStats = await base44.asServiceRole.entities.PlayerStats.create({
+            user_id: user.id,
+            total_coins: 0,
+            total_score: 0,
+            total_distance: 0,
+            total_runs: 0,
+            best_score: 0,
+            best_distance: 0
+        });
+        console.log('✅ Created new PlayerStats:', playerStats.id);
     } else if (statsResult.length === 1) {
         playerStats = statsResult[0];
         console.log('✅ Using single PlayerStats entry');

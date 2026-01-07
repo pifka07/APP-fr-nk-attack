@@ -104,19 +104,20 @@ Deno.serve(async (req) => {
       console.log('✅ Coins updated');
     }
 
+    console.log('🎉 Purchase successful! Remaining coins:', newCoinBalance);
     return Response.json({
       success: true,
       coins_remaining: newCoinBalance
     });
 
   } catch (err) {
-    console.error('buySkin ERROR', err);
+    console.error('❌ buySkin ERROR:', err);
     console.error('Stack:', err.stack);
     return Response.json({
       success: false,
       reason: 'SERVER_ERROR',
       message: err.message,
-      stack: err.stack
-    }, { status: 500 });
+      details: err.toString()
+    }, { status: 200 });
   }
 });

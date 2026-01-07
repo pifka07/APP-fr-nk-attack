@@ -141,7 +141,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'park') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png";
         } else if (level === 'london') {
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/84ec8ef9f_Hintergrund.png";
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7786d17f6_ChatGPTImage7Jan202610_45_40.png";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png";
         }
@@ -985,12 +985,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // --- BACKGROUND RENDERING ---
         if (level === 'london' && assetsLoaded.current && IMAGES.current.background) {
-            // London: static background
+            // London: slow scrolling background (1/10 of foreground speed)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;
-            ctx.drawImage(bg, 0, 0, w, h);
+
+            // Scroll at 1/10 of foreground speed (foreground is distance * 15, so this is distance * 1.5)
+            const bgOffset = (state.distance * 1.5) % w;
+
+            ctx.drawImage(bg, -bgOffset, 0, w, h);
+            ctx.drawImage(bg, w - bgOffset, 0, w, h);
         } else if (assetsLoaded.current && IMAGES.current.background && IMAGES.current.background2) {
             const bg1 = IMAGES.current.background;
             const bg2 = IMAGES.current.background2;

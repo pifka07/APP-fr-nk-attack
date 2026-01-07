@@ -54,6 +54,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     const IMAGES = useRef({
         background: new Image(),
+        background2: new Image(), // Second background layer
         londonForeground: new Image(), // London scrolling foreground
         playerSheet: new Image(), // Flying
         playerGlide: new Image(), // Gliding (input active)
@@ -149,6 +150,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.playerGlide.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/71a9e1eb7_frnkoriginal.png";
         IMAGES.current.playerDead.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ae2c71989_FrnkdieTaube4-Kopie.png";
         IMAGES.current.playerGround.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dc76f3fcb_FrnkdieTaube5-Kopie.png";
+        IMAGES.current.background2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06817ca07_ChatGPTImage7Jan202610_04_15.png";
         IMAGES.current.enemiesSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c18e80915_ChatGPTImage3Dez202518_18_31.png";
         IMAGES.current.uiAtlas.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/8759edce6_ChatGPTImage3Dez202518_37_35.png";
         IMAGES.current.eagle.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/4d3c96004_file_00000000e518720cb81ddd8c61248547.png";
@@ -988,10 +990,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;
-            
+
             // Scroll at game speed (10x distance unit) - except for London (static)
             const offset = level === 'london' ? 0 : (state.distance * 10) % w; 
-            
+
             ctx.drawImage(bg, -offset, 0, w, h);
             if (level !== 'london') {
                 ctx.drawImage(bg, w - offset, 0, w, h);
@@ -1002,6 +1004,23 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
+        }
+
+        // Second background layer (Ruhrgebiet)
+        if (assetsLoaded.current && IMAGES.current.background2 && IMAGES.current.background2.complete) {
+            const bg2 = IMAGES.current.background2;
+            const scale2 = Math.max(width / bg2.width, height / bg2.height);
+            const w2 = bg2.width * scale2;
+            const h2 = bg2.height * scale2;
+
+            // Scroll slightly slower for parallax effect
+            const offset2 = (state.distance * 8) % w2;
+
+            ctx.drawImage(bg2, -offset2, 0, w2, h2);
+            ctx.drawImage(bg2, w2 - offset2, 0, w2, h2);
+            if (w2 - offset2 < width) {
+                ctx.drawImage(bg2, (w2 * 2) - offset2, 0, w2, h2);
+            }
         }
 
         // Draw London scrolling foreground

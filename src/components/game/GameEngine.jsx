@@ -430,9 +430,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Worker
                     enemy.spriteType = 'worker';
                     enemy.isTarget = true;
-                    enemy.width = 50;
-                    enemy.height = 80;
-                    enemy.y = walkingNpcY - 80;
+                    enemy.width = 100;
+                    enemy.height = 160;
+                    enemy.y = walkingNpcY - 160;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.7) {
                     // Cat

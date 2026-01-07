@@ -1007,7 +1007,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Second background layer (Ruhrgebiet)
-        if (assetsLoaded.current && IMAGES.current.background2 && IMAGES.current.background2.complete) {
+        if (assetsLoaded.current && IMAGES.current.background2 && IMAGES.current.background2.complete && level !== 'london') {
             const bg2 = IMAGES.current.background2;
             const scale2 = Math.max(width / bg2.width, height / bg2.height);
             const w2 = bg2.width * scale2;

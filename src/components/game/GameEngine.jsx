@@ -504,7 +504,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 120;
                     enemy.height = 160;
                     enemy.y = londonGroundY - 165;
-                    enemy.vx = -scrollSpeed * 0.7; // Slower, stopping for photos
+                    enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
                     // Business Person with briefcase
@@ -538,7 +538,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 140;
                     enemy.height = 180;
                     enemy.y = londonGroundY - 185;
-                    enemy.vx = -scrollSpeed * 0.3; // Nearly stationary
+                    enemy.vx = -scrollSpeed; // Same speed as foreground
                     enemy.scoreValue = 70;
                 } else {
                     // London Car

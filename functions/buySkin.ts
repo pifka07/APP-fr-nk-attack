@@ -6,21 +6,21 @@ Deno.serve(async (req) => {
 
     // 1️⃣ User holen
     const user = await base44.auth.me();
-    console.log('User:', user?.id);
+    console.log('🔐 User ID:', user?.id);
     if (!user) {
-      return Response.json({ success: false, reason: 'NOT_LOGGED_IN' }, { status: 401 });
+      console.log('❌ User not logged in');
+      return Response.json({ success: false, reason: 'NOT_LOGGED_IN' }, { status: 200 });
     }
 
     const payload = await req.json();
-    console.log('=== RAW PAYLOAD ===', JSON.stringify(payload, null, 2));
+    console.log('📦 Raw Payload:', JSON.stringify(payload, null, 2));
     
-    // Robust: Unterstützt beide Varianten { skin_id } und { body: { skin_id } }
     const skin_id = payload?.body?.skin_id || payload?.skin_id;
-    console.log('=== EXTRACTED SKIN_ID ===', skin_id);
+    console.log('🎨 Extracted skin_id:', skin_id);
     
     if (!skin_id) {
-      console.log('❌ INVALID_REQUEST - skin_id fehlt!');
-      return Response.json({ success: false, reason: 'INVALID_REQUEST', payload_received: payload }, { status: 400 });
+      console.log('❌ No skin_id provided');
+      return Response.json({ success: false, reason: 'INVALID_REQUEST', payload_received: payload }, { status: 200 });
     }
 
     // 2️⃣ Skin laden (Admin → OK)

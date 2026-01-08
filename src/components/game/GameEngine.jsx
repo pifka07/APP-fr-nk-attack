@@ -415,7 +415,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             isTarget: true,
             isObstacle: true,
             scoreValue: 10,
-            vx: -scrollSpeed,
+            vx: 0,
             spriteType: 'car' // default
         };
 
@@ -433,7 +433,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 150;
                     enemy.height = 160;
                     enemy.y = walkingNpcY - 160;
-                    enemy.vx = -scrollSpeed; // Same speed as foreground
+                    enemy.vx = 0;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.7) {
                     // Cat
@@ -442,7 +442,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 60;
                     enemy.height = 50;
                     enemy.y = walkingNpcY - 50;
-                    enemy.vx = -scrollSpeed; // Same speed as foreground
+                    enemy.vx = 0;
                     enemy.scoreValue = 60;
                 } else {
                     // AC Unit (Obstacle)
@@ -462,7 +462,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = 20 + Math.random() * (groundY - 170);
                     enemy.width = 60;
                     enemy.height = 50;
-                    enemy.vx = -scrollSpeed * 1.3;
+                    enemy.vx = 0;
                     enemy.scoreValue = 40;
                 } else {
                     enemy.spriteType = 'rooftop_pigeon';
@@ -471,7 +471,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = 20 + Math.random() * (groundY - 170);
                     enemy.width = 70;
                     enemy.height = 60;
-                    enemy.vx = -scrollSpeed * 1.2;
+                    enemy.vx = 0;
                     enemy.scoreValue = 50;
                 }
                 }
@@ -486,7 +486,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 60;
                     enemy.height = 60;
                     enemy.y = walkingNpcY - 60;
-                    enemy.vx = -scrollSpeed * 1.5; // Fast!
+                    enemy.vx = 0;
                     enemy.scoreValue = 50;
                 } else if (rand < 0.7) {
                     // Trash Can with Raccoon (Background/Obstacle)
@@ -496,7 +496,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 50;
                     enemy.height = 70;
                     enemy.y = walkingNpcY - 70;
-                    enemy.vx = -scrollSpeed; // Normal speed
+                    enemy.vx = 0;
                     enemy.scoreValue = 40;
                 } else {
                     // Snail (Slow, obstacle mainly?)
@@ -505,7 +505,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 50;
                     enemy.height = 40;
                     enemy.y = walkingNpcY - 40;
-                    enemy.vx = -scrollSpeed * 0.4; // Very Slow
+                    enemy.vx = 0;
                     enemy.scoreValue = 30;
                 }
                 } else {
@@ -516,7 +516,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 enemy.y = 20 + Math.random() * (groundY - 170);
                 enemy.width = 40;
                 enemy.height = 40;
-                enemy.vx = -scrollSpeed * 1.2;
+                enemy.vx = 0;
                 }
                 } else if (level === 'london') {
                 // LONDON LEVEL ENEMIES
@@ -530,7 +530,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 110;
                     enemy.height = 150;
                     enemy.y = londonGroundY - 150;
-                    enemy.vx = -scrollSpeed; // Same speed as foreground
+                    enemy.vx = 0;
                     enemy.scoreValue = 50;
                 } else if (rand < 0.4) {
                     // Business Person with briefcase
@@ -539,6 +539,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 120;
                     enemy.height = 160;
                     enemy.y = londonGroundY - 160;
+                    enemy.vx = 0;
                     enemy.scoreValue = 40;
                 } else if (rand < 0.55) {
                     // London Bobby (Police)
@@ -547,6 +548,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 120;
                     enemy.height = 160;
                     enemy.y = londonGroundY - 160;
+                    enemy.vx = 0;
                     enemy.scoreValue = 60;
                 } else if (rand < 0.62) {
                     // Street Vendor with food stall
@@ -564,7 +566,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 110;
                     enemy.height = 150;
                     enemy.y = londonGroundY - 150;
-                    enemy.vx = -scrollSpeed; // Same speed as foreground
+                    enemy.vx = 0;
                     enemy.scoreValue = 70;
                 } else {
                     // London Car
@@ -573,7 +575,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.width = 200;
                     enemy.height = 120;
                     enemy.y = londonGroundY - 120;
-                    enemy.vx = -scrollSpeed - 1.5;
+                    enemy.vx = 0;
                     enemy.scoreValue = 100;
                 }
                 } else {
@@ -587,7 +589,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.y = 20 + Math.random() * (groundY - 170);
                         enemy.width = 80;
                         enemy.height = 70;
-                        enemy.vx = -scrollSpeed * 1.3;
+                        enemy.vx = 0;
                         enemy.erratic = true;
                         enemy.scoreValue = 50;
                     } else {
@@ -598,7 +600,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.y = 30 + Math.random() * 100;
                         enemy.width = 100;
                         enemy.height = 120;
-                        enemy.vx = -scrollSpeed * 0.6;
+                        enemy.vx = 0;
                         enemy.scoreValue = 100;
                     }
                 }
@@ -613,7 +615,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.width = 180;
                         enemy.height = 100;
                         enemy.y = walkingNpcY - 100;
-                        enemy.vx = -scrollSpeed;
+                        enemy.vx = 0;
                         enemy.scoreValue = 30;
                     } else if (rand < 0.7) {
                         // Cop
@@ -622,7 +624,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.width = 200;
                         enemy.height = 200;
                         enemy.y = walkingNpcY - 200;
-                        enemy.vx = -scrollSpeed;
+                        enemy.vx = 0;
                         enemy.scoreValue = 50;
                     } else if (rand < 0.75) {
                         // Granny (Obstacle!)
@@ -632,7 +634,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.width = 50;
                         enemy.height = 80;
                         enemy.y = walkingNpcY - 100;
-                        enemy.vx = -scrollSpeed;
+                        enemy.vx = 0;
                     } else if (rand < 0.9) {
                         // Fruit Vendor
                         enemy.spriteType = 'fruit_vendor';
@@ -640,7 +642,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.width = 180;
                         enemy.height = 180;
                         enemy.y = walkingNpcY - 200;
-                        enemy.vx = -scrollSpeed;
+                        enemy.vx = 0;
                         enemy.scoreValue = 70;
                     } else {
                         // Dog
@@ -650,7 +652,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.width = 40;
                         enemy.height = 40;
                         enemy.y = walkingNpcY - 40;
-                        enemy.vx = -scrollSpeed;
+                        enemy.vx = 0;
                     }
             } else {
                 // Air
@@ -662,7 +664,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     enemy.y = 50 + Math.random() * (groundY - 270);
                     enemy.width = 80;
                     enemy.height = 60;
-                    enemy.vx = -scrollSpeed * 1.5;
+                    enemy.vx = 0;
                 } else {
                 // Spawn 3 sparrows in formation
                 const baseY = 50 + Math.random() * (groundY - 250);
@@ -676,7 +678,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         isTarget: true,
                         isObstacle: true,
                         scoreValue: 20,
-                        vx: -scrollSpeed * 1.3,
+                        vx: 0,
                         spriteType: 'sparrow'
                     });
                 }

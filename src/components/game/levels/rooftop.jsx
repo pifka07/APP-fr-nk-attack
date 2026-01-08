@@ -14,7 +14,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
         isTarget: true,
         isObstacle: true,
         scoreValue: 10,
-        vx: 0,
+        vx: -scrollSpeed,
         spriteType: 'worker'
     };
 
@@ -27,7 +27,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 150;
             enemy.height = 160;
             enemy.y = walkingNpcY - 160;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
         } else if (rand < 0.7) {
             // Cat
@@ -36,7 +36,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 60;
             enemy.height = 50;
             enemy.y = walkingNpcY - 50;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else {
             // AC Unit (Obstacle)
@@ -46,6 +46,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 70;
             enemy.height = 70;
             enemy.y = groundY - 60;
+            enemy.vx = -scrollSpeed;
         }
     } else {
         // Air - Sparrow or Pigeon
@@ -56,7 +57,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = 20 + Math.random() * (groundY - 170);
             enemy.width = 60;
             enemy.height = 50;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
         } else {
             enemy.spriteType = 'rooftop_pigeon';
@@ -65,7 +66,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = 20 + Math.random() * (groundY - 170);
             enemy.width = 70;
             enemy.height = 60;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         }
     }

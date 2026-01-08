@@ -14,7 +14,7 @@ export const spawnParkEnemy = (width, height, groundY, scrollSpeed) => {
         isTarget: true,
         isObstacle: true,
         scoreValue: 10,
-        vx: 0,
+        vx: -scrollSpeed,
         spriteType: 'squirrel'
     };
 
@@ -27,7 +27,7 @@ export const spawnParkEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 60;
             enemy.height = 60;
             enemy.y = walkingNpcY - 60;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.7) {
             // Trash Can with Raccoon (Background/Obstacle)
@@ -37,7 +37,7 @@ export const spawnParkEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 50;
             enemy.height = 70;
             enemy.y = walkingNpcY - 70;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
         } else {
             // Snail (Slow, obstacle mainly?)
@@ -46,7 +46,7 @@ export const spawnParkEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 50;
             enemy.height = 40;
             enemy.y = walkingNpcY - 40;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 30;
         }
     } else {
@@ -57,7 +57,7 @@ export const spawnParkEnemy = (width, height, groundY, scrollSpeed) => {
         enemy.y = 20 + Math.random() * (groundY - 170);
         enemy.width = 40;
         enemy.height = 40;
-        enemy.vx = 0;
+        enemy.vx = -scrollSpeed;
     }
 
     return enemy;

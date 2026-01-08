@@ -14,7 +14,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
         isTarget: true,
         isObstacle: true,
         scoreValue: 10,
-        vx: 0,
+        vx: -scrollSpeed,
         spriteType: 'tourist'
     };
 
@@ -27,7 +27,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 110;
             enemy.height = 150;
             enemy.y = londonGroundY - 150;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.4) {
             // Business Person with briefcase
@@ -36,7 +36,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 120;
             enemy.height = 160;
             enemy.y = londonGroundY - 160;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
         } else if (rand < 0.55) {
             // London Bobby (Police)
@@ -45,7 +45,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 120;
             enemy.height = 160;
             enemy.y = londonGroundY - 160;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else if (rand < 0.62) {
             // Street Vendor with food stall
@@ -54,7 +54,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 240;
             enemy.height = 200;
             enemy.y = londonGroundY - 200;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 80;
         } else if (rand < 0.85) {
             // Street Musician
@@ -63,7 +63,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 110;
             enemy.height = 150;
             enemy.y = londonGroundY - 150;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
         } else {
             // London Car
@@ -72,7 +72,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 200;
             enemy.height = 120;
             enemy.y = londonGroundY - 120;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 100;
         }
     } else {
@@ -86,7 +86,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = 20 + Math.random() * (groundY - 170);
             enemy.width = 80;
             enemy.height = 70;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.erratic = true;
             enemy.scoreValue = 50;
         } else {
@@ -97,7 +97,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = 30 + Math.random() * 100;
             enemy.width = 100;
             enemy.height = 120;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 100;
         }
     }

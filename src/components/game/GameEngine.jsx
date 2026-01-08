@@ -631,15 +631,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         enemy.isObstacle = true;
                         enemy.width = 50;
                         enemy.height = 80;
-                        enemy.y = walkingNpcY - 80;
+                        enemy.y = walkingNpcY - 100;
                         enemy.vx = -scrollSpeed;
                     } else if (rand < 0.9) {
                         // Fruit Vendor
                         enemy.spriteType = 'fruit_vendor';
                         enemy.isTarget = true;
-                        enemy.width = 160;
-                        enemy.height = 160;
-                        enemy.y = walkingNpcY - 180;
+                        enemy.width = 180;
+                        enemy.height = 180;
+                        enemy.y = walkingNpcY - 200;
                         enemy.vx = -scrollSpeed;
                         enemy.scoreValue = 70;
                     } else {

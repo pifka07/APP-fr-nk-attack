@@ -27,7 +27,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 180;
             enemy.height = 100;
             enemy.y = walkingNpcY - 100;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 30;
         } else if (rand < 0.7) {
             // Cop
@@ -36,7 +36,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 200;
             enemy.height = 200;
             enemy.y = walkingNpcY - 200;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.75) {
             // Granny (Obstacle!)
@@ -46,7 +46,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 50;
             enemy.height = 80;
             enemy.y = walkingNpcY - 100;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
         } else if (rand < 0.9) {
             // Fruit Vendor
             enemy.spriteType = 'fruit_vendor';
@@ -54,7 +54,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 220;
             enemy.height = 220;
             enemy.y = walkingNpcY - 230;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
         } else {
             // Dog
@@ -64,7 +64,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 40;
             enemy.height = 40;
             enemy.y = walkingNpcY - 40;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
         }
     } else {
         // Air NPCs
@@ -75,7 +75,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = 50 + Math.random() * (groundY - 270);
             enemy.width = 80;
             enemy.height = 60;
-            enemy.vx = 0;
+            enemy.vx = -scrollSpeed;
         } else {
             // Return sparrow formation (handled separately in GameEngine)
             return 'sparrow_formation';
@@ -85,7 +85,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
     return enemy;
 };
 
-export const spawnSparrowFormation = (width, groundY) => {
+export const spawnSparrowFormation = (width, groundY, scrollSpeed) => {
     const baseY = 50 + Math.random() * (groundY - 250);
     const sparrows = [];
     for (let i = 0; i < 3; i++) {
@@ -98,7 +98,7 @@ export const spawnSparrowFormation = (width, groundY) => {
             isTarget: true,
             isObstacle: true,
             scoreValue: 20,
-            vx: 0,
+            vx: -scrollSpeed,
             spriteType: 'sparrow'
         });
     }

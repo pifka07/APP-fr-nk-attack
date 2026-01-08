@@ -424,7 +424,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             
             // Handle sparrow formation special case
             if (enemy === 'sparrow_formation') {
-                const sparrows = spawnSparrowFormation(width, groundY);
+                const sparrows = spawnSparrowFormation(width, groundY, scrollSpeed);
                 enemies.push(...sparrows);
                 return;
             }

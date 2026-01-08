@@ -53,7 +53,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 220;
             enemy.height = 220;
-            enemy.y = walkingNpcY - 230;
+            enemy.y = walkingNpcY - 242;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
         } else {

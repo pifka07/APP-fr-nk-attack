@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
+import { spawnDowntownEnemy, spawnSparrowFormation } from './levels/downtown';
+import { spawnRooftopEnemy } from './levels/rooftop';
+import { spawnParkEnemy } from './levels/park';
+import { spawnLondonEnemy } from './levels/london';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -404,286 +408,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
         const groundY = height * GROUND_Y_PCT;
-        const walkingNpcY = groundY * 0.98; // NPCs that walk on the ground at 98% of groundY
 
-        let enemy = {
-            x: width + 50,
-            y: groundY - 50,
-            width: 60,
-            height: 60,
-            hp: 1,
-            isTarget: true,
-            isObstacle: true,
-            scoreValue: 10,
-            vx: 0,
-            spriteType: 'car' // default
-        };
+        let enemy;
 
-        const rand = Math.random();
-        const isAir = Math.random() > 0.6;
-
+        // Use level-specific spawn functions
         if (level === 'rooftop') {
-            // ROOFTOP LEVEL ENEMIES
-            if (!isAir) {
-                // Ground (Rooftop surface)
-                if (rand < 0.4) {
-                    // Worker
-                    enemy.spriteType = 'worker';
-                    enemy.isTarget = true;
-                    enemy.width = 150;
-                    enemy.height = 160;
-                    enemy.y = walkingNpcY - 160;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 40;
-                } else if (rand < 0.7) {
-                    // Cat
-                    enemy.spriteType = 'cat';
-                    enemy.isTarget = true;
-                    enemy.width = 60;
-                    enemy.height = 50;
-                    enemy.y = walkingNpcY - 50;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 60;
-                } else {
-                    // AC Unit (Obstacle)
-                    enemy.spriteType = 'ac_unit';
-                    enemy.isTarget = false; // Can't poop on AC? Or maybe just obstacle. Let's make it obstacle.
-                    enemy.isObstacle = true;
-                    enemy.width = 70;
-                    enemy.height = 70;
-                    enemy.y = groundY - 60;
-                }
-            } else {
-                // Air - Sparrow or Pigeon
-                if (Math.random() < 0.5) {
-                    enemy.spriteType = 'rooftop_sparrow';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = 20 + Math.random() * (groundY - 170);
-                    enemy.width = 60;
-                    enemy.height = 50;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 40;
-                } else {
-                    enemy.spriteType = 'rooftop_pigeon';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    enemy.y = 20 + Math.random() * (groundY - 170);
-                    enemy.width = 70;
-                    enemy.height = 60;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 50;
-                }
-                }
-                } else if (level === 'park') {
-                // PARK LEVEL ENEMIES
-                if (!isAir) {
-                // Ground
-                if (rand < 0.4) {
-                    // Squirrel (Fast runner)
-                    enemy.spriteType = 'squirrel';
-                    enemy.isTarget = true;
-                    enemy.width = 60;
-                    enemy.height = 60;
-                    enemy.y = walkingNpcY - 60;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 50;
-                } else if (rand < 0.7) {
-                    // Trash Can with Raccoon (Background/Obstacle)
-                    enemy.spriteType = 'trash_can';
-                    enemy.isTarget = true; 
-                    enemy.isObstacle = true;
-                    enemy.width = 50;
-                    enemy.height = 70;
-                    enemy.y = walkingNpcY - 70;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 40;
-                } else {
-                    // Snail (Slow, obstacle mainly?)
-                    enemy.spriteType = 'snail';
-                    enemy.isTarget = true;
-                    enemy.width = 50;
-                    enemy.height = 40;
-                    enemy.y = walkingNpcY - 40;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 30;
-                }
-                } else {
-                // Air - Fly/Wasp (Erratic movement?)
-                enemy.spriteType = 'fly';
-                enemy.isTarget = true;
-                enemy.isObstacle = true;
-                enemy.y = 20 + Math.random() * (groundY - 170);
-                enemy.width = 40;
-                enemy.height = 40;
-                enemy.vx = 0;
-                }
-                } else if (level === 'london') {
-                // LONDON LEVEL ENEMIES
-                const londonGroundY = height * 0.995; // London NPCs at 99.5% height
-                if (!isAir) {
-                // Ground (Pedestrians & Vehicles)
-                if (rand < 0.2) {
-                    // Tourist with camera
-                    enemy.spriteType = 'tourist';
-                    enemy.isTarget = true;
-                    enemy.width = 110;
-                    enemy.height = 150;
-                    enemy.y = londonGroundY - 150;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 50;
-                } else if (rand < 0.4) {
-                    // Business Person with briefcase
-                    enemy.spriteType = 'business_person';
-                    enemy.isTarget = true;
-                    enemy.width = 120;
-                    enemy.height = 160;
-                    enemy.y = londonGroundY - 160;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 40;
-                } else if (rand < 0.55) {
-                    // London Bobby (Police)
-                    enemy.spriteType = 'london_cop';
-                    enemy.isTarget = true;
-                    enemy.width = 120;
-                    enemy.height = 160;
-                    enemy.y = londonGroundY - 160;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 60;
-                } else if (rand < 0.62) {
-                    // Street Vendor with food stall
-                    enemy.spriteType = 'street_vendor';
-                    enemy.isTarget = true;
-                    enemy.width = 240;
-                    enemy.height = 200;
-                    enemy.y = londonGroundY - 200;
-                    enemy.vx = 0; // Stationary on foreground
-                    enemy.scoreValue = 80;
-                } else if (rand < 0.85) {
-                    // Street Musician
-                    enemy.spriteType = 'street_musician';
-                    enemy.isTarget = true;
-                    enemy.width = 110;
-                    enemy.height = 150;
-                    enemy.y = londonGroundY - 150;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 70;
-                } else {
-                    // London Car
-                    enemy.spriteType = 'london_car';
-                    enemy.isTarget = true;
-                    enemy.width = 200;
-                    enemy.height = 120;
-                    enemy.y = londonGroundY - 120;
-                    enemy.vx = 0;
-                    enemy.scoreValue = 100;
-                }
-                } else {
-                    // Air
-                    const airRand = Math.random();
-                    if (airRand < 0.5) {
-                        // London Pigeon
-                        enemy.spriteType = 'london_pigeon';
-                        enemy.isTarget = true;
-                        enemy.isObstacle = true;
-                        enemy.y = 20 + Math.random() * (groundY - 170);
-                        enemy.width = 80;
-                        enemy.height = 70;
-                        enemy.vx = 0;
-                        enemy.erratic = true;
-                        enemy.scoreValue = 50;
-                    } else {
-                        // Hot Air Balloon
-                        enemy.spriteType = 'balloon';
-                        enemy.isTarget = true;
-                        enemy.isObstacle = true;
-                        enemy.y = 30 + Math.random() * 100;
-                        enemy.width = 100;
-                        enemy.height = 120;
-                        enemy.vx = 0;
-                        enemy.scoreValue = 100;
-                    }
-                }
-                } else {
-                    // DOWNTOWN LEVEL ENEMIES (Original)
-                if (!isAir) {
-                    // Ground
-                    if (rand < 0.4) {
-                        // Car
-                        enemy.spriteType = 'car';
-                        enemy.isTarget = true;
-                        enemy.width = 180;
-                        enemy.height = 100;
-                        enemy.y = walkingNpcY - 100;
-                        enemy.vx = 0;
-                        enemy.scoreValue = 30;
-                    } else if (rand < 0.7) {
-                        // Cop
-                        enemy.spriteType = 'cop';
-                        enemy.isTarget = true;
-                        enemy.width = 200;
-                        enemy.height = 200;
-                        enemy.y = walkingNpcY - 200;
-                        enemy.vx = 0;
-                        enemy.scoreValue = 50;
-                    } else if (rand < 0.75) {
-                        // Granny (Obstacle!)
-                        enemy.spriteType = 'granny';
-                        enemy.isTarget = true;
-                        enemy.isObstacle = true;
-                        enemy.width = 50;
-                        enemy.height = 80;
-                        enemy.y = walkingNpcY - 100;
-                        enemy.vx = 0;
-                    } else if (rand < 0.9) {
-                        // Fruit Vendor
-                        enemy.spriteType = 'fruit_vendor';
-                        enemy.isTarget = true;
-                        enemy.width = 180;
-                        enemy.height = 180;
-                        enemy.y = walkingNpcY - 200;
-                        enemy.vx = 0;
-                        enemy.scoreValue = 70;
-                    } else {
-                        // Dog
-                        enemy.spriteType = 'dog';
-                        enemy.isTarget = true; // Neutral/Obstacle
-                        enemy.isObstacle = true;
-                        enemy.width = 40;
-                        enemy.height = 40;
-                        enemy.y = walkingNpcY - 40;
-                        enemy.vx = 0;
-                    }
-            } else {
-                // Air
-                if (Math.random() < 0.5) {
-                    enemy.spriteType = 'eagle';
-                    enemy.isTarget = true;
-                    enemy.isObstacle = true;
-                    // Spawn slightly lower (approx 1cm / 50px)
-                    enemy.y = 50 + Math.random() * (groundY - 270);
-                    enemy.width = 80;
-                    enemy.height = 60;
-                    enemy.vx = 0;
-                } else {
-                // Spawn 3 sparrows in formation
-                const baseY = 50 + Math.random() * (groundY - 250);
-                for (let i = 0; i < 3; i++) {
-                    enemies.push({
-                        x: width + 50 + (i * 30),
-                        y: baseY + (i * 25),
-                        width: 40,
-                        height: 40,
-                        hp: 1,
-                        isTarget: true,
-                        isObstacle: true,
-                        scoreValue: 20,
-                        vx: 0,
-                        spriteType: 'sparrow'
-                    });
-                }
-                return; // Skip adding the default enemy
-                }
+            enemy = spawnRooftopEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'park') {
+            enemy = spawnParkEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'london') {
+            enemy = spawnLondonEnemy(width, height, groundY, scrollSpeed);
+        } else {
+            // Downtown/Gelsenkirchen
+            enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
+            
+            // Handle sparrow formation special case
+            if (enemy === 'sparrow_formation') {
+                const sparrows = spawnSparrowFormation(width, groundY);
+                enemies.push(...sparrows);
+                return;
             }
         }
 

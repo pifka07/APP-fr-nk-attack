@@ -26,7 +26,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 110;
             enemy.height = 150;
-            enemy.y = londonGroundY - 150;
+            enemy.y = londonGroundY - 170;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.4) {
@@ -35,7 +35,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 120;
             enemy.height = 160;
-            enemy.y = londonGroundY - 160;
+            enemy.y = londonGroundY - 180;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
         } else if (rand < 0.55) {
@@ -44,7 +44,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 120;
             enemy.height = 160;
-            enemy.y = londonGroundY - 160;
+            enemy.y = londonGroundY - 180;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else if (rand < 0.62) {
@@ -53,7 +53,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 240;
             enemy.height = 200;
-            enemy.y = londonGroundY - 200;
+            enemy.y = londonGroundY - 220;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 80;
         } else if (rand < 0.85) {
@@ -62,7 +62,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 110;
             enemy.height = 150;
-            enemy.y = londonGroundY - 150;
+            enemy.y = londonGroundY - 170;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
         } else {

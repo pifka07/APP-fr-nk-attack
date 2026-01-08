@@ -51,9 +51,9 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             // Fruit Vendor
             enemy.spriteType = 'fruit_vendor';
             enemy.isTarget = true;
-            enemy.width = 180;
-            enemy.height = 180;
-            enemy.y = walkingNpcY - 200;
+            enemy.width = 220;
+            enemy.height = 220;
+            enemy.y = walkingNpcY - 230;
             enemy.vx = 0;
             enemy.scoreValue = 70;
         } else {

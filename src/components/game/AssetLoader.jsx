@@ -14,6 +14,10 @@ export class AssetLoader {
         this.images.londonForeground1 = new Image();
         this.images.londonForeground2 = new Image();
         this.images.londonForeground3 = new Image();
+        this.images.parisForeground1 = new Image();
+        this.images.parisForeground2 = new Image();
+        this.images.parisForeground3 = new Image();
+        this.images.parisForeground4 = new Image();
         this.images.rooftopForeground1 = new Image();
         this.images.rooftopForeground2 = new Image();
         this.images.rooftopForeground3 = new Image();
@@ -115,6 +119,10 @@ export class AssetLoader {
         this.images.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/57b677041_Strasse-1.png";
         this.images.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a85523873_Strasse-2.png";
         this.images.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
+        this.images.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ce9a6acff_Hintergrund1.png";
+        this.images.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/7f512e9b6_Hintergrund2.png";
+        this.images.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8f288565_Hintergrund3.png";
+        this.images.parisForeground4.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf672941d_Hintergrund4.png";
         this.images.rooftopForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51fb3855b_Rooftop1.png";
         this.images.rooftopForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d3b217c6a_Rooftop2.png";
         this.images.rooftopForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5358e6ade_Rooftop3.png";

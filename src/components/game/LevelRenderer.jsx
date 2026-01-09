@@ -17,6 +17,9 @@ export class LevelRenderer {
         } else if (levelType === 'london') {
             this.drawLondonBackground(ctx, width, height, distance);
             this.drawLondonForeground(ctx, width, height, distance);
+        } else if (levelType === 'paris') {
+            this.drawScrollingBackground(ctx, width, height, distance, 10);
+            this.drawParisForeground(ctx, width, height, distance);
         } else if (levelType === 'park') {
             this.drawScrollingBackground(ctx, width, height, distance, 10);
         } else {
@@ -121,6 +124,51 @@ export class LevelRenderer {
             ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
             ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
             ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
+        }
+    }
+
+    drawParisForeground(ctx, width, height, distance) {
+        const fg1 = this.assetLoader.getImage('parisForeground1');
+        const fg2 = this.assetLoader.getImage('parisForeground2');
+        const fg3 = this.assetLoader.getImage('parisForeground3');
+        const fg4 = this.assetLoader.getImage('parisForeground4');
+
+        if (!fg1.complete || !fg2.complete || !fg3.complete || !fg4.complete) return;
+
+        const fgScale = height / fg1.height;
+        const fgW1 = fg1.width * fgScale;
+        const fgW2 = fg2.width * fgScale;
+        const fgW3 = fg3.width * fgScale;
+        const fgW4 = fg4.width * fgScale;
+        const fgH = height;
+
+        const totalWidth = fgW1 + fgW2 + fgW3 + fgW4;
+        const fgOffset = (distance * 15) % totalWidth;
+        const fgY = height - fgH + 20;
+
+        if (fgOffset < fgW1) {
+            ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
+            ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
+            ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
+            ctx.drawImage(fg4, fgW1 + fgW2 + fgW3 - fgOffset, fgY, fgW4, fgH);
+        } else if (fgOffset < fgW1 + fgW2) {
+            const offset2 = fgOffset - fgW1;
+            ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
+            ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
+            ctx.drawImage(fg4, fgW2 + fgW3 - offset2, fgY, fgW4, fgH);
+            ctx.drawImage(fg1, fgW2 + fgW3 + fgW4 - offset2, fgY, fgW1, fgH);
+        } else if (fgOffset < fgW1 + fgW2 + fgW3) {
+            const offset3 = fgOffset - fgW1 - fgW2;
+            ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
+            ctx.drawImage(fg4, fgW3 - offset3, fgY, fgW4, fgH);
+            ctx.drawImage(fg1, fgW3 + fgW4 - offset3, fgY, fgW1, fgH);
+            ctx.drawImage(fg2, fgW3 + fgW4 + fgW1 - offset3, fgY, fgW2, fgH);
+        } else {
+            const offset4 = fgOffset - fgW1 - fgW2 - fgW3;
+            ctx.drawImage(fg4, -offset4, fgY, fgW4, fgH);
+            ctx.drawImage(fg1, fgW4 - offset4, fgY, fgW1, fgH);
+            ctx.drawImage(fg2, fgW4 + fgW1 - offset4, fgY, fgW2, fgH);
+            ctx.drawImage(fg3, fgW4 + fgW1 + fgW2 - offset4, fgY, fgW3, fgH);
         }
     }
 

@@ -70,7 +70,7 @@ export const NPC_TYPES = {
 
     // Rooftop NPCs
     worker: {
-        width: 150,
+        width: 160,
         height: 160,
         sprite: 'worker',
         isTarget: true,

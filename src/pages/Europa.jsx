@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 
 export default function Europa() {
     const [stats, setStats] = useState(null);
+    const [unlockedLevels, setUnlockedLevels] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -16,9 +17,13 @@ export default function Europa() {
             try {
                 const user = await base44.auth.me();
                 const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
+                const unlocked = await base44.entities.UnlockedLevel.filter({ user_id: user.id });
+                
                 setStats(playerStats.length > 0 ? playerStats[0] : { best_score: 0, total_coins: 0 });
+                setUnlockedLevels(unlocked.map(u => u.level_id));
             } catch (error) {
                 setStats({ best_score: 0, total_coins: 0 });
+                setUnlockedLevels([]);
             } finally {
                 setLoading(false);
             }
@@ -67,7 +72,24 @@ export default function Europa() {
         }
     ].map(level => {
         const req = levelRequirements[level.id];
-        const locked = !stats || stats.best_score < req.score || stats.total_coins < req.coins;
+        const isUnlocked = unlockedLevels.includes(level.id);
+        const meetsRequirements = stats && stats.best_score >= req.score && stats.total_coins >= req.coins;
+        const locked = !isUnlocked && !meetsRequirements;
+        
+        // Auto-unlock if requirements are met but not yet saved
+        if (meetsRequirements && !isUnlocked) {
+            const unlockLevel = async () => {
+                try {
+                    const user = await base44.auth.me();
+                    await base44.entities.UnlockedLevel.create({ user_id: user.id, level_id: level.id });
+                    setUnlockedLevels(prev => [...prev, level.id]);
+                } catch (error) {
+                    console.error('Failed to unlock level:', error);
+                }
+            };
+            unlockLevel();
+        }
+        
         return { ...level, locked, requirements: req };
     });
 

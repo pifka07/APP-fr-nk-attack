@@ -18,7 +18,7 @@ export class LevelRenderer {
             this.drawLondonBackground(ctx, width, height, distance);
             this.drawLondonForeground(ctx, width, height, distance);
         } else if (levelType === 'paris') {
-            this.drawScrollingBackground(ctx, width, height, distance, 10);
+            this.drawParisBackground(ctx, width, height, distance);
             this.drawParisForeground(ctx, width, height, distance);
         } else if (levelType === 'park') {
             this.drawScrollingBackground(ctx, width, height, distance, 10);
@@ -125,6 +125,23 @@ export class LevelRenderer {
             ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
             ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
         }
+    }
+
+    drawParisBackground(ctx, width, height, distance) {
+        const bg = this.assetLoader.getImage('parisBackground');
+        if (!bg || !bg.complete) {
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, width, height);
+            return;
+        }
+
+        const scale = Math.max(width / bg.width, height / bg.height);
+        const w = bg.width * scale;
+        const h = bg.height * scale;
+        const bgOffset = (distance * 1.5) % w;
+
+        ctx.drawImage(bg, -bgOffset, 0, w, h);
+        ctx.drawImage(bg, w - bgOffset, 0, w, h);
     }
 
     drawParisForeground(ctx, width, height, distance) {

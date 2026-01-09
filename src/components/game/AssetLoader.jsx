@@ -160,6 +160,8 @@ export class AssetLoader {
             this.images.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e2de8800c_Level3Park.png";
         } else if (levelName === 'london') {
             this.images.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7786d17f6_ChatGPTImage7Jan202610_45_40.png";
+        } else if (levelName === 'paris') {
+            this.images.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ba97a2434_ParisHintergrund.png";
         } else if (levelName === 'rooftop') {
             this.images.background.src = "";
         } else {

@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Play, ShoppingCart, Trophy, UserIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import LoginModal from "../components/auth/LoginModal";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 export default function StartScreen() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showInfoPopup, setShowInfoPopup] = useState(true);
 
   // ========================
   //  USER LADEN
@@ -39,6 +41,22 @@ export default function StartScreen() {
 
   return (
     <div className="flex flex-col items-center justify-end min-h-screen bg-slate-900 p-6 pb-[15px] pt-[15px] relative overflow-hidden">
+      <AlertDialog open={showInfoPopup} onOpenChange={setShowInfoPopup}>
+        <AlertDialogContent className="bg-slate-800 border-purple-500">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl text-purple-400">Important Notice</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-200 text-lg">
+              All users have been deleted. Please sign up again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button onClick={() => setShowInfoPopup(false)} className="bg-purple-600 hover:bg-purple-700">
+              Okay
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 

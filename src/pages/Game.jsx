@@ -154,7 +154,7 @@ export default function Game() {
 
             // Calculate run duration
             const now = new Date();
-            const durationMs = runStartTimeRef.current ? now - runStartTimeRef.current : stats.duration || 60000;
+            const durationMs = runStartTimeRef.current ? Math.max(0, now - runStartTimeRef.current) : stats.duration || 60000;
 
             console.log("Calling finishRun with payload:", {
                 run_session_id: runSessionIdRef.current,

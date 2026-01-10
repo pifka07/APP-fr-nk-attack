@@ -142,28 +142,23 @@ export default function Europa() {
                         transition={{ delay: index * 0.1 }}
                     >
                         {level.locked && level.meetsRequirements ? (
-                            <div onClick={(e) => handleUnlockLevel(e, level)}>
-                                <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-yellow-600 hover:border-yellow-400 cursor-pointer">
-                        ) : (
-                            <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
-                                <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
-                        )}
-                                {/* Background Image */}
-                                <div className="absolute inset-0 z-0">
-                                    <img 
-                                        src={level.image} 
-                                        alt={level.name} 
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
-                                </div>
+                            <div onClick={(e) => handleUnlockLevel(e, level)} className="cursor-pointer">
+                                <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-yellow-600 hover:border-yellow-400">
+                                    {/* Background Image */}
+                                    <div className="absolute inset-0 z-0">
+                                        <img 
+                                            src={level.image} 
+                                            alt={level.name} 
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                                    </div>
 
-                                <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
-                                    <div className="flex justify-between items-end">
-                                        <div className="flex-1">
-                                            <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
-                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md">{level.description}</p>
-                                            {level.locked && (
+                                    <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
+                                        <div className="flex justify-between items-end">
+                                            <div className="flex-1">
+                                                <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
+                                                <p className="text-slate-200 text-sm font-medium drop-shadow-md">{level.description}</p>
                                                 <div className="mt-2 flex flex-col gap-1 text-xs text-slate-300">
                                                     <div className="flex items-center gap-1">
                                                         <Trophy className="w-3 h-3" />
@@ -174,30 +169,59 @@ export default function Europa() {
                                                         <span>Benötigt: {level.requirements.coins} Coins</span>
                                                     </div>
                                                 </div>
-                                            )}
+                                            </div>
+                                            
+                                            <div className="bg-yellow-600 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                                <Coins className="w-6 h-6 text-white" />
+                                            </div>
                                         </div>
-                                        
-                                        {level.locked ? (
-                                            level.meetsRequirements ? (
-                                                <div className="bg-yellow-600 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                                                    <Coins className="w-6 h-6 text-white" />
-                                                </div>
-                                            ) : (
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ) : (
+                            <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
+                                <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
+                                    {/* Background Image */}
+                                    <div className="absolute inset-0 z-0">
+                                        <img 
+                                            src={level.image} 
+                                            alt={level.name} 
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                                    </div>
+
+                                    <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
+                                        <div className="flex justify-between items-end">
+                                            <div className="flex-1">
+                                                <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
+                                                <p className="text-slate-200 text-sm font-medium drop-shadow-md">{level.description}</p>
+                                                {level.locked && (
+                                                    <div className="mt-2 flex flex-col gap-1 text-xs text-slate-300">
+                                                        <div className="flex items-center gap-1">
+                                                            <Trophy className="w-3 h-3" />
+                                                            <span>Benötigt: {level.requirements.score} Score</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Coins className="w-3 h-3" />
+                                                            <span>Benötigt: {level.requirements.coins} Coins</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            
+                                            {level.locked ? (
                                                 <div className="bg-slate-900/80 p-3 rounded-full">
                                                     <Lock className="w-6 h-6 text-slate-500" />
                                                 </div>
-                                            )
-                                        ) : (
-                                            <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                                                <Play className="w-6 h-6 text-white fill-current" />
-                                            </div>
-                                        )}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        {level.locked && level.meetsRequirements ? (
-                            </div>
-                        ) : (
+                                            ) : (
+                                                <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                                    <Play className="w-6 h-6 text-white fill-current" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             </Link>
                         )}
                     </motion.div>

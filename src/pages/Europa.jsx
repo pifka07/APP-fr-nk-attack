@@ -17,11 +17,13 @@ export default function Europa() {
         const fetchStats = async () => {
             try {
                 const user = await base44.auth.me();
-                const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
                 const unlocked = await base44.entities.UnlockedLevel.filter({ user_id: user.id });
                 
-                const currentStats = playerStats.length > 0 ? playerStats[0] : { total_score: 0, total_coins: 0 };
-                console.log('Europa Stats:', currentStats);
+                const currentStats = {
+                    total_score: user.total_score || 0,
+                    total_coins: user.total_coins || 0
+                };
+                console.log('Europa Stats from User:', currentStats);
                 console.log('Unlocked Levels:', unlocked);
                 
                 setStats(currentStats);

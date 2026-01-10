@@ -245,7 +245,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/13b759a24_2-Vordergrund2.png";
         IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8a922164e_2-Vordergrund3.png";
         IMAGES.current.parisBackground = new Image();
-        IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/82f77e60e_2-Hintergrund1.png";
+        IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bb32c2d58_2-Hintergrund2.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -795,10 +795,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'paris') {
-            // Paris: Simple sky background
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, width, height);
+        if (level === 'paris' && IMAGES.current.parisBackground.complete) {
+            // Paris: Fixed background (no scrolling)
+            const bg = IMAGES.current.parisBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
         } else if (level === 'rooftop') {
             // Rooftop: Sky blue background
             ctx.fillStyle = '#87CEEB';

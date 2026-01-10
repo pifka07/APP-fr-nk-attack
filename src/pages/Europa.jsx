@@ -64,19 +64,22 @@ export default function Europa() {
             id: 'madrid',
             name: 'Madrid',
             description: 'Royal Palace, tapas, and Spanish flair. ¡Vamos!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png'
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/dbc30a26c_file_000000007ee0722fb1fc03fbe2a5cdea.png',
+            comingSoon: true
         },
         {
             id: 'rome',
             name: 'Rom',
             description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png'
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
+            comingSoon: true
         },
         {
             id: 'berlin',
             name: 'Berlin',
             description: 'Brandenburger Tor, Fernsehturm, and currywurst!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png'
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png',
+            comingSoon: true
         }
     ].map(level => {
         const req = levelRequirements[level.id];
@@ -150,7 +153,31 @@ export default function Europa() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                     >
-                        {level.locked && level.meetsRequirements ? (
+                        {level.comingSoon ? (
+                            <Card className="relative overflow-hidden border-4 transition-all duration-300 border-slate-700 opacity-70 cursor-not-allowed">
+                                <div className="absolute inset-0 z-0">
+                                    <img 
+                                        src={level.image} 
+                                        alt={level.name} 
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                                </div>
+
+                                <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
+                                    <div className="flex justify-between items-end">
+                                        <div className="flex-1">
+                                            <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
+                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md">{level.description}</p>
+                                        </div>
+
+                                        <div className="absolute top-4 right-4 bg-yellow-500 text-slate-900 font-black text-xs px-3 py-1.5 rounded-full shadow-lg transform rotate-12">
+                                            COMING SOON
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ) : level.locked && level.meetsRequirements ? (
                             <div onClick={(e) => handleUnlockLevel(e, level)} className="cursor-pointer">
                                 <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-yellow-600 hover:border-yellow-400">
                                     {/* Background Image */}
@@ -219,7 +246,11 @@ export default function Europa() {
                                                 )}
                                             </div>
                                             
-                                            {level.locked ? (
+                                            {level.comingSoon ? (
+                                                <div className="absolute top-4 right-4 bg-yellow-500 text-slate-900 font-black text-xs px-3 py-1.5 rounded-full shadow-lg transform rotate-12">
+                                                    COMING SOON
+                                                </div>
+                                            ) : level.locked ? (
                                                 <div className="bg-slate-900/80 p-3 rounded-full">
                                                     <Lock className="w-6 h-6 text-slate-500" />
                                                 </div>

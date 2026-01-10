@@ -230,6 +230,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.rooftopForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51fb3855b_Rooftop1.png";
         IMAGES.current.rooftopForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d3b217c6a_Rooftop2.png";
         IMAGES.current.rooftopForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5358e6ade_Rooftop3.png";
+        IMAGES.current.parisForeground1 = new Image();
+        IMAGES.current.parisForeground2 = new Image();
+        IMAGES.current.parisForeground3 = new Image();
+        IMAGES.current.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8b2b11695_2-Vordergrund1.png";
+        IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/49199463c_2-Vordergrund2.png";
+        IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/88fe1044e_2-Vordergrund3.png";
         IMAGES.current.parisBackground = new Image();
         IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/de560f22c_2-Hintergrund2.png";
 
@@ -928,6 +934,48 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
             } else {
                 // fg1 and fg2 scrolled off, show fg3, then fg1, then fg2
+                const offset3 = fgOffset - fgW1 - fgW2;
+                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
+                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
+                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
+            }
+        }
+
+        // Draw Paris scrolling foreground (3 images in sequence)
+        if (level === 'paris' && IMAGES.current.parisForeground1.complete && 
+            IMAGES.current.parisForeground2.complete && IMAGES.current.parisForeground3.complete) {
+
+            const fg1 = IMAGES.current.parisForeground1;
+            const fg2 = IMAGES.current.parisForeground2;
+            const fg3 = IMAGES.current.parisForeground3;
+
+            // Scale all to same height
+            const fgScale = height / fg1.height;
+            const fgW1 = fg1.width * fgScale;
+            const fgW2 = fg2.width * fgScale;
+            const fgW3 = fg3.width * fgScale;
+            const fgH = height;
+
+            // Total width of all 3 images
+            const totalWidth = fgW1 + fgW2 + fgW3;
+
+            // Scroll at game speed
+            const fgOffset = (state.distance * 10) % totalWidth;
+
+            // Draw at bottom
+            const fgY = height - fgH;
+
+            // Determine which images to draw based on offset
+            if (fgOffset < fgW1) {
+                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
+                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
+                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
+            } else if (fgOffset < fgW1 + fgW2) {
+                const offset2 = fgOffset - fgW1;
+                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
+                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
+                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
+            } else {
                 const offset3 = fgOffset - fgW1 - fgW2;
                 ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
                 ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);

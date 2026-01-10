@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Play, Lock, Trophy, Coins } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export default function Europa() {
     const [stats, setStats] = useState(null);
@@ -74,24 +75,43 @@ export default function Europa() {
         const req = levelRequirements[level.id];
         const isUnlocked = unlockedLevels.includes(level.id);
         const meetsRequirements = stats && stats.best_score >= req.score && stats.total_coins >= req.coins;
-        const locked = !isUnlocked && !meetsRequirements;
+        const locked = !isUnlocked;
         
-        // Auto-unlock if requirements are met but not yet saved
-        if (meetsRequirements && !isUnlocked) {
-            const unlockLevel = async () => {
-                try {
-                    const user = await base44.auth.me();
-                    await base44.entities.UnlockedLevel.create({ user_id: user.id, level_id: level.id });
-                    setUnlockedLevels(prev => [...prev, level.id]);
-                } catch (error) {
-                    console.error('Failed to unlock level:', error);
-                }
-            };
-            unlockLevel();
+        return { ...level, locked, requirements: req, meetsRequirements };
+    });
+
+    const handleUnlockLevel = async (e, level) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!level.meetsRequirements) {
+            toast.error(`Du brauchst ${level.requirements.score} Score und ${level.requirements.coins} Coins!`);
+            return;
         }
         
-        return { ...level, locked, requirements: req };
-    });
+        try {
+            const user = await base44.auth.me();
+            
+            // Create unlock entry
+            await base44.entities.UnlockedLevel.create({ user_id: user.id, level_id: level.id });
+            
+            // Deduct coins
+            const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
+            if (playerStats.length > 0) {
+                const currentStats = playerStats[0];
+                await base44.entities.PlayerStats.update(currentStats.id, {
+                    total_coins: currentStats.total_coins - level.requirements.coins
+                });
+                setStats(prev => ({ ...prev, total_coins: prev.total_coins - level.requirements.coins }));
+            }
+            
+            setUnlockedLevels(prev => [...prev, level.id]);
+            toast.success(`${level.name} freigeschaltet!`);
+        } catch (error) {
+            console.error('Failed to unlock level:', error);
+            toast.error('Freischaltung fehlgeschlagen');
+        }
+    };
 
     if (loading) {
         return (
@@ -121,8 +141,8 @@ export default function Europa() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                     >
-                        <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
-                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
+                        <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`} onClick={level.locked && level.meetsRequirements ? (e) => handleUnlockLevel(e, level) : undefined}>
+                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? (level.meetsRequirements ? 'border-yellow-600 hover:border-yellow-400 cursor-pointer' : 'border-slate-700 opacity-70') : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
                                 {/* Background Image */}
                                 <div className="absolute inset-0 z-0">
                                     <img 
@@ -153,9 +173,15 @@ export default function Europa() {
                                         </div>
                                         
                                         {level.locked ? (
-                                            <div className="bg-slate-900/80 p-3 rounded-full">
-                                                <Lock className="w-6 h-6 text-slate-500" />
-                                            </div>
+                                            level.meetsRequirements ? (
+                                                <div className="bg-yellow-600 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                                    <Coins className="w-6 h-6 text-white" />
+                                                </div>
+                                            ) : (
+                                                <div className="bg-slate-900/80 p-3 rounded-full">
+                                                    <Lock className="w-6 h-6 text-slate-500" />
+                                                </div>
+                                            )
                                         ) : (
                                             <div className="bg-teal-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
                                                 <Play className="w-6 h-6 text-white fill-current" />

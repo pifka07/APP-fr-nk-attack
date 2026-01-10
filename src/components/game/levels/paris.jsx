@@ -57,12 +57,12 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.vx = -scrollSpeed * 2;
             enemy.scoreValue = 80;
         } else {
-            // Street cafe table
-            enemy.spriteType = 'paris_cafe';
+            // Police man
+            enemy.spriteType = 'police_man';
             enemy.isTarget = true;
-            enemy.width = 140;
-            enemy.height = 120;
-            enemy.y = parisGroundY - 120;
+            enemy.width = 100;
+            enemy.height = 150;
+            enemy.y = parisGroundY - 150;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 90;
         }

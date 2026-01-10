@@ -65,7 +65,18 @@ Deno.serve(async (req) => {
         const serverDuration = now - startedAt;
         const timeDifference = Math.abs(serverDuration - durationMs);
         
+        console.log("Time check - serverDuration:", serverDuration, "durationMs:", durationMs, "difference:", timeDifference);
+        
+        if (durationMs < 0) {
+            console.log("Negative durationMs detected:", durationMs);
+            return Response.json({
+                success: false,
+                reason: "CHEAT_SPEEDHACK"
+            }, { status: 400 });
+        }
+        
         if (timeDifference > 10000) {
+            console.log("Time difference too large:", timeDifference);
             return Response.json({
                 success: false,
                 reason: "CHEAT_SPEEDHACK"

@@ -6,13 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Play, Lock, Trophy, Coins } from "lucide-react";
 import { motion } from "framer-motion";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 export default function Europa() {
     const [stats, setStats] = useState(null);
     const [unlockedLevels, setUnlockedLevels] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showInfoPopup, setShowInfoPopup] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -105,22 +103,6 @@ export default function Europa() {
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
-            <AlertDialog open={showInfoPopup} onOpenChange={setShowInfoPopup}>
-                <AlertDialogContent className="bg-slate-800 border-purple-500">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="text-2xl text-purple-400">Important Notice</AlertDialogTitle>
-                        <AlertDialogDescription className="text-slate-200 text-lg">
-                            All users have been deleted. Please sign up again.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <Button onClick={() => setShowInfoPopup(false)} className="bg-purple-600 hover:bg-purple-700">
-                            Okay
-                        </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-
             {/* Header */}
             <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <Link to={createPageUrl('Missions')}>

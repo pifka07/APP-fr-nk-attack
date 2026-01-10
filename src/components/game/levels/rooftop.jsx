@@ -25,7 +25,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'worker';
             enemy.isTarget = true;
             enemy.width = 160;
-            enemy.height = 160;
+            enemy.height = 140;
             enemy.y = walkingNpcY - 290;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
@@ -35,7 +35,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 60;
             enemy.height = 50;
-            enemy.y = walkingNpcY - 250;
+            enemy.y = walkingNpcY - 290;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else {
@@ -45,7 +45,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isObstacle = true;
             enemy.width = 70;
             enemy.height = 70;
-            enemy.y = groundY - 60;
+            enemy.y = groundY - 300;
             enemy.vx = -scrollSpeed;
         }
     } else {

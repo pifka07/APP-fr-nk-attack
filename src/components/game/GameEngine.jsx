@@ -266,7 +266,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         coins: 0,
         distance: 0,
         health: 100,
-        player: { x: 50, y: 100, vy: 0, radius: 20 },
+        player: { x: 50, y: 100, vy: 0, radius: 24 },
         poops: [],
         enemies: [], 
         powerups: [],
@@ -918,7 +918,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (state.health <= 0) {
                 // Draw Dead Player
                 const deadImg = IMAGES.current.playerDead;
-                const playerSize = 55;
+                const playerSize = 66;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
                 ctx.rotate(Math.PI / 4); // Tilt down
@@ -926,7 +926,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.restore();
             } else {
                 // Always draw flying player
-                const playerSize = 55;
+                const playerSize = 66;
                 ctx.save();
                 ctx.translate(state.player.x, state.player.y);
 

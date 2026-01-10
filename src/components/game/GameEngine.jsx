@@ -239,9 +239,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.parisForeground1 = new Image();
         IMAGES.current.parisForeground2 = new Image();
         IMAGES.current.parisForeground3 = new Image();
-        IMAGES.current.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8b2b11695_2-Vordergrund1.png";
-        IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/49199463c_2-Vordergrund2.png";
-        IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/88fe1044e_2-Vordergrund3.png";
+        IMAGES.current.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/524d48dca_2-Vordergrund1.png";
+        IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/13b759a24_2-Vordergrund2.png";
+        IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8a922164e_2-Vordergrund3.png";
         IMAGES.current.parisBackground = new Image();
         IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/de560f22c_2-Hintergrund2.png";
 

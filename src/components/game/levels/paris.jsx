@@ -1,0 +1,97 @@
+// Paris Level Configuration
+
+export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
+    const parisGroundY = height * 0.85; // Paris NPCs at 85% height
+    const rand = Math.random();
+    const isAir = Math.random() > 0.6;
+
+    let enemy = {
+        x: width + 50,
+        y: groundY - 50,
+        width: 60,
+        height: 60,
+        hp: 1,
+        isTarget: true,
+        isObstacle: true,
+        scoreValue: 10,
+        vx: -scrollSpeed,
+        spriteType: 'tourist'
+    };
+
+    if (!isAir) {
+        // Ground (Pedestrians & Vehicles)
+        if (rand < 0.25) {
+            // Tourist with beret
+            enemy.spriteType = 'paris_tourist';
+            enemy.isTarget = true;
+            enemy.width = 110;
+            enemy.height = 150;
+            enemy.y = parisGroundY - 150;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 50;
+        } else if (rand < 0.45) {
+            // French baker with baguette
+            enemy.spriteType = 'paris_baker';
+            enemy.isTarget = true;
+            enemy.width = 120;
+            enemy.height = 160;
+            enemy.y = parisGroundY - 160;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 60;
+        } else if (rand < 0.65) {
+            // Mime artist
+            enemy.spriteType = 'paris_mime';
+            enemy.isTarget = true;
+            enemy.width = 100;
+            enemy.height = 150;
+            enemy.y = parisGroundY - 150;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 70;
+        } else if (rand < 0.8) {
+            // French car
+            enemy.spriteType = 'paris_car';
+            enemy.isTarget = true;
+            enemy.width = 180;
+            enemy.height = 100;
+            enemy.y = parisGroundY - 100;
+            enemy.vx = -scrollSpeed * 2;
+            enemy.scoreValue = 80;
+        } else {
+            // Street cafe table
+            enemy.spriteType = 'paris_cafe';
+            enemy.isTarget = true;
+            enemy.width = 140;
+            enemy.height = 120;
+            enemy.y = parisGroundY - 120;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 90;
+        }
+    } else {
+        // Air
+        const airRand = Math.random();
+        if (airRand < 0.6) {
+            // Paris pigeon
+            enemy.spriteType = 'paris_pigeon';
+            enemy.isTarget = true;
+            enemy.isObstacle = true;
+            enemy.y = 20 + Math.random() * (groundY - 170);
+            enemy.width = 80;
+            enemy.height = 70;
+            enemy.vx = -scrollSpeed;
+            enemy.erratic = true;
+            enemy.scoreValue = 50;
+        } else {
+            // Hot air balloon
+            enemy.spriteType = 'paris_balloon';
+            enemy.isTarget = true;
+            enemy.isObstacle = true;
+            enemy.y = 30 + Math.random() * 100;
+            enemy.width = 100;
+            enemy.height = 120;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 100;
+        }
+    }
+
+    return enemy;
+};

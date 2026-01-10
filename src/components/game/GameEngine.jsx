@@ -3,6 +3,7 @@ import { spawnDowntownEnemy, spawnSparrowFormation } from './levels/downtown';
 import { spawnRooftopEnemy } from './levels/rooftop';
 import { spawnParkEnemy } from './levels/park';
 import { spawnLondonEnemy } from './levels/london';
+import { spawnParisEnemy } from './levels/paris';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -113,6 +114,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3"; 
         } else if (level === 'london') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/sounddogs/soundtrack.mp3";
+        } else if (level === 'paris') {
+            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3";
         }
 
         if (AUDIOS.current.bgm.src !== musicUrl) {
@@ -221,6 +224,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.rooftopForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51fb3855b_Rooftop1.png";
         IMAGES.current.rooftopForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d3b217c6a_Rooftop2.png";
         IMAGES.current.rooftopForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5358e6ade_Rooftop3.png";
+        IMAGES.current.parisBackground = new Image();
+        IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/de560f22c_2-Hintergrund2.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -418,6 +423,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             enemy = spawnParkEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'london') {
             enemy = spawnLondonEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'paris') {
+            enemy = spawnParisEnemy(width, height, groundY, scrollSpeed);
         } else {
             // Downtown/Gelsenkirchen
             enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
@@ -768,7 +775,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'rooftop') {
+        if (level === 'paris' && IMAGES.current.parisBackground.complete) {
+            // Paris: Fixed background (no scrolling)
+            const bg = IMAGES.current.parisBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
+        } else if (level === 'rooftop') {
             // Rooftop: Sky blue background
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);

@@ -45,7 +45,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isObstacle = true;
             enemy.width = 60;
             enemy.height = 90;
-            enemy.y = walkingNpcY - 120;
+            enemy.y = walkingNpcY - 140;
             enemy.vx = -scrollSpeed;
         } else if (rand < 0.9) {
             // Fruit Vendor

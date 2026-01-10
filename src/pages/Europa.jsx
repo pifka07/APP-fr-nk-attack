@@ -20,9 +20,14 @@ export default function Europa() {
                 const playerStats = await base44.entities.PlayerStats.filter({ user_id: user.id });
                 const unlocked = await base44.entities.UnlockedLevel.filter({ user_id: user.id });
                 
-                setStats(playerStats.length > 0 ? playerStats[0] : { total_score: 0, total_coins: 0 });
+                const currentStats = playerStats.length > 0 ? playerStats[0] : { total_score: 0, total_coins: 0 };
+                console.log('Europa Stats:', currentStats);
+                console.log('Unlocked Levels:', unlocked);
+                
+                setStats(currentStats);
                 setUnlockedLevels(unlocked.map(u => u.level_id));
             } catch (error) {
+                console.error('Error fetching stats:', error);
                 setStats({ total_score: 0, total_coins: 0 });
                 setUnlockedLevels([]);
             } finally {
@@ -76,6 +81,8 @@ export default function Europa() {
         const isUnlocked = unlockedLevels.includes(level.id);
         const meetsRequirements = stats && stats.total_score >= req.score && stats.total_coins >= req.coins;
         const locked = !isUnlocked;
+        
+        console.log(`${level.id}: unlocked=${isUnlocked}, meetsReq=${meetsRequirements}, score=${stats?.total_score}/${req.score}, coins=${stats?.total_coins}/${req.coins}`);
         
         return { ...level, locked, requirements: req, meetsRequirements };
     });

@@ -35,7 +35,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 60;
             enemy.height = 50;
-            enemy.y = walkingNpcY - 220;
+            enemy.y = walkingNpcY - 200;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else {
@@ -45,7 +45,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isObstacle = true;
             enemy.width = 70;
             enemy.height = 70;
-            enemy.y = groundY - 160;
+            enemy.y = groundY - 130;
             enemy.vx = -scrollSpeed;
         }
     } else {

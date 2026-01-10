@@ -229,18 +229,18 @@ export default function Europa() {
 
                                     <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
                                         <div className="flex justify-between items-end">
-                                            <div className="flex-1">
-                                                <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">{level.name}</h2>
-                                                <p className="text-slate-200 text-sm font-medium drop-shadow-md">{level.description}</p>
+                                            <div className="flex-1 max-w-[70%]">
+                                                <h2 className="text-2xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg leading-tight">{level.name}</h2>
+                                                <p className="text-slate-200 text-xs font-medium drop-shadow-md line-clamp-2 mt-1">{level.description}</p>
                                                 {level.locked && (
-                                                    <div className="mt-2 flex flex-col gap-1 text-xs text-slate-300">
+                                                    <div className="mt-1.5 flex flex-col gap-0.5 text-[10px] text-slate-300">
                                                         <div className="flex items-center gap-1">
-                                                            <Trophy className="w-3 h-3" />
-                                                            <span>Benötigt: {level.requirements.score} Score</span>
+                                                            <Trophy className="w-2.5 h-2.5" />
+                                                            <span>{level.requirements.score} Score</span>
                                                         </div>
                                                         <div className="flex items-center gap-1">
-                                                            <Coins className="w-3 h-3" />
-                                                            <span>Benötigt: {level.requirements.coins} Coins</span>
+                                                            <Coins className="w-2.5 h-2.5" />
+                                                            <span>{level.requirements.coins} Coins</span>
                                                         </div>
                                                     </div>
                                                 )}

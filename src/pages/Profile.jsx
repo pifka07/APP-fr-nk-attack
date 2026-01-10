@@ -28,7 +28,7 @@ export default function Profile() {
                 
                 setUser(userData);
                 setStats({
-                    best_score: userData.best_score || 0,
+                    total_score: userData.total_score || 0,
                     best_distance: userData.best_distance || 0,
                     total_coins: userData.total_coins || 0,
                     total_runs: userData.total_runs || 0
@@ -153,8 +153,8 @@ export default function Profile() {
                 <Card className="bg-slate-800 border-slate-700">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Trophy className="w-8 h-8 text-yellow-400 mb-2" />
-                        <div className="text-2xl font-bold text-white">{stats?.best_score || 0}</div>
-                        <div className="text-xs text-slate-400 uppercase tracking-wider">High Score</div>
+                        <div className="text-2xl font-bold text-white">{stats?.total_score || 0}</div>
+                        <div className="text-xs text-slate-400 uppercase tracking-wider">Total Score</div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">

@@ -72,7 +72,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 200;
             enemy.height = 120;
             enemy.y = londonGroundY - 120;
-            enemy.vx = -scrollSpeed * 10;
+            enemy.vx = -scrollSpeed * 2;
             enemy.scoreValue = 100;
         }
     } else {

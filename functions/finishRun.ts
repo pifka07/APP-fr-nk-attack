@@ -75,7 +75,8 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
         
-        if (timeDifference > 10000) {
+        // Allow more time tolerance (30 seconds) for mobile devices and network delays
+        if (timeDifference > 30000) {
             console.log("Time difference too large:", timeDifference);
             return Response.json({
                 success: false,
@@ -83,18 +84,20 @@ Deno.serve(async (req) => {
             }, { status: 400 });
         }
 
-        const maxScorePerSecond = 500;
-        const maxCoinsPerSecond = 50;
+        // Adjust limits based on difficulty
+        const speedMultiplier = difficulty === 'quick' ? 1.4 : (difficulty === 'slow' ? 0.7 : 1);
+        const maxScorePerSecond = 500 * speedMultiplier;
+        const maxCoinsPerSecond = 50 * speedMultiplier;
         const durationSeconds = durationMs / 1000;
 
-        if (score > maxScorePerSecond * durationSeconds * 2) {
+        if (score > maxScorePerSecond * durationSeconds * 3) {
             return Response.json({
                 success: false,
                 reason: "CHEAT_DETECTED"
             }, { status: 400 });
         }
 
-        if (coinsCollected > maxCoinsPerSecond * durationSeconds * 2) {
+        if (coinsCollected > maxCoinsPerSecond * durationSeconds * 3) {
             return Response.json({
                 success: false,
                 reason: "CHEAT_DETECTED"

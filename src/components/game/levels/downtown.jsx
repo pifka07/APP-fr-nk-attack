@@ -30,11 +30,11 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 30;
         } else if (rand < 0.7) {
-            // Cop
+            // Fan
             enemy.spriteType = 'cop';
             enemy.isTarget = true;
-            enemy.width = 200;
-            enemy.height = 200;
+            enemy.width = 180;
+            enemy.height = 180;
             enemy.y = walkingNpcY - 200;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;

@@ -53,7 +53,7 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 360;
             enemy.height = 280;
-            enemy.y = parisGroundY - 80;
+            enemy.y = parisGroundY - 100;
             enemy.vx = -scrollSpeed * 2;
             enemy.scoreValue = 80;
         } else {

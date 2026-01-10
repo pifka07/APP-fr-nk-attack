@@ -795,15 +795,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'paris' && IMAGES.current.parisBackground.complete) {
-            // Paris: Fixed background (no scrolling)
-            const bg = IMAGES.current.parisBackground;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
+        if (level === 'paris') {
+            // Paris: Simple sky background
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, width, height);
         } else if (level === 'rooftop') {
             // Rooftop: Sky blue background
             ctx.fillStyle = '#87CEEB';
@@ -949,47 +944,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Paris scrolling foreground (3 images in sequence)
-        if (level === 'paris' && IMAGES.current.parisForeground1.complete && 
-            IMAGES.current.parisForeground2.complete && IMAGES.current.parisForeground3.complete) {
 
-            const fg1 = IMAGES.current.parisForeground1;
-            const fg2 = IMAGES.current.parisForeground2;
-            const fg3 = IMAGES.current.parisForeground3;
-
-            // Scale all to same height
-            const fgScale = height / fg1.height;
-            const fgW1 = fg1.width * fgScale;
-            const fgW2 = fg2.width * fgScale;
-            const fgW3 = fg3.width * fgScale;
-            const fgH = height;
-
-            // Total width of all 3 images
-            const totalWidth = fgW1 + fgW2 + fgW3;
-
-            // Scroll at game speed
-            const fgOffset = (state.distance * 10) % totalWidth;
-
-            // Draw at bottom
-            const fgY = height - fgH;
-
-            // Determine which images to draw based on offset
-            if (fgOffset < fgW1) {
-                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
-            } else if (fgOffset < fgW1 + fgW2) {
-                const offset2 = fgOffset - fgW1;
-                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
-            } else {
-                const offset3 = fgOffset - fgW1 - fgW2;
-                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
-            }
-        }
 
         // Draw Player
         if (assetsLoaded.current) {

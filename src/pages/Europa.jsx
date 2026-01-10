@@ -11,6 +11,7 @@ export default function Europa() {
     const [stats, setStats] = useState(null);
     const [unlockedLevels, setUnlockedLevels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showInfoPopup, setShowInfoPopup] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {

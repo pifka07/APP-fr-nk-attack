@@ -241,9 +241,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.parisForeground1 = new Image();
         IMAGES.current.parisForeground2 = new Image();
         IMAGES.current.parisForeground3 = new Image();
-        IMAGES.current.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f6563d395_2-Vordergrund1.png";
-        IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/97b734eb9_2-Vordergrund2.png";
-        IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0cb11257b_2-Vordergrund3.png";
+        IMAGES.current.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/524d48dca_2-Vordergrund1.png";
+        IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/13b759a24_2-Vordergrund2.png";
+        IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8a922164e_2-Vordergrund3.png";
         IMAGES.current.parisBackground = new Image();
         IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bb32c2d58_2-Hintergrund2.png";
 
@@ -887,41 +887,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const fgY = 0;
 
             // Determine which images to draw based on offset
-            if (fgOffset < fgW1) {
-                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
-            } else if (fgOffset < fgW1 + fgW2) {
-                const offset2 = fgOffset - fgW1;
-                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
-            } else {
-                const offset3 = fgOffset - fgW1 - fgW2;
-                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
-            }
-        }
-
-        // Draw Paris scrolling foreground (3 images in sequence)
-        if (level === 'paris' && IMAGES.current.parisForeground1.complete && 
-            IMAGES.current.parisForeground2.complete && IMAGES.current.parisForeground3.complete) {
-
-            const fg1 = IMAGES.current.parisForeground1;
-            const fg2 = IMAGES.current.parisForeground2;
-            const fg3 = IMAGES.current.parisForeground3;
-
-            const fgScale = height / fg1.height;
-            const fgW1 = fg1.width * fgScale;
-            const fgW2 = fg2.width * fgScale;
-            const fgW3 = fg3.width * fgScale;
-            const fgH = height;
-
-            const totalWidth = fgW1 + fgW2 + fgW3;
-            const fgOffset = (state.distance * 10) % totalWidth;
-            const fgY = 0;
-
             if (fgOffset < fgW1) {
                 ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
                 ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);

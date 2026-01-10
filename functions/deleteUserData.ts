@@ -50,14 +50,8 @@ Deno.serve(async (req) => {
 
         await Promise.all(deletePromises);
 
-        // Reset user stats
-        await base44.asServiceRole.entities.User.update(userId, {
-            total_coins: 0,
-            total_runs: 0,
-            best_score: 0,
-            best_distance: 0,
-            equipped_skin: 'default'
-        });
+        // Delete the user account
+        await base44.asServiceRole.entities.User.delete(userId);
 
         return Response.json({ success: true });
     } catch (error) {

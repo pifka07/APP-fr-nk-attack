@@ -154,7 +154,13 @@ export default function Game() {
 
             // Calculate run duration
             const now = new Date();
-            const durationMs = runStartTimeRef.current ? Math.max(0, now - runStartTimeRef.current) : stats.duration || 60000;
+            let durationMs = runStartTimeRef.current ? (now - runStartTimeRef.current) : (stats.duration || 60000);
+            
+            // If duration is 0 or negative, use a minimum duration of 1 second
+            if (durationMs <= 0) {
+                console.warn("Invalid duration calculated:", durationMs, "Using minimum 1000ms");
+                durationMs = 1000;
+            }
 
             console.log("Calling finishRun with payload:", {
                 run_session_id: runSessionIdRef.current,

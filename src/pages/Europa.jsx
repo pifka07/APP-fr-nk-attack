@@ -142,15 +142,6 @@ export default function Europa() {
                 <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">EUROPA</h1>
             </div>
 
-            {/* DEBUG INFO */}
-            <div className="bg-yellow-500 text-black p-4 rounded-lg mb-6">
-                <h3 className="font-bold mb-2">DEBUG INFO:</h3>
-                <p>Total Score: {stats?.total_score || 0}</p>
-                <p>Total Coins: {stats?.total_coins || 0}</p>
-                <p>Unlocked Levels: {unlockedLevels.join(', ') || 'none'}</p>
-                <p className="mt-2 text-sm">London braucht: 500 Score + 250 Coins</p>
-            </div>
-
             <div className="space-y-6">
                 {europeanLevels.map((level, index) => (
                     <motion.div

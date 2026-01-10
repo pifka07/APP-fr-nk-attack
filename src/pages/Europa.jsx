@@ -141,8 +141,13 @@ export default function Europa() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                     >
-                        <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`} onClick={level.locked && level.meetsRequirements ? (e) => handleUnlockLevel(e, level) : undefined}>
-                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? (level.meetsRequirements ? 'border-yellow-600 hover:border-yellow-400 cursor-pointer' : 'border-slate-700 opacity-70') : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
+                        {level.locked && level.meetsRequirements ? (
+                            <div onClick={(e) => handleUnlockLevel(e, level)}>
+                                <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-yellow-600 hover:border-yellow-400 cursor-pointer">
+                        ) : (
+                            <Link to={level.locked ? '#' : `${createPageUrl('Game')}?level=${level.id}`}>
+                                <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
+                        )}
                                 {/* Background Image */}
                                 <div className="absolute inset-0 z-0">
                                     <img 
@@ -190,7 +195,11 @@ export default function Europa() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </Link>
+                        {level.locked && level.meetsRequirements ? (
+                            </div>
+                        ) : (
+                            </Link>
+                        )}
                     </motion.div>
                 ))}
             </div>

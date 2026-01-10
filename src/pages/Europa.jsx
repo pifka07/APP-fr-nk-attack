@@ -33,7 +33,7 @@ export default function Europa() {
     }, []);
 
     const levelRequirements = {
-        london: { score: 0, coins: 0 },
+        london: { score: 500, coins: 250 },
         paris: { score: 1000, coins: 500 },
         madrid: { score: 3000, coins: 1500 },
         rome: { score: 6000, coins: 3000 },

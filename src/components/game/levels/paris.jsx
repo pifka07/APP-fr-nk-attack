@@ -51,8 +51,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             // French car
             enemy.spriteType = 'paris_car';
             enemy.isTarget = true;
-            enemy.width = 260;
-            enemy.height = 180;
+            enemy.width = 360;
+            enemy.height = 280;
             enemy.y = parisGroundY - 80;
             enemy.vx = -scrollSpeed * 2;
             enemy.scoreValue = 80;

@@ -35,7 +35,7 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 140;
             enemy.height = 180;
-            enemy.y = parisGroundY - 160;
+            enemy.y = parisGroundY - 110;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else if (rand < 0.65) {
@@ -44,16 +44,16 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 120;
             enemy.height = 170;
-            enemy.y = parisGroundY - 150;
+            enemy.y = parisGroundY - 115;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
         } else if (rand < 0.8) {
             // French car
             enemy.spriteType = 'paris_car';
             enemy.isTarget = true;
-            enemy.width = 220;
-            enemy.height = 140;
-            enemy.y = parisGroundY - 100;
+            enemy.width = 260;
+            enemy.height = 180;
+            enemy.y = parisGroundY - 80;
             enemy.vx = -scrollSpeed * 2;
             enemy.scoreValue = 80;
         } else {
@@ -62,7 +62,7 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 120;
             enemy.height = 170;
-            enemy.y = parisGroundY - 150;
+            enemy.y = parisGroundY - 118;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 90;
         }
@@ -86,7 +86,7 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.isObstacle = true;
             enemy.y = 30 + Math.random() * 100;
-            enemy.width = 100;
+            enemy.width = 120;
             enemy.height = 120;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 100;

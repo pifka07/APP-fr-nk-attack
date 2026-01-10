@@ -35,7 +35,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 160;
             enemy.height = 160;
-            enemy.y = walkingNpcY - 200;
+            enemy.y = walkingNpcY - 170;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.75) {
@@ -53,7 +53,7 @@ export const spawnDowntownEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 150;
             enemy.height = 150;
-            enemy.y = walkingNpcY - 198;
+            enemy.y = walkingNpcY - 180;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
         } else {

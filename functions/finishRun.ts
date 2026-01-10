@@ -117,21 +117,36 @@ Deno.serve(async (req) => {
             mode: missionId ? 'mission' : 'endless'
         });
 
-        // Update User stats directly
-        console.log('📊 Updating User stats');
-        const newTotalCoins = (user.total_coins || 0) + coinsCollected;
-        const newBestScore = Math.max(user.best_score || 0, score);
+        // Update PlayerStats
+        console.log('📊 Updating PlayerStats');
+        const playerStats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
         
-        await base44.asServiceRole.entities.User.update(user.id, {
-            total_score: (user.total_score || 0) + score,
-            total_coins: newTotalCoins,
-            total_distance: (user.total_distance || 0) + (distance || 0),
-            total_runs: (user.total_runs || 0) + 1,
-            best_score: newBestScore,
-            best_distance: Math.max(user.best_distance || 0, distance || 0)
-        });
+        if (playerStats.length > 0) {
+            const stats = playerStats[0];
+            await base44.asServiceRole.entities.PlayerStats.update(stats.id, {
+                total_score: (stats.total_score || 0) + score,
+                total_coins: (stats.total_coins || 0) + coinsCollected,
+                total_distance: (stats.total_distance || 0) + (distance || 0),
+                total_runs: (stats.total_runs || 0) + 1,
+                best_score: Math.max(stats.best_score || 0, score),
+                best_distance: Math.max(stats.best_distance || 0, distance || 0)
+            });
+        } else {
+            await base44.asServiceRole.entities.PlayerStats.create({
+                user_id: user.id,
+                total_score: score,
+                total_coins: coinsCollected,
+                total_distance: distance || 0,
+                total_runs: 1,
+                best_score: score,
+                best_distance: distance || 0
+            });
+        }
         
-        console.log('✅ User stats updated');
+        console.log('✅ PlayerStats updated');
+        
+        const newTotalCoins = playerStats.length > 0 ? (playerStats[0].total_coins || 0) + coinsCollected : coinsCollected;
+        const newBestScore = playerStats.length > 0 ? Math.max(playerStats[0].best_score || 0, score) : score;
 
         // Check existing leaderboard entries
         const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({

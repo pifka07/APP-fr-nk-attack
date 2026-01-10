@@ -24,8 +24,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             // Tourist with beret
             enemy.spriteType = 'paris_tourist';
             enemy.isTarget = true;
-            enemy.width = 110;
-            enemy.height = 150;
+            enemy.width = 130;
+            enemy.height = 170;
             enemy.y = parisGroundY - 150;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
@@ -33,8 +33,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             // Watch seller
             enemy.spriteType = 'watch_seller';
             enemy.isTarget = true;
-            enemy.width = 120;
-            enemy.height = 160;
+            enemy.width = 140;
+            enemy.height = 180;
             enemy.y = parisGroundY - 160;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
@@ -42,8 +42,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             // Mime artist
             enemy.spriteType = 'paris_mime';
             enemy.isTarget = true;
-            enemy.width = 100;
-            enemy.height = 150;
+            enemy.width = 120;
+            enemy.height = 170;
             enemy.y = parisGroundY - 150;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 70;
@@ -51,8 +51,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             // French car
             enemy.spriteType = 'paris_car';
             enemy.isTarget = true;
-            enemy.width = 180;
-            enemy.height = 100;
+            enemy.width = 220;
+            enemy.height = 140;
             enemy.y = parisGroundY - 100;
             enemy.vx = -scrollSpeed * 2;
             enemy.scoreValue = 80;
@@ -60,8 +60,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             // Police man
             enemy.spriteType = 'police_man';
             enemy.isTarget = true;
-            enemy.width = 100;
-            enemy.height = 150;
+            enemy.width = 120;
+            enemy.height = 170;
             enemy.y = parisGroundY - 150;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 90;

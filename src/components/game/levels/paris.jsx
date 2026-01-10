@@ -30,8 +30,8 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.45) {
-            // French baker with baguette
-            enemy.spriteType = 'paris_baker';
+            // Watch seller
+            enemy.spriteType = 'watch_seller';
             enemy.isTarget = true;
             enemy.width = 120;
             enemy.height = 160;

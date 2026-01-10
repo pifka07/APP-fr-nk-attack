@@ -226,6 +226,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.police_man.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c72cd1a7e_police.png";
         IMAGES.current.paris_tourist = new Image();
         IMAGES.current.paris_tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0c5cdddb8_ChatGPTImage10Jan202617_03_15.png";
+        IMAGES.current.watch_seller = new Image();
+        IMAGES.current.watch_seller.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c899b1ac3_watchseller.png";
         IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/57b677041_Strasse-1.png";
         IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a85523873_Strasse-2.png";
         IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
@@ -1258,6 +1260,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'paris_car') useFullImage(IMAGES.current.paris_car);
                 else if (e.spriteType === 'police_man') useFullImage(IMAGES.current.police_man);
                 else if (e.spriteType === 'paris_tourist') useFullImage(IMAGES.current.paris_tourist);
+                else if (e.spriteType === 'watch_seller') useFullImage(IMAGES.current.watch_seller);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

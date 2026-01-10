@@ -232,6 +232,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.paris_mime.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8ba5f201d_MimeArtist.png";
         IMAGES.current.paris_pigeon = new Image();
         IMAGES.current.paris_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2301b3f57_ChatGPTImage10Jan202618_52_29.png";
+        IMAGES.current.paris_balloon = new Image();
+        IMAGES.current.paris_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/57b677041_Strasse-1.png";
         IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a85523873_Strasse-2.png";
         IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
@@ -1269,6 +1271,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'watch_seller') useFullImage(IMAGES.current.watch_seller);
                 else if (e.spriteType === 'paris_mime') useFullImage(IMAGES.current.paris_mime);
                 else if (e.spriteType === 'paris_pigeon') useFullImage(IMAGES.current.paris_pigeon);
+                else if (e.spriteType === 'paris_balloon') useFullImage(IMAGES.current.paris_balloon);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

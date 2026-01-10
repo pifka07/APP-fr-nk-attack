@@ -13,7 +13,7 @@ export default function StartScreen() {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showInfoPopup, setShowInfoPopup] = useState(true);
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
 
   // ========================
   //  USER LADEN
@@ -23,8 +23,10 @@ export default function StartScreen() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        setShowInfoPopup(false);
       } catch (e) {
         setUser(null);
+        setShowInfoPopup(true);
       }
       setLoadingUser(false);
     };

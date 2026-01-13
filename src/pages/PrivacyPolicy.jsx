@@ -456,6 +456,9 @@ export default function PrivacyPolicy() {
                         <p style={{marginTop: '12px', opacity: '0.6'}}>
                             © 2025 pifka07
                         </p>
+                        <p style={{marginTop: '8px', opacity: '0.4', fontSize: '11px'}}>
+                            W.Zimmermann
+                        </p>
                     </footer>
                 </div>
             </div>

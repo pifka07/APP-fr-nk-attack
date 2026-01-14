@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Play, Lock, Trophy, Coins } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { toast } from "sonner";
 
 export default function Europa() {
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [unlockedLevels, setUnlockedLevels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const dragX = useMotionValue(0);
+    const background = useTransform(dragX, [0, 300], ['rgba(15, 23, 42, 1)', 'rgba(45, 212, 191, 0.1)']);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -37,7 +40,15 @@ export default function Europa() {
             }
         };
         fetchStats();
-    }, []);
+
+        // Handle hardware back button (Android)
+        const handleBackButton = (e) => {
+            e.preventDefault();
+            navigate(createPageUrl('Missions'));
+        };
+        window.addEventListener('popstate', handleBackButton);
+        return () => window.removeEventListener('popstate', handleBackButton);
+    }, [navigate]);
 
     const levelRequirements = {
         london: { score: 500, coins: 250 },
@@ -133,8 +144,21 @@ export default function Europa() {
         );
     }
 
+    const handleDragEnd = (event, info) => {
+        if (info.offset.x > 200) {
+            navigate(createPageUrl('Missions'));
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
+        <motion.div 
+            className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0, right: 0.5 }}
+            onDragEnd={handleDragEnd}
+            style={{ background }}
+        >
             {/* Header */}
             <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <Link to={createPageUrl('Missions')}>
@@ -265,8 +289,8 @@ export default function Europa() {
                             </Link>
                         )}
                     </motion.div>
-                ))}
-            </div>
-        </div>
-    );
-}
+                    ))}
+                    </div>
+                    </motion.div>
+                    );
+                    }

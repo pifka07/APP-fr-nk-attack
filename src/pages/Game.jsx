@@ -208,6 +208,19 @@ export default function Game() {
                 toast.success("Run saved!");
             }
 
+            // Track level completion event
+            base44.analytics.track({
+                eventName: "level_completed",
+                properties: {
+                    level: currentLevel,
+                    score: stats.score,
+                    coins: stats.coins,
+                    distance: stats.distance,
+                    difficulty: gameSpeed,
+                    is_highscore: response.data.isHighscore
+                }
+            });
+
             // Update local final stats with server stats
             setFinalStats({
                 ...stats,

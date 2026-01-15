@@ -272,6 +272,23 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_drone = new Image();
         IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
 
+        // Madrid Buildings
+        IMAGES.current.madrid_buildings = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1a977495f_Haus3-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/800a80db8_Haus3-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e23877bc0_Haus1-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/6e57baaf4_Haus1-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b22da4299_Haus1-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/895673462_Haus1-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5352275e8_Haus2-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/fdc86f645_Haus2-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2cf0bff38_Haus2-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5b19c454c_Haus3-Kopie2.png" }
+        ];
+        IMAGES.current.madrid_buildings.forEach(building => {
+            building.img.src = building.src;
+        });
+
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
@@ -331,7 +348,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         animFrame: 0, // Global animation tick
         rapidFireUntil: 0,
         shotQueue: [],
-        lastMilestone: 0 // Track last milestone reached
+        lastMilestone: 0, // Track last milestone reached
+        madridBuildings: [] // Madrid scrolling buildings
         });
 
     // Apply config
@@ -623,6 +641,35 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 state.combo = 0;
                 if (onComboUpdate) onComboUpdate(0);
             }
+        }
+
+        // Madrid Buildings Management
+        if (level === 'madrid') {
+            // Add new building if needed
+            if (state.madridBuildings.length === 0 || state.madridBuildings[state.madridBuildings.length - 1].x < width - 100) {
+                const buildingIndex = Math.floor(Math.random() * IMAGES.current.madrid_buildings.length);
+                const buildingImg = IMAGES.current.madrid_buildings[buildingIndex].img;
+
+                // Calculate height to fit screen (buildings should be at bottom)
+                const maxHeight = height * 0.6; // Buildings take up 60% of screen height
+                const scale = maxHeight / buildingImg.height;
+                const buildingWidth = buildingImg.width * scale;
+
+                state.madridBuildings.push({
+                    x: width,
+                    img: buildingImg,
+                    width: buildingWidth,
+                    height: maxHeight
+                });
+            }
+
+            // Update building positions
+            state.madridBuildings.forEach(building => {
+                building.x -= state.scrollSpeed;
+            });
+
+            // Remove buildings that are off-screen
+            state.madridBuildings = state.madridBuildings.filter(b => b.x > -b.width);
         }
 
         // Enemy/World Movement & Spawning
@@ -983,6 +1030,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
                 ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
             }
+        }
+
+        // Draw Madrid scrolling buildings - behind NPCs
+        if (level === 'madrid') {
+            state.madridBuildings.forEach(building => {
+                if (building.img.complete) {
+                    const groundY = height * GROUND_Y_PCT;
+                    const buildingY = groundY - building.height;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
         }
 
         // Draw Paris scrolling foreground (3 images in sequence) - behind NPCs

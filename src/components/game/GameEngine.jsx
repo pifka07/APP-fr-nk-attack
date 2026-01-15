@@ -363,7 +363,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         shotQueue: [],
         lastMilestone: 0, // Track last milestone reached
         madridBuildings: [], // Madrid scrolling buildings
-        madridTrees: [] // Madrid scrolling trees/bushes
+        madridTrees: [], // Madrid scrolling trees/bushes
+        madridScenery: [] // Combined buildings and trees
         });
 
     // Apply config

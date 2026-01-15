@@ -403,6 +403,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
             gameStateRef.current.lastMilestone = 0;
+            gameStateRef.current.madridBuildings = [];
+            gameStateRef.current.madridTrees = [];
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();

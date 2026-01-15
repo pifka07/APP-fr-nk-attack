@@ -1049,8 +1049,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Draw London scrolling foreground (3 images in sequence)
-        if (level === 'london' && IMAGES.current.londonForeground1.complete && 
-            IMAGES.current.londonForeground2.complete && IMAGES.current.londonForeground3.complete) {
+        if (level === 'london' && isImageValid(IMAGES.current.londonForeground1) && 
+            isImageValid(IMAGES.current.londonForeground2) && isImageValid(IMAGES.current.londonForeground3)) {
 
             const fg1 = IMAGES.current.londonForeground1;
             const fg2 = IMAGES.current.londonForeground2;

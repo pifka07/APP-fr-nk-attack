@@ -1007,8 +1007,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Draw Rooftop scrolling foreground (3 images in sequence)
-        if (level === 'rooftop' && IMAGES.current.rooftopForeground1.complete && 
-            IMAGES.current.rooftopForeground2.complete && IMAGES.current.rooftopForeground3.complete) {
+        if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopForeground1) && 
+            isImageValid(IMAGES.current.rooftopForeground2) && isImageValid(IMAGES.current.rooftopForeground3)) {
 
             const fg1 = IMAGES.current.rooftopForeground1;
             const fg2 = IMAGES.current.rooftopForeground2;

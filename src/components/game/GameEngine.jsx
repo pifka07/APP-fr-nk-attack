@@ -644,23 +644,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Madrid Buildings Management
-        if (level === 'madrid') {
+        if (level === 'madrid' && IMAGES.current.madrid_buildings) {
             // Add new building if needed
             if (state.madridBuildings.length === 0 || state.madridBuildings[state.madridBuildings.length - 1].x < width - 100) {
                 const buildingIndex = Math.floor(Math.random() * IMAGES.current.madrid_buildings.length);
                 const buildingImg = IMAGES.current.madrid_buildings[buildingIndex].img;
 
-                // Calculate height to fit screen (buildings should be at bottom)
-                const maxHeight = height * 0.6; // Buildings take up 60% of screen height
-                const scale = maxHeight / buildingImg.height;
-                const buildingWidth = buildingImg.width * scale;
+                // Only add if image is loaded
+                if (buildingImg.complete && buildingImg.naturalHeight > 0) {
+                    // Calculate height to fit screen (buildings should be at bottom)
+                    const maxHeight = height * 0.6; // Buildings take up 60% of screen height
+                    const scale = maxHeight / buildingImg.height;
+                    const buildingWidth = buildingImg.width * scale;
 
-                state.madridBuildings.push({
-                    x: width,
-                    img: buildingImg,
-                    width: buildingWidth,
-                    height: maxHeight
-                });
+                    state.madridBuildings.push({
+                        x: width,
+                        img: buildingImg,
+                        width: buildingWidth,
+                        height: maxHeight
+                    });
+                }
             }
 
             // Update building positions
@@ -1035,7 +1038,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Madrid scrolling buildings - behind NPCs
         if (level === 'madrid') {
             state.madridBuildings.forEach(building => {
-                if (building.img.complete) {
+                if (building.img && building.img.complete && building.img.naturalHeight > 0) {
                     const groundY = height * GROUND_Y_PCT;
                     const buildingY = groundY - building.height;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);

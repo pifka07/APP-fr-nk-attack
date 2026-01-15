@@ -416,6 +416,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
+            gameStateRef.current.madridStreetX = 0;
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();

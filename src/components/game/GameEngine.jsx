@@ -952,7 +952,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Rooftop: Sky blue background
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
-        } else if (level === 'london' && assetsLoaded.current && IMAGES.current.background) {
+        } else if (level === 'london' && assetsLoaded.current && isImageValid(IMAGES.current.background)) {
             // London: slow scrolling background (1/10 of foreground speed)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -964,7 +964,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             ctx.drawImage(bg, -bgOffset, 0, w, h);
             ctx.drawImage(bg, w - bgOffset, 0, w, h);
-        } else if (level === 'park' && assetsLoaded.current && IMAGES.current.background) {
+        } else if (level === 'park' && assetsLoaded.current && isImageValid(IMAGES.current.background)) {
             // Park: Single repeating background
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -974,7 +974,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const offset = (state.distance * 10) % w;
             ctx.drawImage(bg, -offset, 0, w, h);
             ctx.drawImage(bg, w - offset, 0, w, h);
-        } else if (assetsLoaded.current && IMAGES.current.background && IMAGES.current.background2) {
+        } else if (assetsLoaded.current && isImageValid(IMAGES.current.background) && isImageValid(IMAGES.current.background2)) {
             const bg1 = IMAGES.current.background;
             const bg2 = IMAGES.current.background2;
 

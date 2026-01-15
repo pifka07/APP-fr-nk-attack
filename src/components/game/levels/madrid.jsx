@@ -59,6 +59,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 90;
             enemy.height = 100;
             enemy.scoreValue = 20;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_flamenco':
@@ -66,6 +67,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 120;
             enemy.height = 100;
             enemy.scoreValue = 25;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_tourist_girl':
@@ -73,6 +75,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 90;
             enemy.height = 96;
             enemy.scoreValue = 18;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_flower_girl':
@@ -80,6 +83,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 100;
             enemy.height = 100;
             enemy.scoreValue = 20;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_elderly':
@@ -87,6 +91,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 110;
             enemy.height = 96;
             enemy.scoreValue = 30;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_flight_attendant':
@@ -94,6 +99,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 80;
             enemy.height = 96;
             enemy.scoreValue = 18;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_boy_tourist':
@@ -101,6 +107,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 80;
             enemy.height = 90;
             enemy.scoreValue = 15;
+            enemy.isObstacle = true;
             break;
 
         case 'madrid_car':

@@ -697,7 +697,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Madrid Trees/Bushes Management
         if (level === 'madrid' && IMAGES.current.madrid_trees) {
             // Add new tree/bush between buildings
-            if (state.madridTrees.length === 0 || state.madridTrees[state.madridTrees.length - 1].x < width - 150) {
+            if (state.madridTrees.length === 0 || state.madridTrees[state.madridTrees.length - 1].x < width - 400) {
                 const treeData = IMAGES.current.madrid_trees[Math.floor(Math.random() * IMAGES.current.madrid_trees.length)];
                 const treeImg = treeData?.img;
 
@@ -1099,7 +1099,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             state.madridBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height;
+                    const buildingY = groundY - building.height - 50;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });
@@ -1107,7 +1107,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Draw trees/bushes
             state.madridTrees.forEach(tree => {
                 if (isImageValid(tree.img)) {
-                    const treeY = groundY - tree.height;
+                    const treeY = groundY - tree.height - 50;
                     ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
                 }
             });

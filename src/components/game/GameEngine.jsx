@@ -405,6 +405,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.lastMilestone = 0;
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
+            gameStateRef.current.madridScenery = [];
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -659,73 +660,58 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Madrid Buildings Management
-        if (level === 'madrid' && IMAGES.current.madrid_buildings) {
-            // Add new building if needed (increased spacing from 100 to 400)
-            if (state.madridBuildings.length === 0 || state.madridBuildings[state.madridBuildings.length - 1].x < width - 400) {
-                const buildingData = IMAGES.current.madrid_buildings[Math.floor(Math.random() * IMAGES.current.madrid_buildings.length)];
-                const buildingImg = buildingData?.img;
+        // Madrid Scenery Management (Buildings and Trees combined)
+        if (level === 'madrid' && IMAGES.current.madrid_buildings && IMAGES.current.madrid_trees) {
+            // Add new scenery item if needed
+            if (state.madridScenery.length === 0 || state.madridScenery[state.madridScenery.length - 1].x < width - 200) {
+                // Randomly choose between building (70%) or tree (30%)
+                const isBuilding = Math.random() < 0.7;
 
-                // Only add if image is loaded and valid
-                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    // Calculate height to fit screen (buildings should be at bottom)
-                    const maxHeight = height * 0.6; // Buildings take up 60% of screen height
-                    const scale = maxHeight / buildingImg.naturalHeight;
-                    const buildingWidth = buildingImg.naturalWidth * scale;
+                if (isBuilding) {
+                    const buildingData = IMAGES.current.madrid_buildings[Math.floor(Math.random() * IMAGES.current.madrid_buildings.length)];
+                    const buildingImg = buildingData?.img;
 
-                    state.madridBuildings.push({
-                        x: width,
-                        img: buildingImg,
-                        width: buildingWidth,
-                        height: maxHeight
-                    });
+                    if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                        const maxHeight = height * 0.6;
+                        const scale = maxHeight / buildingImg.naturalHeight;
+                        const buildingWidth = buildingImg.naturalWidth * scale;
+
+                        state.madridScenery.push({
+                            x: width,
+                            img: buildingImg,
+                            width: buildingWidth,
+                            height: maxHeight,
+                            type: 'building'
+                        });
+                    }
+                } else {
+                    const treeData = IMAGES.current.madrid_trees[Math.floor(Math.random() * IMAGES.current.madrid_trees.length)];
+                    const treeImg = treeData?.img;
+
+                    if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
+                        const maxHeight = height * 0.3;
+                        const scale = maxHeight / treeImg.naturalHeight;
+                        const treeWidth = treeImg.naturalWidth * scale;
+
+                        state.madridScenery.push({
+                            x: width,
+                            img: treeImg,
+                            width: treeWidth,
+                            height: maxHeight,
+                            type: 'tree'
+                        });
+                    }
                 }
             }
 
-            // Update building positions and filter out broken images
-            state.madridBuildings = state.madridBuildings.filter(building => {
-                building.x -= state.scrollSpeed;
-                // Keep only if on screen and image is valid
-                return building.x > -building.width && 
-                       building.img && 
-                       building.img.complete && 
-                       building.img.naturalHeight > 0 && 
-                       building.img.naturalWidth > 0;
-            });
-        }
-
-        // Madrid Trees/Bushes Management
-        if (level === 'madrid' && IMAGES.current.madrid_trees) {
-            // Add new tree/bush between buildings
-            if (state.madridTrees.length === 0 || state.madridTrees[state.madridTrees.length - 1].x < width - 400) {
-                const treeData = IMAGES.current.madrid_trees[Math.floor(Math.random() * IMAGES.current.madrid_trees.length)];
-                const treeImg = treeData?.img;
-
-                // Only add if image is loaded and valid
-                if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
-                    // Trees are smaller than buildings
-                    const maxHeight = height * 0.3;
-                    const scale = maxHeight / treeImg.naturalHeight;
-                    const treeWidth = treeImg.naturalWidth * scale;
-
-                    state.madridTrees.push({
-                        x: width,
-                        img: treeImg,
-                        width: treeWidth,
-                        height: maxHeight
-                    });
-                }
-            }
-
-            // Update tree positions and filter out broken images
-            state.madridTrees = state.madridTrees.filter(tree => {
-                tree.x -= state.scrollSpeed;
-                // Keep only if on screen and image is valid
-                return tree.x > -tree.width && 
-                       tree.img && 
-                       tree.img.complete && 
-                       tree.img.naturalHeight > 0 && 
-                       tree.img.naturalWidth > 0;
+            // Update positions and filter out offscreen items
+            state.madridScenery = state.madridScenery.filter(item => {
+                item.x -= state.scrollSpeed;
+                return item.x > -item.width && 
+                       item.img && 
+                       item.img.complete && 
+                       item.img.naturalHeight > 0 && 
+                       item.img.naturalWidth > 0;
             });
         }
 
@@ -1093,22 +1079,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Madrid scrolling buildings - behind NPCs
+        // Draw Madrid scrolling scenery (buildings and trees) - behind NPCs
         if (level === 'madrid') {
             const groundY = height * GROUND_Y_PCT;
 
-            state.madridBuildings.forEach(building => {
-                if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 50;
-                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
-                }
-            });
-
-            // Draw trees/bushes
-            state.madridTrees.forEach(tree => {
-                if (isImageValid(tree.img)) {
-                    const treeY = groundY - tree.height - 50;
-                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
+            state.madridScenery.forEach(item => {
+                if (isImageValid(item.img)) {
+                    const itemY = groundY - item.height - 50;
+                    ctx.drawImage(item.img, item.x, itemY, item.width, item.height);
                 }
             });
         }

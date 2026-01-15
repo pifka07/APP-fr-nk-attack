@@ -1098,25 +1098,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const groundY = height * GROUND_Y_PCT;
 
             state.madridBuildings.forEach(building => {
-                try {
-                    if (building.img && building.img.complete && building.img.naturalHeight > 0 && building.img.naturalWidth > 0) {
-                        const buildingY = groundY - building.height;
-                        ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
-                    }
-                } catch (e) {
-                    console.error('Error drawing building:', e);
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });
 
             // Draw trees/bushes
             state.madridTrees.forEach(tree => {
-                try {
-                    if (tree.img && tree.img.complete && tree.img.naturalHeight > 0 && tree.img.naturalWidth > 0) {
-                        const treeY = groundY - tree.height;
-                        ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
-                    }
-                } catch (e) {
-                    console.error('Error drawing tree:', e);
+                if (isImageValid(tree.img)) {
+                    const treeY = groundY - tree.height;
+                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
                 }
             });
         }

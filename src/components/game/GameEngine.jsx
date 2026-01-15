@@ -4,6 +4,7 @@ import { spawnRooftopEnemy } from './levels/rooftop';
 import { spawnParkEnemy } from './levels/park';
 import { spawnLondonEnemy } from './levels/london';
 import { spawnParisEnemy } from './levels/paris';
+import { spawnMadridEnemy } from './levels/madrid';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -248,6 +249,24 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a863d9d95_2-Vordergrund3.png";
         IMAGES.current.parisBackground = new Image();
         IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bb32c2d58_2-Hintergrund2.png";
+        IMAGES.current.madridBackground = new Image();
+        IMAGES.current.madridBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/baad7cd36_Hintergrund.png";
+        IMAGES.current.madrid_tourist = new Image();
+        IMAGES.current.madrid_tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0c5cdddb8_ChatGPTImage10Jan202617_03_15.png";
+        IMAGES.current.madrid_street_performer = new Image();
+        IMAGES.current.madrid_street_performer.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/507d69cbc_Musiker.png";
+        IMAGES.current.madrid_police = new Image();
+        IMAGES.current.madrid_police.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c72cd1a7e_police.png";
+        IMAGES.current.madrid_vendor = new Image();
+        IMAGES.current.madrid_vendor.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c899b1ac3_watchseller.png";
+        IMAGES.current.madrid_car = new Image();
+        IMAGES.current.madrid_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf69dde28_car.png";
+        IMAGES.current.madrid_balloon = new Image();
+        IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
+        IMAGES.current.madrid_pigeon = new Image();
+        IMAGES.current.madrid_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2301b3f57_ChatGPTImage10Jan202618_52_29.png";
+        IMAGES.current.madrid_drone = new Image();
+        IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
 
         let loadedCount = 0;
         const checkLoad = () => {
@@ -447,6 +466,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             enemy = spawnLondonEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'paris') {
             enemy = spawnParisEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'madrid') {
+            enemy = spawnMadridEnemy(width, height, groundY, scrollSpeed);
         } else {
             // Downtown/Gelsenkirchen
             enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
@@ -797,7 +818,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'paris' && IMAGES.current.parisBackground.complete) {
+        if (level === 'madrid' && IMAGES.current.madridBackground.complete) {
+            // Madrid: Fixed background (no scrolling)
+            const bg = IMAGES.current.madridBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
+        } else if (level === 'paris' && IMAGES.current.parisBackground.complete) {
             // Paris: Fixed background (no scrolling)
             const bg = IMAGES.current.parisBackground;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -1272,6 +1302,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'paris_mime') useFullImage(IMAGES.current.paris_mime);
                 else if (e.spriteType === 'paris_pigeon') useFullImage(IMAGES.current.paris_pigeon);
                 else if (e.spriteType === 'paris_balloon') useFullImage(IMAGES.current.paris_balloon);
+                else if (e.spriteType === 'madrid_tourist') useFullImage(IMAGES.current.madrid_tourist);
+                else if (e.spriteType === 'madrid_street_performer') useFullImage(IMAGES.current.madrid_street_performer);
+                else if (e.spriteType === 'madrid_police') useFullImage(IMAGES.current.madrid_police);
+                else if (e.spriteType === 'madrid_vendor') useFullImage(IMAGES.current.madrid_vendor);
+                else if (e.spriteType === 'madrid_car') useFullImage(IMAGES.current.madrid_car);
+                else if (e.spriteType === 'madrid_balloon') useFullImage(IMAGES.current.madrid_balloon);
+                else if (e.spriteType === 'madrid_pigeon') useFullImage(IMAGES.current.madrid_pigeon);
+                else if (e.spriteType === 'madrid_drone') useFullImage(IMAGES.current.madrid_drone);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

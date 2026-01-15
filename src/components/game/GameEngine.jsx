@@ -1083,20 +1083,28 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Madrid scrolling buildings - behind NPCs
         if (level === 'madrid') {
+            const groundY = height * GROUND_Y_PCT;
+
             state.madridBuildings.forEach(building => {
-                if (building.img && building.img.complete && building.img.naturalHeight > 0) {
-                    const groundY = height * GROUND_Y_PCT;
-                    const buildingY = groundY - building.height;
-                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                try {
+                    if (building.img && building.img.complete && building.img.naturalHeight > 0 && building.img.naturalWidth > 0) {
+                        const buildingY = groundY - building.height;
+                        ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                    }
+                } catch (e) {
+                    console.error('Error drawing building:', e);
                 }
             });
 
             // Draw trees/bushes
             state.madridTrees.forEach(tree => {
-                if (tree.img && tree.img.complete && tree.img.naturalHeight > 0) {
-                    const groundY = height * GROUND_Y_PCT;
-                    const treeY = groundY - tree.height;
-                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
+                try {
+                    if (tree.img && tree.img.complete && tree.img.naturalHeight > 0 && tree.img.naturalWidth > 0) {
+                        const treeY = groundY - tree.height;
+                        ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
+                    }
+                } catch (e) {
+                    console.error('Error drawing tree:', e);
                 }
             });
         }

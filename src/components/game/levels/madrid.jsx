@@ -126,6 +126,8 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 40;
             enemy.scoreValue = 15;
             enemy.erratic = true;
+            enemy.isObstacle = true;
+            enemy.isTarget = true;
             break;
 
         case 'madrid_parrot':
@@ -134,6 +136,8 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 35;
             enemy.scoreValue = 18;
             enemy.erratic = true;
+            enemy.isObstacle = true;
+            enemy.isTarget = true;
             break;
 
         case 'madrid_sparrow':
@@ -142,6 +146,8 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 30;
             enemy.scoreValue = 12;
             enemy.erratic = true;
+            enemy.isObstacle = true;
+            enemy.isTarget = true;
             break;
 
         case 'madrid_drone':

@@ -661,8 +661,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'madrid' && IMAGES.current.madrid_buildings) {
             // Add new building if needed (increased spacing from 100 to 400)
             if (state.madridBuildings.length === 0 || state.madridBuildings[state.madridBuildings.length - 1].x < width - 400) {
-                const buildingIndex = Math.floor(Math.random() * IMAGES.current.madrid_buildings.length);
-                const buildingImg = IMAGES.current.madrid_buildings[buildingIndex].img;
+                const buildingData = IMAGES.current.madrid_buildings[Math.floor(Math.random() * IMAGES.current.madrid_buildings.length)];
+                const buildingImg = buildingData?.img;
 
                 // Only add if image is loaded and valid
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
@@ -680,21 +680,24 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             }
 
-            // Update building positions
-            state.madridBuildings.forEach(building => {
+            // Update building positions and filter out broken images
+            state.madridBuildings = state.madridBuildings.filter(building => {
                 building.x -= state.scrollSpeed;
+                // Keep only if on screen and image is valid
+                return building.x > -building.width && 
+                       building.img && 
+                       building.img.complete && 
+                       building.img.naturalHeight > 0 && 
+                       building.img.naturalWidth > 0;
             });
-
-            // Remove buildings that are off-screen
-            state.madridBuildings = state.madridBuildings.filter(b => b.x > -b.width);
         }
 
         // Madrid Trees/Bushes Management
         if (level === 'madrid' && IMAGES.current.madrid_trees) {
             // Add new tree/bush between buildings
             if (state.madridTrees.length === 0 || state.madridTrees[state.madridTrees.length - 1].x < width - 150) {
-                const treeIndex = Math.floor(Math.random() * IMAGES.current.madrid_trees.length);
-                const treeImg = IMAGES.current.madrid_trees[treeIndex].img;
+                const treeData = IMAGES.current.madrid_trees[Math.floor(Math.random() * IMAGES.current.madrid_trees.length)];
+                const treeImg = treeData?.img;
 
                 // Only add if image is loaded and valid
                 if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
@@ -712,13 +715,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             }
 
-            // Update tree positions
-            state.madridTrees.forEach(tree => {
+            // Update tree positions and filter out broken images
+            state.madridTrees = state.madridTrees.filter(tree => {
                 tree.x -= state.scrollSpeed;
+                // Keep only if on screen and image is valid
+                return tree.x > -tree.width && 
+                       tree.img && 
+                       tree.img.complete && 
+                       tree.img.naturalHeight > 0 && 
+                       tree.img.naturalWidth > 0;
             });
-
-            // Remove trees that are off-screen
-            state.madridTrees = state.madridTrees.filter(t => t.x > -t.width);
         }
 
         // Enemy/World Movement & Spawning

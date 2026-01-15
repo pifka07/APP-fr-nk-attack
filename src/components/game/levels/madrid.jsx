@@ -3,11 +3,14 @@
 export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
     const enemyTypes = [
         // Ground enemies (70%)
-        { type: 'madrid_tourist', weight: 20 },
-        { type: 'madrid_street_performer', weight: 15 },
-        { type: 'madrid_police', weight: 10 },
-        { type: 'madrid_vendor', weight: 15 },
-        { type: 'madrid_car', weight: 10 },
+        { type: 'madrid_waiter', weight: 15 },
+        { type: 'madrid_flamenco', weight: 15 },
+        { type: 'madrid_tourist_girl', weight: 10 },
+        { type: 'madrid_flower_girl', weight: 10 },
+        { type: 'madrid_elderly', weight: 8 },
+        { type: 'madrid_flight_attendant', weight: 7 },
+        { type: 'madrid_boy_tourist', weight: 7 },
+        { type: 'madrid_car', weight: 8 },
         
         // Air obstacles/enemies (30%)
         { type: 'madrid_balloon', weight: 5 },
@@ -22,7 +25,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
 
     let selectedType;
     if (isGroundSpawn) {
-        const groundTypes = enemyTypes.filter(e => ['madrid_tourist', 'madrid_street_performer', 'madrid_police', 'madrid_vendor', 'madrid_car'].includes(e.type));
+        const groundTypes = enemyTypes.filter(e => ['madrid_waiter', 'madrid_flamenco', 'madrid_tourist_girl', 'madrid_flower_girl', 'madrid_elderly', 'madrid_flight_attendant', 'madrid_boy_tourist', 'madrid_car'].includes(e.type));
         const totalWeight = groundTypes.reduce((sum, e) => sum + e.weight, 0);
         let rand = Math.random() * totalWeight;
         selectedType = groundTypes.find(e => {
@@ -51,30 +54,51 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
 
     // Configure based on type
     switch (selectedType) {
-        case 'madrid_tourist':
-            enemy.y = groundY - 45;
-            enemy.width = 40;
-            enemy.height = 45;
-            enemy.scoreValue = 15;
-            break;
-
-        case 'madrid_street_performer':
+        case 'madrid_waiter':
             enemy.y = groundY - 50;
             enemy.width = 45;
             enemy.height = 50;
             enemy.scoreValue = 20;
             break;
 
-        case 'madrid_police':
+        case 'madrid_flamenco':
             enemy.y = groundY - 50;
-            enemy.width = 40;
+            enemy.width = 60;
             enemy.height = 50;
             enemy.scoreValue = 25;
             break;
 
-        case 'madrid_vendor':
-            enemy.y = groundY - 45;
+        case 'madrid_tourist_girl':
+            enemy.y = groundY - 48;
+            enemy.width = 45;
+            enemy.height = 48;
+            enemy.scoreValue = 18;
+            break;
+
+        case 'madrid_flower_girl':
+            enemy.y = groundY - 50;
             enemy.width = 50;
+            enemy.height = 50;
+            enemy.scoreValue = 20;
+            break;
+
+        case 'madrid_elderly':
+            enemy.y = groundY - 48;
+            enemy.width = 55;
+            enemy.height = 48;
+            enemy.scoreValue = 30;
+            break;
+
+        case 'madrid_flight_attendant':
+            enemy.y = groundY - 48;
+            enemy.width = 40;
+            enemy.height = 48;
+            enemy.scoreValue = 18;
+            break;
+
+        case 'madrid_boy_tourist':
+            enemy.y = groundY - 45;
+            enemy.width = 40;
             enemy.height = 45;
             enemy.scoreValue = 15;
             break;

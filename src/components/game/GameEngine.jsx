@@ -1505,7 +1505,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     const jumpOffset = Math.abs(Math.sin(state.animFrame * 0.1)) * 40; // 0 to 40px up
 
                     // Draw Raccoon
-                    if (IMAGES.current.raccoon) {
+                    if (isImageValid(IMAGES.current.raccoon)) {
                         const rW = 50; 
                         const rH = 50;
                         ctx.drawImage(
@@ -1530,7 +1530,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // So we draw the Can ON TOP of the lower part of the raccoon.
                     // But the can image is the whole can. 
                     // So simply drawing the can *after* the raccoon should hide the raccoon when it's "down" if the can image is opaque.
-                    ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+                    if (isImageValid(sheet)) {
+                        ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
+                    }
 
                     } else if (e.spriteType !== 'smoke' && isImageValid(sheet)) {
                         ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);

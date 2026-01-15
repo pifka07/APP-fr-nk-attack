@@ -1111,7 +1111,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'madrid' && isImageValid(IMAGES.current.madridStreet)) {
             const groundY = height * GROUND_Y_PCT;
             const street = IMAGES.current.madridStreet;
-            const streetHeight = 200; // Fixed height for street
+            const streetHeight = 180; // Fixed height for street
             const streetScale = streetHeight / street.height;
             const streetWidth = street.width * streetScale;
             const streetY = height - streetHeight;

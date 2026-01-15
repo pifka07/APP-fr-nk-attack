@@ -83,7 +83,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             break;
 
         case 'madrid_elderly':
-            enemy.y = groundY - 96;
+            enemy.y = groundY - 80;
             enemy.width = 110;
             enemy.height = 96;
             enemy.scoreValue = 30;

@@ -919,6 +919,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.particles = state.particles.filter(p => p.life > 0);
     };
 
+    const isImageValid = (img) => {
+        return img && img.complete && img.naturalHeight > 0 && img.naturalWidth > 0;
+    };
+
     const draw = (ctx, width, height) => {
         const state = gameStateRef.current;
 

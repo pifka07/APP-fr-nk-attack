@@ -651,12 +651,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 const buildingIndex = Math.floor(Math.random() * IMAGES.current.madrid_buildings.length);
                 const buildingImg = IMAGES.current.madrid_buildings[buildingIndex].img;
 
-                // Only add if image is loaded
-                if (buildingImg.complete && buildingImg.naturalHeight > 0) {
+                // Only add if image is loaded and valid
+                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
                     // Calculate height to fit screen (buildings should be at bottom)
                     const maxHeight = height * 0.6; // Buildings take up 60% of screen height
-                    const scale = maxHeight / buildingImg.height;
-                    const buildingWidth = buildingImg.width * scale;
+                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const buildingWidth = buildingImg.naturalWidth * scale;
 
                     state.madridBuildings.push({
                         x: width,

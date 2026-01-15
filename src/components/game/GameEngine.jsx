@@ -1532,9 +1532,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // So simply drawing the can *after* the raccoon should hide the raccoon when it's "down" if the can image is opaque.
                     ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
 
-                    } else if (e.spriteType !== 'smoke') {
+                    } else if (e.spriteType !== 'smoke' && isImageValid(sheet)) {
                         ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
-                        } else {
+                        } else if (e.spriteType === 'smoke') {
                     // Draw Smoke
                     ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';
                     ctx.beginPath();

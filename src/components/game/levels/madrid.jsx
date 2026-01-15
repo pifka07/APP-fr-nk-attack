@@ -55,7 +55,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
     // Configure based on type
     switch (selectedType) {
         case 'madrid_waiter':
-            enemy.y = groundY - 80;
+            enemy.y = groundY - 130;
             enemy.width = 90;
             enemy.height = 100;
             enemy.scoreValue = 20;

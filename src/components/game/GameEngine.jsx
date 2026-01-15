@@ -1114,8 +1114,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Draw Paris scrolling foreground (3 images in sequence) - behind NPCs
-        if (level === 'paris' && IMAGES.current.parisForeground1.complete && 
-            IMAGES.current.parisForeground2.complete && IMAGES.current.parisForeground3.complete) {
+        if (level === 'paris' && isImageValid(IMAGES.current.parisForeground1) && 
+            isImageValid(IMAGES.current.parisForeground2) && isImageValid(IMAGES.current.parisForeground3)) {
 
             const fg1 = IMAGES.current.parisForeground1;
             const fg2 = IMAGES.current.parisForeground2;

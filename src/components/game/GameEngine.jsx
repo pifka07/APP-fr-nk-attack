@@ -1102,7 +1102,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const streetHeight = 120; // Fixed height for street
             const streetScale = streetHeight / street.height;
             const streetWidth = street.width * streetScale;
-            const streetY = groundY - streetHeight;
+            const streetY = height - streetHeight;
 
             // Wrap around scrolling
             const offset = state.madridStreetX % streetWidth;

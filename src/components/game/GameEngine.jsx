@@ -1574,7 +1574,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.powerups.forEach(p => {
             if (!p.active) return;
 
-            if (p.type === 'coin' && assetsLoaded.current) {
+            if (p.type === 'coin' && isImageValid(IMAGES.current.coin)) {
                 const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
                 ctx.save();
                 ctx.translate(p.x + p.width/2, p.y + p.height/2);
@@ -1582,7 +1582,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(IMAGES.current.coin, -p.width/2, -p.height/2, p.width, p.height);
                 ctx.restore();
             }
-            else if (p.type === 'energy' && assetsLoaded.current) {
+            else if (p.type === 'energy' && isImageValid(IMAGES.current.energyIcon)) {
                 const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
                 ctx.save();
                 ctx.translate(p.x + p.width/2, p.y + p.height/2);
@@ -1590,7 +1590,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(IMAGES.current.energyIcon, -p.width/2, -p.height/2, p.width, p.height);
                 ctx.restore();
             }
-            else if (p.type === 'ammo' && assetsLoaded.current) {
+            else if (p.type === 'ammo' && isImageValid(IMAGES.current.ammoIcon)) {
                 const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
                 ctx.save();
                 ctx.translate(p.x + p.width/2, p.y + p.height/2);

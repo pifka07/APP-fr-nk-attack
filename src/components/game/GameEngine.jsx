@@ -286,6 +286,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5b19c454c_Haus3-Kopie2.png" }
         ];
         IMAGES.current.madrid_buildings.forEach(building => {
+            building.img.onerror = () => console.error('Failed to load building:', building.src);
             building.img.src = building.src;
         });
 

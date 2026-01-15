@@ -290,6 +290,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             building.img.src = building.src;
         });
 
+        // Madrid Trees/Bushes
+        IMAGES.current.madrid_trees = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8e8e51f72_Tree-Kopie6.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/07760b9b1_Tree-Kopie7.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/96c56d737_Tree-Kopie8.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3d8f925cb_Tree-Kopie3.png" }
+        ];
+        IMAGES.current.madrid_trees.forEach(tree => {
+            tree.img.onerror = () => console.error('Failed to load tree:', tree.src);
+            tree.img.src = tree.src;
+        });
+
         let loadedCount = 0;
         const checkLoad = () => {
             loadedCount++;
@@ -350,7 +362,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         rapidFireUntil: 0,
         shotQueue: [],
         lastMilestone: 0, // Track last milestone reached
-        madridBuildings: [] // Madrid scrolling buildings
+        madridBuildings: [], // Madrid scrolling buildings
+        madridTrees: [] // Madrid scrolling trees/bushes
         });
 
     // Apply config
@@ -646,8 +659,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Madrid Buildings Management
         if (level === 'madrid' && IMAGES.current.madrid_buildings) {
-            // Add new building if needed
-            if (state.madridBuildings.length === 0 || state.madridBuildings[state.madridBuildings.length - 1].x < width - 100) {
+            // Add new building if needed (increased spacing from 100 to 400)
+            if (state.madridBuildings.length === 0 || state.madridBuildings[state.madridBuildings.length - 1].x < width - 400) {
                 const buildingIndex = Math.floor(Math.random() * IMAGES.current.madrid_buildings.length);
                 const buildingImg = IMAGES.current.madrid_buildings[buildingIndex].img;
 
@@ -674,6 +687,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             // Remove buildings that are off-screen
             state.madridBuildings = state.madridBuildings.filter(b => b.x > -b.width);
+        }
+
+        // Madrid Trees/Bushes Management
+        if (level === 'madrid' && IMAGES.current.madrid_trees) {
+            // Add new tree/bush between buildings
+            if (state.madridTrees.length === 0 || state.madridTrees[state.madridTrees.length - 1].x < width - 150) {
+                const treeIndex = Math.floor(Math.random() * IMAGES.current.madrid_trees.length);
+                const treeImg = IMAGES.current.madrid_trees[treeIndex].img;
+
+                // Only add if image is loaded and valid
+                if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
+                    // Trees are smaller than buildings
+                    const maxHeight = height * 0.3;
+                    const scale = maxHeight / treeImg.naturalHeight;
+                    const treeWidth = treeImg.naturalWidth * scale;
+
+                    state.madridTrees.push({
+                        x: width,
+                        img: treeImg,
+                        width: treeWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update tree positions
+            state.madridTrees.forEach(tree => {
+                tree.x -= state.scrollSpeed;
+            });
+
+            // Remove trees that are off-screen
+            state.madridTrees = state.madridTrees.filter(t => t.x > -t.width);
         }
 
         // Enemy/World Movement & Spawning
@@ -1043,6 +1088,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     const groundY = height * GROUND_Y_PCT;
                     const buildingY = groundY - building.height;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
+
+            // Draw trees/bushes
+            state.madridTrees.forEach(tree => {
+                if (tree.img && tree.img.complete && tree.img.naturalHeight > 0) {
+                    const groundY = height * GROUND_Y_PCT;
+                    const treeY = groundY - tree.height;
+                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
                 }
             });
         }

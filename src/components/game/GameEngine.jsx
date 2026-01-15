@@ -1394,8 +1394,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 
                 // Helper for single image sprites
                 const useFullImage = (img) => {
-                    sheet = img;
-                    sx = 0; sy = 0; sw = img.width; sh = img.height;
+                    if (isImageValid(img)) {
+                        sheet = img;
+                        sx = 0; sy = 0; sw = img.width; sh = img.height;
+                        return true;
+                    }
+                    return false;
                 };
 
                 if (e.spriteType === 'eagle') useFullImage(IMAGES.current.eagle);

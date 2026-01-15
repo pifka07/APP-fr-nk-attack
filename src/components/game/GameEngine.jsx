@@ -251,6 +251,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bb32c2d58_2-Hintergrund2.png";
         IMAGES.current.madridBackground = new Image();
         IMAGES.current.madridBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e8e4bed57_Hintergrund2.png";
+        IMAGES.current.madridStreet = new Image();
+        IMAGES.current.madridStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/851b95a9c_Strasse.png";
         IMAGES.current.madrid_waiter = new Image();
         IMAGES.current.madrid_waiter.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/14efbf717_NPCs-Kopie2.png";
         IMAGES.current.madrid_flamenco = new Image();
@@ -370,7 +372,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         lastMilestone: 0, // Track last milestone reached
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/bushes
-        madridScenery: [] // Combined buildings and trees
+        madridScenery: [], // Combined buildings and trees
+        madridStreetX: 0 // Madrid street scroll position
         });
 
     // Apply config
@@ -665,6 +668,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 state.combo = 0;
                 if (onComboUpdate) onComboUpdate(0);
             }
+        }
+
+        // Madrid Street Scrolling
+        if (level === 'madrid') {
+            state.madridStreetX -= state.scrollSpeed;
         }
 
         // Madrid Scenery Management (Buildings and Trees combined)
@@ -1086,7 +1094,27 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Madrid scrolling scenery (buildings and trees) - behind NPCs
+        // Draw Madrid scrolling street - at the bottom, behind scenery and NPCs
+        if (level === 'madrid' && isImageValid(IMAGES.current.madridStreet)) {
+            const groundY = height * GROUND_Y_PCT;
+            const street = IMAGES.current.madridStreet;
+            const streetHeight = 120; // Fixed height for street
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = groundY - streetHeight;
+
+            // Wrap around scrolling
+            const offset = state.madridStreetX % streetWidth;
+
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
+            }
+        }
+
+        // Draw Madrid scrolling scenery (buildings and trees) - behind NPCs, above street
         if (level === 'madrid') {
             const groundY = height * GROUND_Y_PCT;
 

@@ -264,7 +264,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_balloon = new Image();
         IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.madrid_pigeon = new Image();
-        IMAGES.current.madrid_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2301b3f57_ChatGPTImage10Jan202618_52_29.png";
+        IMAGES.current.madrid_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b8ed2c60b_Birds-Kopie.png";
+        IMAGES.current.madrid_parrot = new Image();
+        IMAGES.current.madrid_parrot.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/da3dee563_Birds-Kopie2.png";
+        IMAGES.current.madrid_sparrow = new Image();
+        IMAGES.current.madrid_sparrow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2a9103eb0_Birds-Kopie3.png";
         IMAGES.current.madrid_drone = new Image();
         IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
 
@@ -1309,6 +1313,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'madrid_car') useFullImage(IMAGES.current.madrid_car);
                 else if (e.spriteType === 'madrid_balloon') useFullImage(IMAGES.current.madrid_balloon);
                 else if (e.spriteType === 'madrid_pigeon') useFullImage(IMAGES.current.madrid_pigeon);
+                else if (e.spriteType === 'madrid_parrot') useFullImage(IMAGES.current.madrid_parrot);
+                else if (e.spriteType === 'madrid_sparrow') useFullImage(IMAGES.current.madrid_sparrow);
                 else if (e.spriteType === 'madrid_drone') useFullImage(IMAGES.current.madrid_drone);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)

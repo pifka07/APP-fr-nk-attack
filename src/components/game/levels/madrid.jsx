@@ -10,8 +10,10 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
         { type: 'madrid_car', weight: 10 },
         
         // Air obstacles/enemies (30%)
-        { type: 'madrid_balloon', weight: 10 },
-        { type: 'madrid_pigeon', weight: 15 },
+        { type: 'madrid_balloon', weight: 5 },
+        { type: 'madrid_pigeon', weight: 10 },
+        { type: 'madrid_parrot', weight: 10 },
+        { type: 'madrid_sparrow', weight: 10 },
         { type: 'madrid_drone', weight: 5 }
     ];
 
@@ -28,7 +30,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             return rand <= 0;
         }).type;
     } else {
-        const airTypes = enemyTypes.filter(e => ['madrid_balloon', 'madrid_pigeon', 'madrid_drone'].includes(e.type));
+        const airTypes = enemyTypes.filter(e => ['madrid_balloon', 'madrid_pigeon', 'madrid_parrot', 'madrid_sparrow', 'madrid_drone'].includes(e.type));
         const totalWeight = airTypes.reduce((sum, e) => sum + e.weight, 0);
         let rand = Math.random() * totalWeight;
         selectedType = airTypes.find(e => {
@@ -96,9 +98,25 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
 
         case 'madrid_pigeon':
             enemy.y = 100 + Math.random() * 150;
+            enemy.width = 45;
+            enemy.height = 40;
+            enemy.scoreValue = 15;
+            enemy.erratic = true;
+            break;
+
+        case 'madrid_parrot':
+            enemy.y = 80 + Math.random() * 120;
+            enemy.width = 40;
+            enemy.height = 35;
+            enemy.scoreValue = 18;
+            enemy.erratic = true;
+            break;
+
+        case 'madrid_sparrow':
+            enemy.y = 120 + Math.random() * 100;
             enemy.width = 35;
             enemy.height = 30;
-            enemy.scoreValue = 15;
+            enemy.scoreValue = 12;
             enemy.erratic = true;
             break;
 

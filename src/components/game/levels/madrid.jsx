@@ -55,14 +55,14 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
     // Configure based on type
     switch (selectedType) {
         case 'madrid_waiter':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 95;
             enemy.width = 90;
             enemy.height = 100;
             enemy.scoreValue = 20;
             break;
 
         case 'madrid_flamenco':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 90;
             enemy.width = 120;
             enemy.height = 100;
             enemy.scoreValue = 25;
@@ -76,7 +76,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             break;
 
         case 'madrid_flower_girl':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 102;
             enemy.width = 100;
             enemy.height = 100;
             enemy.scoreValue = 20;
@@ -90,7 +90,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
             break;
 
         case 'madrid_flight_attendant':
-            enemy.y = groundY - 96;
+            enemy.y = groundY - 94;
             enemy.width = 80;
             enemy.height = 96;
             enemy.scoreValue = 18;
@@ -105,8 +105,8 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
 
         case 'madrid_car':
             enemy.y = groundY - 70;
-            enemy.width = 140;
-            enemy.height = 70;
+            enemy.width = 150;
+            enemy.height = 100;
             enemy.scoreValue = 30;
             enemy.isObstacle = true;
             enemy.isTarget = false;

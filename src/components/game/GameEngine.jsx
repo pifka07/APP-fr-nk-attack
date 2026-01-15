@@ -1095,7 +1095,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Madrid scrolling street - at the bottom, behind scenery and NPCs
+        // Draw Madrid scrolling scenery (buildings and trees) - behind street and NPCs
+        if (level === 'madrid') {
+            const groundY = height * GROUND_Y_PCT;
+
+            state.madridScenery.forEach(item => {
+                if (isImageValid(item.img)) {
+                    const itemY = groundY - item.height - 50;
+                    ctx.drawImage(item.img, item.x, itemY, item.width, item.height);
+                }
+            });
+        }
+
+        // Draw Madrid scrolling street - above scenery, behind NPCs
         if (level === 'madrid' && isImageValid(IMAGES.current.madridStreet)) {
             const groundY = height * GROUND_Y_PCT;
             const street = IMAGES.current.madridStreet;
@@ -1113,18 +1125,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (offset < 0) {
                 ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
             }
-        }
-
-        // Draw Madrid scrolling scenery (buildings and trees) - behind NPCs, above street
-        if (level === 'madrid') {
-            const groundY = height * GROUND_Y_PCT;
-
-            state.madridScenery.forEach(item => {
-                if (isImageValid(item.img)) {
-                    const itemY = groundY - item.height - 50;
-                    ctx.drawImage(item.img, item.x, itemY, item.width, item.height);
-                }
-            });
         }
 
         // Draw Paris scrolling foreground (3 images in sequence) - behind NPCs

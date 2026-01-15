@@ -930,7 +930,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'madrid' && IMAGES.current.madridBackground.complete) {
+        if (level === 'madrid' && isImageValid(IMAGES.current.madridBackground)) {
             // Madrid: Fixed background (no scrolling)
             const bg = IMAGES.current.madridBackground;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -939,7 +939,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const x = (width - w) / 2;
             const y = (height - h) / 2;
             ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'paris' && IMAGES.current.parisBackground.complete) {
+        } else if (level === 'paris' && isImageValid(IMAGES.current.parisBackground)) {
             // Paris: Fixed background (no scrolling)
             const bg = IMAGES.current.parisBackground;
             const scale = Math.max(width / bg.width, height / bg.height);

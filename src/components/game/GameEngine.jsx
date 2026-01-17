@@ -486,15 +486,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isPink = skin === 'pink';
             const isBat = skin === 'bat';
             const isZombie = skin === 'zombie';
+            const isGhost = skin === 'ghost';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : 2))))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : 5))))))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : 2)))))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : 5)))))))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isRapidFire ? 'triple' : 'normal')))))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isRapidFire ? 60 : 30)))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isRapidFire ? 60 : 30))))))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isRapidFire ? 'triple' : 'normal'))))))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isRapidFire ? 60 : 30))))))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isRapidFire ? 60 : 30)))))))))
             });
         };
 
@@ -1413,6 +1414,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             ctx.fill();
 
                             ctx.shadowBlur = 0;
+                    } else if (p.type === 'ghost_poop') {
+                        // Draw white ghost poop
+                        ctx.rotate(state.animFrame * 0.2);
+                        ctx.shadowColor = '#ffffff';
+                        ctx.shadowBlur = 10;
+                        
+                        // White poop shape
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Highlight
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                        ctx.beginPath();
+                        ctx.arc(-p.width/6, -p.height/6, p.width/3, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.shadowBlur = 0;
                     } else {
                         const img = IMAGES.current.poopProjectile;
                         // Spin the poop!

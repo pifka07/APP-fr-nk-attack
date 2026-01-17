@@ -221,6 +221,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.laserProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/laser.png";
         IMAGES.current.ammoIcon = new Image();
         IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png";
+        IMAGES.current.boneProjectile = new Image();
+        IMAGES.current.boneProjectile.src = "BONE_IMAGE_URL_PLACEHOLDER";
         IMAGES.current.paris_car = new Image();
         IMAGES.current.paris_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf69dde28_car.png";
         IMAGES.current.police_man = new Image();
@@ -483,15 +485,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isChristmas = skin === 'christmas';
             const isPink = skin === 'pink';
             const isBat = skin === 'bat';
+            const isZombie = skin === 'zombie';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : 2)))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : 5)))))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : 2))))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : 5))))))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isRapidFire ? 'triple' : 'normal'))))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isRapidFire ? 60 : 30))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isRapidFire ? 60 : 30)))))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isRapidFire ? 'triple' : 'normal')))))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isRapidFire ? 60 : 30)))))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isRapidFire ? 60 : 30))))))))
             });
         };
 
@@ -653,7 +656,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang') {
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone') {
                 p.vy += GRAVITY * 0.5; // accelerate down
             }
             // Bubbles float slowly upward
@@ -1355,6 +1358,34 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                             ctx.lineTo(0, 0);
                             ctx.lineTo(p.width/2, p.height/3);
                             ctx.stroke();
+
+                            ctx.shadowBlur = 0;
+                            } else if (p.type === 'bone') {
+                            // Draw bone projectile
+                            ctx.rotate(state.animFrame * 0.25);
+                            ctx.shadowColor = '#f5f5dc';
+                            ctx.shadowBlur = 8;
+
+                            // Draw bone shape
+                            ctx.fillStyle = '#f5f5dc'; // Beige bone color
+                            ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+
+                            // Bone ends (knobs)
+                            ctx.beginPath();
+                            ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                            ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Darker outline
+                            ctx.strokeStyle = '#d3c5a0';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.strokeRect(-p.width/2, -p.height/2, p.width, p.height);
 
                             ctx.shadowBlur = 0;
                             } else if (p.type === 'shuriken') {

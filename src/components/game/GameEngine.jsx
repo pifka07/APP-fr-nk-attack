@@ -274,6 +274,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf69dde28_car.png";
         IMAGES.current.rome_car = new Image();
         IMAGES.current.rome_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5acdb35aa_Auto.png";
+        IMAGES.current.rome_tourist = new Image();
+        IMAGES.current.rome_tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf3ec66f5_NPCS-Kopie.png";
+        IMAGES.current.rome_priest = new Image();
+        IMAGES.current.rome_priest.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/34f1cf3bd_NPC-Kopie6.png";
+        IMAGES.current.rome_pizza_chef = new Image();
+        IMAGES.current.rome_pizza_chef.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c38cfd030_NPC-Kopie7.png";
+        IMAGES.current.rome_vespa_driver = new Image();
+        IMAGES.current.rome_vespa_driver.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cf634acb6_NPC-Kopie4.png";
+        IMAGES.current.rome_old_lady = new Image();
+        IMAGES.current.rome_old_lady.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f3babc258_NPC-Kopie2.png";
+        IMAGES.current.rome_gladiator = new Image();
+        IMAGES.current.rome_gladiator.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ab9282d41_NPC-Kopie.png";
         IMAGES.current.madrid_balloon = new Image();
         IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.madrid_pigeon = new Image();
@@ -1689,6 +1701,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'madrid_sparrow') useFullImage(IMAGES.current.madrid_sparrow);
                 else if (e.spriteType === 'madrid_drone') useFullImage(IMAGES.current.madrid_drone);
                 else if (e.spriteType === 'rome_car') useFullImage(IMAGES.current.rome_car);
+                else if (e.spriteType === 'rome_tourist') useFullImage(IMAGES.current.rome_tourist);
+                else if (e.spriteType === 'rome_priest') useFullImage(IMAGES.current.rome_priest);
+                else if (e.spriteType === 'rome_pizza_chef') useFullImage(IMAGES.current.rome_pizza_chef);
+                else if (e.spriteType === 'rome_vespa_driver') useFullImage(IMAGES.current.rome_vespa_driver);
+                else if (e.spriteType === 'rome_old_lady') useFullImage(IMAGES.current.rome_old_lady);
+                else if (e.spriteType === 'rome_gladiator') useFullImage(IMAGES.current.rome_gladiator);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

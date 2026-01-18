@@ -180,7 +180,8 @@ export default function Game() {
                 distance: stats.distance,
                 durationMs: durationMs,
                 missionId: null,
-                difficulty: gameSpeed
+                difficulty: gameSpeed,
+                level: currentLevel
             });
             
             console.log("finishRun response:", response.data);

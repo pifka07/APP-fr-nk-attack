@@ -90,6 +90,7 @@ export default function Leaderboard() {
                                                         <span className={`font-bold ${currentUser && player.user_id === currentUser.id ? 'text-teal-400' : 'text-white'}`}>
                                                             {player.username || 'Anonymous Bird'}
                                                         </span>
+                                                        <span className="text-[10px] text-teal-400/70 uppercase font-bold">{player.level || 'downtown'}</span>
                                                         {currentUser && player.user_id === currentUser.id && (
                                                             <span className="text-[10px] text-teal-500/70 uppercase font-bold">That's You!</span>
                                                         )}

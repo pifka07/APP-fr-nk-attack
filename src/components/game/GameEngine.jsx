@@ -311,6 +311,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             building.img.src = building.src;
         });
 
+        // Rome Trees
+        IMAGES.current.rome_trees = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/989b1364a_Pflanzen10-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ffa348c2e_Pflanzen3-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2e71626ca_Pflanzen4-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5e98ab898_Pflanzen5-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a3b1fc6e5_Pflanzen6-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a28b7a01e_Pflanzen7-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/afb4070b0_Pflanzen8-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/fca695d2d_Pflanzen9-Kopie.png" }
+        ];
+        IMAGES.current.rome_trees.forEach(tree => {
+            tree.img.onerror = () => console.error('Failed to load Rome tree:', tree.src);
+            tree.img.src = tree.src;
+        });
+
         // Madrid Buildings
         IMAGES.current.madrid_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1a977495f_Haus3-Kopie3.png" },
@@ -406,6 +422,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         madridScenery: [], // Combined buildings and trees
         madridStreetX: 0, // Madrid street scroll position
         romeBuildings: [], // Rome scrolling buildings
+        romeTrees: [], // Rome scrolling trees
         romeStreetX: 0 // Rome street scroll position
         });
 
@@ -451,6 +468,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.madridScenery = [];
             gameStateRef.current.madridStreetX = 0;
             gameStateRef.current.romeBuildings = [];
+            gameStateRef.current.romeTrees = [];
             gameStateRef.current.romeStreetX = 0;
 
             // Initialize Poop Tank
@@ -723,7 +741,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rome Buildings Management
         if (level === 'rome' && IMAGES.current.rome_buildings) {
             // Add new building if needed
-            if (state.romeBuildings.length === 0 || state.romeBuildings[state.romeBuildings.length - 1].x < width - (300 + Math.random() * 600)) {
+            if (state.romeBuildings.length === 0 || state.romeBuildings[state.romeBuildings.length - 1].x < width - (500 + Math.random() * 800)) {
                 const buildingData = IMAGES.current.rome_buildings[Math.floor(Math.random() * IMAGES.current.rome_buildings.length)];
                 const buildingImg = buildingData?.img;
 
@@ -749,6 +767,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                        building.img.complete && 
                        building.img.naturalHeight > 0 && 
                        building.img.naturalWidth > 0;
+            });
+        }
+
+        // Rome Trees Management
+        if (level === 'rome' && IMAGES.current.rome_trees) {
+            // Add new tree if needed
+            if (state.romeTrees.length === 0 || state.romeTrees[state.romeTrees.length - 1].x < width - (200 + Math.random() * 400)) {
+                const treeData = IMAGES.current.rome_trees[Math.floor(Math.random() * IMAGES.current.rome_trees.length)];
+                const treeImg = treeData?.img;
+
+                if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.35;
+                    const scale = maxHeight / treeImg.naturalHeight;
+                    const treeWidth = treeImg.naturalWidth * scale;
+
+                    state.romeTrees.push({
+                        x: width,
+                        img: treeImg,
+                        width: treeWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen trees
+            state.romeTrees = state.romeTrees.filter(tree => {
+                tree.x -= state.scrollSpeed;
+                return tree.x > -tree.width && 
+                       tree.img && 
+                       tree.img.complete && 
+                       tree.img.naturalHeight > 0 && 
+                       tree.img.naturalWidth > 0;
             });
         }
 
@@ -1188,6 +1238,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 if (isImageValid(building.img)) {
                     const buildingY = groundY - building.height - 30;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
+
+            // Draw Rome scrolling trees - in front of buildings, behind street
+            state.romeTrees.forEach(tree => {
+                if (isImageValid(tree.img)) {
+                    const treeY = groundY - tree.height - 20;
+                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
                 }
             });
         }

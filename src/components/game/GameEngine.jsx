@@ -277,15 +277,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.rome_tourist = new Image();
         IMAGES.current.rome_tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf3ec66f5_NPCS-Kopie.png";
         IMAGES.current.rome_priest = new Image();
-        IMAGES.current.rome_priest.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/34f1cf3bd_NPC-Kopie6.png";
+        IMAGES.current.rome_priest.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/26cf7434b_NPC-Kopie6.png";
         IMAGES.current.rome_pizza_chef = new Image();
-        IMAGES.current.rome_pizza_chef.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c38cfd030_NPC-Kopie7.png";
+        IMAGES.current.rome_pizza_chef.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/296df79ad_NPC-Kopie7.png";
         IMAGES.current.rome_vespa_driver = new Image();
-        IMAGES.current.rome_vespa_driver.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cf634acb6_NPC-Kopie4.png";
+        IMAGES.current.rome_vespa_driver.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3c0279402_NPC-Kopie4.png";
         IMAGES.current.rome_old_lady = new Image();
-        IMAGES.current.rome_old_lady.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f3babc258_NPC-Kopie2.png";
+        IMAGES.current.rome_old_lady.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/32cfa8ee1_NPC-Kopie2.png";
         IMAGES.current.rome_gladiator = new Image();
-        IMAGES.current.rome_gladiator.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ab9282d41_NPC-Kopie.png";
+        IMAGES.current.rome_gladiator.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0c5724494_NPC-Kopie.png";
         IMAGES.current.madrid_balloon = new Image();
         IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.madrid_pigeon = new Image();
@@ -308,7 +308,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rome Buildings
         IMAGES.current.rome_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5f6f73bab_Haus2-Kopie.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1ef7f76e9_Haus1-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0d3efaf14_Haus1-Kopie2.png" },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b5c8bdf09_Haus1-Kopie3.png" },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2b6b5ac60_Haus1-Kopie4.png" },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ee4ecb6b5_Haus1-Kopie5.png" },

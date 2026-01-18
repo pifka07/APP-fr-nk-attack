@@ -164,7 +164,45 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.isObstacle = true;
             break;
 
+        case 'rome_bird_white':
+            enemy.y = 80 + Math.random() * 150;
+            enemy.width = 60;
+            enemy.height = 50;
+            enemy.scoreValue = 15;
+            enemy.isTarget = true;
+            break;
 
+        case 'rome_bird_grey':
+            enemy.y = 100 + Math.random() * 150;
+            enemy.width = 65;
+            enemy.height = 55;
+            enemy.scoreValue = 18;
+            enemy.isTarget = true;
+            break;
+
+        case 'rome_bird_seagull':
+            enemy.y = 70 + Math.random() * 140;
+            enemy.width = 70;
+            enemy.height = 50;
+            enemy.scoreValue = 20;
+            enemy.isTarget = true;
+            break;
+
+        case 'rome_bird_swallow':
+            enemy.y = 90 + Math.random() * 130;
+            enemy.width = 60;
+            enemy.height = 45;
+            enemy.scoreValue = 22;
+            enemy.isTarget = true;
+            break;
+
+        case 'rome_bird_swallow2':
+            enemy.y = 85 + Math.random() * 135;
+            enemy.width = 58;
+            enemy.height = 48;
+            enemy.scoreValue = 22;
+            enemy.isTarget = true;
+            break;
     }
 
     return enemy;

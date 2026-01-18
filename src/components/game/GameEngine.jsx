@@ -723,7 +723,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rome Buildings Management
         if (level === 'rome' && IMAGES.current.rome_buildings) {
             // Add new building if needed
-            if (state.romeBuildings.length === 0 || state.romeBuildings[state.romeBuildings.length - 1].x < width - (100 + Math.random() * 300)) {
+            if (state.romeBuildings.length === 0 || state.romeBuildings[state.romeBuildings.length - 1].x < width - (300 + Math.random() * 600)) {
                 const buildingData = IMAGES.current.rome_buildings[Math.floor(Math.random() * IMAGES.current.rome_buildings.length)];
                 const buildingImg = buildingData?.img;
 

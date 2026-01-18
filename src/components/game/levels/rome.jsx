@@ -2,7 +2,6 @@
 
 export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
     const enemyTypes = [
-        // Ground enemies (70%)
         { type: 'rome_tourist', weight: 10 },
         { type: 'rome_priest', weight: 7 },
         { type: 'rome_gladiator', weight: 6 },
@@ -15,37 +14,16 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
         { type: 'rome_musician', weight: 7 },
         { type: 'rome_couple_bench2', weight: 6 },
         { type: 'rome_couple_vespa', weight: 7 },
-        { type: 'rome_girl_basket', weight: 6 },
-        
-        // Air obstacles/enemies (30%)
-        { type: 'rome_balloon', weight: 5 },
-        { type: 'rome_bird1', weight: 10 },
-        { type: 'rome_bird2', weight: 10 },
-        { type: 'rome_bird3', weight: 8 },
-        { type: 'rome_drone', weight: 5 }
+        { type: 'rome_girl_basket', weight: 6 }
     ];
 
-    // Decide if ground or air spawn
-    const isGroundSpawn = Math.random() < 0.7;
-
-    let selectedType;
-    if (isGroundSpawn) {
-        const groundTypes = enemyTypes.filter(e => ['rome_tourist', 'rome_priest', 'rome_gladiator', 'rome_pizza_chef', 'rome_vespa_driver', 'rome_car', 'rome_old_lady', 'rome_couple_bench', 'rome_couple_standing', 'rome_musician', 'rome_couple_bench2', 'rome_couple_vespa', 'rome_girl_basket'].includes(e.type));
-        const totalWeight = groundTypes.reduce((sum, e) => sum + e.weight, 0);
-        let rand = Math.random() * totalWeight;
-        selectedType = groundTypes.find(e => {
-            rand -= e.weight;
-            return rand <= 0;
-        }).type;
-    } else {
-        const airTypes = enemyTypes.filter(e => ['rome_balloon', 'rome_bird1', 'rome_bird2', 'rome_bird3', 'rome_drone'].includes(e.type));
-        const totalWeight = airTypes.reduce((sum, e) => sum + e.weight, 0);
-        let rand = Math.random() * totalWeight;
-        selectedType = airTypes.find(e => {
-            rand -= e.weight;
-            return rand <= 0;
-        }).type;
-    }
+    // Select enemy type
+    const totalWeight = enemyTypes.reduce((sum, e) => sum + e.weight, 0);
+    let rand = Math.random() * totalWeight;
+    const selectedType = enemyTypes.find(e => {
+        rand -= e.weight;
+        return rand <= 0;
+    }).type;
 
     let enemy = {
         x: width + 20,
@@ -164,52 +142,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.isObstacle = true;
             break;
 
-        case 'rome_balloon':
-            enemy.y = 80 + Math.random() * 100;
-            enemy.width = 40;
-            enemy.height = 50;
-            enemy.vx = -scrollSpeed * 0.5;
-            enemy.scoreValue = 20;
-            break;
 
-        case 'rome_bird1':
-            enemy.y = 100 + Math.random() * 150;
-            enemy.width = 60;
-            enemy.height = 50;
-            enemy.scoreValue = 15;
-            enemy.erratic = true;
-            enemy.isObstacle = true;
-            enemy.isTarget = true;
-            break;
-
-        case 'rome_bird2':
-            enemy.y = 80 + Math.random() * 120;
-            enemy.width = 65;
-            enemy.height = 55;
-            enemy.scoreValue = 18;
-            enemy.erratic = true;
-            enemy.isObstacle = true;
-            enemy.isTarget = true;
-            break;
-
-        case 'rome_bird3':
-            enemy.y = 90 + Math.random() * 130;
-            enemy.width = 55;
-            enemy.height = 48;
-            enemy.scoreValue = 16;
-            enemy.erratic = true;
-            enemy.isObstacle = true;
-            enemy.isTarget = true;
-            break;
-
-        case 'rome_drone':
-            enemy.y = 120 + Math.random() * 100;
-            enemy.width = 45;
-            enemy.height = 30;
-            enemy.scoreValue = 25;
-            enemy.isObstacle = true;
-            enemy.isTarget = false;
-            break;
     }
 
     return enemy;

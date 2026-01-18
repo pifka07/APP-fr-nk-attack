@@ -18,11 +18,11 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
         { type: 'rome_girl_basket', weight: 6 },
         
         // Air enemies (30%)
-        { type: 'rome_bird_white', weight: 8 },
-        { type: 'rome_bird_grey', weight: 8 },
-        { type: 'rome_bird_seagull', weight: 7 },
-        { type: 'rome_bird_swallow', weight: 6 },
-        { type: 'rome_bird_swallow2', weight: 6 }
+        { type: 'rome_bird1', weight: 7 },
+        { type: 'rome_bird2', weight: 7 },
+        { type: 'rome_bird3', weight: 7 },
+        { type: 'rome_bird4', weight: 7 },
+        { type: 'rome_bird5', weight: 7 }
     ];
 
     // Decide if ground or air spawn
@@ -38,7 +38,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             return rand <= 0;
         }).type;
     } else {
-        const airTypes = enemyTypes.filter(e => ['rome_bird_white', 'rome_bird_grey', 'rome_bird_seagull', 'rome_bird_swallow', 'rome_bird_swallow2'].includes(e.type));
+        const airTypes = enemyTypes.filter(e => ['rome_bird1', 'rome_bird2', 'rome_bird3', 'rome_bird4', 'rome_bird5'].includes(e.type));
         const totalWeight = airTypes.reduce((sum, e) => sum + e.weight, 0);
         let rand = Math.random() * totalWeight;
         selectedType = airTypes.find(e => {
@@ -164,7 +164,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.isObstacle = true;
             break;
 
-        case 'rome_bird_white':
+        case 'rome_bird1':
             enemy.y = 80 + Math.random() * 150;
             enemy.width = 60;
             enemy.height = 50;
@@ -172,34 +172,34 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.isTarget = true;
             break;
 
-        case 'rome_bird_grey':
-            enemy.y = 100 + Math.random() * 150;
+        case 'rome_bird2':
+            enemy.y = 90 + Math.random() * 140;
             enemy.width = 65;
             enemy.height = 55;
             enemy.scoreValue = 18;
             enemy.isTarget = true;
             break;
 
-        case 'rome_bird_seagull':
-            enemy.y = 70 + Math.random() * 140;
-            enemy.width = 70;
-            enemy.height = 50;
+        case 'rome_bird3':
+            enemy.y = 75 + Math.random() * 145;
+            enemy.width = 62;
+            enemy.height = 52;
             enemy.scoreValue = 20;
             enemy.isTarget = true;
             break;
 
-        case 'rome_bird_swallow':
-            enemy.y = 90 + Math.random() * 130;
-            enemy.width = 60;
-            enemy.height = 45;
+        case 'rome_bird4':
+            enemy.y = 85 + Math.random() * 135;
+            enemy.width = 58;
+            enemy.height = 48;
             enemy.scoreValue = 22;
             enemy.isTarget = true;
             break;
 
-        case 'rome_bird_swallow2':
-            enemy.y = 85 + Math.random() * 135;
-            enemy.width = 58;
-            enemy.height = 48;
+        case 'rome_bird5':
+            enemy.y = 70 + Math.random() * 150;
+            enemy.width = 60;
+            enemy.height = 50;
             enemy.scoreValue = 22;
             enemy.isTarget = true;
             break;

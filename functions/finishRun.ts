@@ -35,6 +35,8 @@ Deno.serve(async (req) => {
         // Find the specific session
         const pendingRun = allPendingRuns.find(pr => pr.id === run_session_id);
 
+        // ANTI-CHEAT CHECKS DISABLED
+        /*
         if (!pendingRun) {
             console.log("No pending run found for session:", run_session_id);
             console.log("Available sessions:", allPendingRuns.map(pr => ({ id: pr.id, user_id: pr.user_id })));
@@ -64,9 +66,9 @@ Deno.serve(async (req) => {
         const startedAt = new Date(pendingRun.started_at);
         const serverDuration = now - startedAt;
         const timeDifference = Math.abs(serverDuration - durationMs);
-        
+
         console.log("Time check - serverDuration:", serverDuration, "durationMs:", durationMs, "difference:", timeDifference);
-        
+
         if (durationMs < 0) {
             console.log("Negative durationMs detected:", durationMs);
             return Response.json({
@@ -74,7 +76,7 @@ Deno.serve(async (req) => {
                 reason: "CHEAT_SPEEDHACK"
             }, { status: 400 });
         }
-        
+
         // Allow more time tolerance (30 seconds) for mobile devices and network delays
         if (timeDifference > 30000) {
             console.log("Time difference too large:", timeDifference);
@@ -103,10 +105,14 @@ Deno.serve(async (req) => {
                 reason: "CHEAT_DETECTED"
             }, { status: 400 });
         }
+        */
 
-        await base44.asServiceRole.entities.PendingRun.update(pendingRun.id, {
-            used: true
-        });
+        // Mark session as used (if exists)
+        if (pendingRun) {
+            await base44.asServiceRole.entities.PendingRun.update(pendingRun.id, {
+                used: true
+            });
+        }
 
         const run = await base44.asServiceRole.entities.Run.create({
             user_id: user.id,

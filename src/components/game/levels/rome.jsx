@@ -3,13 +3,19 @@
 export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
     const enemyTypes = [
         // Ground enemies (70%)
-        { type: 'rome_tourist', weight: 15 },
-        { type: 'rome_priest', weight: 10 },
-        { type: 'rome_gladiator', weight: 8 },
-        { type: 'rome_pizza_chef', weight: 12 },
-        { type: 'rome_vespa_driver', weight: 10 },
-        { type: 'rome_car', weight: 8 },
-        { type: 'rome_old_lady', weight: 7 },
+        { type: 'rome_tourist', weight: 10 },
+        { type: 'rome_priest', weight: 7 },
+        { type: 'rome_gladiator', weight: 6 },
+        { type: 'rome_pizza_chef', weight: 8 },
+        { type: 'rome_vespa_driver', weight: 6 },
+        { type: 'rome_car', weight: 6 },
+        { type: 'rome_old_lady', weight: 5 },
+        { type: 'rome_couple_bench', weight: 8 },
+        { type: 'rome_couple_standing', weight: 8 },
+        { type: 'rome_musician', weight: 7 },
+        { type: 'rome_couple_bench2', weight: 6 },
+        { type: 'rome_couple_vespa', weight: 7 },
+        { type: 'rome_girl_basket', weight: 6 },
         
         // Air obstacles/enemies (30%)
         { type: 'rome_balloon', weight: 5 },
@@ -23,7 +29,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
 
     let selectedType;
     if (isGroundSpawn) {
-        const groundTypes = enemyTypes.filter(e => ['rome_tourist', 'rome_priest', 'rome_gladiator', 'rome_pizza_chef', 'rome_vespa_driver', 'rome_car', 'rome_old_lady'].includes(e.type));
+        const groundTypes = enemyTypes.filter(e => ['rome_tourist', 'rome_priest', 'rome_gladiator', 'rome_pizza_chef', 'rome_vespa_driver', 'rome_car', 'rome_old_lady', 'rome_couple_bench', 'rome_couple_standing', 'rome_musician', 'rome_couple_bench2', 'rome_couple_vespa', 'rome_girl_basket'].includes(e.type));
         const totalWeight = groundTypes.reduce((sum, e) => sum + e.weight, 0);
         let rand = Math.random() * totalWeight;
         selectedType = groundTypes.find(e => {
@@ -58,6 +64,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 100;
             enemy.scoreValue = 18;
             enemy.isObstacle = true;
+            enemy.groundNPC = true;
             break;
 
         case 'rome_priest':
@@ -66,6 +73,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 110;
             enemy.scoreValue = 25;
             enemy.isObstacle = true;
+            enemy.groundNPC = true;
             break;
 
         case 'rome_gladiator':
@@ -74,6 +82,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 120;
             enemy.scoreValue = 30;
             enemy.isObstacle = true;
+            enemy.groundNPC = true;
             break;
 
         case 'rome_pizza_chef':
@@ -82,6 +91,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 100;
             enemy.scoreValue = 20;
             enemy.isObstacle = true;
+            enemy.groundNPC = true;
             break;
 
         case 'rome_vespa_driver':
@@ -90,6 +100,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 90;
             enemy.scoreValue = 22;
             enemy.isObstacle = true;
+            enemy.groundNPC = true;
             break;
 
         case 'rome_car':
@@ -107,6 +118,61 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.height = 95;
             enemy.scoreValue = 15;
             enemy.isObstacle = true;
+            enemy.groundNPC = true;
+            break;
+
+        case 'rome_couple_bench':
+            enemy.y = groundY - 85;
+            enemy.width = 150;
+            enemy.height = 85;
+            enemy.scoreValue = 25;
+            enemy.isObstacle = true;
+            enemy.groundNPC = true;
+            break;
+
+        case 'rome_couple_standing':
+            enemy.y = groundY - 100;
+            enemy.width = 100;
+            enemy.height = 100;
+            enemy.scoreValue = 22;
+            enemy.isObstacle = true;
+            enemy.groundNPC = true;
+            break;
+
+        case 'rome_musician':
+            enemy.y = groundY - 105;
+            enemy.width = 75;
+            enemy.height = 105;
+            enemy.scoreValue = 20;
+            enemy.isObstacle = true;
+            enemy.groundNPC = true;
+            break;
+
+        case 'rome_couple_bench2':
+            enemy.y = groundY - 90;
+            enemy.width = 140;
+            enemy.height = 90;
+            enemy.scoreValue = 24;
+            enemy.isObstacle = true;
+            enemy.groundNPC = true;
+            break;
+
+        case 'rome_couple_vespa':
+            enemy.y = groundY - 95;
+            enemy.width = 120;
+            enemy.height = 95;
+            enemy.scoreValue = 28;
+            enemy.isObstacle = true;
+            enemy.groundNPC = true;
+            break;
+
+        case 'rome_girl_basket':
+            enemy.y = groundY - 100;
+            enemy.width = 70;
+            enemy.height = 100;
+            enemy.scoreValue = 18;
+            enemy.isObstacle = true;
+            enemy.groundNPC = true;
             break;
 
         case 'rome_balloon':

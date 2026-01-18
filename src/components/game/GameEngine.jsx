@@ -286,6 +286,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.rome_old_lady.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/32cfa8ee1_NPC-Kopie2.png";
         IMAGES.current.rome_gladiator = new Image();
         IMAGES.current.rome_gladiator.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0c5724494_NPC-Kopie.png";
+        IMAGES.current.rome_couple_bench = new Image();
+        IMAGES.current.rome_couple_bench.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d65aee45d_NPCS-Kopie6.png";
+        IMAGES.current.rome_couple_standing = new Image();
+        IMAGES.current.rome_couple_standing.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/33cbd509e_NPCs-Kopie2.png";
+        IMAGES.current.rome_musician = new Image();
+        IMAGES.current.rome_musician.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b3800614d_NPCs-Kopie3.png";
+        IMAGES.current.rome_couple_bench2 = new Image();
+        IMAGES.current.rome_couple_bench2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/10899e4f8_NPCs-Kopie4-Kopie.png";
+        IMAGES.current.rome_couple_vespa = new Image();
+        IMAGES.current.rome_couple_vespa.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c3a5131d6_NPCs-Kopie4.png";
+        IMAGES.current.rome_girl_basket = new Image();
+        IMAGES.current.rome_girl_basket.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1d86a757a_NPCs-Kopie5-Kopie.png";
         IMAGES.current.madrid_balloon = new Image();
         IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.madrid_pigeon = new Image();
@@ -1707,6 +1719,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'rome_vespa_driver') useFullImage(IMAGES.current.rome_vespa_driver);
                 else if (e.spriteType === 'rome_old_lady') useFullImage(IMAGES.current.rome_old_lady);
                 else if (e.spriteType === 'rome_gladiator') useFullImage(IMAGES.current.rome_gladiator);
+                else if (e.spriteType === 'rome_couple_bench') useFullImage(IMAGES.current.rome_couple_bench);
+                else if (e.spriteType === 'rome_couple_standing') useFullImage(IMAGES.current.rome_couple_standing);
+                else if (e.spriteType === 'rome_musician') useFullImage(IMAGES.current.rome_musician);
+                else if (e.spriteType === 'rome_couple_bench2') useFullImage(IMAGES.current.rome_couple_bench2);
+                else if (e.spriteType === 'rome_couple_vespa') useFullImage(IMAGES.current.rome_couple_vespa);
+                else if (e.spriteType === 'rome_girl_basket') useFullImage(IMAGES.current.rome_girl_basket);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -1741,8 +1759,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Flapping wings
                     ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
                     } else if (e.spriteType === 'rooftop_sparrow') {
-                    // Sparrow fast flapping
-                    ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
+                        // Sparrow fast flapping
+                        ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
+                    } else if (e.groundNPC && !e.spriteType.includes('car') && !e.spriteType.includes('vespa')) {
+                        // Ground NPCs bob up/down +-50px
+                        ctx.translate(0, Math.sin(state.animFrame * 0.05 + e.x * 0.01) * 50);
                     } else if (e.spriteType === 'balloon') {
                     // Gentle float
                     ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);

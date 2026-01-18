@@ -287,6 +287,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.romeBackground = new Image();
         IMAGES.current.romeBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/562d13a4a_Hintergrund.png";
 
+        // Rome Buildings
+        IMAGES.current.rome_buildings = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8c0dec0b2_Haus-3-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b01731cad_Haus-2-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/346be0be9_Haus-2-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/76858904a_Haus-2-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1037b1151_Haus-2-Kopie5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2a8c40716_Haus-2-Kopie6.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ac5f515b5_Haus-2-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/da10b3636_Haus-3-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3ee31b9ba_Haus-3-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/140dfcaaf_Haus-3-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0183a22e1_Haus-3-Kopie5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/52acce0a1_Haus-3-Kopie6.png" }
+        ];
+        IMAGES.current.rome_buildings.forEach(building => {
+            building.img.onerror = () => console.error('Failed to load Rome building:', building.src);
+            building.img.src = building.src;
+        });
+
         // Madrid Buildings
         IMAGES.current.madrid_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1a977495f_Haus3-Kopie3.png" },
@@ -380,7 +400,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/bushes
         madridScenery: [], // Combined buildings and trees
-        madridStreetX: 0 // Madrid street scroll position
+        madridStreetX: 0, // Madrid street scroll position
+        romeBuildings: [] // Rome scrolling buildings
         });
 
     // Apply config
@@ -424,6 +445,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
             gameStateRef.current.madridStreetX = 0;
+            gameStateRef.current.romeBuildings = [];
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -685,6 +707,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Madrid Street Scrolling
         if (level === 'madrid') {
             state.madridStreetX -= state.scrollSpeed;
+        }
+
+        // Rome Buildings Management
+        if (level === 'rome' && IMAGES.current.rome_buildings) {
+            // Add new building if needed
+            if (state.romeBuildings.length === 0 || state.romeBuildings[state.romeBuildings.length - 1].x < width - (100 + Math.random() * 300)) {
+                const buildingData = IMAGES.current.rome_buildings[Math.floor(Math.random() * IMAGES.current.rome_buildings.length)];
+                const buildingImg = buildingData?.img;
+
+                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.5;
+                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const buildingWidth = buildingImg.naturalWidth * scale;
+
+                    state.romeBuildings.push({
+                        x: width,
+                        img: buildingImg,
+                        width: buildingWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen buildings
+            state.romeBuildings = state.romeBuildings.filter(building => {
+                building.x -= state.scrollSpeed;
+                return building.x > -building.width && 
+                       building.img && 
+                       building.img.complete && 
+                       building.img.naturalHeight > 0 && 
+                       building.img.naturalWidth > 0;
+            });
         }
 
         // Madrid Scenery Management (Buildings and Trees combined)
@@ -1113,6 +1167,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
                 ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
             }
+        }
+
+        // Draw Rome scrolling buildings - behind NPCs
+        if (level === 'rome') {
+            const groundY = height * GROUND_Y_PCT;
+
+            state.romeBuildings.forEach(building => {
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height - 30;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
         }
 
         // Draw Madrid scrolling scenery (buildings and trees) - behind street and NPCs

@@ -287,6 +287,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.romeBackground = new Image();
         IMAGES.current.romeBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/562d13a4a_Hintergrund.png";
 
+        // Rome Street
+        IMAGES.current.romeStreet = new Image();
+        IMAGES.current.romeStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/86b7e1f7e_Street.png";
+
         // Rome Buildings
         IMAGES.current.rome_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8c0dec0b2_Haus-3-Kopie.png" },
@@ -401,7 +405,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         madridTrees: [], // Madrid scrolling trees/bushes
         madridScenery: [], // Combined buildings and trees
         madridStreetX: 0, // Madrid street scroll position
-        romeBuildings: [] // Rome scrolling buildings
+        romeBuildings: [], // Rome scrolling buildings
+        romeStreetX: 0 // Rome street scroll position
         });
 
     // Apply config
@@ -446,6 +451,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.madridScenery = [];
             gameStateRef.current.madridStreetX = 0;
             gameStateRef.current.romeBuildings = [];
+            gameStateRef.current.romeStreetX = 0;
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -707,6 +713,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Madrid Street Scrolling
         if (level === 'madrid') {
             state.madridStreetX -= state.scrollSpeed;
+        }
+
+        // Rome Street Scrolling
+        if (level === 'rome') {
+            state.romeStreetX -= state.scrollSpeed;
         }
 
         // Rome Buildings Management
@@ -1179,6 +1190,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });
+        }
+
+        // Draw Rome scrolling street - below buildings, behind NPCs
+        if (level === 'rome' && isImageValid(IMAGES.current.romeStreet)) {
+            const street = IMAGES.current.romeStreet;
+            const streetHeight = 180;
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = height - streetHeight;
+
+            // Wrap around scrolling
+            const offset = state.romeStreetX % streetWidth;
+
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
+            }
         }
 
         // Draw Madrid scrolling scenery (buildings and trees) - behind street and NPCs

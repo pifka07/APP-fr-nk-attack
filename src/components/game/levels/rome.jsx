@@ -60,48 +60,43 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
     // Configure based on type
     switch (selectedType) {
         case 'rome_tourist':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 100 + (Math.random() * 100 - 50);
             enemy.width = 90;
             enemy.height = 100;
             enemy.scoreValue = 18;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_priest':
-            enemy.y = groundY - 110;
+            enemy.y = groundY - 110 + (Math.random() * 100 - 50);
             enemy.width = 85;
             enemy.height = 110;
             enemy.scoreValue = 25;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_gladiator':
-            enemy.y = groundY - 120;
+            enemy.y = groundY - 120 + (Math.random() * 100 - 50);
             enemy.width = 100;
             enemy.height = 120;
             enemy.scoreValue = 30;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_pizza_chef':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 100 + (Math.random() * 100 - 50);
             enemy.width = 95;
             enemy.height = 100;
             enemy.scoreValue = 20;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_vespa_driver':
-            enemy.y = groundY - 90;
+            enemy.y = groundY - 90 + (Math.random() * 100 - 50);
             enemy.width = 110;
             enemy.height = 90;
             enemy.scoreValue = 22;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_car':
@@ -114,66 +109,59 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             break;
 
         case 'rome_old_lady':
-            enemy.y = groundY - 95;
+            enemy.y = groundY - 95 + (Math.random() * 100 - 50);
             enemy.width = 85;
             enemy.height = 95;
             enemy.scoreValue = 15;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_couple_bench':
-            enemy.y = groundY - 85;
+            enemy.y = groundY - 85 + (Math.random() * 100 - 50);
             enemy.width = 150;
             enemy.height = 85;
             enemy.scoreValue = 25;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_couple_standing':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 100 + (Math.random() * 100 - 50);
             enemy.width = 100;
             enemy.height = 100;
             enemy.scoreValue = 22;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_musician':
-            enemy.y = groundY - 105;
+            enemy.y = groundY - 105 + (Math.random() * 100 - 50);
             enemy.width = 75;
             enemy.height = 105;
             enemy.scoreValue = 20;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_couple_bench2':
-            enemy.y = groundY - 90;
+            enemy.y = groundY - 90 + (Math.random() * 100 - 50);
             enemy.width = 140;
             enemy.height = 90;
             enemy.scoreValue = 24;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_couple_vespa':
-            enemy.y = groundY - 95;
+            enemy.y = groundY - 95 + (Math.random() * 100 - 50);
             enemy.width = 120;
             enemy.height = 95;
             enemy.scoreValue = 28;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_girl_basket':
-            enemy.y = groundY - 100;
+            enemy.y = groundY - 100 + (Math.random() * 100 - 50);
             enemy.width = 70;
             enemy.height = 100;
             enemy.scoreValue = 18;
             enemy.isObstacle = true;
-            enemy.groundNPC = true;
             break;
 
         case 'rome_balloon':

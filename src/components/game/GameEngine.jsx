@@ -1768,11 +1768,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Flapping wings
                     ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
                     } else if (e.spriteType === 'rooftop_sparrow') {
-                        // Sparrow fast flapping
-                        ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
-                    } else if (e.groundNPC && !e.spriteType.includes('car') && !e.spriteType.includes('vespa')) {
-                        // Ground NPCs bob up/down +-50px
-                        ctx.translate(0, Math.sin(state.animFrame * 0.05 + e.x * 0.01) * 50);
+                    // Sparrow fast flapping
+                    ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
                     } else if (e.spriteType === 'balloon') {
                     // Gentle float
                     ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);

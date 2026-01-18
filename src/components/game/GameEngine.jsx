@@ -272,6 +272,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_boy_tourist.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e20a75045_NPC-Kopie5.png";
         IMAGES.current.madrid_car = new Image();
         IMAGES.current.madrid_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf69dde28_car.png";
+        IMAGES.current.rome_car = new Image();
+        IMAGES.current.rome_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5acdb35aa_Auto.png";
         IMAGES.current.madrid_balloon = new Image();
         IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.madrid_pigeon = new Image();
@@ -1686,6 +1688,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'madrid_parrot') useFullImage(IMAGES.current.madrid_parrot);
                 else if (e.spriteType === 'madrid_sparrow') useFullImage(IMAGES.current.madrid_sparrow);
                 else if (e.spriteType === 'madrid_drone') useFullImage(IMAGES.current.madrid_drone);
+                else if (e.spriteType === 'rome_car') useFullImage(IMAGES.current.rome_car);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

@@ -54,7 +54,7 @@ export default function Europa() {
         london: { score: 500, coins: 250 },
         paris: { score: 1000, coins: 500 },
         madrid: { score: 3000, coins: 1500 },
-        rome: { score: 6000, coins: 3000 },
+        rome: { score: 0, coins: 0 },
         berlin: { score: 10000, coins: 5000 }
     };
 
@@ -81,8 +81,7 @@ export default function Europa() {
             id: 'rome',
             name: 'Rom',
             description: 'Colosseum, ancient ruins, and pasta. When in Rome...',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba63ecdfe_file_00000000b38c722fbef60ea67c6e8c16.png',
-            comingSoon: true
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/562d13a4a_Hintergrund.png'
         },
         {
             id: 'berlin',

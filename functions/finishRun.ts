@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
 
         const body = await req.json();
         console.log("finishRun request body:", JSON.stringify(body));
-        const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty, distance } = body;
+        const { run_session_id, score, coinsCollected, durationMs, missionId, difficulty, distance, level } = body;
 
         // Get all pending runs (no filter to see everything)
         const allPendingRunsGlobal = await base44.asServiceRole.entities.PendingRun.list();
@@ -172,6 +172,7 @@ Deno.serve(async (req) => {
                     await base44.asServiceRole.entities.LeaderboardEntry.update(existingEntries[0].id, {
                         score: score,
                         username: user.username || user.full_name || user.email,
+                        level: level || 'downtown',
                         date: new Date().toISOString()
                     });
                 }
@@ -181,6 +182,7 @@ Deno.serve(async (req) => {
                     user_id: user.id,
                     username: user.username || user.full_name || user.email,
                     score: score,
+                    level: level || 'downtown',
                     date: new Date().toISOString()
                 });
             }

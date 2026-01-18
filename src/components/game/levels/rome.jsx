@@ -2,6 +2,7 @@
 
 export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
     const enemyTypes = [
+        // Ground enemies (70%)
         { type: 'rome_tourist', weight: 10 },
         { type: 'rome_priest', weight: 7 },
         { type: 'rome_gladiator', weight: 6 },
@@ -14,16 +15,37 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
         { type: 'rome_musician', weight: 7 },
         { type: 'rome_couple_bench2', weight: 6 },
         { type: 'rome_couple_vespa', weight: 7 },
-        { type: 'rome_girl_basket', weight: 6 }
+        { type: 'rome_girl_basket', weight: 6 },
+        
+        // Air enemies (30%)
+        { type: 'rome_bird_white', weight: 8 },
+        { type: 'rome_bird_grey', weight: 8 },
+        { type: 'rome_bird_seagull', weight: 7 },
+        { type: 'rome_bird_swallow', weight: 6 },
+        { type: 'rome_bird_swallow2', weight: 6 }
     ];
 
-    // Select enemy type
-    const totalWeight = enemyTypes.reduce((sum, e) => sum + e.weight, 0);
-    let rand = Math.random() * totalWeight;
-    const selectedType = enemyTypes.find(e => {
-        rand -= e.weight;
-        return rand <= 0;
-    }).type;
+    // Decide if ground or air spawn
+    const isGroundSpawn = Math.random() < 0.7;
+
+    let selectedType;
+    if (isGroundSpawn) {
+        const groundTypes = enemyTypes.filter(e => ['rome_tourist', 'rome_priest', 'rome_gladiator', 'rome_pizza_chef', 'rome_vespa_driver', 'rome_car', 'rome_old_lady', 'rome_couple_bench', 'rome_couple_standing', 'rome_musician', 'rome_couple_bench2', 'rome_couple_vespa', 'rome_girl_basket'].includes(e.type));
+        const totalWeight = groundTypes.reduce((sum, e) => sum + e.weight, 0);
+        let rand = Math.random() * totalWeight;
+        selectedType = groundTypes.find(e => {
+            rand -= e.weight;
+            return rand <= 0;
+        }).type;
+    } else {
+        const airTypes = enemyTypes.filter(e => ['rome_bird_white', 'rome_bird_grey', 'rome_bird_seagull', 'rome_bird_swallow', 'rome_bird_swallow2'].includes(e.type));
+        const totalWeight = airTypes.reduce((sum, e) => sum + e.weight, 0);
+        let rand = Math.random() * totalWeight;
+        selectedType = airTypes.find(e => {
+            rand -= e.weight;
+            return rand <= 0;
+        }).type;
+    }
 
     let enemy = {
         x: width + 20,

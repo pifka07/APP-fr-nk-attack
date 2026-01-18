@@ -298,12 +298,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.rome_couple_vespa.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c3a5131d6_NPCs-Kopie4.png";
         IMAGES.current.rome_girl_basket = new Image();
         IMAGES.current.rome_girl_basket.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1d86a757a_NPCs-Kopie5-Kopie.png";
-        IMAGES.current.rome_bird1 = new Image();
-        IMAGES.current.rome_bird1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a04400b32_Vogel-.png";
-        IMAGES.current.rome_bird2 = new Image();
-        IMAGES.current.rome_bird2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/73d1bb3f9_Vogel-Kopie2.png";
-        IMAGES.current.rome_bird3 = new Image();
-        IMAGES.current.rome_bird3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d3a511084_Vogel-Kopie3.png";
+        IMAGES.current.rome_bird_white = new Image();
+        IMAGES.current.rome_bird_white.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/15aca18a2_Vogel-Kopie3.png";
+        IMAGES.current.rome_bird_grey = new Image();
+        IMAGES.current.rome_bird_grey.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/79fe2cd6c_Vogel-Kopie4.png";
+        IMAGES.current.rome_bird_seagull = new Image();
+        IMAGES.current.rome_bird_seagull.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/352f4b9a6_Vogel-Kopie5.png";
+        IMAGES.current.rome_bird_swallow = new Image();
+        IMAGES.current.rome_bird_swallow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d1c258cd6_Vogel-Kopie6.png";
+        IMAGES.current.rome_bird_swallow2 = new Image();
+        IMAGES.current.rome_bird_swallow2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25fa64a38_Vogel-.png";
         IMAGES.current.madrid_balloon = new Image();
         IMAGES.current.madrid_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
         IMAGES.current.madrid_pigeon = new Image();
@@ -1731,9 +1735,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'rome_couple_bench2') useFullImage(IMAGES.current.rome_couple_bench2);
                 else if (e.spriteType === 'rome_couple_vespa') useFullImage(IMAGES.current.rome_couple_vespa);
                 else if (e.spriteType === 'rome_girl_basket') useFullImage(IMAGES.current.rome_girl_basket);
-                else if (e.spriteType === 'rome_bird1') useFullImage(IMAGES.current.rome_bird1);
-                else if (e.spriteType === 'rome_bird2') useFullImage(IMAGES.current.rome_bird2);
-                else if (e.spriteType === 'rome_bird3') useFullImage(IMAGES.current.rome_bird3);
+                else if (e.spriteType === 'rome_bird_white') useFullImage(IMAGES.current.rome_bird_white);
+                else if (e.spriteType === 'rome_bird_grey') useFullImage(IMAGES.current.rome_bird_grey);
+                else if (e.spriteType === 'rome_bird_seagull') useFullImage(IMAGES.current.rome_bird_seagull);
+                else if (e.spriteType === 'rome_bird_swallow') useFullImage(IMAGES.current.rome_bird_swallow);
+                else if (e.spriteType === 'rome_bird_swallow2') useFullImage(IMAGES.current.rome_bird_swallow2);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

@@ -5,6 +5,7 @@ import { spawnParkEnemy } from './levels/park';
 import { spawnLondonEnemy } from './levels/london';
 import { spawnParisEnemy } from './levels/paris';
 import { spawnMadridEnemy } from './levels/madrid';
+import { spawnRomeEnemy } from './levels/rome';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -281,6 +282,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_sparrow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2a9103eb0_Birds-Kopie3.png";
         IMAGES.current.madrid_drone = new Image();
         IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
+        
+        // Rome Assets
+        IMAGES.current.romeBackground = new Image();
+        IMAGES.current.romeBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/562d13a4a_Hintergrund.png";
 
         // Madrid Buildings
         IMAGES.current.madrid_buildings = [
@@ -522,6 +527,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             enemy = spawnParisEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'madrid') {
             enemy = spawnMadridEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'rome') {
+            enemy = spawnRomeEnemy(width, height, groundY, scrollSpeed);
         } else {
             // Downtown/Gelsenkirchen
             enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
@@ -936,7 +943,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'madrid' && isImageValid(IMAGES.current.madridBackground)) {
+        if (level === 'rome' && isImageValid(IMAGES.current.romeBackground)) {
+            // Rome: Fixed background (no scrolling)
+            const bg = IMAGES.current.romeBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
+        } else if (level === 'madrid' && isImageValid(IMAGES.current.madridBackground)) {
             // Madrid: Fixed background (no scrolling)
             const bg = IMAGES.current.madridBackground;
             const scale = Math.max(width / bg.width, height / bg.height);

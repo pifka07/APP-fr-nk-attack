@@ -102,7 +102,7 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
         case 'rome_car':
             enemy.y = groundY - 50;
             enemy.width = 250;
-            enemy.height = 180;
+            enemy.height = 160;
             enemy.scoreValue = 30;
             enemy.isObstacle = true;
             enemy.isTarget = false;

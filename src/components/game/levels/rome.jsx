@@ -169,7 +169,8 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 60;
             enemy.height = 50;
             enemy.scoreValue = 15;
-            enemy.isTarget = true;
+            enemy.isTarget = false;
+            enemy.isObstacle = true;
             break;
 
         case 'rome_bird2':
@@ -177,7 +178,8 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 65;
             enemy.height = 55;
             enemy.scoreValue = 18;
-            enemy.isTarget = true;
+            enemy.isTarget = false;
+            enemy.isObstacle = true;
             break;
 
         case 'rome_bird3':
@@ -185,7 +187,8 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 62;
             enemy.height = 52;
             enemy.scoreValue = 20;
-            enemy.isTarget = true;
+            enemy.isTarget = false;
+            enemy.isObstacle = true;
             break;
 
         case 'rome_bird4':
@@ -193,7 +196,8 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 58;
             enemy.height = 48;
             enemy.scoreValue = 22;
-            enemy.isTarget = true;
+            enemy.isTarget = false;
+            enemy.isObstacle = true;
             break;
 
         case 'rome_bird5':
@@ -201,7 +205,8 @@ export function spawnRomeEnemy(width, height, groundY, scrollSpeed) {
             enemy.width = 60;
             enemy.height = 50;
             enemy.scoreValue = 22;
-            enemy.isTarget = true;
+            enemy.isTarget = false;
+            enemy.isObstacle = true;
             break;
     }
 

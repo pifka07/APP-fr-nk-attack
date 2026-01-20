@@ -120,16 +120,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3";
         } else if (level === 'madrid') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3";
+        } else if (level === 'rome') {
+            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
         }
 
-        if (AUDIOS.current.bgm.src !== musicUrl) {
-            AUDIOS.current.bgm.src = musicUrl;
+        const fullMusicUrl = musicUrl.startsWith('http') ? musicUrl : `https://codeskulptor-demos.commondatastorage.googleapis.com/${musicUrl}`;
+        
+        if (AUDIOS.current.bgm.src !== fullMusicUrl) {
+            AUDIOS.current.bgm.src = fullMusicUrl;
             AUDIOS.current.bgm.load();
             if (gameStateRef.current.isPlaying && musicEnabled) {
                 AUDIOS.current.bgm.play().catch(e => console.log("BGM Play prevented"));
             }
         }
-    }, [level]);
+    }, [level, musicEnabled]);
 
     // Load custom skin when skin prop changes
     useEffect(() => {

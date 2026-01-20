@@ -841,7 +841,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Madrid Scenery Management (Buildings and Trees combined)
         if (level === 'madrid' && IMAGES.current.madrid_buildings && IMAGES.current.madrid_trees) {
             // Add new scenery item if needed
-            if (state.madridScenery.length === 0 || state.madridScenery[state.madridScenery.length - 1].x < width - 200) {
+            if (state.madridScenery.length === 0 || state.madridScenery[state.madridScenery.length - 1].x < width - 400) {
                 // Randomly choose between building (70%) or tree (30%)
                 const isBuilding = Math.random() < 0.7;
 

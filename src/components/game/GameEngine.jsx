@@ -118,8 +118,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/sounddogs/soundtrack.mp3";
         } else if (level === 'paris') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3";
-        } else if (level === 'madrid') {
-            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3";
         } else if (level === 'rome') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
         }

@@ -13,9 +13,9 @@ export const LAYER_CONFIG = {
     // Layer-Typen und ihre Standard-Scroll-Multiplikatoren
     BACKGROUND: {
         name: 'background',
-        scrollMultiplier: 0, // Fest, bewegt sich nicht
+        scrollMultiplier: 0.15, // Sehr langsam, über 10000m Flugdistanz skaliert
         renderOrder: 1,
-        description: 'Statischer Hintergrund (Himmel, ferne Berge, etc.)'
+        description: 'Hintergrund scrollt langsam über gesamte Leveldistanz (10000m)'
     },
     
     BUILDINGS: {
@@ -87,8 +87,9 @@ export const EUROPA_LEVEL_TEMPLATE = {
     // Hintergrund-Konfiguration
     background: {
         image: '', // URL zum Hintergrundbild
-        fixed: true,
-        scale: 'cover' // 'cover', 'contain', 'stretch'
+        fixed: false, // Scrollt langsam über 10000m
+        scale: 'cover', // 'cover', 'contain', 'stretch'
+        scrollMultiplier: 0.15 // 15% der Spielgeschwindigkeit
     },
     
     // Gebäude-Layer
@@ -139,8 +140,9 @@ export const EXAMPLE_LEVEL_CONFIG = {
     
     background: {
         image: 'URL_ZUM_BERLIN_HINTERGRUND',
-        fixed: true,
-        scale: 'cover'
+        fixed: false,
+        scale: 'cover',
+        scrollMultiplier: 0.15
     },
     
     buildings: {

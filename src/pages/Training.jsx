@@ -10,10 +10,10 @@ export default function Training() {
 
     const trainingMissions = [
         {
-            id: "gelsenkirchen",
-            name: "Gelsenkirchen",
-            description: "Downtown streets chaos",
-            image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png",
+            id: "park",
+            name: "Park",
+            description: "Natural obstacles ahead",
+            image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png",
             locked: false
         },
         {
@@ -24,10 +24,10 @@ export default function Training() {
             locked: false
         },
         {
-            id: "park",
-            name: "Park",
-            description: "Natural obstacles ahead",
-            image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/2bf59f945_Level3Park.png",
+            id: "gelsenkirchen",
+            name: "Gelsenkirchen",
+            description: "Downtown streets chaos",
+            image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png",
             locked: false
         }
     ];

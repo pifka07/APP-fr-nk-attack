@@ -126,6 +126,12 @@ export default function Game() {
         if (engineRef.current) engineRef.current.start();
     };
 
+    const quitGame = async () => {
+        // Save current progress before quitting
+        await handleGameOver({ score, coins, distance });
+        navigate(createPageUrl('Home'));
+    };
+
     const handleGameOver = async (stats) => {
         console.log("handleGameOver called with stats:", stats);
         console.log("runSessionId from ref:", runSessionIdRef.current);
@@ -560,16 +566,11 @@ export default function Game() {
                         </Button>
                         <Button 
                             size="lg" 
-                            className="w-full h-14 font-titan text-xl bg-purple-600 hover:bg-purple-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
-                            onClick={(e) => { e.stopPropagation(); resumeGame(); }}
+                            className="w-full h-14 font-titan text-xl bg-red-500 hover:bg-red-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase"
+                            onClick={(e) => { e.stopPropagation(); quitGame(); }}
                         >
-                            BACK
+                            <HomeIcon className="mr-2 w-5 h-5" /> SAVE & QUIT
                         </Button>
-                        <Link to={createPageUrl('Home')} className="block">
-                            <Button size="lg" className="w-full h-14 font-titan text-xl bg-red-500 hover:bg-red-400 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                                <HomeIcon className="mr-2 w-5 h-5" /> QUIT
-                            </Button>
-                        </Link>
                         
                         <div className="flex justify-center gap-4 mt-6">
                             <Button

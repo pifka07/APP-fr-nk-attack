@@ -96,7 +96,7 @@ export const spawnLondonEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isObstacle = true;
             enemy.y = 30 + Math.random() * 100;
             enemy.width = 100;
-            enemy.height = 100;
+            enemy.height = 80;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 100;
         }

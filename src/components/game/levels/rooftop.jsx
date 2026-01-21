@@ -72,4 +72,4 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
     }
 
     return enemy;
-};
+};tauben soll auch 

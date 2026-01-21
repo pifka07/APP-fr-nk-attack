@@ -161,8 +161,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'paris') {
             IMAGES.current.background.src = "";
         } else if (level === 'rooftop') {
-            // Rooftop uses foreground images instead
             IMAGES.current.background.src = "";
+            IMAGES.current.rooftopBackground = new Image();
+            IMAGES.current.rooftopBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f77ca6e93_Hintergrund.png";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png";
         }
@@ -245,9 +246,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/57b677041_Strasse-1.png";
         IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a85523873_Strasse-2.png";
         IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
-        IMAGES.current.rooftopForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51fb3855b_Rooftop1.png";
-        IMAGES.current.rooftopForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d3b217c6a_Rooftop2.png";
-        IMAGES.current.rooftopForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5358e6ade_Rooftop3.png";
+        IMAGES.current.rooftopBackground = new Image();
+        IMAGES.current.rooftopBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f77ca6e93_Hintergrund.png";
         IMAGES.current.parisForeground1 = new Image();
         IMAGES.current.parisForeground2 = new Image();
         IMAGES.current.parisForeground3 = new Image();
@@ -1125,10 +1125,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const x = (width - w) / 2;
             const y = (height - h) / 2;
             ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'rooftop') {
-            // Rooftop: Sky blue background
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, width, height);
+        } else if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopBackground)) {
+            // Rooftop: Fixed background (no scrolling)
+            const bg = IMAGES.current.rooftopBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
         } else if (level === 'london' && assetsLoaded.current && isImageValid(IMAGES.current.background)) {
             // London: slow scrolling background (1/10 of foreground speed)
             const bg = IMAGES.current.background;
@@ -1183,47 +1188,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             ctx.fillRect(0, 0, width, height);
         }
 
-        // Draw Rooftop scrolling foreground (3 images in sequence)
-        if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopForeground1) && 
-            isImageValid(IMAGES.current.rooftopForeground2) && isImageValid(IMAGES.current.rooftopForeground3)) {
 
-            const fg1 = IMAGES.current.rooftopForeground1;
-            const fg2 = IMAGES.current.rooftopForeground2;
-            const fg3 = IMAGES.current.rooftopForeground3;
-
-            // Scale all to same height
-            const fgScale = height / fg1.height;
-            const fgW1 = fg1.width * fgScale;
-            const fgW2 = fg2.width * fgScale;
-            const fgW3 = fg3.width * fgScale;
-            const fgH = height;
-
-            // Total width of all 3 images
-            const totalWidth = fgW1 + fgW2 + fgW3;
-
-            // Scroll at game speed
-            const fgOffset = (state.distance * 10) % totalWidth;
-
-            // Draw at bottom
-            const fgY = 0;
-
-            // Determine which images to draw based on offset
-            if (fgOffset < fgW1) {
-                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
-            } else if (fgOffset < fgW1 + fgW2) {
-                const offset2 = fgOffset - fgW1;
-                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
-            } else {
-                const offset3 = fgOffset - fgW1 - fgW2;
-                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
-            }
-        }
 
         // Draw London scrolling foreground (3 images in sequence)
         if (level === 'london' && isImageValid(IMAGES.current.londonForeground1) && 

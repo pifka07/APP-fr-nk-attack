@@ -939,7 +939,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 e.hasDropped = true;
             }
 
-            // Pigeon erratic movement (London)
+            // Pigeon erratic movement (London) - not for rooftop pigeons
             if ((e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon') && e.erratic) {
                 e.y += Math.sin(state.animFrame * 0.05 + e.x * 0.01) * 2;
             }

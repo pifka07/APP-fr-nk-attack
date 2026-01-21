@@ -20,13 +20,15 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
 
     if (!isAir) {
         // Ground (Rooftop surface)
+        const heightVariation = Math.random() * 150; // 0 to 150 pixels variation
+        
         if (rand < 0.2) {
             // Worker
             enemy.spriteType = 'worker';
             enemy.isTarget = true;
             enemy.width = 80;
             enemy.height = 100;
-            enemy.y = walkingNpcY - 110;
+            enemy.y = walkingNpcY - 100 - heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
         } else if (rand < 0.4) {
@@ -35,7 +37,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 60;
             enemy.height = 50;
-            enemy.y = walkingNpcY - 80;
+            enemy.y = walkingNpcY - 100 - heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else if (rand < 0.6) {
@@ -44,7 +46,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 140;
             enemy.height = 100;
-            enemy.y = walkingNpcY - 100;
+            enemy.y = walkingNpcY - 100 - heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.8) {
@@ -53,7 +55,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 100;
             enemy.height = 120;
-            enemy.y = walkingNpcY - 120;
+            enemy.y = walkingNpcY - 100 - heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 45;
         } else {
@@ -63,7 +65,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isObstacle = true;
             enemy.width = 70;
             enemy.height = 70;
-            enemy.y = groundY - 110;
+            enemy.y = walkingNpcY - 100 - heightVariation;
             enemy.vx = -scrollSpeed;
         }
     } else {

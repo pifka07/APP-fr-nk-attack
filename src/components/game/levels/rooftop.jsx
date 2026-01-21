@@ -70,13 +70,15 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
         }
     } else {
         // Air - Multiple flying objects (some are dangerous enemies that damage on contact)
+        // Birds fly in upper two thirds of screen
         const airRand = Math.random();
+        const flyHeight = groundY * 0.12 + Math.random() * (groundY * 0.68);
         
         if (airRand < 0.2) {
             enemy.spriteType = 'rooftop_sparrow';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = flyHeight;
             enemy.width = 60;
             enemy.height = 50;
             enemy.vx = -scrollSpeed;
@@ -85,7 +87,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'rooftop_pigeon';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = flyHeight;
             enemy.width = 70;
             enemy.height = 60;
             enemy.vx = -scrollSpeed;
@@ -95,7 +97,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'seagull';
             enemy.isTarget = false;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = flyHeight;
             enemy.width = 65;
             enemy.height = 55;
             enemy.vx = -scrollSpeed * 1.3;
@@ -105,7 +107,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'eagle';
             enemy.isTarget = false;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = flyHeight;
             enemy.width = 85;
             enemy.height = 70;
             enemy.vx = -scrollSpeed * 1.5;
@@ -115,7 +117,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'drone_l2';
             enemy.isTarget = false;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = flyHeight;
             enemy.width = 80;
             enemy.height = 60;
             enemy.vx = -scrollSpeed * 0.9;
@@ -124,7 +126,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'paris_balloon';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = flyHeight;
             enemy.width = 60;
             enemy.height = 80;
             enemy.vx = -scrollSpeed * 0.7;

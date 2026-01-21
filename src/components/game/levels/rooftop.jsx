@@ -25,7 +25,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'worker';
             enemy.isTarget = true;
             enemy.width = 160;
-            enemy.height = 140;
+            enemy.height = 160;
             enemy.y = walkingNpcY - 260;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;

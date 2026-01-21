@@ -164,6 +164,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.background.src = "";
             IMAGES.current.rooftopBackground = new Image();
             IMAGES.current.rooftopBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f77ca6e93_Hintergrund.png";
+            IMAGES.current.rooftopStreet = new Image();
+            IMAGES.current.rooftopStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8143c6294_Ebene2.png";
         } else {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png";
         }
@@ -776,6 +778,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rome Street Scrolling
         if (level === 'rome') {
             state.romeStreetX -= state.scrollSpeed;
+        }
+
+        // Rooftop Street Scrolling
+        if (level === 'rooftop') {
+            state.rooftopStreetX -= state.scrollSpeed;
         }
 
         // Rome Buildings Management

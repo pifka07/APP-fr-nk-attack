@@ -69,10 +69,10 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.vx = -scrollSpeed;
         }
     } else {
-        // Air - Multiple flying objects
+        // Air - Multiple flying objects (some are dangerous enemies that damage on contact)
         const airRand = Math.random();
         
-        if (airRand < 0.25) {
+        if (airRand < 0.2) {
             enemy.spriteType = 'rooftop_sparrow';
             enemy.isTarget = true;
             enemy.isObstacle = true;
@@ -81,7 +81,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.height = 50;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
-        } else if (airRand < 0.5) {
+        } else if (airRand < 0.4) {
             enemy.spriteType = 'rooftop_pigeon';
             enemy.isTarget = true;
             enemy.isObstacle = true;
@@ -90,24 +90,36 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.height = 60;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
-        } else if (airRand < 0.7) {
+        } else if (airRand < 0.55) {
+            // Seagull - aggressive enemy, damages on contact
             enemy.spriteType = 'seagull';
-            enemy.isTarget = true;
+            enemy.isTarget = false;
             enemy.isObstacle = true;
             enemy.y = walkingNpcY - 100 + Math.random() * 100;
             enemy.width = 65;
             enemy.height = 55;
-            enemy.vx = -scrollSpeed * 1.2;
-            enemy.scoreValue = 45;
+            enemy.vx = -scrollSpeed * 1.3;
+            enemy.scoreValue = 0;
+        } else if (airRand < 0.7) {
+            // Eagle - dangerous flying predator
+            enemy.spriteType = 'eagle';
+            enemy.isTarget = false;
+            enemy.isObstacle = true;
+            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.width = 85;
+            enemy.height = 70;
+            enemy.vx = -scrollSpeed * 1.5;
+            enemy.scoreValue = 0;
         } else if (airRand < 0.85) {
+            // Drone - dangerous obstacle
             enemy.spriteType = 'drone_l2';
-            enemy.isTarget = true;
+            enemy.isTarget = false;
             enemy.isObstacle = true;
             enemy.y = walkingNpcY - 100 + Math.random() * 100;
             enemy.width = 80;
             enemy.height = 60;
             enemy.vx = -scrollSpeed * 0.9;
-            enemy.scoreValue = 55;
+            enemy.scoreValue = 0;
         } else {
             enemy.spriteType = 'paris_balloon';
             enemy.isTarget = true;

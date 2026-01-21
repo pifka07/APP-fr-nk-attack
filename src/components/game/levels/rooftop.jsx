@@ -54,7 +54,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'rooftop_sparrow';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = 20 + Math.random() * (groundY - 170);
+            enemy.y = walkingNpcY - 100 + Math.random() * 100;
             enemy.width = 60;
             enemy.height = 50;
             enemy.vx = -scrollSpeed;
@@ -63,7 +63,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'rooftop_pigeon';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = 20 + Math.random() * (groundY - 170);
+            enemy.y = walkingNpcY - 100 + Math.random() * 100;
             enemy.width = 70;
             enemy.height = 60;
             enemy.vx = -scrollSpeed;

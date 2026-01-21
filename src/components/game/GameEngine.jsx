@@ -1318,7 +1318,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Rooftop scrolling street
         if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopStreet)) {
             const street = IMAGES.current.rooftopStreet;
-            const streetHeight = 230;
+            const streetHeight = 240;
             const streetScale = streetHeight / street.height;
             const streetWidth = street.width * streetScale;
             const streetY = height - streetHeight;

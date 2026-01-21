@@ -20,7 +20,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
 
     if (!isAir) {
         // Ground (Rooftop surface)
-        if (rand < 0.4) {
+        if (rand < 0.2) {
             // Worker
             enemy.spriteType = 'worker';
             enemy.isTarget = true;
@@ -29,7 +29,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = walkingNpcY - 110;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
-        } else if (rand < 0.7) {
+        } else if (rand < 0.4) {
             // Cat
             enemy.spriteType = 'cat';
             enemy.isTarget = true;
@@ -38,6 +38,24 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = walkingNpcY - 80;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
+        } else if (rand < 0.6) {
+            // Ninja
+            enemy.spriteType = 'rooftop_ninja';
+            enemy.isTarget = true;
+            enemy.width = 140;
+            enemy.height = 100;
+            enemy.y = walkingNpcY - 100;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 50;
+        } else if (rand < 0.8) {
+            // Fitness Person
+            enemy.spriteType = 'rooftop_fitness';
+            enemy.isTarget = true;
+            enemy.width = 100;
+            enemy.height = 120;
+            enemy.y = walkingNpcY - 120;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 45;
         } else {
             // AC Unit (Obstacle)
             enemy.spriteType = 'ac_unit';

@@ -20,16 +20,16 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
 
     if (!isAir) {
         // Ground (Rooftop surface)
-        if (rand < 0.15) {
+        if (rand < 0.4) {
             // Worker
             enemy.spriteType = 'worker';
             enemy.isTarget = true;
-            enemy.width = 120;
-            enemy.height = 140;
+            enemy.width = 80;
+            enemy.height = 100;
             enemy.y = walkingNpcY - 110;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
-        } else if (rand < 0.28) {
+        } else if (rand < 0.7) {
             // Cat
             enemy.spriteType = 'cat';
             enemy.isTarget = true;
@@ -38,7 +38,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = walkingNpcY - 80;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
-        } else if (rand < 0.38) {
+        } else {
             // AC Unit (Obstacle)
             enemy.spriteType = 'ac_unit';
             enemy.isTarget = false;
@@ -46,60 +46,6 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.width = 70;
             enemy.height = 70;
             enemy.y = groundY - 110;
-            enemy.vx = -scrollSpeed;
-        } else if (rand < 0.52) {
-            // Ninja
-            enemy.spriteType = 'rooftop_ninja';
-            enemy.isTarget = true;
-            enemy.width = 140;
-            enemy.height = 100;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 50;
-        } else if (rand < 0.64) {
-            // Sunbather
-            enemy.spriteType = 'rooftop_sunbather';
-            enemy.isTarget = true;
-            enemy.width = 140;
-            enemy.height = 80;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 35;
-        } else if (rand < 0.76) {
-            // Fitness Person
-            enemy.spriteType = 'rooftop_fitness';
-            enemy.isTarget = true;
-            enemy.width = 100;
-            enemy.height = 120;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 45;
-        } else if (rand < 0.88) {
-            // Worker 2
-            enemy.spriteType = 'rooftop_worker2';
-            enemy.isTarget = true;
-            enemy.width = 120;
-            enemy.height = 130;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 42;
-        } else if (rand < 0.94) {
-            // Ninja 2
-            enemy.spriteType = 'rooftop_ninja2';
-            enemy.isTarget = true;
-            enemy.width = 140;
-            enemy.height = 110;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 55;
-        } else {
-            // AC Unit 2
-            enemy.spriteType = 'rooftop_ac2';
-            enemy.isTarget = false;
-            enemy.isObstacle = true;
-            enemy.width = 90;
-            enemy.height = 75;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
             enemy.vx = -scrollSpeed;
         }
     } else {

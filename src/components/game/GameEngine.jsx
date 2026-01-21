@@ -465,7 +465,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         madridStreetX: 0, // Madrid street scroll position
         romeBuildings: [], // Rome scrolling buildings
         romeTrees: [], // Rome scrolling trees
-        romeStreetX: 0 // Rome street scroll position
+        romeStreetX: 0, // Rome street scroll position
+        rooftopStreetX: 0 // Rooftop street scroll position
         });
 
     // Apply config
@@ -512,6 +513,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.romeBuildings = [];
             gameStateRef.current.romeTrees = [];
             gameStateRef.current.romeStreetX = 0;
+            gameStateRef.current.rooftopStreetX = 0;
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -1304,6 +1306,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             // Wrap around scrolling
             const offset = state.madridStreetX % streetWidth;
+
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
+            }
+        }
+
+        // Draw Rooftop scrolling street
+        if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopStreet)) {
+            const street = IMAGES.current.rooftopStreet;
+            const streetHeight = 180;
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = height - streetHeight;
+
+            // Wrap around scrolling
+            const offset = state.rooftopStreetX % streetWidth;
 
             // Draw two copies for seamless scrolling
             ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);

@@ -69,25 +69,54 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.vx = -scrollSpeed;
         }
     } else {
-        // Air - Sparrow or Pigeon
-        if (Math.random() < 0.5) {
+        // Air - Multiple flying objects
+        const airRand = Math.random();
+        
+        if (airRand < 0.25) {
             enemy.spriteType = 'rooftop_sparrow';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = walkingNpcY - 100 - Math.random() * 150;
             enemy.width = 60;
             enemy.height = 50;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
-        } else {
+        } else if (airRand < 0.5) {
             enemy.spriteType = 'rooftop_pigeon';
             enemy.isTarget = true;
             enemy.isObstacle = true;
-            enemy.y = walkingNpcY - 100 + Math.random() * 100;
+            enemy.y = walkingNpcY - 100 - Math.random() * 150;
             enemy.width = 70;
             enemy.height = 60;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
+        } else if (airRand < 0.7) {
+            enemy.spriteType = 'seagull';
+            enemy.isTarget = true;
+            enemy.isObstacle = true;
+            enemy.y = walkingNpcY - 100 - Math.random() * 150;
+            enemy.width = 65;
+            enemy.height = 55;
+            enemy.vx = -scrollSpeed * 1.2;
+            enemy.scoreValue = 45;
+        } else if (airRand < 0.85) {
+            enemy.spriteType = 'drone_l2';
+            enemy.isTarget = true;
+            enemy.isObstacle = true;
+            enemy.y = walkingNpcY - 100 - Math.random() * 150;
+            enemy.width = 80;
+            enemy.height = 60;
+            enemy.vx = -scrollSpeed * 0.9;
+            enemy.scoreValue = 55;
+        } else {
+            enemy.spriteType = 'paris_balloon';
+            enemy.isTarget = true;
+            enemy.isObstacle = true;
+            enemy.y = walkingNpcY - 100 - Math.random() * 150;
+            enemy.width = 60;
+            enemy.height = 80;
+            enemy.vx = -scrollSpeed * 0.7;
+            enemy.scoreValue = 35;
         }
     }
 

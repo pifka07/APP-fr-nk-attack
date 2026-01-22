@@ -3,7 +3,7 @@
 export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
     const walkingNpcY = groundY * 0.98;
     const rand = Math.random();
-    const isAir = Math.random() > 0.6;
+    const isAir = Math.random() > 0.45;
     const heightVariation = Math.random() * 100; // 0 to 100 pixels variation (-100 to 0)
 
     let enemy = {

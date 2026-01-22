@@ -604,6 +604,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isWood = skin === 'wood';
             const isStone = skin === 'stone';
             const isSkeleton = skin === 'skeleton';
+            const isFire = skin === 'fire';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
@@ -776,7 +777,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone') {
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball') {
                 p.vy += GRAVITY * 0.5; // accelerate down
             }
             // Bubbles float slowly upward
@@ -1747,6 +1748,43 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.arc(-p.width/4, -p.height/4, p.width/6, 0, Math.PI * 2);
                         ctx.fill();
 
+                        ctx.shadowBlur = 0;
+                    } else if (p.type === 'fireball') {
+                        // Draw fireball
+                        ctx.rotate(state.animFrame * 0.3);
+                        ctx.shadowColor = '#ff4500';
+                        ctx.shadowBlur = 20;
+
+                        // Outer flame (orange-red)
+                        ctx.fillStyle = '#ff4500';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Middle flame (orange-yellow)
+                        ctx.fillStyle = '#ff8c00';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.width/3, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Core (bright yellow)
+                        ctx.fillStyle = '#ffff00';
+                        ctx.beginPath();
+                        ctx.arc(-p.width/8, -p.height/8, p.width/6, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Flame particles trailing
+                        for (let i = 0; i < 3; i++) {
+                            const offset = i * 8;
+                            const size = (p.width/4) * (1 - i * 0.3);
+                            ctx.fillStyle = i === 0 ? '#ff6600' : (i === 1 ? '#ff8800' : '#ffaa00');
+                            ctx.globalAlpha = 0.6 - i * 0.2;
+                            ctx.beginPath();
+                            ctx.arc(-offset - p.width/2, Math.sin(state.animFrame * 0.2 + i) * 5, size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+
+                        ctx.globalAlpha = 1.0;
                         ctx.shadowBlur = 0;
                     } else {
                         const img = IMAGES.current.poopProjectile;

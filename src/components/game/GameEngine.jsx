@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { spawnDowntownEnemy, spawnSparrowFormation } from './levels/downtown';
 import { spawnRooftopEnemy } from './levels/rooftop';
@@ -604,16 +605,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isWood = skin === 'wood';
             const isStone = skin === 'stone';
             const isSkeleton = skin === 'skeleton';
-            const isFire = skin === 'fire';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : (isStone ? 7 : 2))))))))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (iPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : 5))))))))))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : (isStone ? 7 : (isSkeleton ? 5 : 2)))))))))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : (isSkeleton ? 7 : 5)))))))))))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isRapidFire ? 'triple' : 'normal')))))))))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isRapidFire ? 60 : 30)))))))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isRapidFire ? 60 : 30))))))))))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isSkeleton ? 'bone' : (isRapidFire ? 'triple' : 'normal'))))))))))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isSkeleton ? 35 : (isRapidFire ? 60 : 30)))))))))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isSkeleton ? 15 : (isRapidFire ? 60 : 30))))))))))))))
             });
         };
 
@@ -777,7 +777,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball') {
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone') {
                 p.vy += GRAVITY * 0.5; // accelerate down
             }
             // Bubbles float slowly upward
@@ -1748,43 +1748,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.arc(-p.width/4, -p.height/4, p.width/6, 0, Math.PI * 2);
                         ctx.fill();
 
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'fireball') {
-                        // Draw fireball
-                        ctx.rotate(state.animFrame * 0.3);
-                        ctx.shadowColor = '#ff4500';
-                        ctx.shadowBlur = 20;
-
-                        // Outer flame (orange-red)
-                        ctx.fillStyle = '#ff4500';
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Middle flame (orange-yellow)
-                        ctx.fillStyle = '#ff8c00';
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width/3, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Core (bright yellow)
-                        ctx.fillStyle = '#ffff00';
-                        ctx.beginPath();
-                        ctx.arc(-p.width/8, -p.height/8, p.width/6, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Flame particles trailing
-                        for (let i = 0; i < 3; i++) {
-                            const offset = i * 8;
-                            const size = (p.width/4) * (1 - i * 0.3);
-                            ctx.fillStyle = i === 0 ? '#ff6600' : (i === 1 ? '#ff8800' : '#ffaa00');
-                            ctx.globalAlpha = 0.6 - i * 0.2;
-                            ctx.beginPath();
-                            ctx.arc(-offset - p.width/2, Math.sin(state.animFrame * 0.2 + i) * 5, size, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-
-                        ctx.globalAlpha = 1.0;
                         ctx.shadowBlur = 0;
                     } else {
                         const img = IMAGES.current.poopProjectile;

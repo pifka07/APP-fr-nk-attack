@@ -92,7 +92,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
         const airRand = Math.random();
         const flyHeight = groundY * 0.12 + Math.random() * (groundY * 0.68);
         
-        if (airRand < 0.2) {
+        if (airRand < 0.25) {
             enemy.spriteType = 'rooftop_sparrow';
             enemy.isTarget = true;
             enemy.isObstacle = true;
@@ -101,16 +101,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.height = 50;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
-        } else if (airRand < 0.4) {
-            enemy.spriteType = 'rooftop_pigeon';
-            enemy.isTarget = true;
-            enemy.isObstacle = true;
-            enemy.y = flyHeight;
-            enemy.width = 70;
-            enemy.height = 60;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 50;
-        } else if (airRand < 0.55) {
+        } else if (airRand < 0.45) {
             // Seagull - aggressive enemy, damages on contact
             enemy.spriteType = 'seagull';
             enemy.isTarget = false;

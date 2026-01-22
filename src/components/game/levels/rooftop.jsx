@@ -37,7 +37,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 60;
             enemy.height = 50;
-            enemy.y = walkingNpcY - 100 + heightVariation;
+            enemy.y = walkingNpcY - 80 + heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else if (rand < 0.6) {
@@ -65,7 +65,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isObstacle = true;
             enemy.width = 70;
             enemy.height = 70;
-            enemy.y = walkingNpcY - 100 + heightVariation;
+            enemy.y = walkingNpcY - 80 + heightVariation;
             enemy.vx = -scrollSpeed;
         }
     } else {

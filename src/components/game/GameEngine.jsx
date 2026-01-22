@@ -1740,6 +1740,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'rooftop_worker2') useFullImage(IMAGES.current.rooftop_worker2);
                 else if (e.spriteType === 'rooftop_ninja2') useFullImage(IMAGES.current.rooftop_ninja2);
                 else if (e.spriteType === 'rooftop_ac2') useFullImage(IMAGES.current.rooftop_ac2);
+                else if (e.spriteType === 'rooftop_plant1') useFullImage(IMAGES.current.rooftop_plant1);
+                else if (e.spriteType === 'rooftop_plant2') useFullImage(IMAGES.current.rooftop_plant2);
+                else if (e.spriteType === 'rooftop_plant3') useFullImage(IMAGES.current.rooftop_plant3);
                 else if (e.spriteType === 'cat') useFullImage(IMAGES.current.cat);
                 else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
                 else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);

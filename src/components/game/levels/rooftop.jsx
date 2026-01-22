@@ -4,6 +4,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
     const walkingNpcY = groundY * 0.98;
     const rand = Math.random();
     const isAir = Math.random() > 0.6;
+    const heightVariation = Math.random() * 100; // 0 to 100 pixels variation (-100 to 0)
 
     let enemy = {
         x: width + 50,
@@ -20,7 +21,6 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
 
     if (!isAir) {
         // Ground (Rooftop surface)
-        const heightVariation = Math.random() * 100; // 0 to 100 pixels variation (-100 to 0)
         
         if (rand < 0.2) {
             // Worker

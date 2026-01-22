@@ -602,15 +602,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isGhost = skin === 'ghost';
             const isArmy = skin === 'army';
             const isWood = skin === 'wood';
+            const isStone = skin === 'stone';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : 2)))))))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : 5)))))))))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : (isStone ? 7 : 2))))))))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : 5))))))))))),
                 active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isRapidFire ? 'triple' : 'normal'))))))))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isRapidFire ? 60 : 30))))))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isRapidFire ? 60 : 30)))))))))))))
+                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (iPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isRapidFire ? 'triple' : 'normal')))))))))))),
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isRapidFire ? 60 : 30)))))))))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isRapidFire ? 60 : 30))))))))))))))
             });
         };
 
@@ -1715,6 +1716,35 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         ctx.fillStyle = '#D2691E';
                         ctx.fillRect(-p.width/2, -p.height/2, p.width, 2);
                         ctx.fillRect(-p.width/2, -p.height/2, 2, p.height);
+
+                        ctx.shadowBlur = 0;
+                    } else if (p.type === 'stone') {
+                        // Draw stone rock
+                        ctx.rotate(state.animFrame * 0.2);
+                        ctx.shadowColor = '#4a5568';
+                        ctx.shadowBlur = 10;
+
+                        // Main stone body (gray)
+                        ctx.fillStyle = '#6b7280';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Darker cracks/texture
+                        ctx.strokeStyle = '#4b5563';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(-p.width/3, -p.height/6);
+                        ctx.lineTo(p.width/4, p.height/6);
+                        ctx.moveTo(-p.width/4, p.height/4);
+                        ctx.lineTo(p.width/3, -p.height/5);
+                        ctx.stroke();
+
+                        // Highlight spots
+                        ctx.fillStyle = '#9ca3af';
+                        ctx.beginPath();
+                        ctx.arc(-p.width/4, -p.height/4, p.width/6, 0, Math.PI * 2);
+                        ctx.fill();
 
                         ctx.shadowBlur = 0;
                     } else {

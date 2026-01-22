@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { spawnDowntownEnemy, spawnSparrowFormation } from './levels/downtown';
 import { spawnRooftopEnemy } from './levels/rooftop';
@@ -612,8 +611,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : (isSkeleton ? 7 : 5)))))))))))),
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isSkeleton ? 'bone' : (isRapidFire ? 'triple' : 'normal'))))))))))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isSkeleton ? 35 : (isRapidFire ? 60 : 30)))))))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isSkeleton ? 15 : (isRapidFire ? 60 : 30))))))))))))))
+                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isSkeleton ? 35 : (isRapidFire ? 60 : 30))))))))))))),
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isSkeleton ? 15 : (isRapidFire ? 60 : 30)))))))))))))))
             });
         };
 

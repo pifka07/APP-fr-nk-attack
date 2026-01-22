@@ -97,7 +97,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.spriteType = 'seagull';
             enemy.isTarget = false;
             enemy.isObstacle = true;
-            enemy.y = flyHeight;
+            enemy.y = walkingNpcY - 80 + heightVariation;
             enemy.width = 65;
             enemy.height = 55;
             enemy.vx = -scrollSpeed * 1.3;
@@ -127,7 +127,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.isObstacle = true;
             enemy.y = flyHeight;
-            enemy.width = 60;
+            enemy.width = 70;
             enemy.height = 80;
             enemy.vx = -scrollSpeed * 0.7;
             enemy.scoreValue = 35;

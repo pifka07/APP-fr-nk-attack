@@ -1829,9 +1829,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (e.spriteType === 'business_person' || e.spriteType === 'tourist') {
                     // Walking animation
                     ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
-                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon' || e.spriteType === 'rooftop_pigeon' || e.spriteType === 'rome_bird1' || e.spriteType === 'rome_bird2' || e.spriteType === 'rome_bird3' || e.spriteType === 'rome_bird4' || e.spriteType === 'rome_bird5') {
-                    // Flapping wings
-                    ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
+                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon' || e.spriteType === 'rome_bird1' || e.spriteType === 'rome_bird2' || e.spriteType === 'rome_bird3' || e.spriteType === 'rome_bird4' || e.spriteType === 'rome_bird5') {
+                        // Flapping wings
+                        ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
                     } else if (e.spriteType === 'rooftop_sparrow') {
                     // Sparrow fast flapping
                     ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);

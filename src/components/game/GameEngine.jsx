@@ -603,6 +603,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isArmy = skin === 'army';
             const isWood = skin === 'wood';
             const isStone = skin === 'stone';
+            const isSkeleton = skin === 'skeleton';
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,

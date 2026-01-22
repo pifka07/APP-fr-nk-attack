@@ -22,7 +22,34 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
     if (!isAir) {
         // Ground (Rooftop surface)
         
-        if (rand < 0.2) {
+        if (rand < 0.15) {
+            // Plant 1 (Round Tree)
+            enemy.spriteType = 'rooftop_plant1';
+            enemy.isTarget = true;
+            enemy.width = 70;
+            enemy.height = 80;
+            enemy.y = walkingNpcY - 80 + heightVariation;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 30;
+        } else if (rand < 0.3) {
+            // Plant 2 (Square Tree)
+            enemy.spriteType = 'rooftop_plant2';
+            enemy.isTarget = true;
+            enemy.width = 75;
+            enemy.height = 85;
+            enemy.y = walkingNpcY - 85 + heightVariation;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 35;
+        } else if (rand < 0.45) {
+            // Plant 3 (Cactus)
+            enemy.spriteType = 'rooftop_plant3';
+            enemy.isTarget = true;
+            enemy.width = 60;
+            enemy.height = 70;
+            enemy.y = walkingNpcY - 70 + heightVariation;
+            enemy.vx = -scrollSpeed;
+            enemy.scoreValue = 25;
+        } else if (rand < 0.6) {
             // Sparrow
             enemy.spriteType = 'rooftop_sparrow';
             enemy.isTarget = true;
@@ -31,7 +58,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = walkingNpcY - 100 + heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 40;
-        } else if (rand < 0.4) {
+        } else if (rand < 0.75) {
             // Pigeon
             enemy.spriteType = 'rooftop_pigeon';
             enemy.isTarget = true;
@@ -40,7 +67,7 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = walkingNpcY - 80 + heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
-        } else if (rand < 0.6) {
+        } else if (rand < 0.9) {
             // Seagull
             enemy.spriteType = 'seagull';
             enemy.isTarget = true;
@@ -49,15 +76,6 @@ export const spawnRooftopEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.y = walkingNpcY - 100 + heightVariation;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
-        } else if (rand < 0.8) {
-            // Sparrow (second)
-            enemy.spriteType = 'rooftop_sparrow';
-            enemy.isTarget = true;
-            enemy.width = 60;
-            enemy.height = 50;
-            enemy.y = walkingNpcY - 100 + heightVariation;
-            enemy.vx = -scrollSpeed;
-            enemy.scoreValue = 45;
         } else {
             // AC Unit (Obstacle)
             enemy.spriteType = 'ac_unit';

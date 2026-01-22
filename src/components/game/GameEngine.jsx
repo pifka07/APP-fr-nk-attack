@@ -611,7 +611,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isRapidFire ? 'triple' : 'normal')))))))))))),
                 width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isRapidFire ? 60 : 30)))))))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isRapidFire ? 60 : 30)))))))))))))
+                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isRapidFire ? 60 : 30))))))))))))
             });
         };
 

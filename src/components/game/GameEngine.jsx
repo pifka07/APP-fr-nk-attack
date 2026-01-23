@@ -514,6 +514,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         downtownTrees: [], // Downtown scrolling trees
         downtownStreetX: 0, // Downtown street scroll position
         dusseldorfBuildings: [], // Düsseldorf scrolling buildings
+        dusseldorfSidewalkX: 0 // Düsseldorf sidewalk scroll position
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -565,6 +566,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.downtownTrees = [];
             gameStateRef.current.downtownStreetX = 0;
             gameStateRef.current.dusseldorfBuildings = [];
+            gameStateRef.current.dusseldorfSidewalkX = 0;
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -859,6 +861,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rooftop Street Scrolling
         if (level === 'rooftop') {
             state.rooftopStreetX -= state.scrollSpeed;
+        }
+
+        // Düsseldorf Sidewalk Scrolling
+        if (level === 'dusseldorf') {
+            state.dusseldorfSidewalkX -= state.scrollSpeed;
         }
 
         // Downtown Street Scrolling
@@ -1379,16 +1386,34 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Düsseldorf scrolling buildings - behind NPCs
+        // Draw Düsseldorf scrolling buildings and sidewalk - behind NPCs
         if (level === 'dusseldorf') {
             const groundY = height * GROUND_Y_PCT;
 
+            // Draw buildings
             state.dusseldorfBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
                     const buildingY = groundY - building.height - 30;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });
+
+            // Draw sidewalk at bottom
+            if (isImageValid(IMAGES.current.dusseldorfSidewalk)) {
+                const sidewalk = IMAGES.current.dusseldorfSidewalk;
+                const sidewalkHeight = 150;
+                const sidewalkScale = sidewalkHeight / sidewalk.height;
+                const sidewalkWidth = sidewalk.width * sidewalkScale;
+                const sidewalkY = height - sidewalkHeight;
+
+                const offset = state.dusseldorfSidewalkX % sidewalkWidth;
+
+                ctx.drawImage(sidewalk, offset, sidewalkY, sidewalkWidth, sidewalkHeight);
+                ctx.drawImage(sidewalk, offset + sidewalkWidth, sidewalkY, sidewalkWidth, sidewalkHeight);
+                if (offset < 0) {
+                    ctx.drawImage(sidewalk, offset - sidewalkWidth, sidewalkY, sidewalkWidth, sidewalkHeight);
+                }
+            }
         }
 
         // Draw Downtown scrolling buildings - behind NPCs

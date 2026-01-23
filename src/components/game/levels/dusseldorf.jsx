@@ -1,6 +1,6 @@
 // Düsseldorf Level Enemy Spawning
 
-// Enemy types with spawn weights
+// Ground enemy types with spawn weights
 const groundEnemyTypes = [
     { type: 'dusseldorf_npc1', weight: 1 },
     { type: 'dusseldorf_npc2', weight: 1 },
@@ -13,6 +13,13 @@ const groundEnemyTypes = [
     { type: 'dusseldorf_npc9', weight: 1 },
     { type: 'dusseldorf_npc10', weight: 1 },
     { type: 'dusseldorf_npc11', weight: 1 }
+];
+
+// Air enemy types (birds)
+const airEnemyTypes = [
+    { type: 'sparrow', weight: 2 },
+    { type: 'seagull', weight: 2 },
+    { type: 'pigeon', weight: 1 }
 ];
 
 export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
@@ -30,12 +37,16 @@ export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
         scoreValue: 10
     };
 
-    // Select random ground NPC
-    const totalWeight = groundEnemyTypes.reduce((sum, t) => sum + t.weight, 0);
-    let random = Math.random() * totalWeight;
-    let selectedType = groundEnemyTypes[0].type;
+    // 30% air, 70% ground
+    const spawnAir = Math.random() < 0.3;
+    const enemyTypes = spawnAir ? airEnemyTypes : groundEnemyTypes;
 
-    for (const enemyType of groundEnemyTypes) {
+    // Select random enemy type
+    const totalWeight = enemyTypes.reduce((sum, t) => sum + t.weight, 0);
+    let random = Math.random() * totalWeight;
+    let selectedType = enemyTypes[0].type;
+
+    for (const enemyType of enemyTypes) {
         random -= enemyType.weight;
         if (random <= 0) {
             selectedType = enemyType.type;
@@ -45,10 +56,18 @@ export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
 
     enemy.spriteType = selectedType;
     
-    // Vary Y position: max 70px above ground
-    const minY = groundY - 70;
-    const maxY = groundY - enemy.height;
-    enemy.y = minY + Math.random() * (maxY - minY);
+    if (spawnAir) {
+        // Air enemies: from groundY - 90 to top (50px margin)
+        enemy.width = 60;
+        enemy.height = 60;
+        enemy.y = 50 + Math.random() * (groundY - 90 - 50);
+        enemy.erratic = true;
+    } else {
+        // Ground enemies: max 70px above ground
+        const minY = groundY - 70;
+        const maxY = groundY - enemy.height;
+        enemy.y = minY + Math.random() * (maxY - minY);
+    }
 
     return enemy;
 }

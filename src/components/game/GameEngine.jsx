@@ -167,7 +167,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.rooftopStreet = new Image();
             IMAGES.current.rooftopStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8143c6294_Ebene2.png";
         } else {
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png";
+            // Downtown/Gelsenkirchen - New 5-layer structure
+            IMAGES.current.background.src = "";
+            IMAGES.current.downtownBackground = new Image();
+            IMAGES.current.downtownBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
+            IMAGES.current.downtownStreet = new Image();
+            IMAGES.current.downtownStreet.src = ""; // TODO: Add street image
         }
 
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/59fa7a8db_FrnkdieTaube2-Kopie.png";
@@ -524,6 +529,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
             gameStateRef.current.lastMilestone = 0;
+            gameStateRef.current.downtownBuildings = [];
+            gameStateRef.current.downtownTrees = [];
+            gameStateRef.current.downtownStreetX = 0;
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -809,6 +817,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rooftop Street Scrolling
         if (level === 'rooftop') {
             state.rooftopStreetX -= state.scrollSpeed;
+        }
+
+        // Downtown Street Scrolling
+        if (level === 'downtown') {
+            state.downtownStreetX -= state.scrollSpeed;
         }
 
         // Rome Buildings Management
@@ -1131,7 +1144,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'rome' && isImageValid(IMAGES.current.romeBackground)) {
+        if (level === 'downtown' && isImageValid(IMAGES.current.downtownBackground)) {
+            // Downtown/Gelsenkirchen: Fixed background (no scrolling)
+            const bg = IMAGES.current.downtownBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
+        } else if (level === 'rome' && isImageValid(IMAGES.current.romeBackground)) {
             // Rome: Fixed background (no scrolling)
             const bg = IMAGES.current.romeBackground;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -1189,33 +1211,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const offset = (state.distance * 10) % w;
             ctx.drawImage(bg, -offset, 0, w, h);
             ctx.drawImage(bg, w - offset, 0, w, h);
-        } else if (assetsLoaded.current && isImageValid(IMAGES.current.background) && isImageValid(IMAGES.current.background2)) {
-            const bg1 = IMAGES.current.background;
-            const bg2 = IMAGES.current.background2;
-
-            const scale1 = Math.max(width / bg1.width, height / bg1.height);
-            const w1 = bg1.width * scale1;
-            const h1 = bg1.height * scale1;
-
-            const scale2 = Math.max(width / bg2.width, height / bg2.height);
-            const w2 = bg2.width * scale2;
-            const h2 = bg2.height * scale2;
-
-            // Both backgrounds scroll at same speed, one after another
-            const totalWidth = w1 + w2;
-            const offset = (state.distance * 10) % totalWidth;
-
-            // Determine which background to show
-            if (offset < w1) {
-                // Show bg1, then bg2 after it
-                ctx.drawImage(bg1, -offset, 0, w1, h1);
-                ctx.drawImage(bg2, w1 - offset, 0, w2, h2);
-            } else {
-                // bg1 has scrolled off, show bg2, then bg1 after it
-                const offset2 = offset - w1;
-                ctx.drawImage(bg2, -offset2, 0, w2, h2);
-                ctx.drawImage(bg1, w2 - offset2, 0, w1, h1);
-            }
         } else {
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
@@ -1330,6 +1325,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             // Wrap around scrolling
             const offset = state.madridStreetX % streetWidth;
+
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
+            }
+        }
+
+        // Draw Downtown scrolling street
+        if (level === 'downtown' && isImageValid(IMAGES.current.downtownStreet)) {
+            const street = IMAGES.current.downtownStreet;
+            const streetHeight = 180;
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = height - streetHeight;
+
+            // Wrap around scrolling
+            const offset = state.downtownStreetX % streetWidth;
 
             // Draw two copies for seamless scrolling
             ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);

@@ -1028,7 +1028,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Play Sound
             if (['cop', 'granny', 'dog'].includes(e.spriteType)) {
                 playSound('ouch');
-            } else {
+            } else if (p.type === 'normal' || p.type === 'triple') {
                 playSound('explosion');
             }
 

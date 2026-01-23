@@ -482,6 +482,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         rapidFireUntil: 0,
         shotQueue: [],
         lastMilestone: 0, // Track last milestone reached
+        downtownBuildings: [], // Downtown scrolling buildings
+        downtownTrees: [], // Downtown scrolling trees
+        downtownStreetX: 0, // Downtown street scroll position
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -1215,8 +1218,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
         }
-
-
 
         // Draw London scrolling foreground (3 images in sequence)
         if (level === 'london' && isImageValid(IMAGES.current.londonForeground1) && 

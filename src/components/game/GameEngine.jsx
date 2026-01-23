@@ -348,6 +348,35 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_drone = new Image();
         IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
         
+        // Downtown/Gelsenkirchen Buildings
+        IMAGES.current.downtown_buildings = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9bb6b5087_Haus-1.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/7ad2f25d2_Haus-2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/12d32a59b_Haus-3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/4803fe12a_Haus-4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/671f03270_Haus-5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f8d3f9b50_Haus-6.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/371aaa382_Haus-7.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0ee36a4a9_Haus-8.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0587f0a97_Haus-9.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f4e72ed0b_Haus-10.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a032209f7_Haus-11.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf23fa904_Haus-12.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9f9fa031b_Haus-13.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/6258d5b55_Haus-14.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/46d81d66a_Haus-15.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25ccdc960_Haus-16.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/95d096de2_Haus-17.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e7ef0669e_Haus-18.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/05339400c_Haus-19.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/44d6f3e4a_Haus-20.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b616ce908_Haus-21.png" }
+        ];
+        IMAGES.current.downtown_buildings.forEach(building => {
+            building.img.onerror = () => console.error('Failed to load Downtown building:', building.src);
+            building.img.src = building.src;
+        });
+        
         // Rome Assets
         IMAGES.current.romeBackground = new Image();
         IMAGES.current.romeBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/562d13a4a_Hintergrund.png";
@@ -891,6 +920,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
+        // Downtown Buildings Management
+        if (level === 'downtown' && IMAGES.current.downtown_buildings) {
+            // Add new building if needed
+            if (state.downtownBuildings.length === 0 || state.downtownBuildings[state.downtownBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
+                const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
+                const buildingImg = buildingData?.img;
+
+                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.5;
+                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const buildingWidth = buildingImg.naturalWidth * scale;
+
+                    state.downtownBuildings.push({
+                        x: width,
+                        img: buildingImg,
+                        width: buildingWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen buildings
+            state.downtownBuildings = state.downtownBuildings.filter(building => {
+                building.x -= state.scrollSpeed;
+                return building.x > -building.width && 
+                       building.img && 
+                       building.img.complete && 
+                       building.img.naturalHeight > 0 && 
+                       building.img.naturalWidth > 0;
+            });
+        }
+
         // Madrid Scenery Management (Buildings and Trees combined)
         if (level === 'madrid' && IMAGES.current.madrid_buildings && IMAGES.current.madrid_trees) {
             // Add new scenery item if needed
@@ -1262,6 +1323,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
                 ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
             }
+        }
+
+        // Draw Downtown scrolling buildings - behind NPCs
+        if (level === 'downtown') {
+            const groundY = height * GROUND_Y_PCT;
+
+            state.downtownBuildings.forEach(building => {
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height - 30;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
         }
 
         // Draw Rome scrolling buildings - behind NPCs

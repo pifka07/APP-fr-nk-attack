@@ -513,6 +513,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         downtownBuildings: [], // Downtown scrolling buildings
         downtownTrees: [], // Downtown scrolling trees
         downtownStreetX: 0, // Downtown street scroll position
+        dusseldorfBuildings: [], // Düsseldorf scrolling buildings
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -563,6 +564,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.downtownBuildings = [];
             gameStateRef.current.downtownTrees = [];
             gameStateRef.current.downtownStreetX = 0;
+            gameStateRef.current.dusseldorfBuildings = [];
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -925,6 +927,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                        tree.img.complete && 
                        tree.img.naturalHeight > 0 && 
                        tree.img.naturalWidth > 0;
+            });
+        }
+
+        // Düsseldorf Buildings Management
+        if (level === 'dusseldorf' && IMAGES.current.downtown_buildings) {
+            // Add new building if needed
+            if (state.dusseldorfBuildings.length === 0 || state.dusseldorfBuildings[state.dusseldorfBuildings.length - 1].x < width - (300 + Math.random() * 700)) {
+                const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
+                const buildingImg = buildingData?.img;
+
+                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.4;
+                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const buildingWidth = buildingImg.naturalWidth * scale;
+
+                    state.dusseldorfBuildings.push({
+                        x: width,
+                        img: buildingImg,
+                        width: buildingWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen buildings
+            state.dusseldorfBuildings = state.dusseldorfBuildings.filter(building => {
+                building.x -= state.scrollSpeed;
+                return building.x > -building.width && 
+                       building.img && 
+                       building.img.complete && 
+                       building.img.naturalHeight > 0 && 
+                       building.img.naturalWidth > 0;
             });
         }
 
@@ -1343,6 +1377,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
                 ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
             }
+        }
+
+        // Draw Düsseldorf scrolling buildings - behind NPCs
+        if (level === 'dusseldorf') {
+            const groundY = height * GROUND_Y_PCT;
+
+            state.dusseldorfBuildings.forEach(building => {
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height - 30;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
         }
 
         // Draw Downtown scrolling buildings - behind NPCs

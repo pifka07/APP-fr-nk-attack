@@ -166,6 +166,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.rooftopBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f77ca6e93_Hintergrund.png";
             IMAGES.current.rooftopStreet = new Image();
             IMAGES.current.rooftopStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8143c6294_Ebene2.png";
+        } else if (level === 'dusseldorf') {
+            // Düsseldorf - New 5-layer structure
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5d06e0a92_Hintergrund.png";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
@@ -667,7 +670,16 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         let enemy;
 
         // Use level-specific spawn functions
-        if (level === 'rooftop') {
+        if (level === 'dusseldorf') {
+            // Düsseldorf uses same enemy spawn as downtown for now
+            enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
+            
+            if (enemy === 'sparrow_formation') {
+                const sparrows = spawnSparrowFormation(width, groundY, scrollSpeed);
+                enemies.push(...sparrows);
+                return;
+            }
+        } else if (level === 'rooftop') {
             enemy = spawnRooftopEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'park') {
             enemy = spawnParkEnemy(width, height, groundY, scrollSpeed);
@@ -1204,7 +1216,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'downtown' && isImageValid(IMAGES.current.background)) {
+        if ((level === 'downtown' || level === 'dusseldorf') && isImageValid(IMAGES.current.background)) {
             // Downtown/Gelsenkirchen: Fixed background (no scrolling)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);

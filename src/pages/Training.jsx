@@ -29,6 +29,13 @@ export default function Training() {
             description: "Downtown streets chaos",
             image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/c7155d711_file_00000000404471f788411228f72d739a.png",
             locked: false
+        },
+        {
+            id: "dusseldorf",
+            name: "Düsseldorf",
+            description: "Rhine city adventure",
+            image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5d06e0a92_Hintergrund.png",
+            locked: false
         }
     ];
 

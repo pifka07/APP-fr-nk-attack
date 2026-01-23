@@ -516,7 +516,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         downtownTrees: [], // Downtown scrolling trees
         downtownStreetX: 0, // Downtown street scroll position
         dusseldorfBuildings: [], // Düsseldorf scrolling buildings
-        dusseldorfSidewalkX: 0 // Düsseldorf sidewalk scroll position
+        dusseldorfSidewalkX: 0, // Düsseldorf sidewalk scroll position
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees

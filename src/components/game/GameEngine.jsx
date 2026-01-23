@@ -168,11 +168,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.rooftopStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8143c6294_Ebene2.png";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
-            IMAGES.current.background.src = "";
-            IMAGES.current.downtownBackground = new Image();
-            IMAGES.current.downtownBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
-            IMAGES.current.downtownStreet = new Image();
-            IMAGES.current.downtownStreet.src = ""; // TODO: Add street image
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
         }
 
         IMAGES.current.playerSheet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/59fa7a8db_FrnkdieTaube2-Kopie.png";
@@ -1208,9 +1204,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'downtown' && isImageValid(IMAGES.current.downtownBackground)) {
+        if (level === 'downtown' && isImageValid(IMAGES.current.background)) {
             // Downtown/Gelsenkirchen: Fixed background (no scrolling)
-            const bg = IMAGES.current.downtownBackground;
+            const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;

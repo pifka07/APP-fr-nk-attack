@@ -677,14 +677,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Use level-specific spawn functions
         if (level === 'dusseldorf') {
-            // Düsseldorf uses same enemy spawn as downtown for now
-            enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
-            
-            if (enemy === 'sparrow_formation') {
-                const sparrows = spawnSparrowFormation(width, groundY, scrollSpeed);
-                enemies.push(...sparrows);
-                return;
-            }
+            // No enemies for Düsseldorf yet
+            return;
         } else if (level === 'rooftop') {
             enemy = spawnRooftopEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'park') {
@@ -1388,19 +1382,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Düsseldorf scrolling buildings and sidewalk - behind NPCs
+        // Draw Düsseldorf scrolling sidewalk and buildings
         if (level === 'dusseldorf') {
             const groundY = height * GROUND_Y_PCT;
 
-            // Draw buildings
-            state.dusseldorfBuildings.forEach(building => {
-                if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 80;
-                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
-                }
-            });
-
-            // Draw sidewalk at bottom
+            // Draw sidewalk at bottom (first)
             if (isImageValid(IMAGES.current.dusseldorfSidewalk)) {
                 const sidewalk = IMAGES.current.dusseldorfSidewalk;
                 const sidewalkHeight = 210;
@@ -1416,6 +1402,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.drawImage(sidewalk, offset - sidewalkWidth, sidewalkY, sidewalkWidth, sidewalkHeight);
                 }
             }
+
+            // Draw buildings (on top of sidewalk)
+            state.dusseldorfBuildings.forEach(building => {
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height - 80;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
         }
 
         // Draw Downtown scrolling buildings - behind NPCs

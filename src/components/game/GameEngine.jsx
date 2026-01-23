@@ -169,6 +169,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'dusseldorf') {
             // Düsseldorf - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5d06e0a92_Hintergrund.png";
+            IMAGES.current.dusseldorfSidewalk = new Image();
+            IMAGES.current.dusseldorfSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";

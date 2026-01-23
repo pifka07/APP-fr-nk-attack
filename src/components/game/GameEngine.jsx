@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
-import { spawnDowntownEnemy, spawnSparrowFormation } from './levels/downtown';
 import { spawnRooftopEnemy } from './levels/rooftop';
 import { spawnParkEnemy } from './levels/park';
 import { spawnLondonEnemy } from './levels/london';
 import { spawnParisEnemy } from './levels/paris';
 import { spawnMadridEnemy } from './levels/madrid';
 import { spawnRomeEnemy } from './levels/rome';
-import { spawnDusseldorfEnemy } from './levels/dusseldorf';
+import { spawnGelsenkirchenEnemy } from './levels/gelsenkirchen';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -167,11 +166,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.rooftopBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f77ca6e93_Hintergrund.png";
             IMAGES.current.rooftopStreet = new Image();
             IMAGES.current.rooftopStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8143c6294_Ebene2.png";
-        } else if (level === 'dusseldorf') {
-            // Düsseldorf - New 5-layer structure
+        } else if (level === 'gelsenkirchen') {
+            // Gelsenkirchen - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5d06e0a92_Hintergrund.png";
-            IMAGES.current.dusseldorfSidewalk = new Image();
-            IMAGES.current.dusseldorfSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
+            IMAGES.current.gelsenkirchenSidewalk = new Image();
+            IMAGES.current.gelsenkirchenSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
@@ -350,8 +349,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_drone = new Image();
         IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
 
-        // Düsseldorf NPCs
-        IMAGES.current.dusseldorf_npc1 = new Image();
+        // Gelsenkirchen NPCs
+        IMAGES.current.gelsenkirchen_npc1 = new Image();
         IMAGES.current.dusseldorf_npc1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/4ac8e458a_NPCs-Kopie.png";
         IMAGES.current.dusseldorf_npc2 = new Image();
         IMAGES.current.dusseldorf_npc2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/65888fee0_NPC1.png";
@@ -537,11 +536,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         rapidFireUntil: 0,
         shotQueue: [],
         lastMilestone: 0, // Track last milestone reached
-        downtownBuildings: [], // Downtown scrolling buildings
-        downtownTrees: [], // Downtown scrolling trees
-        downtownStreetX: 0, // Downtown street scroll position
-        dusseldorfBuildings: [], // Düsseldorf scrolling buildings
-        dusseldorfSidewalkX: 0, // Düsseldorf sidewalk scroll position
+        gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
+        gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -589,11 +585,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.combo = 0;
             gameStateRef.current.comboTimer = 0;
             gameStateRef.current.lastMilestone = 0;
-            gameStateRef.current.downtownBuildings = [];
-            gameStateRef.current.downtownTrees = [];
-            gameStateRef.current.downtownStreetX = 0;
-            gameStateRef.current.dusseldorfBuildings = [];
-            gameStateRef.current.dusseldorfSidewalkX = 0;
+            gameStateRef.current.gelsenkirchenBuildings = [];
+            gameStateRef.current.gelsenkirchenSidewalkX = 0;
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -701,8 +694,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         let enemy;
 
         // Use level-specific spawn functions
-        if (level === 'dusseldorf') {
-            enemy = spawnDusseldorfEnemy(width, height, groundY, scrollSpeed);
+        if (level === 'gelsenkirchen') {
+            enemy = spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'rooftop') {
             enemy = spawnRooftopEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'park') {
@@ -883,14 +876,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             state.rooftopStreetX -= state.scrollSpeed;
         }
 
-        // Düsseldorf Sidewalk Scrolling
-        if (level === 'dusseldorf') {
-            state.dusseldorfSidewalkX -= state.scrollSpeed;
-        }
-
-        // Downtown Street Scrolling
-        if (level === 'downtown') {
-            state.downtownStreetX -= state.scrollSpeed;
+        // Gelsenkirchen Sidewalk Scrolling
+        if (level === 'gelsenkirchen') {
+            state.gelsenkirchenSidewalkX -= state.scrollSpeed;
         }
 
         // Rome Buildings Management
@@ -957,12 +945,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
-        // Düsseldorf Buildings Management
-        if (level === 'dusseldorf' && IMAGES.current.downtown_buildings) {
+        // Gelsenkirchen Buildings Management
+        if (level === 'gelsenkirchen' && IMAGES.current.downtown_buildings) {
             const BUILDING_HEIGHT = 250; // Fixed building height
 
             // Add new building if needed
-            if (state.dusseldorfBuildings.length === 0 || state.dusseldorfBuildings[state.dusseldorfBuildings.length - 1].x < width - (300 + Math.random() * 700)) {
+            if (state.gelsenkirchenBuildings.length === 0 || state.gelsenkirchenBuildings[state.gelsenkirchenBuildings.length - 1].x < width - (300 + Math.random() * 700)) {
                 const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
                 const buildingImg = buildingData?.img;
 
@@ -970,7 +958,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     const scale = BUILDING_HEIGHT / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 
-                    state.dusseldorfBuildings.push({
+                    state.gelsenkirchenBuildings.push({
                         x: width,
                         img: buildingImg,
                         width: buildingWidth,
@@ -980,39 +968,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
 
             // Update positions and filter out offscreen buildings
-            state.dusseldorfBuildings = state.dusseldorfBuildings.filter(building => {
-                building.x -= state.scrollSpeed;
-                return building.x > -building.width && 
-                       building.img && 
-                       building.img.complete && 
-                       building.img.naturalHeight > 0 && 
-                       building.img.naturalWidth > 0;
-            });
-        }
-
-        // Downtown Buildings Management
-        if (level === 'downtown' && IMAGES.current.downtown_buildings) {
-            // Add new building if needed
-            if (state.downtownBuildings.length === 0 || state.downtownBuildings[state.downtownBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
-                const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
-                const buildingImg = buildingData?.img;
-
-                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    const maxHeight = height * 0.5;
-                    const scale = maxHeight / buildingImg.naturalHeight;
-                    const buildingWidth = buildingImg.naturalWidth * scale;
-
-                    state.downtownBuildings.push({
-                        x: width,
-                        img: buildingImg,
-                        width: buildingWidth,
-                        height: maxHeight
-                    });
-                }
-            }
-
-            // Update positions and filter out offscreen buildings
-            state.downtownBuildings = state.downtownBuildings.filter(building => {
+            state.gelsenkirchenBuildings = state.gelsenkirchenBuildings.filter(building => {
                 building.x -= state.scrollSpeed;
                 return building.x > -building.width && 
                        building.img && 
@@ -1278,8 +1234,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'dusseldorf' && isImageValid(IMAGES.current.background)) {
-            // Düsseldorf: Scrolling background (image width distributed over 20000 meters)
+        if (level === 'gelsenkirchen' && isImageValid(IMAGES.current.background)) {
+            // Gelsenkirchen: Scrolling background (image width distributed over 20000 meters)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
@@ -1290,15 +1246,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
             ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
-        } else if (level === 'downtown' && isImageValid(IMAGES.current.background)) {
-            // Downtown/Gelsenkirchen: Fixed background (no scrolling)
-            const bg = IMAGES.current.background;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
         } else if (level === 'rome' && isImageValid(IMAGES.current.romeBackground)) {
             // Rome: Fixed background (no scrolling)
             const bg = IMAGES.current.romeBackground;
@@ -1407,19 +1354,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Düsseldorf scrolling sidewalk and buildings
-        if (level === 'dusseldorf') {
+        // Draw Gelsenkirchen scrolling sidewalk and buildings
+        if (level === 'gelsenkirchen') {
             const groundY = height * GROUND_Y_PCT;
 
             // Draw sidewalk at bottom (first)
-            if (isImageValid(IMAGES.current.dusseldorfSidewalk)) {
-                const sidewalk = IMAGES.current.dusseldorfSidewalk;
+            if (isImageValid(IMAGES.current.gelsenkirchenSidewalk)) {
+                const sidewalk = IMAGES.current.gelsenkirchenSidewalk;
                 const sidewalkHeight = 210;
                 const sidewalkScale = sidewalkHeight / sidewalk.height;
                 const sidewalkWidth = sidewalk.width * sidewalkScale;
                 const sidewalkY = height - sidewalkHeight;
 
-                const offset = state.dusseldorfSidewalkX % sidewalkWidth;
+                const offset = state.gelsenkirchenSidewalkX % sidewalkWidth;
 
                 ctx.drawImage(sidewalk, offset, sidewalkY, sidewalkWidth, sidewalkHeight);
                 ctx.drawImage(sidewalk, offset + sidewalkWidth, sidewalkY, sidewalkWidth, sidewalkHeight);
@@ -1429,7 +1376,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
 
             // Draw buildings (on top of sidewalk)
-            state.dusseldorfBuildings.forEach(building => {
+            state.gelsenkirchenBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
                     const buildingY = groundY - building.height - 80;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
@@ -1437,17 +1384,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
-        // Draw Downtown scrolling buildings - behind NPCs
-        if (level === 'downtown') {
-            const groundY = height * GROUND_Y_PCT;
 
-            state.downtownBuildings.forEach(building => {
-                if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 30;
-                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
-                }
-            });
-        }
 
         // Draw Rome scrolling buildings - behind NPCs
         if (level === 'rome') {
@@ -1520,24 +1457,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Downtown scrolling street
-        if (level === 'downtown' && isImageValid(IMAGES.current.downtownStreet)) {
-            const street = IMAGES.current.downtownStreet;
-            const streetHeight = 180;
-            const streetScale = streetHeight / street.height;
-            const streetWidth = street.width * streetScale;
-            const streetY = height - streetHeight;
 
-            // Wrap around scrolling
-            const offset = state.downtownStreetX % streetWidth;
-
-            // Draw two copies for seamless scrolling
-            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
-            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
-            if (offset < 0) {
-                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
-            }
-        }
 
         // Draw Rooftop scrolling street
         if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopStreet)) {
@@ -2096,18 +2016,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'rome_bird3') useFullImage(IMAGES.current.rome_bird3);
                 else if (e.spriteType === 'rome_bird4') useFullImage(IMAGES.current.rome_bird4);
                 else if (e.spriteType === 'rome_bird5') useFullImage(IMAGES.current.rome_bird5);
-                else if (e.spriteType === 'dusseldorf_npc1') useFullImage(IMAGES.current.dusseldorf_npc1);
-                else if (e.spriteType === 'dusseldorf_npc2') useFullImage(IMAGES.current.dusseldorf_npc2);
-                else if (e.spriteType === 'dusseldorf_npc3') useFullImage(IMAGES.current.dusseldorf_npc3);
-                else if (e.spriteType === 'dusseldorf_npc4') useFullImage(IMAGES.current.dusseldorf_npc4);
-                else if (e.spriteType === 'dusseldorf_npc5') useFullImage(IMAGES.current.dusseldorf_npc5);
-                else if (e.spriteType === 'dusseldorf_npc6') useFullImage(IMAGES.current.dusseldorf_npc6);
-                else if (e.spriteType === 'dusseldorf_npc7') useFullImage(IMAGES.current.dusseldorf_npc7);
-                else if (e.spriteType === 'dusseldorf_npc8') useFullImage(IMAGES.current.dusseldorf_npc8);
-                else if (e.spriteType === 'dusseldorf_npc9') useFullImage(IMAGES.current.dusseldorf_npc9);
-                else if (e.spriteType === 'dusseldorf_npc10') useFullImage(IMAGES.current.dusseldorf_npc10);
-                else if (e.spriteType === 'dusseldorf_npc11') useFullImage(IMAGES.current.dusseldorf_npc11);
-                else if (e.spriteType === 'dusseldorf_npc12') useFullImage(IMAGES.current.dusseldorf_npc12);
+                else if (e.spriteType === 'gelsenkirchen_npc1') useFullImage(IMAGES.current.gelsenkirchen_npc1);
+                else if (e.spriteType === 'gelsenkirchen_npc2') useFullImage(IMAGES.current.gelsenkirchen_npc2);
+                else if (e.spriteType === 'gelsenkirchen_npc3') useFullImage(IMAGES.current.gelsenkirchen_npc3);
+                else if (e.spriteType === 'gelsenkirchen_npc4') useFullImage(IMAGES.current.gelsenkirchen_npc4);
+                else if (e.spriteType === 'gelsenkirchen_npc5') useFullImage(IMAGES.current.gelsenkirchen_npc5);
+                else if (e.spriteType === 'gelsenkirchen_npc6') useFullImage(IMAGES.current.gelsenkirchen_npc6);
+                else if (e.spriteType === 'gelsenkirchen_npc7') useFullImage(IMAGES.current.gelsenkirchen_npc7);
+                else if (e.spriteType === 'gelsenkirchen_npc8') useFullImage(IMAGES.current.gelsenkirchen_npc8);
+                else if (e.spriteType === 'gelsenkirchen_npc9') useFullImage(IMAGES.current.gelsenkirchen_npc9);
+                else if (e.spriteType === 'gelsenkirchen_npc10') useFullImage(IMAGES.current.gelsenkirchen_npc10);
+                else if (e.spriteType === 'gelsenkirchen_npc11') useFullImage(IMAGES.current.gelsenkirchen_npc11);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

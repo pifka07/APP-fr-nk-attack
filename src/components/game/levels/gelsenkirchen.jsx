@@ -1,18 +1,18 @@
-// Düsseldorf Level Enemy Spawning
+// Gelsenkirchen Level Enemy Spawning
 
 // Ground enemy types with spawn weights
 const groundEnemyTypes = [
-    { type: 'dusseldorf_npc1', weight: 1 },
-    { type: 'dusseldorf_npc2', weight: 1 },
-    { type: 'dusseldorf_npc3', weight: 1 },
-    { type: 'dusseldorf_npc4', weight: 1 },
-    { type: 'dusseldorf_npc5', weight: 1 },
-    { type: 'dusseldorf_npc6', weight: 1 },
-    { type: 'dusseldorf_npc7', weight: 1 },
-    { type: 'dusseldorf_npc8', weight: 1 },
-    { type: 'dusseldorf_npc9', weight: 1 },
-    { type: 'dusseldorf_npc10', weight: 1 },
-    { type: 'dusseldorf_npc11', weight: 1 }
+    { type: 'gelsenkirchen_npc1', weight: 1 },
+    { type: 'gelsenkirchen_npc2', weight: 1 },
+    { type: 'gelsenkirchen_npc3', weight: 1 },
+    { type: 'gelsenkirchen_npc4', weight: 1 },
+    { type: 'gelsenkirchen_npc5', weight: 1 },
+    { type: 'gelsenkirchen_npc6', weight: 1 },
+    { type: 'gelsenkirchen_npc7', weight: 1 },
+    { type: 'gelsenkirchen_npc8', weight: 1 },
+    { type: 'gelsenkirchen_npc9', weight: 1 },
+    { type: 'gelsenkirchen_npc10', weight: 1 },
+    { type: 'gelsenkirchen_npc11', weight: 1 }
 ];
 
 // Air enemy types (birds)
@@ -22,7 +22,7 @@ const airEnemyTypes = [
     { type: 'pigeon', weight: 1 }
 ];
 
-export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
+export function spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed) {
     const enemy = {
         x: width + 50,
         y: 0,

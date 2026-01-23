@@ -46,10 +46,8 @@ export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
 
     enemy.spriteType = selectedType;
     
-    // Vary Y position: from building bottom to ground
-    const BUILDING_HEIGHT = 250;
-    const buildingBottomY = groundY - BUILDING_HEIGHT - 80; // Same calculation as in GameEngine
-    const minY = buildingBottomY;
+    // Vary Y position: max 70px above ground
+    const minY = groundY - 70;
     const maxY = groundY - enemy.height;
     enemy.y = minY + Math.random() * (maxY - minY);
 

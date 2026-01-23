@@ -1395,7 +1395,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Draw buildings
             state.dusseldorfBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 30;
+                    const buildingY = groundY - building.height - 60;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });

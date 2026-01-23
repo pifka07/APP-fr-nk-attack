@@ -373,6 +373,28 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.gelsenkirchen_npc11 = new Image();
         IMAGES.current.gelsenkirchen_npc11.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/94afff8fe_ATA.png";
         
+        // Gelsenkirchen Birds
+        IMAGES.current.gelsenkirchen_bird1 = new Image();
+        IMAGES.current.gelsenkirchen_bird1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/384355eea_Vogel1-Kopie.png";
+        IMAGES.current.gelsenkirchen_bird2 = new Image();
+        IMAGES.current.gelsenkirchen_bird2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1645a294b_Vogel2.png";
+        IMAGES.current.gelsenkirchen_bird3 = new Image();
+        IMAGES.current.gelsenkirchen_bird3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b87ae8a69_Vogel3-Kopie.png";
+        
+        // Gelsenkirchen Drones
+        IMAGES.current.gelsenkirchen_drone1 = new Image();
+        IMAGES.current.gelsenkirchen_drone1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/46a249e2b_Drohne-Kopie.png";
+        IMAGES.current.gelsenkirchen_drone2 = new Image();
+        IMAGES.current.gelsenkirchen_drone2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/44c7a0181_Drohne-Kopie2.png";
+        IMAGES.current.gelsenkirchen_drone3 = new Image();
+        IMAGES.current.gelsenkirchen_drone3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/21bacc964_Drohne-Kopie3.png";
+        IMAGES.current.gelsenkirchen_drone4 = new Image();
+        IMAGES.current.gelsenkirchen_drone4.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/87525eca0_Drohne-Kopie4.png";
+        IMAGES.current.gelsenkirchen_drone5 = new Image();
+        IMAGES.current.gelsenkirchen_drone5.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/43779f1a4_Drohne-Kopie5.png";
+        IMAGES.current.gelsenkirchen_drone6 = new Image();
+        IMAGES.current.gelsenkirchen_drone6.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3a09ae431_Drohne-Kopie6.png";
+        
         // Downtown/Gelsenkirchen Buildings
         IMAGES.current.downtown_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/89413af74_Haus-1.png" },
@@ -2027,6 +2049,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'gelsenkirchen_npc9') useFullImage(IMAGES.current.gelsenkirchen_npc9);
                 else if (e.spriteType === 'gelsenkirchen_npc10') useFullImage(IMAGES.current.gelsenkirchen_npc10);
                 else if (e.spriteType === 'gelsenkirchen_npc11') useFullImage(IMAGES.current.gelsenkirchen_npc11);
+                else if (e.spriteType === 'gelsenkirchen_bird1') useFullImage(IMAGES.current.gelsenkirchen_bird1);
+                else if (e.spriteType === 'gelsenkirchen_bird2') useFullImage(IMAGES.current.gelsenkirchen_bird2);
+                else if (e.spriteType === 'gelsenkirchen_bird3') useFullImage(IMAGES.current.gelsenkirchen_bird3);
+                else if (e.spriteType === 'gelsenkirchen_drone1') useFullImage(IMAGES.current.gelsenkirchen_drone1);
+                else if (e.spriteType === 'gelsenkirchen_drone2') useFullImage(IMAGES.current.gelsenkirchen_drone2);
+                else if (e.spriteType === 'gelsenkirchen_drone3') useFullImage(IMAGES.current.gelsenkirchen_drone3);
+                else if (e.spriteType === 'gelsenkirchen_drone4') useFullImage(IMAGES.current.gelsenkirchen_drone4);
+                else if (e.spriteType === 'gelsenkirchen_drone5') useFullImage(IMAGES.current.gelsenkirchen_drone5);
+                else if (e.spriteType === 'gelsenkirchen_drone6') useFullImage(IMAGES.current.gelsenkirchen_drone6);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -2057,7 +2088,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (e.spriteType === 'business_person' || e.spriteType === 'tourist') {
                     // Walking animation
                     ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
-                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon' || e.spriteType === 'rome_bird1' || e.spriteType === 'rome_bird2' || e.spriteType === 'rome_bird3' || e.spriteType === 'rome_bird4' || e.spriteType === 'rome_bird5') {
+                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon' || e.spriteType === 'rome_bird1' || e.spriteType === 'rome_bird2' || e.spriteType === 'rome_bird3' || e.spriteType === 'rome_bird4' || e.spriteType === 'rome_bird5' || e.spriteType === 'gelsenkirchen_bird1' || e.spriteType === 'gelsenkirchen_bird2' || e.spriteType === 'gelsenkirchen_bird3') {
                         // Flapping wings
                         ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
                     } else if (e.spriteType === 'rooftop_sparrow') {
@@ -2066,7 +2097,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (e.spriteType === 'balloon') {
                     // Gentle float
                     ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);
-                    } else if (e.spriteType === 'london_drone') {
+                    } else if (e.spriteType === 'london_drone' || e.spriteType === 'gelsenkirchen_drone1' || e.spriteType === 'gelsenkirchen_drone2' || e.spriteType === 'gelsenkirchen_drone3' || e.spriteType === 'gelsenkirchen_drone4' || e.spriteType === 'gelsenkirchen_drone5' || e.spriteType === 'gelsenkirchen_drone6') {
                     // Drone hovering
                     ctx.translate(0, Math.sin(state.animFrame * 0.3) * 2);
                     }

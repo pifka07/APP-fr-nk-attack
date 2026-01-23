@@ -15,11 +15,17 @@ const groundEnemyTypes = [
     { type: 'gelsenkirchen_npc11', weight: 1 }
 ];
 
-// Air enemy types (birds)
+// Air enemy types (birds and drones)
 const airEnemyTypes = [
-    { type: 'sparrow', weight: 2 },
-    { type: 'seagull', weight: 2 },
-    { type: 'pigeon', weight: 1 }
+    { type: 'gelsenkirchen_bird1', weight: 2 },
+    { type: 'gelsenkirchen_bird2', weight: 2 },
+    { type: 'gelsenkirchen_bird3', weight: 2 },
+    { type: 'gelsenkirchen_drone1', weight: 1 },
+    { type: 'gelsenkirchen_drone2', weight: 1 },
+    { type: 'gelsenkirchen_drone3', weight: 1 },
+    { type: 'gelsenkirchen_drone4', weight: 1 },
+    { type: 'gelsenkirchen_drone5', weight: 1 },
+    { type: 'gelsenkirchen_drone6', weight: 1 }
 ];
 
 export function spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed) {

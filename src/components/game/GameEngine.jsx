@@ -1216,7 +1216,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if ((level === 'downtown' || level === 'dusseldorf') && isImageValid(IMAGES.current.background)) {
+        if (level === 'dusseldorf' && isImageValid(IMAGES.current.background)) {
+            // Düsseldorf: Scrolling background (image width distributed over 20000 meters)
+            const bg = IMAGES.current.background;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+
+            // Scroll: image width over 20000 meters distance
+            const bgOffset = ((state.distance / 20000) * w) % w;
+
+            ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
+            ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
+        } else if (level === 'downtown' && isImageValid(IMAGES.current.background)) {
             // Downtown/Gelsenkirchen: Fixed background (no scrolling)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);

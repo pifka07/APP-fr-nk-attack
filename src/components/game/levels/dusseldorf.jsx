@@ -12,8 +12,7 @@ const groundEnemyTypes = [
     { type: 'dusseldorf_npc8', weight: 1 },
     { type: 'dusseldorf_npc9', weight: 1 },
     { type: 'dusseldorf_npc10', weight: 1 },
-    { type: 'dusseldorf_npc11', weight: 1 },
-    { type: 'dusseldorf_npc12', weight: 1 }
+    { type: 'dusseldorf_npc11', weight: 1 }
 ];
 
 export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {

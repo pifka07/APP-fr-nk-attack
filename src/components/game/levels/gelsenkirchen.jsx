@@ -43,8 +43,8 @@ export function spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed) {
         scoreValue: 10
     };
 
-    // 30% air, 70% ground
-    const spawnAir = Math.random() < 0.3;
+    // 50% air, 50% ground
+    const spawnAir = Math.random() < 0.5;
     const enemyTypes = spawnAir ? airEnemyTypes : groundEnemyTypes;
 
     // Select random enemy type

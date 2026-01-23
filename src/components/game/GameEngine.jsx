@@ -1403,7 +1403,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Draw sidewalk at bottom
             if (isImageValid(IMAGES.current.dusseldorfSidewalk)) {
                 const sidewalk = IMAGES.current.dusseldorfSidewalk;
-                const sidewalkHeight = 150;
+                const sidewalkHeight = 210;
                 const sidewalkScale = sidewalkHeight / sidewalk.height;
                 const sidewalkWidth = sidewalk.width * sidewalkScale;
                 const sidewalkY = height - sidewalkHeight;

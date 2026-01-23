@@ -6,6 +6,7 @@ import { spawnLondonEnemy } from './levels/london';
 import { spawnParisEnemy } from './levels/paris';
 import { spawnMadridEnemy } from './levels/madrid';
 import { spawnRomeEnemy } from './levels/rome';
+import { spawnDusseldorfEnemy } from './levels/dusseldorf';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -348,6 +349,32 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.madrid_sparrow.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2a9103eb0_Birds-Kopie3.png";
         IMAGES.current.madrid_drone = new Image();
         IMAGES.current.madrid_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
+
+        // Düsseldorf NPCs
+        IMAGES.current.dusseldorf_npc1 = new Image();
+        IMAGES.current.dusseldorf_npc1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/092d7a914_NPCs-Kopie.png";
+        IMAGES.current.dusseldorf_npc2 = new Image();
+        IMAGES.current.dusseldorf_npc2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3564b4c8d_NPC1.png";
+        IMAGES.current.dusseldorf_npc3 = new Image();
+        IMAGES.current.dusseldorf_npc3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b7e2a930e_NPC2.png";
+        IMAGES.current.dusseldorf_npc4 = new Image();
+        IMAGES.current.dusseldorf_npc4.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/728094b00_NPC3.png";
+        IMAGES.current.dusseldorf_npc5 = new Image();
+        IMAGES.current.dusseldorf_npc5.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e9b26c0a3_NPCs-Kopie4.png";
+        IMAGES.current.dusseldorf_npc6 = new Image();
+        IMAGES.current.dusseldorf_npc6.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/516c2a6ab_NPCs-Kopie5.png";
+        IMAGES.current.dusseldorf_npc7 = new Image();
+        IMAGES.current.dusseldorf_npc7.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1f3b9037f_NPCs-Kopie6.png";
+        IMAGES.current.dusseldorf_npc8 = new Image();
+        IMAGES.current.dusseldorf_npc8.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/23e1e62bd_NPCs-Kopie7.png";
+        IMAGES.current.dusseldorf_npc9 = new Image();
+        IMAGES.current.dusseldorf_npc9.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1888cc42b_NPCs-Kopie8.png";
+        IMAGES.current.dusseldorf_npc10 = new Image();
+        IMAGES.current.dusseldorf_npc10.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/64a0a7138_NPCs-Kopie9.png";
+        IMAGES.current.dusseldorf_npc11 = new Image();
+        IMAGES.current.dusseldorf_npc11.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3e226be10_NPCs-Kopie10.png";
+        IMAGES.current.dusseldorf_npc12 = new Image();
+        IMAGES.current.dusseldorf_npc12.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f23d1605d_NPCs-Kopie11.png";
         
         // Downtown/Gelsenkirchen Buildings
         IMAGES.current.downtown_buildings = [
@@ -677,8 +704,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Use level-specific spawn functions
         if (level === 'dusseldorf') {
-            // No enemies for Düsseldorf yet
-            return;
+            enemy = spawnDusseldorfEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'rooftop') {
             enemy = spawnRooftopEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'park') {
@@ -2071,6 +2097,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'rome_bird3') useFullImage(IMAGES.current.rome_bird3);
                 else if (e.spriteType === 'rome_bird4') useFullImage(IMAGES.current.rome_bird4);
                 else if (e.spriteType === 'rome_bird5') useFullImage(IMAGES.current.rome_bird5);
+                else if (e.spriteType === 'dusseldorf_npc1') useFullImage(IMAGES.current.dusseldorf_npc1);
+                else if (e.spriteType === 'dusseldorf_npc2') useFullImage(IMAGES.current.dusseldorf_npc2);
+                else if (e.spriteType === 'dusseldorf_npc3') useFullImage(IMAGES.current.dusseldorf_npc3);
+                else if (e.spriteType === 'dusseldorf_npc4') useFullImage(IMAGES.current.dusseldorf_npc4);
+                else if (e.spriteType === 'dusseldorf_npc5') useFullImage(IMAGES.current.dusseldorf_npc5);
+                else if (e.spriteType === 'dusseldorf_npc6') useFullImage(IMAGES.current.dusseldorf_npc6);
+                else if (e.spriteType === 'dusseldorf_npc7') useFullImage(IMAGES.current.dusseldorf_npc7);
+                else if (e.spriteType === 'dusseldorf_npc8') useFullImage(IMAGES.current.dusseldorf_npc8);
+                else if (e.spriteType === 'dusseldorf_npc9') useFullImage(IMAGES.current.dusseldorf_npc9);
+                else if (e.spriteType === 'dusseldorf_npc10') useFullImage(IMAGES.current.dusseldorf_npc10);
+                else if (e.spriteType === 'dusseldorf_npc11') useFullImage(IMAGES.current.dusseldorf_npc11);
+                else if (e.spriteType === 'dusseldorf_npc12') useFullImage(IMAGES.current.dusseldorf_npc12);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;

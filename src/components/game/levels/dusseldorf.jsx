@@ -26,8 +26,8 @@ export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
         spriteType: '',
         isTarget: true,
         isObstacle: false,
-        width: 60,
-        height: 100,
+        width: 80,
+        height: 120,
         scoreValue: 10
     };
 
@@ -45,7 +45,12 @@ export function spawnDusseldorfEnemy(width, height, groundY, scrollSpeed) {
     }
 
     enemy.spriteType = selectedType;
-    enemy.y = groundY - enemy.height;
+    
+    // Vary Y position: from building height (-30px) to ground
+    const buildingMaxHeight = height * 0.4;
+    const minY = buildingMaxHeight - 30;
+    const maxY = groundY - enemy.height;
+    enemy.y = minY + Math.random() * (maxY - minY);
 
     return enemy;
 }

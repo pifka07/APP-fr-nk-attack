@@ -961,21 +961,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Düsseldorf Buildings Management
         if (level === 'dusseldorf' && IMAGES.current.downtown_buildings) {
+            const BUILDING_HEIGHT = 250; // Fixed building height
+
             // Add new building if needed
             if (state.dusseldorfBuildings.length === 0 || state.dusseldorfBuildings[state.dusseldorfBuildings.length - 1].x < width - (300 + Math.random() * 700)) {
                 const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
                 const buildingImg = buildingData?.img;
 
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    const maxHeight = height * 0.4;
-                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const scale = BUILDING_HEIGHT / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 
                     state.dusseldorfBuildings.push({
                         x: width,
                         img: buildingImg,
                         width: buildingWidth,
-                        height: maxHeight
+                        height: BUILDING_HEIGHT
                     });
                 }
             }

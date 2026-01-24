@@ -403,12 +403,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
 
         
-        // Downtown/Gelsenkirchen Buildings (Kneipen)
+        // Downtown/Gelsenkirchen Buildings (Kneipen + Häuser)
         IMAGES.current.downtown_buildings = [
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/16f3db12f_Haus11-Kopie.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/44ac7d542_Haus12-Kopie.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/66aaff922_Haus17-Kopie.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/64df19fb0_Haus18-Kopie.png" }
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/16f3db12f_Haus11-Kopie.png", size: 'small' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/44ac7d542_Haus12-Kopie.png", size: 'small' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/66aaff922_Haus17-Kopie.png", size: 'small' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/64df19fb0_Haus18-Kopie.png", size: 'small' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8805c0fbf_Haus16-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/caf230fde_Haus7-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/176a375ad_Haus8-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1e55abcfe_Haus9-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/384745fa4_Haus10-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/4f092b9bd_Haus13-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a02066a3d_Haus14-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9dd3074a2_Haus15-Kopie.png", size: 'large' }
         ];
         IMAGES.current.downtown_buildings.forEach(building => {
             building.img.onerror = () => console.error('Failed to load Downtown building:', building.src);
@@ -962,8 +970,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Gelsenkirchen Buildings Management
         if (level === 'gelsenkirchen' && IMAGES.current.downtown_buildings) {
-            const BUILDING_HEIGHT = 160; // Fixed building height (half size)
-
             // Add new building if needed - variable spacing for variety
             const spacing = Math.random() < 0.05 ? Math.random() * 800 : (1800 + Math.random() * 2500);
             if (state.gelsenkirchenBuildings.length === 0 || state.gelsenkirchenBuildings[state.gelsenkirchenBuildings.length - 1].x < width - spacing) {
@@ -971,6 +977,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 const buildingImg = buildingData?.img;
 
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                    // Different heights based on building size
+                    const BUILDING_HEIGHT = buildingData.size === 'large' ? 213 : 160; // Large buildings are 1/3 bigger
                     const scale = BUILDING_HEIGHT / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 

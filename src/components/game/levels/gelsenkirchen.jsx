@@ -37,7 +37,7 @@ export function spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed) {
         hp: 1,
         spriteType: '',
         isTarget: true,
-        isObstacle: false,
+        isObstacle: true,
         width: 80,
         height: 120,
         scoreValue: 10

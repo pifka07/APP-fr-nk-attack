@@ -1383,10 +1383,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             // Draw sidewalk at bottom (first)
             if (isImageValid(IMAGES.current.gelsenkirchenSidewalk)) {
                 const sidewalk = IMAGES.current.gelsenkirchenSidewalk;
-                const sidewalkHeight = 210;
+                const sidewalkY = groundY - 80;
+                const sidewalkHeight = height - sidewalkY;
                 const sidewalkScale = sidewalkHeight / sidewalk.height;
                 const sidewalkWidth = sidewalk.width * sidewalkScale;
-                const sidewalkY = height - sidewalkHeight;
 
                 const offset = state.gelsenkirchenSidewalkX % sidewalkWidth;
 

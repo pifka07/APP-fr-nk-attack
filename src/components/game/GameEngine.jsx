@@ -401,6 +401,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.gelsenkirchen_hole2 = new Image();
         IMAGES.current.gelsenkirchen_hole2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3789d288c_strassenloch2.png";
 
+        // Gelsenkirchen Vegetation (Bushes/Trees)
+        IMAGES.current.gelsenkirchen_vegetation = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/39dfa346d_Busch-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/22884adb5_Busch-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9e9ba4723_Busch-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/8658f55fe_Busch-Kopie5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1f21ad7a8_Busch-Kopie6.png" }
+        ];
+        IMAGES.current.gelsenkirchen_vegetation.forEach(veg => {
+            veg.img.onerror = () => console.error('Failed to load Gelsenkirchen vegetation:', veg.src);
+            veg.img.src = veg.src;
+        });
+
 
         
         // Downtown/Gelsenkirchen Buildings (Kneipen + Häuser)
@@ -566,6 +579,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
+        gelsenkirchenVegetation: [], // Gelsenkirchen background vegetation
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -971,6 +985,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                        tree.img.complete && 
                        tree.img.naturalHeight > 0 && 
                        tree.img.naturalWidth > 0;
+            });
+        }
+
+        // Gelsenkirchen Vegetation Management (behind buildings)
+        if (level === 'gelsenkirchen' && IMAGES.current.gelsenkirchen_vegetation) {
+            // Add new vegetation if needed
+            if (state.gelsenkirchenVegetation.length === 0 || state.gelsenkirchenVegetation[state.gelsenkirchenVegetation.length - 1].x < width - (400 + Math.random() * 600)) {
+                const vegData = IMAGES.current.gelsenkirchen_vegetation[Math.floor(Math.random() * IMAGES.current.gelsenkirchen_vegetation.length)];
+                const vegImg = vegData?.img;
+
+                if (vegImg && vegImg.complete && vegImg.naturalHeight > 0 && vegImg.naturalWidth > 0) {
+                    const vegHeight = 60 + Math.random() * 80; // Random height between 60-140
+                    const scale = vegHeight / vegImg.naturalHeight;
+                    const vegWidth = vegImg.naturalWidth * scale;
+
+                    state.gelsenkirchenVegetation.push({
+                        x: width,
+                        img: vegImg,
+                        width: vegWidth,
+                        height: vegHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen vegetation
+            state.gelsenkirchenVegetation = state.gelsenkirchenVegetation.filter(veg => {
+                veg.x -= state.scrollSpeed * 0.7; // Scroll slower than buildings for parallax
+                return veg.x > -veg.width && 
+                       veg.img && 
+                       veg.img.complete && 
+                       veg.img.naturalHeight > 0 && 
+                       veg.img.naturalWidth > 0;
             });
         }
 
@@ -1422,6 +1468,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Gelsenkirchen scrolling sidewalk and buildings
         if (level === 'gelsenkirchen') {
             const groundY = height * GROUND_Y_PCT;
+
+            // Draw vegetation (behind buildings)
+            state.gelsenkirchenVegetation.forEach(veg => {
+                if (isImageValid(veg.img)) {
+                    const vegY = groundY - veg.height - 90;
+                    ctx.drawImage(veg.img, veg.x, vegY, veg.width, veg.height);
+                }
+            });
 
             // Draw sidewalk at bottom (first)
             if (isImageValid(IMAGES.current.gelsenkirchenSidewalk)) {

@@ -394,6 +394,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.gelsenkirchen_drone5.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/43779f1a4_Drohne-Kopie5.png";
         IMAGES.current.gelsenkirchen_drone6 = new Image();
         IMAGES.current.gelsenkirchen_drone6.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3a09ae431_Drohne-Kopie6.png";
+
+        // Gelsenkirchen Street Holes
+        IMAGES.current.gelsenkirchen_hole1 = new Image();
+        IMAGES.current.gelsenkirchen_hole1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/422511d30_strassenloch1.png";
+        IMAGES.current.gelsenkirchen_hole2 = new Image();
+        IMAGES.current.gelsenkirchen_hole2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cd35b8e2c_strassenloch2.png";
         
         // Downtown/Gelsenkirchen Buildings
         IMAGES.current.downtown_buildings = [
@@ -560,6 +566,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         lastMilestone: 0, // Track last milestone reached
         gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
+        gelsenkirchenHoles: [], // Gelsenkirchen street holes
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -609,6 +616,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.lastMilestone = 0;
             gameStateRef.current.gelsenkirchenBuildings = [];
             gameStateRef.current.gelsenkirchenSidewalkX = 0;
+            gameStateRef.current.gelsenkirchenHoles = [];
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -997,6 +1005,37 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                        building.img.complete && 
                        building.img.naturalHeight > 0 && 
                        building.img.naturalWidth > 0;
+            });
+        }
+
+        // Gelsenkirchen Street Holes Management
+        if (level === 'gelsenkirchen' && IMAGES.current.gelsenkirchen_hole1 && IMAGES.current.gelsenkirchen_hole2) {
+            // Add new hole if needed
+            if (state.gelsenkirchenHoles.length === 0 || state.gelsenkirchenHoles[state.gelsenkirchenHoles.length - 1].x < width - (800 + Math.random() * 1200)) {
+                const holeImg = Math.random() < 0.5 ? IMAGES.current.gelsenkirchen_hole1 : IMAGES.current.gelsenkirchen_hole2;
+
+                if (holeImg && holeImg.complete && holeImg.naturalHeight > 0 && holeImg.naturalWidth > 0) {
+                    const holeHeight = 60 + Math.random() * 60; // Random height between 60 and 120
+                    const scale = holeHeight / holeImg.naturalHeight;
+                    const holeWidth = holeImg.naturalWidth * scale;
+
+                    state.gelsenkirchenHoles.push({
+                        x: width,
+                        img: holeImg,
+                        width: holeWidth,
+                        height: holeHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen holes
+            state.gelsenkirchenHoles = state.gelsenkirchenHoles.filter(hole => {
+                hole.x -= state.scrollSpeed;
+                return hole.x > -hole.width && 
+                       hole.img && 
+                       hole.img.complete && 
+                       hole.img.naturalHeight > 0 && 
+                       hole.img.naturalWidth > 0;
             });
         }
 
@@ -1396,6 +1435,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     ctx.drawImage(sidewalk, offset - sidewalkWidth, sidewalkY, sidewalkWidth, sidewalkHeight);
                 }
             }
+
+            // Draw street holes on sidewalk
+            state.gelsenkirchenHoles.forEach(hole => {
+                if (isImageValid(hole.img)) {
+                    const holeY = height - hole.height - 10;
+                    ctx.drawImage(hole.img, hole.x, holeY, hole.width, hole.height);
+                }
+            });
 
             // Draw buildings (on top of sidewalk)
             state.gelsenkirchenBuildings.forEach(building => {

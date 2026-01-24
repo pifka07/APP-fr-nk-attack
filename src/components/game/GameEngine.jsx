@@ -977,10 +977,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Gelsenkirchen Buildings Management
         if (level === 'gelsenkirchen' && IMAGES.current.downtown_buildings) {
-            const BUILDING_HEIGHT = 250; // Fixed building height
+            const BUILDING_HEIGHT = 320; // Fixed building height (stretched)
 
             // Add new building if needed - variable spacing for variety
-            const spacing = Math.random() < 0.2 ? Math.random() * 300 : (500 + Math.random() * 1200);
+            const spacing = Math.random() < 0.15 ? Math.random() * 400 : (800 + Math.random() * 1500);
             if (state.gelsenkirchenBuildings.length === 0 || state.gelsenkirchenBuildings[state.gelsenkirchenBuildings.length - 1].x < width - spacing) {
                 const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
                 const buildingImg = buildingData?.img;

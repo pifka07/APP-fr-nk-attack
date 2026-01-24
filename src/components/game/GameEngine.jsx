@@ -980,7 +980,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const BUILDING_HEIGHT = 320; // Fixed building height (stretched)
 
             // Add new building if needed - variable spacing for variety
-            const spacing = Math.random() < 0.15 ? Math.random() * 400 : (800 + Math.random() * 1500);
+            const spacing = Math.random() < 0.1 ? Math.random() * 600 : (1200 + Math.random() * 2000);
             if (state.gelsenkirchenBuildings.length === 0 || state.gelsenkirchenBuildings[state.gelsenkirchenBuildings.length - 1].x < width - spacing) {
                 const buildingData = IMAGES.current.downtown_buildings[Math.floor(Math.random() * IMAGES.current.downtown_buildings.length)];
                 const buildingImg = buildingData?.img;

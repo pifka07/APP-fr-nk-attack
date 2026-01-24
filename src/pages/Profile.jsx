@@ -156,11 +156,6 @@ export default function Profile() {
                         )}
                     </>
                 )}
-                <div className="flex items-center gap-2 mt-3 bg-slate-800/50 px-4 py-2 rounded-full border border-yellow-500/30">
-                    <Coins className="w-5 h-5 text-yellow-500" />
-                    <span className="text-xl font-bold text-yellow-400">{stats?.total_coins || 0}</span>
-                    <span className="text-xs text-slate-400">Coins</span>
-                </div>
                 <p className="text-slate-500 text-[10px] mt-2">ID: {user?.id}</p>
             </div>
 

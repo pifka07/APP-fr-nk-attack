@@ -69,10 +69,10 @@ export function spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed) {
         enemy.y = 50 + Math.random() * (groundY - 90 - 50);
         enemy.erratic = true;
     } else {
-        // Ground enemies: spawn above the bushes (min 60px above ground to avoid bush layer)
-        const minY = groundY - 120;
-        const maxY = groundY - enemy.height - 40;
-        enemy.y = minY + Math.random() * Math.max(0, maxY - minY);
+        // Ground enemies: max 70px above ground
+        const minY = groundY - 70;
+        const maxY = groundY - enemy.height;
+        enemy.y = minY + Math.random() * (maxY - minY);
     }
 
     return enemy;

@@ -397,9 +397,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Gelsenkirchen Street Holes
         IMAGES.current.gelsenkirchen_hole1 = new Image();
-        IMAGES.current.gelsenkirchen_hole1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/422511d30_strassenloch1.png";
+        IMAGES.current.gelsenkirchen_hole1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c7c6aee17_strassenloch1.png";
         IMAGES.current.gelsenkirchen_hole2 = new Image();
-        IMAGES.current.gelsenkirchen_hole2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cd35b8e2c_strassenloch2.png";
+        IMAGES.current.gelsenkirchen_hole2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3789d288c_strassenloch2.png";
         
         // Downtown/Gelsenkirchen Buildings
         IMAGES.current.downtown_buildings = [

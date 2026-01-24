@@ -583,7 +583,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
-        gelsenkirchenBushes: [] // Gelsenkirchen street bushes
+        gelsenkirchenBushes: [], // Gelsenkirchen street bushes
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees

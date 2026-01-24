@@ -401,19 +401,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.gelsenkirchen_hole2 = new Image();
         IMAGES.current.gelsenkirchen_hole2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3789d288c_strassenloch2.png";
 
-        // Gelsenkirchen Trees
-        IMAGES.current.gelsenkirchen_trees = [
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0d61e9d60_Busch.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b57477d78_Busch-Kopie3.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0c15faa1e_Busch-Kopie4.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/72062cb1b_Busch-Kopie5.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3e9693ce3_Busch-Kopie6.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/6d61ca82c_Busch-Kopie.png" }
-        ];
-        IMAGES.current.gelsenkirchen_trees.forEach(tree => {
-            tree.img.onerror = () => console.error('Failed to load tree:', tree.src);
-            tree.img.src = tree.src;
-        });
+
         
         // Downtown/Gelsenkirchen Buildings
         IMAGES.current.downtown_buildings = [
@@ -581,7 +569,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
-        gelsenkirchenTrees: [], // Gelsenkirchen background trees
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -632,7 +619,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.gelsenkirchenBuildings = [];
             gameStateRef.current.gelsenkirchenSidewalkX = 0;
             gameStateRef.current.gelsenkirchenHoles = [];
-            gameStateRef.current.gelsenkirchenTrees = [];
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -1056,38 +1042,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
-        // Gelsenkirchen Trees Management (behind buildings)
-        if (level === 'gelsenkirchen' && IMAGES.current.gelsenkirchen_trees) {
-            // Add new tree if needed
-            const treeSpacing = Math.random() < 0.3 ? Math.random() * 150 : (200 + Math.random() * 600);
-            if (state.gelsenkirchenTrees.length === 0 || state.gelsenkirchenTrees[state.gelsenkirchenTrees.length - 1].x < width - treeSpacing) {
-                const treeData = IMAGES.current.gelsenkirchen_trees[Math.floor(Math.random() * IMAGES.current.gelsenkirchen_trees.length)];
-                const treeImg = treeData?.img;
 
-                if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
-                    const treeHeight = 180 + Math.random() * 100; // Random height between 180 and 280
-                    const scale = treeHeight / treeImg.naturalHeight;
-                    const treeWidth = treeImg.naturalWidth * scale;
-
-                    state.gelsenkirchenTrees.push({
-                        x: width,
-                        img: treeImg,
-                        width: treeWidth,
-                        height: treeHeight
-                    });
-                }
-            }
-
-            // Update positions and filter out offscreen trees
-            state.gelsenkirchenTrees = state.gelsenkirchenTrees.filter(tree => {
-                tree.x -= state.scrollSpeed;
-                return tree.x > -tree.width && 
-                       tree.img && 
-                       tree.img.complete && 
-                       tree.img.naturalHeight > 0 && 
-                       tree.img.naturalWidth > 0;
-            });
-        }
 
         // Madrid Scenery Management (Buildings and Trees combined)
         if (level === 'madrid' && IMAGES.current.madrid_buildings && IMAGES.current.madrid_trees) {
@@ -1494,15 +1449,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             });
 
-            // Draw trees behind buildings
-            state.gelsenkirchenTrees.forEach(tree => {
-                if (isImageValid(tree.img)) {
-                    const treeY = groundY - tree.height - 80;
-                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
-                }
-            });
-
-            // Draw buildings (on top of sidewalk and trees)
+            // Draw buildings (on top of sidewalk)
             state.gelsenkirchenBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
                     const buildingY = groundY - building.height - 80;

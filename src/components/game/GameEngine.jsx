@@ -416,7 +416,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/384745fa4_Haus10-Kopie.png", size: 'large' },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/4f092b9bd_Haus13-Kopie.png", size: 'large' },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a02066a3d_Haus14-Kopie.png", size: 'large' },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9dd3074a2_Haus15-Kopie.png", size: 'large' }
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9dd3074a2_Haus15-Kopie.png", size: 'large' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e9aaa6729_Haus6-Kopie.png", size: 'xlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/418b2d5bd_Haus1.png", size: 'xlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/34f35e4fb_Haus2-Kopie.png", size: 'xlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cbfbca76f_Haus3-Kopie.png", size: 'xlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a18420dd4_Haus4-Kopie.png", size: 'xlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8f92fbcf_Haus5-Kopie.png", size: 'xlarge' }
         ];
         IMAGES.current.downtown_buildings.forEach(building => {
             building.img.onerror = () => console.error('Failed to load Downtown building:', building.src);
@@ -978,7 +984,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
                     // Different heights based on building size
-                    const BUILDING_HEIGHT = buildingData.size === 'large' ? 213 : 160; // Large buildings are 1/3 bigger
+                    let BUILDING_HEIGHT = 160; // Small (Kneipen)
+                    if (buildingData.size === 'large') BUILDING_HEIGHT = 213; // 1/3 bigger
+                    if (buildingData.size === 'xlarge') BUILDING_HEIGHT = 283; // 1/3 bigger than large
                     const scale = BUILDING_HEIGHT / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 

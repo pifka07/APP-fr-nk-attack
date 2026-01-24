@@ -127,21 +127,27 @@ Deno.serve(async (req) => {
         });
 
         // Update PlayerStats
-        console.log('📊 Updating PlayerStats');
+        console.log('📊 Updating PlayerStats for user:', user.id);
         const playerStats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
+        console.log('📊 Found PlayerStats:', playerStats.length);
         
         if (playerStats.length > 0) {
             const stats = playerStats[0];
-            await base44.asServiceRole.entities.PlayerStats.update(stats.id, {
+            console.log('📊 Current stats:', stats);
+            const updatedStats = {
                 total_score: (stats.total_score || 0) + score,
                 total_coins: (stats.total_coins || 0) + coinsCollected,
                 total_distance: (stats.total_distance || 0) + (distance || 0),
                 total_runs: (stats.total_runs || 0) + 1,
                 best_score: Math.max(stats.best_score || 0, score),
                 best_distance: Math.max(stats.best_distance || 0, distance || 0)
-            });
+            };
+            console.log('📊 Updating with:', updatedStats);
+            await base44.asServiceRole.entities.PlayerStats.update(stats.id, updatedStats);
+            console.log('✅ PlayerStats updated');
         } else {
-            await base44.asServiceRole.entities.PlayerStats.create({
+            console.log('📊 Creating new PlayerStats');
+            const newStats = {
                 user_id: user.id,
                 total_score: score,
                 total_coins: coinsCollected,
@@ -149,10 +155,11 @@ Deno.serve(async (req) => {
                 total_runs: 1,
                 best_score: score,
                 best_distance: distance || 0
-            });
+            };
+            console.log('📊 Creating with:', newStats);
+            const created = await base44.asServiceRole.entities.PlayerStats.create(newStats);
+            console.log('✅ PlayerStats created:', created);
         }
-        
-        console.log('✅ PlayerStats updated');
         
         const newTotalCoins = playerStats.length > 0 ? (playerStats[0].total_coins || 0) + coinsCollected : coinsCollected;
         const newBestScore = playerStats.length > 0 ? Math.max(playerStats[0].best_score || 0, score) : score;

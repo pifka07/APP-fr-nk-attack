@@ -435,7 +435,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/34f35e4fb_Haus2-Kopie.png", size: 'xlarge' },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cbfbca76f_Haus3-Kopie.png", size: 'xlarge' },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a18420dd4_Haus4-Kopie.png", size: 'xlarge' },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8f92fbcf_Haus5-Kopie.png", size: 'xlarge' }
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8f92fbcf_Haus5-Kopie.png", size: 'xlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/de1220fa2_Haus5etgaen.png", size: 'xxlarge' },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/84182892a_Haus.png", size: 'xxlarge' }
         ];
         IMAGES.current.downtown_buildings.forEach(building => {
             building.img.onerror = () => console.error('Failed to load Downtown building:', building.src);
@@ -1034,6 +1036,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     let BUILDING_HEIGHT = 160; // Small (Kneipen)
                     if (buildingData.size === 'large') BUILDING_HEIGHT = 213; // 1/3 bigger
                     if (buildingData.size === 'xlarge') BUILDING_HEIGHT = 283; // 1/3 bigger than large
+                    if (buildingData.size === 'xxlarge') BUILDING_HEIGHT = 377; // 1/3 bigger than xlarge
                     const scale = BUILDING_HEIGHT / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 

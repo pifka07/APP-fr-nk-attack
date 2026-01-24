@@ -163,7 +163,7 @@ export default function Profile() {
                         {rankInfo.next_level_threshold && (
                             <div className="w-64 mt-3">
                                 <div className="flex justify-between text-xs text-slate-400 mb-1">
-                                    <span>{rankInfo.progress_value.toLocaleString()}</span>
+                                    <span>{rankInfo.progress_value.toLocaleString()} Punkte</span>
                                     <span>{rankInfo.next_level_threshold.toLocaleString()}</span>
                                 </div>
                                 <Progress value={rankInfo.progress_percentage} className="h-2" />

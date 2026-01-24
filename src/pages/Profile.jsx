@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, Trash2 } from "lucide-react";
+import { calculatePlayerRank } from '@/components/game/PlayerRanks';
+import { Progress } from "@/components/ui/progress";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -19,6 +21,7 @@ export default function Profile() {
     const [editName, setEditName] = useState("");
     const [deleting, setDeleting] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [rankInfo, setRankInfo] = useState(null);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -30,13 +33,16 @@ export default function Profile() {
                 const playerStatsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
                 const playerStats = playerStatsData.length > 0 ? playerStatsData[0] : null;
 
-                setUser(userData);
-                setStats({
+                const statsData = {
                     total_score: playerStats?.total_score || 0,
                     best_distance: playerStats?.best_distance || 0,
                     total_coins: playerStats?.total_coins || 0,
                     total_runs: playerStats?.total_runs || 0
-                });
+                };
+
+                setUser(userData);
+                setStats(statsData);
+                setRankInfo(calculatePlayerRank(statsData.total_score, playerStats?.total_distance || 0));
                 setEditName(userData.username || userData.email?.split('@')[0] || 'Pilot');
                 setRuns(runsData.sort((a, b) => b.score - a.score).slice(0, 10));
             } catch (error) {
@@ -139,8 +145,22 @@ export default function Profile() {
                         </Button>
                     </div>
                 )}
-                <p className="text-slate-400 text-sm">Level 1 Pigeon</p>
-                <p className="text-slate-500 text-[10px] mt-1">ID: {user?.id}</p>
+                {rankInfo && (
+                    <>
+                        <p className="text-teal-400 text-lg font-bold">Level {rankInfo.player_level} – {rankInfo.player_rank_name}</p>
+                        <p className="text-slate-500 text-[10px]">Rank based on score and flight distance</p>
+                        {rankInfo.next_level_threshold && (
+                            <div className="w-64 mt-3">
+                                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>{rankInfo.progress_value.toLocaleString()}</span>
+                                    <span>{rankInfo.next_level_threshold.toLocaleString()}</span>
+                                </div>
+                                <Progress value={rankInfo.progress_percentage} className="h-2" />
+                            </div>
+                        )}
+                    </>
+                )}
+                <p className="text-slate-500 text-[10px] mt-2">ID: {user?.id}</p>
             </div>
 
             {/* Skins Button */}

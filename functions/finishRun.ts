@@ -126,34 +126,18 @@ Deno.serve(async (req) => {
             mode: missionId ? 'mission' : 'endless'
         });
 
-        // Update PlayerStats
-        const playerStats = await base44.asServiceRole.entities.PlayerStats.filter({ user_id: user.id });
+        // Update User stats
+        const updatedUser = await base44.auth.updateMe({
+            total_score: (user.total_score || 0) + score,
+            total_coins: (user.total_coins || 0) + coinsCollected,
+            total_distance: (user.total_distance || 0) + (distance || 0),
+            total_runs: (user.total_runs || 0) + 1,
+            best_score: Math.max(user.best_score || 0, score),
+            best_distance: Math.max(user.best_distance || 0, distance || 0)
+        });
 
-        let updatedPlayerStats;
-        if (playerStats.length > 0) {
-            const stats = playerStats[0];
-            updatedPlayerStats = await base44.asServiceRole.entities.PlayerStats.update(stats.id, {
-                total_score: (stats.total_score || 0) + score,
-                total_coins: (stats.total_coins || 0) + coinsCollected,
-                total_distance: (stats.total_distance || 0) + (distance || 0),
-                total_runs: (stats.total_runs || 0) + 1,
-                best_score: Math.max(stats.best_score || 0, score),
-                best_distance: Math.max(stats.best_distance || 0, distance || 0)
-            });
-        } else {
-            updatedPlayerStats = await base44.asServiceRole.entities.PlayerStats.create({
-                user_id: user.id,
-                total_score: score,
-                total_coins: coinsCollected,
-                total_distance: distance || 0,
-                total_runs: 1,
-                best_score: score,
-                best_distance: distance || 0
-            });
-        }
-
-        const newTotalCoins = updatedPlayerStats.total_coins;
-        const newBestScore = updatedPlayerStats.best_score;
+        const newTotalCoins = updatedUser.total_coins;
+        const newBestScore = updatedUser.best_score;
 
         // Check existing leaderboard entries
         const existingEntries = await base44.asServiceRole.entities.LeaderboardEntry.filter({

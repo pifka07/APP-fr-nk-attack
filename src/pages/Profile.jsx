@@ -28,32 +28,17 @@ export default function Profile() {
             try {
                 const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });
-                
-                console.log('📊 Profile - User ID:', userData.id);
-                console.log('📊 Profile - Runs found:', runsData.length);
-                
-                // Fetch PlayerStats instead of user data
-                const playerStatsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
-                console.log('📊 Profile - PlayerStats found:', playerStatsData.length);
-                
-                const playerStats = playerStatsData.length > 0 ? playerStatsData[0] : null;
-                
-                if (playerStats) {
-                    console.log('📊 Profile - PlayerStats:', playerStats);
-                }
 
                 const statsData = {
-                    total_score: playerStats?.total_score || 0,
-                    best_distance: playerStats?.best_distance || 0,
-                    total_coins: playerStats?.total_coins || 0,
-                    total_runs: playerStats?.total_runs || 0
+                    total_score: userData.total_score || 0,
+                    best_distance: userData.best_distance || 0,
+                    total_coins: userData.total_coins || 0,
+                    total_runs: userData.total_runs || 0
                 };
-
-                console.log('📊 Profile - Stats to display:', statsData);
 
                 setUser(userData);
                 setStats(statsData);
-                setRankInfo(calculatePlayerRank(statsData.total_score, playerStats?.total_distance || 0));
+                setRankInfo(calculatePlayerRank(statsData.total_score, userData.total_distance || 0));
                 setEditName(userData.username || userData.email?.split('@')[0] || 'Pilot');
                 setRuns(runsData.sort((a, b) => b.score - a.score).slice(0, 10));
             } catch (error) {

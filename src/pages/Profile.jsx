@@ -151,7 +151,7 @@ export default function Profile() {
                                     <span>{rankInfo.progress_value.toLocaleString()} Punkte</span>
                                     <span>{rankInfo.next_level_threshold.toLocaleString()}</span>
                                 </div>
-                                <Progress value={rankInfo.progress_percentage} className="h-2" />
+                                <Progress value={rankInfo.progress_percentage} className="h-2 [&>div]:bg-green-500" />
                             </div>
                         )}
                     </>

@@ -29,9 +29,18 @@ export default function Profile() {
                 const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });
                 
+                console.log('📊 Profile - User ID:', userData.id);
+                console.log('📊 Profile - Runs found:', runsData.length);
+                
                 // Fetch PlayerStats instead of user data
                 const playerStatsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
+                console.log('📊 Profile - PlayerStats found:', playerStatsData.length);
+                
                 const playerStats = playerStatsData.length > 0 ? playerStatsData[0] : null;
+                
+                if (playerStats) {
+                    console.log('📊 Profile - PlayerStats:', playerStats);
+                }
 
                 const statsData = {
                     total_score: playerStats?.total_score || 0,
@@ -39,6 +48,8 @@ export default function Profile() {
                     total_coins: playerStats?.total_coins || 0,
                     total_runs: playerStats?.total_runs || 0
                 };
+
+                console.log('📊 Profile - Stats to display:', statsData);
 
                 setUser(userData);
                 setStats(statsData);

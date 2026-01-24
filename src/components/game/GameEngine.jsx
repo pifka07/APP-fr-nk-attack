@@ -401,6 +401,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.gelsenkirchen_hole2 = new Image();
         IMAGES.current.gelsenkirchen_hole2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3789d288c_strassenloch2.png";
 
+        // Gelsenkirchen Street Bushes
+        IMAGES.current.gelsenkirchen_bushes = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0d61e9d60_Busch.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b57477d78_Busch-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0c15faa1e_Busch-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/72062cb1b_Busch-Kopie5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3e9693ce3_Busch-Kopie6.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/6d61ca82c_Busch-Kopie.png" }
+        ];
+        IMAGES.current.gelsenkirchen_bushes.forEach(bush => {
+            bush.img.onerror = () => console.error('Failed to load bush:', bush.src);
+            bush.img.src = bush.src;
+        });
+
 
         
         // Downtown/Gelsenkirchen Buildings
@@ -569,6 +583,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
+        gelsenkirchenBushes: [] // Gelsenkirchen street bushes
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -619,6 +634,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.gelsenkirchenBuildings = [];
             gameStateRef.current.gelsenkirchenSidewalkX = 0;
             gameStateRef.current.gelsenkirchenHoles = [];
+            gameStateRef.current.gelsenkirchenBushes = [];
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -1042,6 +1058,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
+        // Gelsenkirchen Street Bushes Management
+        if (level === 'gelsenkirchen' && IMAGES.current.gelsenkirchen_bushes) {
+            // Add new bush if needed
+            if (state.gelsenkirchenBushes.length === 0 || state.gelsenkirchenBushes[state.gelsenkirchenBushes.length - 1].x < width - (300 + Math.random() * 500)) {
+                const bushData = IMAGES.current.gelsenkirchen_bushes[Math.floor(Math.random() * IMAGES.current.gelsenkirchen_bushes.length)];
+                const bushImg = bushData?.img;
+
+                if (bushImg && bushImg.complete && bushImg.naturalHeight > 0 && bushImg.naturalWidth > 0) {
+                    const bushHeight = 40 + Math.random() * 40; // Random height between 40 and 80
+                    const scale = bushHeight / bushImg.naturalHeight;
+                    const bushWidth = bushImg.naturalWidth * scale;
+
+                    state.gelsenkirchenBushes.push({
+                        x: width,
+                        img: bushImg,
+                        width: bushWidth,
+                        height: bushHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen bushes
+            state.gelsenkirchenBushes = state.gelsenkirchenBushes.filter(bush => {
+                bush.x -= state.scrollSpeed;
+                return bush.x > -bush.width && 
+                       bush.img && 
+                       bush.img.complete && 
+                       bush.img.naturalHeight > 0 && 
+                       bush.img.naturalWidth > 0;
+            });
+        }
+
 
 
         // Madrid Scenery Management (Buildings and Trees combined)
@@ -1441,7 +1489,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             }
 
-            // Draw street holes on sidewalk
+            // Draw street bushes (before holes, on top of sidewalk)
+            state.gelsenkirchenBushes.forEach(bush => {
+                if (isImageValid(bush.img)) {
+                    const bushY = height - bush.height - 15;
+                    ctx.drawImage(bush.img, bush.x, bushY, bush.width, bush.height);
+                }
+            });
+
+            // Draw street holes (on top of bushes)
             state.gelsenkirchenHoles.forEach(hole => {
                 if (isImageValid(hole.img)) {
                     const holeY = height - hole.height - 10;
@@ -1449,14 +1505,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 }
             });
 
-            // Draw buildings (on top of sidewalk)
+            // Draw buildings (on top of sidewalk, behind NPCs)
             state.gelsenkirchenBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
                     const buildingY = groundY - building.height - 80;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });
-            }
+        }
 
 
 

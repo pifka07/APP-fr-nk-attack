@@ -962,7 +962,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Gelsenkirchen Buildings Management
         if (level === 'gelsenkirchen' && IMAGES.current.downtown_buildings) {
-            const BUILDING_HEIGHT = 320; // Fixed building height (stretched)
+            const BUILDING_HEIGHT = 160; // Fixed building height (half size)
 
             // Add new building if needed - variable spacing for variety
             const spacing = Math.random() < 0.1 ? Math.random() * 600 : (1200 + Math.random() * 2000);

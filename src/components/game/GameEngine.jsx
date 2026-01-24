@@ -630,6 +630,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.gelsenkirchenBuildings = [];
             gameStateRef.current.gelsenkirchenSidewalkX = 0;
             gameStateRef.current.gelsenkirchenHoles = [];
+            gameStateRef.current.gelsenkirchenVegetation = [];
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];

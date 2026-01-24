@@ -405,27 +405,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         
         // Downtown/Gelsenkirchen Buildings
         IMAGES.current.downtown_buildings = [
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/89413af74_Haus-1.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cf848bb50_Haus-2.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/9ade19df3_Haus-3.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/6e9794341_Haus-4.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f815012cd_Haus-5.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d27858ae0_Haus-6.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/7061c0686_Haus-7.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3f72df12a_Haus-8.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/12196c0ac_Haus-9.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/555c7157d_Haus-10.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b6a899f5b_Haus-11.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0bf775df5_Haus-12.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/62a94ebc9_Haus-13.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2373d5735_Haus-14.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/7c39574f6_Haus-15.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d60beb247_Haus-16.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/45d82f7a5_Haus-17.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/55503d315_Haus-18.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/50ad351f1_Haus-19.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c9d43947b_Haus-20.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/be68d1cee_Haus-21.png" }
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b6b56ac9c_Haus.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ed559bb7d_Haus1.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/62d518b71_Haus2-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bd4c46866_Haus3-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d607d4c53_Haus4-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ee97b5ab6_Haus5-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/af81c8f40_Haus6-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/dbff2528d_Haus7-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/51f6995f2_Haus8-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ef08fa5d4_Haus9-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/7be5d2094_Haus10-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3076c8f63_Haus11-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/80ff49a41_Haus12-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e1943e12e_Haus13-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a7bd1e4ca_Haus14-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/79fac1448_Haus15-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3e729d258_Haus16-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0622b41cd_Haus17-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f683e0dc2_Haus18-Kopie.png" }
         ];
         IMAGES.current.downtown_buildings.forEach(building => {
             building.img.onerror = () => console.error('Failed to load Downtown building:', building.src);

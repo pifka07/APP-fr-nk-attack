@@ -26,12 +26,16 @@ export default function Profile() {
                 const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });
                 
+                // Fetch PlayerStats instead of user data
+                const playerStatsData = await base44.entities.PlayerStats.filter({ user_id: userData.id });
+                const playerStats = playerStatsData.length > 0 ? playerStatsData[0] : null;
+
                 setUser(userData);
                 setStats({
-                    total_score: userData.total_score || 0,
-                    best_distance: userData.best_distance || 0,
-                    total_coins: userData.total_coins || 0,
-                    total_runs: userData.total_runs || 0
+                    total_score: playerStats?.total_score || 0,
+                    best_distance: playerStats?.best_distance || 0,
+                    total_coins: playerStats?.total_coins || 0,
+                    total_runs: playerStats?.total_runs || 0
                 });
                 setEditName(userData.username || userData.email?.split('@')[0] || 'Pilot');
                 setRuns(runsData.sort((a, b) => b.score - a.score).slice(0, 10));

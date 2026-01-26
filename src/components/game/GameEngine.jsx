@@ -1507,9 +1507,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
 
             // Draw buildings (on top of sidewalk)
+            // All buildings should have their bottom edge at the same height
+            const buildingBaseY = groundY - 80; // Fixed bottom position for all buildings
             state.gelsenkirchenBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 80;
+                    const buildingY = buildingBaseY - building.height;
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });

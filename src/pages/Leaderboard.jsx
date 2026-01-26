@@ -106,7 +106,7 @@ export default function Leaderboard() {
                                                         {getRankIcon(index)}
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <div className="flex items-center gap-2">
+                                                        <div className="flex items-center gap-1.5">
                                                             <span className={`font-bold ${currentUser && player.user_id === currentUser.id ? 'text-teal-400' : 'text-white'}`}>
                                                                 {player.username || 'Anonymous Bird'}
                                                             </span>
@@ -120,7 +120,7 @@ export default function Leaderboard() {
                                                                         '904e55289_Abzeichen-Kopie5.png'
                                                                     }`}
                                                                     alt={`Level ${playerRanks[player.user_id]}`}
-                                                                    className="w-6 h-6 object-contain"
+                                                                    className="w-4 h-4 object-contain"
                                                                 />
                                                             )}
                                                         </div>

@@ -21,7 +21,7 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
     ];
 
     // Decide if ground or air spawn
-    const isGroundSpawn = Math.random() < 0.7;
+    const isGroundSpawn = Math.random() < 0.5;
 
     let selectedType;
     if (isGroundSpawn) {

@@ -114,7 +114,7 @@ export default function Profile() {
             <div className="flex flex-col items-center mb-8">
                 <div className="w-24 h-24 rounded-full bg-slate-800 border-4 border-teal-500 flex items-center justify-center mb-4 shadow-lg overflow-hidden">
                     <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5cbdbe7c2_Frnkprofilbild.png" 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ce99c670f_frnkoriginal.png" 
                         alt="Profile" 
                         className="w-full h-full object-cover"
                     />

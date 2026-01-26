@@ -111,11 +111,17 @@ export default function Leaderboard() {
                                                                 {player.username || 'Anonymous Bird'}
                                                             </span>
                                                             {playerRanks[player.user_id] && (
-                                                                <div className="flex gap-0.5">
-                                                                    {[...Array(playerRanks[player.user_id])].map((_, i) => (
-                                                                        <span key={i} className="text-yellow-400 text-xs">★</span>
-                                                                    ))}
-                                                                </div>
+                                                                <img 
+                                                                    src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${
+                                                                        playerRanks[player.user_id] === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
+                                                                        playerRanks[player.user_id] === 2 ? '4c2d7b20c_Abzeichen-Kopie2.png' :
+                                                                        playerRanks[player.user_id] === 3 ? '640ba9ba4_Abzeichen-Kopie3.png' :
+                                                                        playerRanks[player.user_id] === 4 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
+                                                                        '904e55289_Abzeichen-Kopie5.png'
+                                                                    }`}
+                                                                    alt={`Level ${playerRanks[player.user_id]}`}
+                                                                    className="w-6 h-6 object-contain"
+                                                                />
                                                             )}
                                                         </div>
                                                         <span className="text-[10px] text-teal-400/70 uppercase font-bold">{player.level || 'downtown'}</span>

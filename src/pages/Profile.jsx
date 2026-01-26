@@ -143,15 +143,21 @@ export default function Profile() {
                 )}
                 {rankInfo && (
                     <>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col items-center gap-2 mb-2">
+                            <img 
+                                src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${
+                                    rankInfo.player_level === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
+                                    rankInfo.player_level === 2 ? '4c2d7b20c_Abzeichen-Kopie2.png' :
+                                    rankInfo.player_level === 3 ? '640ba9ba4_Abzeichen-Kopie3.png' :
+                                    rankInfo.player_level === 4 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
+                                    '904e55289_Abzeichen-Kopie5.png'
+                                }`}
+                                alt={rankInfo.player_rank_name}
+                                className="w-24 h-24 object-contain drop-shadow-2xl"
+                            />
                             <p className="text-teal-400 text-lg font-bold">Level {rankInfo.player_level}</p>
-                            <div className="flex gap-0.5">
-                                {[...Array(rankInfo.player_level)].map((_, i) => (
-                                    <span key={i} className="text-yellow-400 text-xl">★</span>
-                                ))}
-                            </div>
+                            <p className="text-teal-400 text-sm font-semibold">{rankInfo.player_rank_name}</p>
                         </div>
-                        <p className="text-teal-400 text-sm font-semibold">{rankInfo.player_rank_name}</p>
                         <p className="text-slate-500 text-[10px]">Rank based on score and flight distance</p>
                         {rankInfo.next_level_threshold && (
                             <div className="w-64 mt-3">

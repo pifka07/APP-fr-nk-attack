@@ -143,7 +143,15 @@ export default function Profile() {
                 )}
                 {rankInfo && (
                     <>
-                        <p className="text-teal-400 text-lg font-bold">Level {rankInfo.player_level} – {rankInfo.player_rank_name}</p>
+                        <div className="flex items-center gap-2">
+                            <p className="text-teal-400 text-lg font-bold">Level {rankInfo.player_level}</p>
+                            <div className="flex gap-0.5">
+                                {[...Array(rankInfo.player_level)].map((_, i) => (
+                                    <span key={i} className="text-yellow-400 text-xl">★</span>
+                                ))}
+                            </div>
+                        </div>
+                        <p className="text-teal-400 text-sm font-semibold">{rankInfo.player_rank_name}</p>
                         <p className="text-slate-500 text-[10px]">Rank based on score and flight distance</p>
                         {rankInfo.next_level_threshold && (
                             <div className="w-64 mt-3">

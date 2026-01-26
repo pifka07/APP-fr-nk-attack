@@ -11,6 +11,7 @@ export default function Leaderboard() {
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
+    const [playerRanks, setPlayerRanks] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,6 +23,24 @@ export default function Leaderboard() {
                 ]);
                 setLeaders(topScores);
                 setCurrentUser(user);
+                
+                // Fetch player stats for each leaderboard entry to calculate ranks
+                const ranks = {};
+                for (const entry of topScores) {
+                    if (entry.user_id) {
+                        try {
+                            const userStats = await base44.entities.User.filter({ id: entry.user_id });
+                            if (userStats.length > 0) {
+                                const stats = userStats[0];
+                                const rankInfo = calculatePlayerRank(stats.total_score || 0, stats.total_distance || 0);
+                                ranks[entry.user_id] = rankInfo.player_level;
+                            }
+                        } catch (err) {
+                            console.error("Could not fetch stats for user", entry.user_id);
+                        }
+                    }
+                }
+                setPlayerRanks(ranks);
             } catch (error) {
                 console.error("Failed to fetch leaderboard", error);
             } finally {
@@ -87,9 +106,18 @@ export default function Leaderboard() {
                                                         {getRankIcon(index)}
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className={`font-bold ${currentUser && player.user_id === currentUser.id ? 'text-teal-400' : 'text-white'}`}>
-                                                            {player.username || 'Anonymous Bird'}
-                                                        </span>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={`font-bold ${currentUser && player.user_id === currentUser.id ? 'text-teal-400' : 'text-white'}`}>
+                                                                {player.username || 'Anonymous Bird'}
+                                                            </span>
+                                                            {playerRanks[player.user_id] && (
+                                                                <div className="flex gap-0.5">
+                                                                    {[...Array(playerRanks[player.user_id])].map((_, i) => (
+                                                                        <span key={i} className="text-yellow-400 text-xs">★</span>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                         <span className="text-[10px] text-teal-400/70 uppercase font-bold">{player.level || 'downtown'}</span>
                                                         {currentUser && player.user_id === currentUser.id && (
                                                             <span className="text-[10px] text-teal-500/70 uppercase font-bold">That's You!</span>

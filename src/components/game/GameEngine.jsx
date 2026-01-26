@@ -518,15 +518,54 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             tree.img.src = tree.src;
         });
 
+        // Track all critical images that must load before game starts
+        const criticalImages = [
+            // Fränk (Player) - MUST load
+            IMAGES.current.playerSheet,
+            IMAGES.current.playerGlide,
+            IMAGES.current.playerDead,
+            IMAGES.current.playerGround,
+            // Essential NPCs
+            IMAGES.current.cop,
+            IMAGES.current.granny,
+            IMAGES.current.car,
+            IMAGES.current.eagle,
+            IMAGES.current.dog,
+            // Essential powerups
+            IMAGES.current.coin,
+            IMAGES.current.poopProjectile
+        ];
+
+        // Add level-specific critical images
+        if (level === 'gelsenkirchen' && IMAGES.current.downtown_buildings) {
+            IMAGES.current.downtown_buildings.slice(0, 3).forEach(b => criticalImages.push(b.img));
+        }
+        if (level === 'madrid' && IMAGES.current.madrid_buildings) {
+            IMAGES.current.madrid_buildings.slice(0, 3).forEach(b => criticalImages.push(b.img));
+        }
+        if (level === 'rome' && IMAGES.current.rome_buildings) {
+            IMAGES.current.rome_buildings.slice(0, 3).forEach(b => criticalImages.push(b.img));
+        }
+
         let loadedCount = 0;
+        const totalCritical = criticalImages.length;
+        
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 15) assetsLoaded.current = true;
+            if (loadedCount >= totalCritical) {
+                assetsLoaded.current = true;
+            }
         };
-        Object.values(IMAGES.current).forEach(img => {
-            img.onload = checkLoad;
-            // Handle cached images
-            if (img.complete) checkLoad();
+        
+        criticalImages.forEach(img => {
+            if (img && img.addEventListener) {
+                img.onload = checkLoad;
+                // Handle cached images
+                if (img.complete && img.naturalHeight > 0) checkLoad();
+            } else {
+                // If image is invalid, still count it to avoid blocking
+                checkLoad();
+            }
         });
         
         // Configure Audio

@@ -155,8 +155,6 @@ export default function Profile() {
                                 alt={rankInfo.player_rank_name}
                                 className="w-24 h-24 object-contain drop-shadow-2xl"
                             />
-                            <p className="text-teal-400 text-lg font-bold">Level {rankInfo.player_level}</p>
-                            <p className="text-teal-400 text-sm font-semibold">{rankInfo.player_rank_name}</p>
                         </div>
                         <p className="text-slate-500 text-[10px]">Rank based on score and flight distance</p>
                         {rankInfo.next_level_threshold && (
@@ -195,7 +193,9 @@ export default function Profile() {
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <MapPin className="w-8 h-8 text-teal-400 mb-2" />
                         <div className="text-2xl font-bold text-white">{stats?.best_distance || 0}m</div>
-                        <div className="text-xs text-slate-400 uppercase tracking-wider">Fartherst Flight</div>
+                        <div className="text-xs text-slate-400 uppercase tracking-wider">
+                            Fartherst Flight {rankInfo && <span className="text-[10px]">(Level {rankInfo.player_level})</span>}
+                        </div>
                     </CardContent>
                 </Card>
                 <Card className="bg-slate-800 border-slate-700">

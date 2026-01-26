@@ -519,14 +519,44 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         });
 
         let loadedCount = 0;
+        let totalImages = 0;
+
         const checkLoad = () => {
             loadedCount++;
-            if (loadedCount >= 15) assetsLoaded.current = true;
+            if (loadedCount >= totalImages && totalImages > 0) {
+                assetsLoaded.current = true;
+            }
         };
-        Object.values(IMAGES.current).forEach(img => {
-            img.onload = checkLoad;
-            // Handle cached images
-            if (img.complete) checkLoad();
+
+        // Count and setup load handlers for single images
+        Object.entries(IMAGES.current).forEach(([key, value]) => {
+            if (value instanceof Image && !key.includes('_buildings') && !key.includes('_trees') && !key.includes('_vegetation')) {
+                totalImages++;
+                value.onload = checkLoad;
+                if (value.complete && value.naturalHeight > 0) checkLoad();
+            }
+        });
+
+        // Count and setup load handlers for image arrays
+        const imageArrays = [
+            IMAGES.current.downtown_buildings,
+            IMAGES.current.rome_buildings,
+            IMAGES.current.rome_trees,
+            IMAGES.current.gelsenkirchen_vegetation,
+            IMAGES.current.madrid_buildings,
+            IMAGES.current.madrid_trees
+        ];
+
+        imageArrays.forEach(arr => {
+            if (arr && Array.isArray(arr)) {
+                arr.forEach(item => {
+                    if (item && item.img) {
+                        totalImages++;
+                        item.img.onload = checkLoad;
+                        if (item.img.complete && item.img.naturalHeight > 0) checkLoad();
+                    }
+                });
+            }
         });
         
         // Configure Audio

@@ -540,8 +540,6 @@ export default function Game() {
                                     >
                                         PLAY
                                     </Button>
-                        </>
-                    )}
 
                                     <Link to={createPageUrl('Home')} className="block">
                                         <Button className="w-full h-12 font-titan text-xl bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
@@ -576,6 +574,8 @@ export default function Game() {
                             </div>
                         </>
                     )}
+                </div>
+            )}
                 </div>
             )}
 

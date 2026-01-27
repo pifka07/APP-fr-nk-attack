@@ -771,13 +771,14 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const isWood = skin === 'wood';
             const isStone = skin === 'stone';
             const isSkeleton = skin === 'skeleton';
-            const isFire = skin === 'fire'; // Added new skin
+            const isFire = skin === 'fire';
+            const isIce = skin === 'ice';
 
             state.poops.push({
                 x: state.player.x,
                 y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : (isStone ? 7 : (isSkeleton ? 5 : (isFire ? 6 : 2))))))))))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : (isSkeleton ? 7 : (isFire ? 8 : 5))))))))))))),
+                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : (isStone ? 7 : (isSkeleton ? 5 : (isFire ? 6 : (isIce ? 5 : 2)))))))))))))),
+                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : (isSkeleton ? 7 : (isFire ? 8 : (isIce ? 7 : 5)))))))))))))),
                 active: true,
                 type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isSkeleton ? 'bone' : (isFire ? 'fireball' : (isRapidFire ? 'triple' : 'normal')))))))))))))),
                 width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isSkeleton ? 35 : (isFire ? 40 : (isRapidFire ? 60 : 30)))))))))))))),
@@ -947,7 +948,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball') { // Updated with fireball
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball' && p.type !== 'icecube') {
                 p.vy += GRAVITY * 0.5; // accelerate down
             }
             // Bubbles float slowly upward
@@ -2102,6 +2103,41 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                         }
 
                         ctx.globalAlpha = 1.0;
+                        ctx.shadowBlur = 0;
+                    } else if (p.type === 'icecube') {
+                        // Draw ice cube
+                        ctx.rotate(state.animFrame * 0.2);
+                        ctx.shadowColor = '#00D4FF';
+                        ctx.shadowBlur = 15;
+
+                        // Main ice cube (light blue transparent)
+                        ctx.fillStyle = 'rgba(135, 206, 235, 0.8)';
+                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+
+                        // Inner brighter layer
+                        ctx.fillStyle = 'rgba(0, 212, 255, 0.6)';
+                        ctx.fillRect(-p.width/2 + 4, -p.height/2 + 4, p.width - 8, p.height - 8);
+
+                        // Highlight spots (white glow)
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        ctx.fillRect(-p.width/3, -p.height/3, p.width/4, p.height/4);
+                        ctx.fillRect(p.width/5, p.height/6, p.width/5, p.height/5);
+
+                        // Frost patterns (cracks)
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(-p.width/2, 0);
+                        ctx.lineTo(p.width/2, 0);
+                        ctx.moveTo(0, -p.height/2);
+                        ctx.lineTo(0, p.height/2);
+                        ctx.stroke();
+
+                        // Outer border (ice edge)
+                        ctx.strokeStyle = 'rgba(0, 180, 255, 0.8)';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(-p.width/2, -p.height/2, p.width, p.height);
+
                         ctx.shadowBlur = 0;
                     } else {
                         const img = IMAGES.current.poopProjectile;

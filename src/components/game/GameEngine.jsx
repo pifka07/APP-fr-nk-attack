@@ -49,9 +49,10 @@ const SPRITE_MAP = {
     }
 };
 
-const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, onAmmoUpdate, config = {}, skin = 'default', level = 'downtown', gameSpeed = 'normal', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true }, ref) => {
+const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, onAmmoUpdate, config = {}, skin = 'default', level = 'downtown', gameSpeed = 'normal', difficultyMultiplier = 1, musicEnabled = true, soundEnabled = true, onAssetsLoaded }, ref) => {
     const canvasRef = useRef(null);
     const assetsLoaded = useRef(false);
+    const [loadingProgress, setLoadingProgress] = useState(0);
     const AUDIOS = useRef({
         bgm: new Audio("https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3"),
         fart: new Audio("https://www.soundjay.com/birds/sounds/hawk-screech-1.mp3"),
@@ -525,26 +526,39 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.playerGlide,
             IMAGES.current.playerDead,
             IMAGES.current.playerGround,
-            // Essential NPCs
-            IMAGES.current.cop,
-            IMAGES.current.granny,
-            IMAGES.current.car,
-            IMAGES.current.eagle,
-            IMAGES.current.dog,
+            // Background
+            IMAGES.current.background,
             // Essential powerups
             IMAGES.current.coin,
             IMAGES.current.poopProjectile
         ];
 
-        // Add level-specific critical images
-        if (level === 'gelsenkirchen' && IMAGES.current.downtown_buildings) {
-            IMAGES.current.downtown_buildings.slice(0, 3).forEach(b => criticalImages.push(b.img));
+        // Add level-specific critical images (Background + Street)
+        if (level === 'gelsenkirchen' && IMAGES.current.gelsenkirchenSidewalk) {
+            criticalImages.push(IMAGES.current.gelsenkirchenSidewalk);
         }
-        if (level === 'madrid' && IMAGES.current.madrid_buildings) {
-            IMAGES.current.madrid_buildings.slice(0, 3).forEach(b => criticalImages.push(b.img));
+        if (level === 'madrid') {
+            if (IMAGES.current.madridBackground) criticalImages.push(IMAGES.current.madridBackground);
+            if (IMAGES.current.madridStreet) criticalImages.push(IMAGES.current.madridStreet);
         }
-        if (level === 'rome' && IMAGES.current.rome_buildings) {
-            IMAGES.current.rome_buildings.slice(0, 3).forEach(b => criticalImages.push(b.img));
+        if (level === 'rome') {
+            if (IMAGES.current.romeBackground) criticalImages.push(IMAGES.current.romeBackground);
+            if (IMAGES.current.romeStreet) criticalImages.push(IMAGES.current.romeStreet);
+        }
+        if (level === 'rooftop') {
+            if (IMAGES.current.rooftopBackground) criticalImages.push(IMAGES.current.rooftopBackground);
+            if (IMAGES.current.rooftopStreet) criticalImages.push(IMAGES.current.rooftopStreet);
+        }
+        if (level === 'london') {
+            if (IMAGES.current.londonForeground1) criticalImages.push(IMAGES.current.londonForeground1);
+            if (IMAGES.current.londonForeground2) criticalImages.push(IMAGES.current.londonForeground2);
+            if (IMAGES.current.londonForeground3) criticalImages.push(IMAGES.current.londonForeground3);
+        }
+        if (level === 'paris') {
+            if (IMAGES.current.parisBackground) criticalImages.push(IMAGES.current.parisBackground);
+            if (IMAGES.current.parisForeground1) criticalImages.push(IMAGES.current.parisForeground1);
+            if (IMAGES.current.parisForeground2) criticalImages.push(IMAGES.current.parisForeground2);
+            if (IMAGES.current.parisForeground3) criticalImages.push(IMAGES.current.parisForeground3);
         }
 
         let loadedCount = 0;
@@ -552,14 +566,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         
         const checkLoad = () => {
             loadedCount++;
+            const progress = Math.floor((loadedCount / totalCritical) * 100);
+            setLoadingProgress(progress);
+            
             if (loadedCount >= totalCritical) {
                 assetsLoaded.current = true;
+                if (onAssetsLoaded) onAssetsLoaded();
             }
         };
         
         criticalImages.forEach(img => {
             if (img && img.addEventListener) {
                 img.onload = checkLoad;
+                img.onerror = checkLoad; // Count errors too to avoid blocking
                 // Handle cached images
                 if (img.complete && img.naturalHeight > 0) checkLoad();
             } else {

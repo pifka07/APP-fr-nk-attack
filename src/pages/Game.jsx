@@ -32,6 +32,7 @@ export default function Game() {
     const runSessionIdRef = useRef(null);
     const runStartTimeRef = useRef(null);
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [assetsReady, setAssetsReady] = useState(false);
     
     // Get selected level from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -309,6 +310,7 @@ export default function Game() {
                     onHealthUpdate={setHealth}
                     onComboUpdate={setCombo}
                     onAmmoUpdate={setAmmo}
+                    onAssetsLoaded={() => setAssetsReady(true)}
                 />
             </div>
 
@@ -481,78 +483,99 @@ export default function Game() {
             {/* Start Screen */}
             {gameState === 'start' && (
                 <div className="absolute top-0 left-0 right-0 bottom-0 z-50 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 pb-48">
-                    <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-purple-600 mb-8 mt-[80px] drop-shadow-lg text-center">
-                        READY TO POOP?
-                    </h1>
-                    <div className="space-y-4 w-full max-w-xs">
-                        <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
-                            <div className="mb-6">
-                                <img 
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a638c62a8_frankbild.png" 
-                                    className="w-32 h-32 mx-auto object-cover rounded-3xl border-4 border-teal-500 bg-cyan-400 mb-4" 
-                                    style={{ width: '120px', height: '120px' }}
-                                    alt="Fränk"
+                    {!assetsReady ? (
+                        <div className="text-center">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-purple-600 mb-8 drop-shadow-lg">
+                                LOADING...
+                            </h1>
+                            <div className="w-64 h-4 bg-slate-800 rounded-full overflow-hidden border-2 border-slate-700">
+                                <motion.div 
+                                    className="h-full bg-gradient-to-r from-teal-400 to-purple-600"
+                                    initial={{ width: '0%' }}
+                                    animate={{ width: '100%' }}
+                                    transition={{ duration: 2, ease: "easeInOut" }}
                                 />
-                                <p className="text-teal-300 font-bold mb-1">MISSION</p>
-                                <p className="text-white text-xl font-black uppercase">Poop on Everything</p>
                             </div>
-
-                            {/* Speed Selection */}
-                            <div className="bg-slate-900/50 p-2 rounded-xl mb-4 flex justify-between gap-1">
-                                {['slow', 'normal', 'quick'].map((speed) => (
-                                    <button
-                                        key={speed}
-                                        onClick={(e) => { e.stopPropagation(); setGameSpeed(speed); }}
-                                        className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
-                                            gameSpeed === speed 
-                                            ? 'bg-teal-500 text-white shadow-lg scale-105' 
-                                            : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
-                                        }`}
-                                    >
-                                        {speed}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <Button 
-                                size="lg" 
-                                className="w-full h-16 text-3xl font-titan bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
-                                onClick={(e) => { e.stopPropagation(); startGame(); }}
-                            >
-                                PLAY
-                            </Button>
-
-                            <Link to={createPageUrl('Home')} className="block">
-                                <Button className="w-full h-12 font-titan text-xl bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                                    MENU
-                                </Button>
-                            </Link>
-
-                            <Link to={createPageUrl('Leaderboard')} className="block mt-2">
-                                <Button className="w-full h-12 font-titan text-xl bg-yellow-600 hover:bg-yellow-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
-                                    <Trophy className="w-5 h-5 mr-2" /> Highscores
-                                </Button>
-                            </Link>
-
-                            <div className="flex justify-center gap-4 mt-4">
-                                <Button
-                                    size="icon"
-                                    onClick={(e) => { e.stopPropagation(); setMusicEnabled(!musicEnabled); }}
-                                    className={`w-14 h-14 rounded-full border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all ${musicEnabled ? 'bg-teal-500 hover:bg-teal-400' : 'bg-slate-600 hover:bg-slate-500'}`}
-                                >
-                                    {musicEnabled ? <Music className="w-7 h-7 text-white" /> : <div className="relative"><Music className="w-7 h-7 text-slate-400" /><div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-1 bg-red-500 rotate-45 transform scale-110 rounded-full"></div></div></div>}
-                                </Button>
-
-                                <Button
-                                    size="icon"
-                                    onClick={(e) => { e.stopPropagation(); setSoundEnabled(!soundEnabled); }}
-                                    className={`w-14 h-14 rounded-full border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all ${soundEnabled ? 'bg-purple-500 hover:bg-purple-400' : 'bg-slate-600 hover:bg-slate-500'}`}
-                                >
-                                    {soundEnabled ? <Volume2 className="w-7 h-7 text-white" /> : <div className="relative"><VolumeX className="w-7 h-7 text-slate-400" /><div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-1 bg-red-500 rotate-45 transform scale-110 rounded-full"></div></div></div>}
-                                </Button>
-                            </div>
+                            <p className="text-slate-400 text-sm mt-4">Preparing Fränk for action...</p>
                         </div>
-                    </div>
+                    ) : (
+                        <>
+                            <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-purple-600 mb-8 mt-[80px] drop-shadow-lg text-center">
+                                READY TO POOP?
+                            </h1>
+                            <div className="space-y-4 w-full max-w-xs">
+                                <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
+                                    <div className="mb-6">
+                                        <img 
+                                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a638c62a8_frankbild.png" 
+                                            className="w-32 h-32 mx-auto object-cover rounded-3xl border-4 border-teal-500 bg-cyan-400 mb-4" 
+                                            style={{ width: '120px', height: '120px' }}
+                                            alt="Fränk"
+                                        />
+                                        <p className="text-teal-300 font-bold mb-1">MISSION</p>
+                                        <p className="text-white text-xl font-black uppercase">Poop on Everything</p>
+                                    </div>
+
+                                    {/* Speed Selection */}
+                                    <div className="bg-slate-900/50 p-2 rounded-xl mb-4 flex justify-between gap-1">
+                                        {['slow', 'normal', 'quick'].map((speed) => (
+                                            <button
+                                                key={speed}
+                                                onClick={(e) => { e.stopPropagation(); setGameSpeed(speed); }}
+                                                className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase transition-all ${
+                                                    gameSpeed === speed 
+                                                    ? 'bg-teal-500 text-white shadow-lg scale-105' 
+                                                    : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                                                }`}
+                                            >
+                                                {speed}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <Button 
+                                        size="lg" 
+                                        className="w-full h-16 text-3xl font-titan bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
+                                        onClick={(e) => { e.stopPropagation(); startGame(); }}
+                                    >
+                                        PLAY
+                                    </Button>
+                        </>
+                    )}
+
+                                    <Link to={createPageUrl('Home')} className="block">
+                                        <Button className="w-full h-12 font-titan text-xl bg-slate-700 hover:bg-slate-600 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+                                            MENU
+                                        </Button>
+                                    </Link>
+
+                                    <Link to={createPageUrl('Leaderboard')} className="block mt-2">
+                                        <Button className="w-full h-12 font-titan text-xl bg-yellow-600 hover:bg-yellow-500 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full uppercase">
+                                            <Trophy className="w-5 h-5 mr-2" /> Highscores
+                                        </Button>
+                                    </Link>
+
+                                    <div className="flex justify-center gap-4 mt-4">
+                                        <Button
+                                            size="icon"
+                                            onClick={(e) => { e.stopPropagation(); setMusicEnabled(!musicEnabled); }}
+                                            className={`w-14 h-14 rounded-full border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all ${musicEnabled ? 'bg-teal-500 hover:bg-teal-400' : 'bg-slate-600 hover:bg-slate-500'}`}
+                                        >
+                                            {musicEnabled ? <Music className="w-7 h-7 text-white" /> : <div className="relative"><Music className="w-7 h-7 text-slate-400" /><div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-1 bg-red-500 rotate-45 transform scale-110 rounded-full"></div></div></div>}
+                                        </Button>
+
+                                        <Button
+                                            size="icon"
+                                            onClick={(e) => { e.stopPropagation(); setSoundEnabled(!soundEnabled); }}
+                                            className={`w-14 h-14 rounded-full border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all ${soundEnabled ? 'bg-purple-500 hover:bg-purple-400' : 'bg-slate-600 hover:bg-slate-500'}`}
+                                        >
+                                            {soundEnabled ? <Volume2 className="w-7 h-7 text-white" /> : <div className="relative"><VolumeX className="w-7 h-7 text-slate-400" /><div className="absolute inset-0 flex items-center justify-center"><div className="w-full h-1 bg-red-500 rotate-45 transform scale-110 rounded-full"></div></div></div>}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             )}
 

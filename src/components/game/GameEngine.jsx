@@ -255,7 +255,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.ammoIcon = new Image();
         IMAGES.current.ammoIcon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/06c8c939e_Frnkkrner.png";
         IMAGES.current.boneProjectile = new Image();
-        IMAGES.current.boneProjectile.src = "BONE_IMAGE_URL_PLACEHOLDER";
+        IMAGES.current.boneProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/61f5618ec_image.png";
         IMAGES.current.paris_car = new Image();
         IMAGES.current.paris_car.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf69dde28_car.png";
         IMAGES.current.police_man = new Image();
@@ -1900,33 +1900,39 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
                             ctx.shadowBlur = 0;
                             } else if (p.type === 'bone') {
-                            // Draw bone projectile
+                            // Draw bone projectile with custom image
                             ctx.rotate(state.animFrame * 0.25);
-                            ctx.shadowColor = '#f5f5dc';
-                            ctx.shadowBlur = 8;
+                            
+                            if (isImageValid(IMAGES.current.boneProjectile)) {
+                                ctx.drawImage(IMAGES.current.boneProjectile, -p.width/2, -p.height/2, p.width, p.height);
+                            } else {
+                                // Fallback if image not loaded
+                                ctx.shadowColor = '#f5f5dc';
+                                ctx.shadowBlur = 8;
 
-                            // Draw bone shape
-                            ctx.fillStyle = '#f5f5dc'; // Beige bone color
-                            ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
+                                // Draw bone shape
+                                ctx.fillStyle = '#f5f5dc'; // Beige bone color
+                                ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
 
-                            // Bone ends (knobs)
-                            ctx.beginPath();
-                            ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                            ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                            ctx.fill();
+                                // Bone ends (knobs)
+                                ctx.beginPath();
+                                ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                                ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                                ctx.fill();
 
-                            // Darker outline
-                            ctx.strokeStyle = '#d3c5a0';
-                            ctx.lineWidth = 2;
-                            ctx.beginPath();
-                            ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                            ctx.stroke();
-                            ctx.beginPath();
-                            ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                            ctx.stroke();
-                            ctx.strokeRect(-p.width/2, -p.height/2, p.width, p.height);
+                                // Darker outline
+                                ctx.strokeStyle = '#d3c5a0';
+                                ctx.lineWidth = 2;
+                                ctx.beginPath();
+                                ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                                ctx.stroke();
+                                ctx.beginPath();
+                                ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
+                                ctx.stroke();
+                                ctx.strokeRect(-p.width/2, -p.height/2, p.width, p.height);
 
-                            ctx.shadowBlur = 0;
+                                ctx.shadowBlur = 0;
+                            }
                             } else if (p.type === 'shuriken') {
                             // Draw ninja star (shuriken)
                             ctx.rotate(state.animFrame * 0.3);

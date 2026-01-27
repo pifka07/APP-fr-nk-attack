@@ -55,65 +55,65 @@ export function spawnMadridEnemy(width, height, groundY, scrollSpeed) {
     // Configure based on type
     switch (selectedType) {
         case 'madrid_waiter':
-            enemy.y = groundY - 140;
+            enemy.y = groundY - 160;
             enemy.width = 90;
-            enemy.height = 100;
+            enemy.height = 120;
             enemy.scoreValue = 20;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_flamenco':
-            enemy.y = groundY - 90;
+            enemy.y = groundY - 110;
             enemy.width = 120;
-            enemy.height = 100;
+            enemy.height = 120;
             enemy.scoreValue = 25;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_tourist_girl':
-            enemy.y = groundY - 96;
+            enemy.y = groundY - 116;
             enemy.width = 90;
-            enemy.height = 96;
+            enemy.height = 116;
             enemy.scoreValue = 18;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_flower_girl':
-            enemy.y = groundY - 102;
+            enemy.y = groundY - 122;
             enemy.width = 100;
-            enemy.height = 100;
+            enemy.height = 120;
             enemy.scoreValue = 20;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_elderly':
-            enemy.y = groundY - 90;
+            enemy.y = groundY - 110;
             enemy.width = 110;
-            enemy.height = 96;
+            enemy.height = 116;
             enemy.scoreValue = 30;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_flight_attendant':
-            enemy.y = groundY - 94;
+            enemy.y = groundY - 114;
             enemy.width = 80;
-            enemy.height = 96;
+            enemy.height = 116;
             enemy.scoreValue = 18;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_boy_tourist':
-            enemy.y = groundY - 90;
+            enemy.y = groundY - 110;
             enemy.width = 80;
-            enemy.height = 90;
+            enemy.height = 110;
             enemy.scoreValue = 15;
             enemy.isObstacle = true;
             break;
 
         case 'madrid_car':
-            enemy.y = groundY - 50;
+            enemy.y = groundY - 70;
             enemy.width = 250;
-            enemy.height = 200;
+            enemy.height = 220;
             enemy.scoreValue = 30;
             enemy.isObstacle = true;
             enemy.isTarget = false;

@@ -571,13 +571,11 @@ export default function Game() {
                                         </Button>
                                     </div>
                                 </div>
-                            </div>
-                        </>
-                    )}
-                </div>
-            )}
-                </div>
-            )}
+                                </div>
+                                </>
+                                )}
+                                </div>
+                                )}
 
             {/* Pause Screen */}
             {gameState === 'paused' && (

@@ -425,7 +425,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.berlinStreet = new Image();
         IMAGES.current.berlinStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b323ca9ea_HintergrundStrasse.png";
 
-        // Berlin Buildings
+        // Berlin Buildings (Ebene 2.1)
         IMAGES.current.berlin_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/33aabd71e_HausLaden-Kopie.png" },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/95d031b4e_HausLaden-Kopie2.png" },
@@ -436,6 +436,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ];
         IMAGES.current.berlin_buildings.forEach(building => {
             building.img.onerror = () => console.error('Failed to load Berlin building:', building.src);
+            building.img.src = building.src;
+        });
+
+        // Berlin Buildings Large (Ebene 2.2 - 1.5x größer)
+        IMAGES.current.berlin_buildings_large = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c0c8f0b71_HausWohnen-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0cdcb7e23_HausOsi-Kopie5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/eb55558fd_HausOsi-Kopie6.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a5e5eeb1e_HausOsi-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/732c2856b_HausWohnen-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5946f869b_HausWohnen-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3b196948e_HausWohnen-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/afc2bc45e_HausWohnen-Kopie5.png" }
+        ];
+        IMAGES.current.berlin_buildings_large.forEach(building => {
+            building.img.onerror = () => console.error('Failed to load Berlin large building:', building.src);
             building.img.src = building.src;
         });
 
@@ -1051,15 +1067,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
-        // Berlin Buildings Management
-        if (level === 'berlin' && IMAGES.current.berlin_buildings) {
+        // Berlin Buildings Management (beide Ebenen)
+        if (level === 'berlin' && IMAGES.current.berlin_buildings && IMAGES.current.berlin_buildings_large) {
             // Add new building if needed
             if (state.berlinBuildings.length === 0 || state.berlinBuildings[state.berlinBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
-                const buildingData = IMAGES.current.berlin_buildings[Math.floor(Math.random() * IMAGES.current.berlin_buildings.length)];
+                // 50% Chance für kleine (Ebene 2.1) oder große (Ebene 2.2) Gebäude
+                const useLarge = Math.random() < 0.5;
+                const buildingArray = useLarge ? IMAGES.current.berlin_buildings_large : IMAGES.current.berlin_buildings;
+                const buildingData = buildingArray[Math.floor(Math.random() * buildingArray.length)];
                 const buildingImg = buildingData?.img;
 
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    const maxHeight = height * 0.5 * 0.5; // 50% smaller
+                    // Kleine Gebäude: height * 0.25, Große Gebäude: height * 0.375 (1.5x)
+                    const maxHeight = useLarge ? (height * 0.5 * 0.5 * 1.5) : (height * 0.5 * 0.5);
                     const scale = maxHeight / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 

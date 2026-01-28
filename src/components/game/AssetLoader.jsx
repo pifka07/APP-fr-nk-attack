@@ -145,6 +145,37 @@ export class AssetLoader {
         this.audios.ouch.volume = 1.0;
     }
 
+    setLevelMusic(levelName) {
+        if (this.audios.bgm) {
+            this.audios.bgm.pause();
+        }
+        
+        let musicUrl;
+        switch(levelName) {
+            case 'london':
+                musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg";
+                break;
+            case 'paris':
+                musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/soundtrack.mp3";
+                break;
+            case 'madrid':
+                musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/music/race2.ogg";
+                break;
+            case 'rome':
+                musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-assets/Evilution.ogg";
+                break;
+            case 'berlin':
+                musicUrl = "https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3";
+                break;
+            default:
+                musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3";
+        }
+        
+        this.audios.bgm = new Audio(musicUrl);
+        this.audios.bgm.loop = true;
+        this.audios.bgm.volume = 0.5;
+    }
+
     async waitForLoad() {
         let loadedCount = 0;
         const totalImages = Object.keys(this.images).length;

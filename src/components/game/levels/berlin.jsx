@@ -40,9 +40,9 @@ export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
 
     const enemy = {
         x: width + 50,
-        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 50,
-        width: 50,
-        height: 50,
+        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 100,
+        width: 100,
+        height: 100,
         vx: -scrollSpeed,
         hp: 1,
         isTarget: true,
@@ -53,12 +53,12 @@ export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
 
     // Specific adjustments
     if (selectedType.includes('drone')) {
-        enemy.width = 60;
-        enemy.height = 40;
+        enemy.width = 120;
+        enemy.height = 80;
         enemy.scoreValue = 20;
     } else if (selectedType.includes('bird')) {
-        enemy.width = 40;
-        enemy.height = 40;
+        enemy.width = 80;
+        enemy.height = 80;
         enemy.scoreValue = 15;
     }
 

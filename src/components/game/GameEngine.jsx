@@ -2495,8 +2495,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     // Sparrow fast flapping
                     ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
                     } else if (e.spriteType === 'berlin_npc1' || e.spriteType === 'berlin_npc2' || e.spriteType === 'berlin_npc3' || e.spriteType === 'berlin_npc4' || e.spriteType === 'berlin_npc5' || e.spriteType === 'berlin_npc6' || e.spriteType === 'berlin_npc7' || e.spriteType === 'berlin_npc8' || e.spriteType === 'berlin_npc9' || e.spriteType === 'berlin_npc10') {
-                    // Berlin NPCs walking animation
-                    ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
+                    // Berlin NPCs - minimal animation
+                    ctx.translate(Math.sin(state.animFrame * 0.1) * 0.5, 0);
                     } else if (e.spriteType === 'berlin_bird1' || e.spriteType === 'berlin_bird2' || e.spriteType === 'berlin_bird3') {
                     // Berlin birds flapping
                     ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);

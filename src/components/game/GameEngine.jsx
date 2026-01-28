@@ -425,7 +425,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.berlinStreet = new Image();
         IMAGES.current.berlinStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b323ca9ea_HintergrundStrasse.png";
 
-        // Berlin Buildings (Ebene 2)
+        // Berlin Buildings
         IMAGES.current.berlin_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/33aabd71e_HausLaden-Kopie.png" },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/95d031b4e_HausLaden-Kopie2.png" },
@@ -436,17 +436,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ];
         IMAGES.current.berlin_buildings.forEach(building => {
             building.img.onerror = () => console.error('Failed to load Berlin building:', building.src);
-            building.img.src = building.src;
-        });
-
-        // Berlin Buildings Layer 2.2 (1.8x größer)
-        IMAGES.current.berlin_buildings_layer2 = [
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/6a32be260_HausWohnen-Kopie.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/48c0a43ff_HausWohnen-Kopie5.png" },
-            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/20589b5f7_HausWohnen-Kopie6.png" }
-        ];
-        IMAGES.current.berlin_buildings_layer2.forEach(building => {
-            building.img.onerror = () => console.error('Failed to load Berlin layer 2.2 building:', building.src);
             building.img.src = building.src;
         });
 
@@ -675,8 +664,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
         gelsenkirchenVegetation: [], // Gelsenkirchen background vegetation
-        berlinBuildings: [], // Berlin scrolling buildings (Ebene 2)
-        berlinBuildingsLayer2: [], // Berlin scrolling buildings (Ebene 2.2 - 1.8x größer)
+        berlinBuildings: [], // Berlin scrolling buildings
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -729,7 +717,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.gelsenkirchenSidewalkX = 0;
             gameStateRef.current.gelsenkirchenHoles = [];
             gameStateRef.current.gelsenkirchenVegetation = [];
-            gameStateRef.current.berlinBuildingsLayer2 = [];
             gameStateRef.current.madridBuildings = [];
             gameStateRef.current.madridTrees = [];
             gameStateRef.current.madridScenery = [];
@@ -1064,7 +1051,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             });
         }
 
-        // Berlin Buildings Management (Ebene 2)
+        // Berlin Buildings Management
         if (level === 'berlin' && IMAGES.current.berlin_buildings) {
             // Add new building if needed
             if (state.berlinBuildings.length === 0 || state.berlinBuildings[state.berlinBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
@@ -1087,38 +1074,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             // Update positions and filter out offscreen buildings
             state.berlinBuildings = state.berlinBuildings.filter(building => {
-                building.x -= state.scrollSpeed;
-                return building.x > -building.width && 
-                       building.img && 
-                       building.img.complete && 
-                       building.img.naturalHeight > 0 && 
-                       building.img.naturalWidth > 0;
-            });
-        }
-
-        // Berlin Buildings Management (Ebene 2.2 - 1.8x größer)
-        if (level === 'berlin' && IMAGES.current.berlin_buildings_layer2) {
-            // Add new layer 2.2 building if needed (seltener spawnen)
-            if (state.berlinBuildingsLayer2.length === 0 || state.berlinBuildingsLayer2[state.berlinBuildingsLayer2.length - 1].x < width - (600 + Math.random() * 900)) {
-                const buildingData = IMAGES.current.berlin_buildings_layer2[Math.floor(Math.random() * IMAGES.current.berlin_buildings_layer2.length)];
-                const buildingImg = buildingData?.img;
-
-                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    const maxHeight = height * 0.5 * 0.5 * 1.8; // 1.8x größer als Ebene 2
-                    const scale = maxHeight / buildingImg.naturalHeight;
-                    const buildingWidth = buildingImg.naturalWidth * scale;
-
-                    state.berlinBuildingsLayer2.push({
-                        x: width,
-                        img: buildingImg,
-                        width: buildingWidth,
-                        height: maxHeight
-                    });
-                }
-            }
-
-            // Update positions and filter out offscreen buildings
-            state.berlinBuildingsLayer2 = state.berlinBuildingsLayer2.filter(building => {
                 building.x -= state.scrollSpeed;
                 return building.x > -building.width && 
                        building.img && 
@@ -1670,15 +1625,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'berlin') {
             const groundY = height * GROUND_Y_PCT;
 
-            // Draw Ebene 2.2 (größere Häuser zuerst, weiter hinten)
-            state.berlinBuildingsLayer2.forEach(building => {
-                if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 40; // 40 pixels higher
-                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
-                }
-            });
-
-            // Draw Ebene 2 (kleinere Häuser darüber)
             state.berlinBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
                     const buildingY = groundY - building.height - 40; // 40 pixels higher

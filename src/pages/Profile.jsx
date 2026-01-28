@@ -123,7 +123,7 @@ export default function Profile() {
                                 '904e55289_Abzeichen-Kopie5.png'
                             }`}
                             alt={rankInfo.player_rank_name}
-                            className="w-40 h-40 object-contain drop-shadow-2xl"
+                            className="w-48 h-48 object-contain drop-shadow-2xl"
                         />
                     </div>
                 )}

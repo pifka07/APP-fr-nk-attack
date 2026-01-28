@@ -1071,24 +1071,34 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'berlin' && IMAGES.current.berlin_buildings && IMAGES.current.berlin_buildings_large) {
             // Add new building if needed
             if (state.berlinBuildings.length === 0 || state.berlinBuildings[state.berlinBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
-                // 50% Chance für kleine (Ebene 2.1) oder große (Ebene 2.2) Gebäude
-                const useLarge = Math.random() < 0.5;
-                const buildingArray = useLarge ? IMAGES.current.berlin_buildings_large : IMAGES.current.berlin_buildings;
-                const buildingData = buildingArray[Math.floor(Math.random() * buildingArray.length)];
-                const buildingImg = buildingData?.img;
+                // 30% Chance für Gruppe von 2-3 Häusern nebeneinander
+                const spawnGroup = Math.random() < 0.3;
+                const numBuildings = spawnGroup ? (2 + Math.floor(Math.random() * 2)) : 1; // 2-3 Häuser oder einzeln
+                
+                let currentX = width;
+                for (let i = 0; i < numBuildings; i++) {
+                    // 50% Chance für kleine (Ebene 2.1) oder große (Ebene 2.2) Gebäude
+                    const useLarge = Math.random() < 0.5;
+                    const buildingArray = useLarge ? IMAGES.current.berlin_buildings_large : IMAGES.current.berlin_buildings;
+                    const buildingData = buildingArray[Math.floor(Math.random() * buildingArray.length)];
+                    const buildingImg = buildingData?.img;
 
-                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    // Kleine Gebäude: height * 0.25, Große Gebäude: height * 0.375 (1.5x)
-                    const maxHeight = useLarge ? (height * 0.5 * 0.5 * 1.5) : (height * 0.5 * 0.5);
-                    const scale = maxHeight / buildingImg.naturalHeight;
-                    const buildingWidth = buildingImg.naturalWidth * scale;
+                    if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                        // Kleine Gebäude: height * 0.25, Große Gebäude: height * 0.375 (1.5x)
+                        const maxHeight = useLarge ? (height * 0.5 * 0.5 * 1.5) : (height * 0.5 * 0.5);
+                        const scale = maxHeight / buildingImg.naturalHeight;
+                        const buildingWidth = buildingImg.naturalWidth * scale;
 
-                    state.berlinBuildings.push({
-                        x: width,
-                        img: buildingImg,
-                        width: buildingWidth,
-                        height: maxHeight
-                    });
+                        state.berlinBuildings.push({
+                            x: currentX,
+                            img: buildingImg,
+                            width: buildingWidth,
+                            height: maxHeight
+                        });
+                        
+                        // Nächstes Haus direkt daneben (mit kleinem Abstand)
+                        currentX += buildingWidth + (20 + Math.random() * 30);
+                    }
                 }
             }
 

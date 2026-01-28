@@ -112,13 +112,21 @@ export default function Profile() {
 
             {/* Profile Header */}
             <div className="flex flex-col items-center mb-8">
-                <div className="w-24 h-24 rounded-full bg-slate-800 border-4 border-teal-500 flex items-center justify-center mb-4 shadow-lg overflow-hidden">
-                    <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ce99c670f_frnkoriginal.png" 
-                        alt="Profile" 
-                        className="w-full h-full object-cover"
-                    />
-                </div>
+                {rankInfo && (
+                    <div className="mb-4">
+                        <img 
+                            src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${
+                                rankInfo.player_level === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
+                                rankInfo.player_level === 2 ? '4c2d7b20c_Abzeichen-Kopie2.png' :
+                                rankInfo.player_level === 3 ? '640ba9ba4_Abzeichen-Kopie3.png' :
+                                rankInfo.player_level === 4 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
+                                '904e55289_Abzeichen-Kopie5.png'
+                            }`}
+                            alt={rankInfo.player_rank_name}
+                            className="w-40 h-40 object-contain drop-shadow-2xl"
+                        />
+                    </div>
+                )}
                 {isEditing ? (
                     <div className="flex items-center gap-2 mb-1">
                         <Input 
@@ -143,19 +151,6 @@ export default function Profile() {
                 )}
                 {rankInfo && (
                     <>
-                        <div className="flex flex-col items-center gap-2 mb-2">
-                            <img 
-                                src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${
-                                    rankInfo.player_level === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
-                                    rankInfo.player_level === 2 ? '4c2d7b20c_Abzeichen-Kopie2.png' :
-                                    rankInfo.player_level === 3 ? '640ba9ba4_Abzeichen-Kopie3.png' :
-                                    rankInfo.player_level === 4 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
-                                    '904e55289_Abzeichen-Kopie5.png'
-                                }`}
-                                alt={rankInfo.player_rank_name}
-                                className="w-24 h-24 object-contain drop-shadow-2xl"
-                            />
-                        </div>
                         <p className="text-slate-500 text-[10px]">Rank based on score and flight distance</p>
                         {rankInfo.next_level_threshold && (
                             <div className="w-64 mt-3">

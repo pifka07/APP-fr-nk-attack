@@ -40,13 +40,13 @@ export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
 
     const enemy = {
         x: width + 50,
-        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 100,
+        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 110,
         width: 100,
         height: 100,
         vx: -scrollSpeed,
         hp: 1,
         isTarget: true,
-        isObstacle: false,
+        isObstacle: true,
         scoreValue: 10,
         spriteType: selectedType
     };

@@ -26,7 +26,7 @@ const AIR_ENEMIES = [
 ];
 
 export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
-    const isAir = Math.random() < 0.3;
+    const isAir = Math.random() < 0.5;
     
     const pool = isAir ? AIR_ENEMIES : GROUND_ENEMIES;
     const totalWeight = pool.reduce((sum, e) => sum + e.weight, 0);
@@ -45,7 +45,7 @@ export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
     
     const enemy = {
         x: width + 50,
-        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 120,
+        y: isAir ? 50 + Math.random() * (groundY * 0.67 - 50) : groundY - 120,
         width: baseHeight * 0.7, // Auto aspect ratio
         height: baseHeight,
         vx: -scrollSpeed,

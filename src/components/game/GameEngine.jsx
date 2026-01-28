@@ -1059,7 +1059,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 const buildingImg = buildingData?.img;
 
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    const maxHeight = height * 0.5 * 0.6; // 40% smaller
+                    const maxHeight = height * 0.5 * 0.5; // 50% smaller
                     const scale = maxHeight / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 

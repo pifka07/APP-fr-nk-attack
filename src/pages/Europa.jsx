@@ -55,7 +55,7 @@ export default function Europa() {
         paris: { score: 1000, coins: 500 },
         madrid: { score: 1000, coins: 500 },
         rome: { score: 1000, coins: 500 },
-        berlin: { score: 0, coins: 0 }
+        berlin: { score: 1000, coins: 500 }
     };
 
     const europeanLevels = [

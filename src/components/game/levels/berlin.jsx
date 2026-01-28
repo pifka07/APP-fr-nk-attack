@@ -14,12 +14,15 @@ const GROUND_ENEMIES = [
 ];
 
 const AIR_ENEMIES = [
-    { type: 'berlin_bird1', weight: 2 },
-    { type: 'berlin_bird2', weight: 2 },
-    { type: 'berlin_bird3', weight: 2 },
-    { type: 'berlin_drone1', weight: 1 },
-    { type: 'berlin_drone2', weight: 1 },
-    { type: 'berlin_drone3', weight: 1 }
+    { type: 'rooftop_sparrow', weight: 2 },
+    { type: 'rooftop_pigeon', weight: 2 },
+    { type: 'seagull', weight: 2 },
+    { type: 'eagle', weight: 1 },
+    { type: 'drone_l2', weight: 1 },
+    { type: 'gelsenkirchen_drone1', weight: 1 },
+    { type: 'gelsenkirchen_drone2', weight: 1 },
+    { type: 'paris_balloon', weight: 2 },
+    { type: 'balloon', weight: 2 }
 ];
 
 export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {

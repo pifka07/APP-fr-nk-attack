@@ -174,8 +174,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.gelsenkirchenSidewalk = new Image();
             IMAGES.current.gelsenkirchenSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
         } else if (level === 'berlin') {
-            // Berlin - Scrolling background
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b925c70ec_Hintergrund.png";
+            // Berlin - Fixed background
+            IMAGES.current.background.src = "";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
@@ -1473,8 +1473,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if ((level === 'gelsenkirchen' || level === 'berlin') && isImageValid(IMAGES.current.background)) {
-            // Gelsenkirchen/Berlin: Scrolling background (image width distributed over 20000 meters)
+        if (level === 'gelsenkirchen' && isImageValid(IMAGES.current.background)) {
+            // Gelsenkirchen: Scrolling background (image width distributed over 20000 meters)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
@@ -1485,6 +1485,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
             ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
+        } else if (level === 'berlin' && isImageValid(IMAGES.current.berlinBackground)) {
+            // Berlin: Fixed background (no scrolling)
+            const bg = IMAGES.current.berlinBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const x = (width - w) / 2;
+            const y = (height - h) / 2;
+            ctx.drawImage(bg, x, y, w, h);
         } else if (level === 'rome' && isImageValid(IMAGES.current.romeBackground)) {
             // Rome: Fixed background (no scrolling)
             const bg = IMAGES.current.romeBackground;

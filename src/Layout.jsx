@@ -7,6 +7,7 @@ export default function Layout({ children }) {
     return (
         <div className="min-h-screen bg-slate-900 font-sans text-slate-100 selection:bg-purple-500 selection:text-white overflow-x-hidden">
             <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet" />
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2590841526378095" crossOrigin="anonymous"></script>
             <style>{`
                 .font-titan {
                     font-family: 'Titan One', cursive;

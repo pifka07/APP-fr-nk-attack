@@ -38,27 +38,30 @@ export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
         }
     }
 
+    const baseHeight = 100;
+    
     const enemy = {
         x: width + 50,
         y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 110,
-        width: 100,
-        height: 100,
+        width: baseHeight * 0.7, // Auto aspect ratio
+        height: baseHeight,
         vx: -scrollSpeed,
         hp: 1,
         isTarget: true,
         isObstacle: true,
         scoreValue: 10,
-        spriteType: selectedType
+        spriteType: selectedType,
+        maintainAspect: true
     };
 
     // Specific adjustments
     if (selectedType.includes('drone')) {
-        enemy.width = 120;
         enemy.height = 80;
+        enemy.width = 120;
         enemy.scoreValue = 20;
     } else if (selectedType.includes('bird')) {
-        enemy.width = 80;
         enemy.height = 80;
+        enemy.width = 80;
         enemy.scoreValue = 15;
     }
 

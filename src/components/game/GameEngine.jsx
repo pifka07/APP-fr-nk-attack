@@ -6,6 +6,7 @@ import { spawnParisEnemy } from './levels/paris';
 import { spawnMadridEnemy } from './levels/madrid';
 import { spawnRomeEnemy } from './levels/rome';
 import { spawnGelsenkirchenEnemy } from './levels/gelsenkirchen';
+import { spawnBerlinEnemy } from './levels/berlin';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -172,6 +173,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5d06e0a92_Hintergrund.png";
             IMAGES.current.gelsenkirchenSidewalk = new Image();
             IMAGES.current.gelsenkirchenSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
+        } else if (level === 'berlin') {
+            // Berlin - Scrolling background
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25d9baf11_Hintergrund.png";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png";
@@ -414,6 +418,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             veg.img.onerror = () => console.error('Failed to load Gelsenkirchen vegetation:', veg.src);
             veg.img.src = veg.src;
         });
+
+        // Berlin Level
+        IMAGES.current.berlinBackground = new Image();
+        IMAGES.current.berlinBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25d9baf11_Hintergrund.png";
 
 
         
@@ -801,6 +809,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Use level-specific spawn functions
         if (level === 'gelsenkirchen') {
             enemy = spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'berlin') {
+            enemy = spawnBerlinEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'rooftop') {
             enemy = spawnRooftopEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'park') {
@@ -1408,8 +1418,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'gelsenkirchen' && isImageValid(IMAGES.current.background)) {
-            // Gelsenkirchen: Scrolling background (image width distributed over 20000 meters)
+        if ((level === 'gelsenkirchen' || level === 'berlin') && isImageValid(IMAGES.current.background)) {
+            // Gelsenkirchen/Berlin: Scrolling background (image width distributed over 20000 meters)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;

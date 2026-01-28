@@ -421,7 +421,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Berlin Level
         IMAGES.current.berlinBackground = new Image();
-        IMAGES.current.berlinBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b925c70ec_Hintergrund.png";
+        IMAGES.current.berlinBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/00cf8f6f7_Hintergrund.png";
         IMAGES.current.berlinStreet = new Image();
         IMAGES.current.berlinStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b323ca9ea_HintergrundStrasse.png";
 

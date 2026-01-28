@@ -400,6 +400,44 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.gelsenkirchen_drone6 = new Image();
         IMAGES.current.gelsenkirchen_drone6.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/3a09ae431_Drohne-Kopie6.png";
 
+        // Berlin NPCs
+        IMAGES.current.berlin_npc1 = new Image();
+        IMAGES.current.berlin_npc1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/585e38b7e_NPCsausland-Kopie6.png";
+        IMAGES.current.berlin_npc2 = new Image();
+        IMAGES.current.berlin_npc2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/307f1d6cc_NPCs-Kopie2.png";
+        IMAGES.current.berlin_npc3 = new Image();
+        IMAGES.current.berlin_npc3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/da5fbd8c4_NPCs-Kopie3.png";
+        IMAGES.current.berlin_npc4 = new Image();
+        IMAGES.current.berlin_npc4.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/878c25123_NPCs-Kopie4.png";
+        IMAGES.current.berlin_npc5 = new Image();
+        IMAGES.current.berlin_npc5.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a4b22dc4e_NPCs-Kopie5.png";
+        IMAGES.current.berlin_npc6 = new Image();
+        IMAGES.current.berlin_npc6.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b03586517_NPCs-Kopie6.png";
+        IMAGES.current.berlin_npc7 = new Image();
+        IMAGES.current.berlin_npc7.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b704d91a8_NPCsausland-Kopie2.png";
+        IMAGES.current.berlin_npc8 = new Image();
+        IMAGES.current.berlin_npc8.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/62250a871_NPCsausland-Kopie3.png";
+        IMAGES.current.berlin_npc9 = new Image();
+        IMAGES.current.berlin_npc9.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/70c0d25e3_NPCsausland-Kopie4.png";
+        IMAGES.current.berlin_npc10 = new Image();
+        IMAGES.current.berlin_npc10.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/967df675c_NPCsausland-Kopie5.png";
+        
+        // Berlin Birds (use gelsenkirchen birds)
+        IMAGES.current.berlin_bird1 = new Image();
+        IMAGES.current.berlin_bird1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/384355eea_Vogel1-Kopie.png";
+        IMAGES.current.berlin_bird2 = new Image();
+        IMAGES.current.berlin_bird2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1645a294b_Vogel2.png";
+        IMAGES.current.berlin_bird3 = new Image();
+        IMAGES.current.berlin_bird3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b87ae8a69_Vogel3-Kopie.png";
+        
+        // Berlin Drones (use gelsenkirchen drones)
+        IMAGES.current.berlin_drone1 = new Image();
+        IMAGES.current.berlin_drone1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/46a249e2b_Drohne-Kopie.png";
+        IMAGES.current.berlin_drone2 = new Image();
+        IMAGES.current.berlin_drone2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/44c7a0181_Drohne-Kopie2.png";
+        IMAGES.current.berlin_drone3 = new Image();
+        IMAGES.current.berlin_drone3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/21bacc964_Drohne-Kopie3.png";
+
         // Gelsenkirchen Street Holes
         IMAGES.current.gelsenkirchen_hole1 = new Image();
         IMAGES.current.gelsenkirchen_hole1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/c7c6aee17_strassenloch1.png";
@@ -2404,6 +2442,22 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 else if (e.spriteType === 'gelsenkirchen_drone4') useFullImage(IMAGES.current.gelsenkirchen_drone4);
                 else if (e.spriteType === 'gelsenkirchen_drone5') useFullImage(IMAGES.current.gelsenkirchen_drone5);
                 else if (e.spriteType === 'gelsenkirchen_drone6') useFullImage(IMAGES.current.gelsenkirchen_drone6);
+                else if (e.spriteType === 'berlin_npc1') useFullImage(IMAGES.current.berlin_npc1);
+                else if (e.spriteType === 'berlin_npc2') useFullImage(IMAGES.current.berlin_npc2);
+                else if (e.spriteType === 'berlin_npc3') useFullImage(IMAGES.current.berlin_npc3);
+                else if (e.spriteType === 'berlin_npc4') useFullImage(IMAGES.current.berlin_npc4);
+                else if (e.spriteType === 'berlin_npc5') useFullImage(IMAGES.current.berlin_npc5);
+                else if (e.spriteType === 'berlin_npc6') useFullImage(IMAGES.current.berlin_npc6);
+                else if (e.spriteType === 'berlin_npc7') useFullImage(IMAGES.current.berlin_npc7);
+                else if (e.spriteType === 'berlin_npc8') useFullImage(IMAGES.current.berlin_npc8);
+                else if (e.spriteType === 'berlin_npc9') useFullImage(IMAGES.current.berlin_npc9);
+                else if (e.spriteType === 'berlin_npc10') useFullImage(IMAGES.current.berlin_npc10);
+                else if (e.spriteType === 'berlin_bird1') useFullImage(IMAGES.current.berlin_bird1);
+                else if (e.spriteType === 'berlin_bird2') useFullImage(IMAGES.current.berlin_bird2);
+                else if (e.spriteType === 'berlin_bird3') useFullImage(IMAGES.current.berlin_bird3);
+                else if (e.spriteType === 'berlin_drone1') useFullImage(IMAGES.current.berlin_drone1);
+                else if (e.spriteType === 'berlin_drone2') useFullImage(IMAGES.current.berlin_drone2);
+                else if (e.spriteType === 'berlin_drone3') useFullImage(IMAGES.current.berlin_drone3);
                 else {
                     // Fallback to sheet (e.g. for dog or future ones)
                     sheet = IMAGES.current.enemiesSheet;
@@ -2440,6 +2494,15 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     } else if (e.spriteType === 'rooftop_sparrow') {
                     // Sparrow fast flapping
                     ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
+                    } else if (e.spriteType === 'berlin_npc1' || e.spriteType === 'berlin_npc2' || e.spriteType === 'berlin_npc3' || e.spriteType === 'berlin_npc4' || e.spriteType === 'berlin_npc5' || e.spriteType === 'berlin_npc6' || e.spriteType === 'berlin_npc7' || e.spriteType === 'berlin_npc8' || e.spriteType === 'berlin_npc9' || e.spriteType === 'berlin_npc10') {
+                    // Berlin NPCs walking animation
+                    ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
+                    } else if (e.spriteType === 'berlin_bird1' || e.spriteType === 'berlin_bird2' || e.spriteType === 'berlin_bird3') {
+                    // Berlin birds flapping
+                    ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
+                    } else if (e.spriteType === 'berlin_drone1' || e.spriteType === 'berlin_drone2' || e.spriteType === 'berlin_drone3') {
+                    // Berlin drones hovering
+                    ctx.translate(0, Math.sin(state.animFrame * 0.3) * 2);
                     } else if (e.spriteType === 'balloon') {
                     // Gentle float
                     ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);

@@ -1,21 +1,25 @@
 // Berlin Level Enemy Configuration
 
 const GROUND_ENEMIES = [
-    { type: 'gelsenkirchen_npc1', weight: 1 },
-    { type: 'gelsenkirchen_npc2', weight: 1 },
-    { type: 'gelsenkirchen_npc3', weight: 1 },
-    { type: 'gelsenkirchen_npc4', weight: 1 },
-    { type: 'gelsenkirchen_npc5', weight: 1 },
-    { type: 'gelsenkirchen_npc6', weight: 1 }
+    { type: 'berlin_npc1', weight: 1 },
+    { type: 'berlin_npc2', weight: 1 },
+    { type: 'berlin_npc3', weight: 1 },
+    { type: 'berlin_npc4', weight: 1 },
+    { type: 'berlin_npc5', weight: 1 },
+    { type: 'berlin_npc6', weight: 1 },
+    { type: 'berlin_npc7', weight: 1 },
+    { type: 'berlin_npc8', weight: 1 },
+    { type: 'berlin_npc9', weight: 1 },
+    { type: 'berlin_npc10', weight: 1 }
 ];
 
 const AIR_ENEMIES = [
-    { type: 'gelsenkirchen_bird1', weight: 2 },
-    { type: 'gelsenkirchen_bird2', weight: 2 },
-    { type: 'gelsenkirchen_bird3', weight: 2 },
-    { type: 'gelsenkirchen_drone1', weight: 1 },
-    { type: 'gelsenkirchen_drone2', weight: 1 },
-    { type: 'gelsenkirchen_drone3', weight: 1 }
+    { type: 'berlin_bird1', weight: 2 },
+    { type: 'berlin_bird2', weight: 2 },
+    { type: 'berlin_bird3', weight: 2 },
+    { type: 'berlin_drone1', weight: 1 },
+    { type: 'berlin_drone2', weight: 1 },
+    { type: 'berlin_drone3', weight: 1 }
 ];
 
 export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {

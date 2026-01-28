@@ -423,6 +423,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.berlinBackground = new Image();
         IMAGES.current.berlinBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25d9baf11_Hintergrund.png";
 
+        // Berlin Buildings
+        IMAGES.current.berlin_buildings = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/33aabd71e_HausLaden-Kopie.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/95d031b4e_HausLaden-Kopie2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/713495504_HausLaden-Kopie3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/0a208593d_HausLaden-Kopie4.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/53a83601a_HausLaden-Kopie5.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e09921ce7_HausLaden-Kopie6.png" }
+        ];
+        IMAGES.current.berlin_buildings.forEach(building => {
+            building.img.onerror = () => console.error('Failed to load Berlin building:', building.src);
+            building.img.src = building.src;
+        });
+
 
         
         // Downtown/Gelsenkirchen Buildings (Kneipen + Häuser)
@@ -648,6 +662,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
         gelsenkirchenVegetation: [], // Gelsenkirchen background vegetation
+        berlinBuildings: [], // Berlin scrolling buildings
         madridBuildings: [], // Madrid scrolling buildings
         madridTrees: [], // Madrid scrolling trees/buhses
         madridScenery: [], // Combined buildings and trees
@@ -1019,6 +1034,38 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             // Update positions and filter out offscreen buildings
             state.romeBuildings = state.romeBuildings.filter(building => {
+                building.x -= state.scrollSpeed;
+                return building.x > -building.width && 
+                       building.img && 
+                       building.img.complete && 
+                       building.img.naturalHeight > 0 && 
+                       building.img.naturalWidth > 0;
+            });
+        }
+
+        // Berlin Buildings Management
+        if (level === 'berlin' && IMAGES.current.berlin_buildings) {
+            // Add new building if needed
+            if (state.berlinBuildings.length === 0 || state.berlinBuildings[state.berlinBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
+                const buildingData = IMAGES.current.berlin_buildings[Math.floor(Math.random() * IMAGES.current.berlin_buildings.length)];
+                const buildingImg = buildingData?.img;
+
+                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.5;
+                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const buildingWidth = buildingImg.naturalWidth * scale;
+
+                    state.berlinBuildings.push({
+                        x: width,
+                        img: buildingImg,
+                        width: buildingWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen buildings
+            state.berlinBuildings = state.berlinBuildings.filter(building => {
                 building.x -= state.scrollSpeed;
                 return building.x > -building.width && 
                        building.img && 
@@ -1536,6 +1583,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
                 ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
             }
+        }
+
+        // Draw Berlin scrolling buildings - behind NPCs
+        if (level === 'berlin') {
+            const groundY = height * GROUND_Y_PCT;
+
+            state.berlinBuildings.forEach(building => {
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
         }
 
         // Draw Gelsenkirchen scrolling sidewalk and buildings

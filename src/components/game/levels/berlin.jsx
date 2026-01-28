@@ -42,7 +42,7 @@ export function spawnBerlinEnemy(width, height, groundY, scrollSpeed) {
     
     const enemy = {
         x: width + 50,
-        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 110,
+        y: isAir ? 50 + Math.random() * (groundY - 150) : groundY - 120,
         width: baseHeight * 0.7, // Auto aspect ratio
         height: baseHeight,
         vx: -scrollSpeed,

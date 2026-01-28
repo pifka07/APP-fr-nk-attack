@@ -55,7 +55,7 @@ export default function Europa() {
         paris: { score: 1000, coins: 500 },
         madrid: { score: 1000, coins: 500 },
         rome: { score: 1000, coins: 500 },
-        berlin: { score: 1000, coins: 500 }
+        berlin: { score: 0, coins: 0 }
     };
 
     const europeanLevels = [
@@ -87,8 +87,7 @@ export default function Europa() {
             id: 'berlin',
             name: 'Berlin',
             description: 'Brandenburger Tor, Fernsehturm, and currywurst!',
-            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/87f9f8d81_file_000000008e14722f878ca7562773ebbd.png',
-            comingSoon: true
+            image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25d9baf11_Hintergrund.png'
         }
     ].map(level => {
         const req = levelRequirements[level.id];

@@ -1051,7 +1051,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 const buildingImg = buildingData?.img;
 
                 if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
-                    const maxHeight = height * 0.5 * 0.7; // 30% smaller
+                    const maxHeight = height * 0.5 * 0.6; // 40% smaller
                     const scale = maxHeight / buildingImg.naturalHeight;
                     const buildingWidth = buildingImg.naturalWidth * scale;
 
@@ -1591,7 +1591,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             state.berlinBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 30; // 30 pixels higher
+                    const buildingY = groundY - building.height - 40; // 40 pixels higher
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });

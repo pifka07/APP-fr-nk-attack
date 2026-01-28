@@ -422,6 +422,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Berlin Level
         IMAGES.current.berlinBackground = new Image();
         IMAGES.current.berlinBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b925c70ec_Hintergrund.png";
+        IMAGES.current.berlinStreet = new Image();
+        IMAGES.current.berlinStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b323ca9ea_HintergrundStrasse.png";
 
         // Berlin Buildings
         IMAGES.current.berlin_buildings = [
@@ -670,7 +672,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         romeBuildings: [], // Rome scrolling buildings
         romeTrees: [], // Rome scrolling trees
         romeStreetX: 0, // Rome street scroll position
-        rooftopStreetX: 0 // Rooftop street scroll position
+        rooftopStreetX: 0, // Rooftop street scroll position
+        berlinStreetX: 0 // Berlin street scroll position
         });
 
     // Apply config
@@ -1004,6 +1007,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Rooftop Street Scrolling
         if (level === 'rooftop') {
             state.rooftopStreetX -= state.scrollSpeed;
+        }
+
+        // Berlin Street Scrolling
+        if (level === 'berlin') {
+            state.berlinStreetX -= state.scrollSpeed;
         }
 
         // Gelsenkirchen Sidewalk Scrolling
@@ -1585,7 +1593,26 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Berlin scrolling buildings - behind NPCs
+        // Draw Berlin scrolling street - below buildings
+        if (level === 'berlin' && isImageValid(IMAGES.current.berlinStreet)) {
+            const street = IMAGES.current.berlinStreet;
+            const streetHeight = 180;
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = height - streetHeight;
+
+            // Wrap around scrolling
+            const offset = state.berlinStreetX % streetWidth;
+
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
+            }
+        }
+
+        // Draw Berlin scrolling buildings - above street, behind NPCs
         if (level === 'berlin') {
             const groundY = height * GROUND_Y_PCT;
 

@@ -71,7 +71,7 @@ export class LevelManager {
             london: {
                 name: 'London',
                 groundY: 0.995,
-                music: 'https://codeskulptor-demos.commondatastorage.googleapis.com/sounddogs/soundtrack.mp3',
+                music: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg',
                 groundNPCs: ['tourist', 'business_person', 'london_cop', 'street_vendor', 'street_musician', 'london_car'],
                 airNPCs: ['london_pigeon', 'balloon'],
                 groundOffsets: {
@@ -82,6 +82,34 @@ export class LevelManager {
                     street_musician: 170,
                     london_car: 120
                 }
+            },
+            paris: {
+                name: 'Paris',
+                groundY: 0.995,
+                music: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg',
+                groundNPCs: [],
+                airNPCs: []
+            },
+            madrid: {
+                name: 'Madrid',
+                groundY: 0.995,
+                music: 'https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/music/race2.ogg',
+                groundNPCs: [],
+                airNPCs: []
+            },
+            rome: {
+                name: 'Rom',
+                groundY: 0.995,
+                music: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Evilution.ogg',
+                groundNPCs: [],
+                airNPCs: []
+            },
+            berlin: {
+                name: 'Berlin',
+                groundY: 0.995,
+                music: 'https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3',
+                groundNPCs: [],
+                airNPCs: []
             }
         };
 

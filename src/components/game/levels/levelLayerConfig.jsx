@@ -153,7 +153,7 @@ export const EXAMPLE_LEVEL_CONFIG = {
         ],
         spawnInterval: { min: 600, max: 900 },
         heightRange: { min: 0.4, max: 0.6 },
-        yOffset: -40
+        yOffset: -20
     },
     
     trees: {

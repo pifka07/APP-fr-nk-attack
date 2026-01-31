@@ -106,7 +106,7 @@ export class LevelManager {
             },
             berlin: {
                 name: 'Berlin',
-                groundY: 0.995,
+                groundY: 1.015,
                 music: 'https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3',
                 groundNPCs: [],
                 airNPCs: []

@@ -168,7 +168,7 @@ export const EXAMPLE_LEVEL_CONFIG = {
     
     ground: {
         image: 'URL_ZUR_STRASSE',
-        height: 270,
+        height: 220,
         repeat: true
     },
     

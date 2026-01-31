@@ -1673,7 +1673,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Berlin scrolling street - below buildings
         if (level === 'berlin' && isImageValid(IMAGES.current.berlinStreet)) {
             const street = IMAGES.current.berlinStreet;
-            const streetHeight = 150;
+            const streetHeight = 220;
             const streetScale = streetHeight / street.height;
             const streetWidth = street.width * streetScale;
             const streetY = height - streetHeight;

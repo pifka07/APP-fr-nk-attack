@@ -167,7 +167,7 @@ export const EXAMPLE_LEVEL_CONFIG = {
     },
     
     ground: {
-        image: 'URL_ZUR_STRASSE',
+        image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25c8ad032_HintergrundStrasse.png',
         height: 220,
         repeat: true
     },

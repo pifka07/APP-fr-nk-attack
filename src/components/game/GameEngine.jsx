@@ -1695,7 +1695,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             state.berlinBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
-                    const buildingY = groundY - building.height - 100; // 100 pixels higher (statt 40)
+                    const buildingY = groundY - building.height - 40; // 40 pixels higher
                     ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
                 }
             });

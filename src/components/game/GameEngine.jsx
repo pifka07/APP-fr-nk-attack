@@ -1851,7 +1851,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Paris scrolling street - behind NPCs
         if (level === 'paris' && isImageValid(IMAGES.current.parisStreet)) {
             const street = IMAGES.current.parisStreet;
-            const streetHeight = height / 3;
+            const streetHeight = 550;
             const streetScale = streetHeight / street.height;
             const streetWidth = street.width * streetScale;
             const streetY = height - streetHeight;

@@ -274,6 +274,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.paris_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2301b3f57_ChatGPTImage10Jan202618_52_29.png";
         IMAGES.current.paris_balloon = new Image();
         IMAGES.current.paris_balloon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/71bfd2309_Baloons.png";
+        IMAGES.current.parisStreet = new Image();
+        IMAGES.current.parisStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/b13a64a94_ChatGPTImage2Feb202617_20_52.png";
         IMAGES.current.londonForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/57b677041_Strasse-1.png";
         IMAGES.current.londonForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a85523873_Strasse-2.png";
         IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
@@ -627,6 +629,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (IMAGES.current.londonForeground2) criticalImages.push(IMAGES.current.londonForeground2);
             if (IMAGES.current.londonForeground3) criticalImages.push(IMAGES.current.londonForeground3);
         }
+        if (level === 'paris') {
+            if (IMAGES.current.parisStreet) criticalImages.push(IMAGES.current.parisStreet);
+        }
 
 
         let loadedCount = 0;
@@ -717,7 +722,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         romeTrees: [], // Rome scrolling trees
         romeStreetX: 0, // Rome street scroll position
         rooftopStreetX: 0, // Rooftop street scroll position
-        berlinStreetX: 0 // Berlin street scroll position
+        berlinStreetX: 0, // Berlin street scroll position
+        parisStreetX: 0 // Paris street scroll position
         });
 
     // Apply config
@@ -769,6 +775,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.romeTrees = [];
             gameStateRef.current.romeStreetX = 0;
             gameStateRef.current.rooftopStreetX = 0;
+            gameStateRef.current.parisStreetX = 0;
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -1056,6 +1063,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Berlin Street Scrolling
         if (level === 'berlin') {
             state.berlinStreetX -= state.scrollSpeed;
+        }
+
+        // Paris Street Scrolling
+        if (level === 'paris') {
+            state.parisStreetX -= state.scrollSpeed;
         }
 
 
@@ -1820,6 +1832,25 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
 
+
+        // Draw Paris scrolling street - behind NPCs
+        if (level === 'paris' && isImageValid(IMAGES.current.parisStreet)) {
+            const street = IMAGES.current.parisStreet;
+            const streetHeight = 550;
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = height - streetHeight;
+
+            // Wrap around scrolling
+            const offset = state.parisStreetX % streetWidth;
+
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
+            }
+        }
 
         // Draw Rooftop scrolling street
         if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopStreet)) {

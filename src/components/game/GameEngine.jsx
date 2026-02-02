@@ -1535,7 +1535,19 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         ctx.clearRect(0, 0, width, height);
 
         // --- BACKGROUND RENDERING ---
-        if (level === 'gelsenkirchen' && isImageValid(IMAGES.current.background)) {
+        if (level === 'paris' && isImageValid(IMAGES.current.background)) {
+            // Paris: Scrolling background (image width distributed over 20000 meters)
+            const bg = IMAGES.current.background;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+
+            // Scroll: image width over 20000 meters distance
+            const bgOffset = ((state.distance / 20000) * w) % w;
+
+            ctx.drawImage(bg, -bgOffset, 0, w, h);
+            ctx.drawImage(bg, w - bgOffset, 0, w, h);
+        } else if (level === 'gelsenkirchen' && isImageValid(IMAGES.current.background)) {
             // Gelsenkirchen: Scrolling background (image width distributed over 20000 meters)
             const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
@@ -1574,18 +1586,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const x = (width - w) / 2;
             const y = (height - h) / 2;
             ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'paris' && isImageValid(IMAGES.current.background)) {
-            // Paris: Scrolling background (image width distributed over 20000 meters)
-            const bg = IMAGES.current.background;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-
-            // Scroll: image width over 20000 meters distance
-            const bgOffset = ((state.distance / 20000) * w) % w;
-
-            ctx.drawImage(bg, -bgOffset, 0, w, h);
-            ctx.drawImage(bg, w - bgOffset, 0, w, h);
         } else if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopBackground)) {
             // Rooftop: Fixed background (no scrolling)
             const bg = IMAGES.current.rooftopBackground;

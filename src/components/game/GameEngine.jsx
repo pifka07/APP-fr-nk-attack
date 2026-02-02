@@ -279,14 +279,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         IMAGES.current.londonForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/e5a89918f_Strasse-3.png";
         IMAGES.current.rooftopBackground = new Image();
         IMAGES.current.rooftopBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f77ca6e93_Hintergrund.png";
-        IMAGES.current.parisForeground1 = new Image();
-        IMAGES.current.parisForeground2 = new Image();
-        IMAGES.current.parisForeground3 = new Image();
-        IMAGES.current.parisForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/740df74f2_2-Vordergrund1.png";
-        IMAGES.current.parisForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8817be05_2-Vordergrund2.png";
-        IMAGES.current.parisForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a863d9d95_2-Vordergrund3.png";
-        IMAGES.current.parisBackground = new Image();
-        IMAGES.current.parisBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bb32c2d58_2-Hintergrund2.png";
+        IMAGES.current.parisStreet = new Image();
+        IMAGES.current.parisStreet.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/25c8ad032_HintergrundStrasse.png";
         IMAGES.current.madridBackground = new Image();
         IMAGES.current.madridBackground.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/e8e4bed57_Hintergrund2.png";
         IMAGES.current.madridStreet = new Image();
@@ -568,6 +562,29 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         });
 
         // Madrid Buildings
+        // Paris Buildings
+        IMAGES.current.paris_buildings = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/740df74f2_2-Vordergrund1.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8817be05_2-Vordergrund2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/a863d9d95_2-Vordergrund3.png" }
+        ];
+        IMAGES.current.paris_buildings.forEach(building => {
+            building.img.onerror = () => console.error('Failed to load Paris building:', building.src);
+            building.img.src = building.src;
+        });
+
+        // Paris Trees/Bushes
+        IMAGES.current.paris_trees = [
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/ce9a6acff_Hintergrund1.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/7f512e9b6_Hintergrund2.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/d8f288565_Hintergrund3.png" },
+            { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/bf672941d_Hintergrund4.png" }
+        ];
+        IMAGES.current.paris_trees.forEach(tree => {
+            tree.img.onerror = () => console.error('Failed to load Paris tree:', tree.src);
+            tree.img.src = tree.src;
+        });
+
         IMAGES.current.madrid_buildings = [
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/1a977495f_Haus3-Kopie3.png" },
             { img: new Image(), src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/800a80db8_Haus3-Kopie.png" },
@@ -633,10 +650,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (IMAGES.current.londonForeground3) criticalImages.push(IMAGES.current.londonForeground3);
         }
         if (level === 'paris') {
-            if (IMAGES.current.parisBackground) criticalImages.push(IMAGES.current.parisBackground);
-            if (IMAGES.current.parisForeground1) criticalImages.push(IMAGES.current.parisForeground1);
-            if (IMAGES.current.parisForeground2) criticalImages.push(IMAGES.current.parisForeground2);
-            if (IMAGES.current.parisForeground3) criticalImages.push(IMAGES.current.parisForeground3);
+            if (IMAGES.current.parisStreet) criticalImages.push(IMAGES.current.parisStreet);
         }
 
         let loadedCount = 0;
@@ -727,7 +741,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         romeTrees: [], // Rome scrolling trees
         romeStreetX: 0, // Rome street scroll position
         rooftopStreetX: 0, // Rooftop street scroll position
-        berlinStreetX: 0 // Berlin street scroll position
+        berlinStreetX: 0, // Berlin street scroll position
+        parisStreetX: 0, // Paris street scroll position
+        parisBuildings: [], // Paris scrolling buildings
+        parisTrees: [] // Paris scrolling trees
         });
 
     // Apply config
@@ -779,6 +796,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.romeTrees = [];
             gameStateRef.current.romeStreetX = 0;
             gameStateRef.current.rooftopStreetX = 0;
+            gameStateRef.current.parisStreetX = 0;
+            gameStateRef.current.parisBuildings = [];
+            gameStateRef.current.parisTrees = [];
 
             // Initialize Poop Tank
             const config = getEffectiveConfig();
@@ -1068,6 +1088,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             state.berlinStreetX -= state.scrollSpeed;
         }
 
+        // Paris Street Scrolling
+        if (level === 'paris') {
+            state.parisStreetX -= state.scrollSpeed;
+        }
+
         // Gelsenkirchen Sidewalk Scrolling
         if (level === 'gelsenkirchen') {
             state.gelsenkirchenSidewalkX -= state.scrollSpeed;
@@ -1284,6 +1309,70 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
 
+
+        // Paris Buildings Management
+        if (level === 'paris' && IMAGES.current.paris_buildings) {
+            // Add new building if needed
+            if (state.parisBuildings.length === 0 || state.parisBuildings[state.parisBuildings.length - 1].x < width - (400 + Math.random() * 600)) {
+                const buildingData = IMAGES.current.paris_buildings[Math.floor(Math.random() * IMAGES.current.paris_buildings.length)];
+                const buildingImg = buildingData?.img;
+
+                if (buildingImg && buildingImg.complete && buildingImg.naturalHeight > 0 && buildingImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.5;
+                    const scale = maxHeight / buildingImg.naturalHeight;
+                    const buildingWidth = buildingImg.naturalWidth * scale;
+
+                    state.parisBuildings.push({
+                        x: width,
+                        img: buildingImg,
+                        width: buildingWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen buildings
+            state.parisBuildings = state.parisBuildings.filter(building => {
+                building.x -= state.scrollSpeed;
+                return building.x > -building.width && 
+                       building.img && 
+                       building.img.complete && 
+                       building.img.naturalHeight > 0 && 
+                       building.img.naturalWidth > 0;
+            });
+        }
+
+        // Paris Trees Management
+        if (level === 'paris' && IMAGES.current.paris_trees) {
+            // Add new tree if needed
+            if (state.parisTrees.length === 0 || state.parisTrees[state.parisTrees.length - 1].x < width - (200 + Math.random() * 400)) {
+                const treeData = IMAGES.current.paris_trees[Math.floor(Math.random() * IMAGES.current.paris_trees.length)];
+                const treeImg = treeData?.img;
+
+                if (treeImg && treeImg.complete && treeImg.naturalHeight > 0 && treeImg.naturalWidth > 0) {
+                    const maxHeight = height * 0.35;
+                    const scale = maxHeight / treeImg.naturalHeight;
+                    const treeWidth = treeImg.naturalWidth * scale;
+
+                    state.parisTrees.push({
+                        x: width,
+                        img: treeImg,
+                        width: treeWidth,
+                        height: maxHeight
+                    });
+                }
+            }
+
+            // Update positions and filter out offscreen trees
+            state.parisTrees = state.parisTrees.filter(tree => {
+                tree.x -= state.scrollSpeed;
+                return tree.x > -tree.width && 
+                       tree.img && 
+                       tree.img.complete && 
+                       tree.img.naturalHeight > 0 && 
+                       tree.img.naturalWidth > 0;
+            });
+        }
 
         // Madrid Scenery Management (Buildings and Trees combined)
         if (level === 'madrid' && IMAGES.current.madrid_buildings && IMAGES.current.madrid_trees) {
@@ -1580,15 +1669,18 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const x = (width - w) / 2;
             const y = (height - h) / 2;
             ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'paris' && isImageValid(IMAGES.current.parisBackground)) {
-            // Paris: Fixed background (no scrolling)
-            const bg = IMAGES.current.parisBackground;
+        } else if (level === 'paris' && isImageValid(IMAGES.current.background)) {
+            // Paris: Scrolling background (image width distributed over 20000 meters)
+            const bg = IMAGES.current.background;
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
+
+            // Scroll: image width over 20000 meters distance
+            const bgOffset = ((state.distance / 20000) * w) % w;
+
+            ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
+            ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
         } else if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopBackground)) {
             // Rooftop: Fixed background (no scrolling)
             const bg = IMAGES.current.rooftopBackground;
@@ -1843,45 +1935,42 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             }
         }
 
-        // Draw Paris scrolling foreground (3 images in sequence) - behind NPCs
-        if (level === 'paris' && isImageValid(IMAGES.current.parisForeground1) && 
-            isImageValid(IMAGES.current.parisForeground2) && isImageValid(IMAGES.current.parisForeground3)) {
+        // Draw Paris scrolling buildings - behind NPCs
+        if (level === 'paris') {
+            const groundY = height * GROUND_Y_PCT;
 
-            const fg1 = IMAGES.current.parisForeground1;
-            const fg2 = IMAGES.current.parisForeground2;
-            const fg3 = IMAGES.current.parisForeground3;
+            state.parisBuildings.forEach(building => {
+                if (isImageValid(building.img)) {
+                    const buildingY = groundY - building.height - 30;
+                    ctx.drawImage(building.img, building.x, buildingY, building.width, building.height);
+                }
+            });
 
-            // Scale all to same height
-            const fgScale = height / fg1.height;
-            const fgW1 = fg1.width * fgScale;
-            const fgW2 = fg2.width * fgScale;
-            const fgW3 = fg3.width * fgScale;
-            const fgH = height;
+            // Draw Paris scrolling trees - in front of buildings, behind street
+            state.parisTrees.forEach(tree => {
+                if (isImageValid(tree.img)) {
+                    const treeY = groundY - tree.height - 20;
+                    ctx.drawImage(tree.img, tree.x, treeY, tree.width, tree.height);
+                }
+            });
+        }
 
-            // Total width of all 3 images
-            const totalWidth = fgW1 + fgW2 + fgW3;
+        // Draw Paris scrolling street - below buildings, behind NPCs
+        if (level === 'paris' && isImageValid(IMAGES.current.parisStreet)) {
+            const street = IMAGES.current.parisStreet;
+            const streetHeight = 220;
+            const streetScale = streetHeight / street.height;
+            const streetWidth = street.width * streetScale;
+            const streetY = height - streetHeight;
 
-            // Scroll at game speed
-            const fgOffset = (state.distance * 10) % totalWidth;
+            // Wrap around scrolling
+            const offset = state.parisStreetX % streetWidth;
 
-            // Draw at bottom
-            const fgY = 0;
-
-            // Determine which images to draw based on offset
-            if (fgOffset < fgW1) {
-                ctx.drawImage(fg1, -fgOffset, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW1 - fgOffset, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW1 + fgW2 - fgOffset, fgY, fgW3, fgH);
-            } else if (fgOffset < fgW1 + fgW2) {
-                const offset2 = fgOffset - fgW1;
-                ctx.drawImage(fg2, -offset2, fgY, fgW2, fgH);
-                ctx.drawImage(fg3, fgW2 - offset2, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW2 + fgW3 - offset2, fgY, fgW1, fgH);
-            } else {
-                const offset3 = fgOffset - fgW1 - fgW2;
-                ctx.drawImage(fg3, -offset3, fgY, fgW3, fgH);
-                ctx.drawImage(fg1, fgW3 - offset3, fgY, fgW1, fgH);
-                ctx.drawImage(fg2, fgW3 + fgW1 - offset3, fgY, fgW2, fgH);
+            // Draw two copies for seamless scrolling
+            ctx.drawImage(street, offset, streetY, streetWidth, streetHeight);
+            ctx.drawImage(street, offset + streetWidth, streetY, streetWidth, streetHeight);
+            if (offset < 0) {
+                ctx.drawImage(street, offset - streetWidth, streetY, streetWidth, streetHeight);
             }
         }
 

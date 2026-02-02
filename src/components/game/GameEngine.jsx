@@ -161,7 +161,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'london') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7786d17f6_ChatGPTImage7Jan202610_45_40.png";
         } else if (level === 'paris') {
-            IMAGES.current.background.src = "";
+            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/50debf740_2-Hintergrund2.png";
         } else if (level === 'rooftop') {
             IMAGES.current.background.src = "";
             IMAGES.current.rooftopBackground = new Image();

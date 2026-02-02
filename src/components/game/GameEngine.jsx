@@ -161,7 +161,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         } else if (level === 'london') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7786d17f6_ChatGPTImage7Jan202610_45_40.png";
         } else if (level === 'paris') {
-            IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/f80023314_ChatGPTImage2Feb202616_11_37.png";
+            IMAGES.current.background.src = "";
         } else if (level === 'rooftop') {
             IMAGES.current.background.src = "";
             IMAGES.current.rooftopBackground = new Image();
@@ -1582,18 +1582,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const x = (width - w) / 2;
             const y = (height - h) / 2;
             ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'paris' && isImageValid(IMAGES.current.background)) {
-            // Paris: Scrolling background (image width distributed over 20000 meters)
-            const bg = IMAGES.current.background;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-
-            // Scroll: image width over 20000 meters distance
-            const bgOffset = ((state.distance / 20000) * w) % w;
-
-            ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
-            ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
         } else if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopBackground)) {
             // Rooftop: Fixed background (no scrolling)
             const bg = IMAGES.current.rooftopBackground;

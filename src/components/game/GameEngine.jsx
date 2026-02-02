@@ -1854,7 +1854,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const streetHeight = 220;
             const streetScale = streetHeight / street.height;
             const streetWidth = street.width * streetScale;
-            const streetY = height - streetHeight;
+            const streetY = height - streetHeight - 50;
 
             // Wrap around scrolling
             const offset = state.parisStreetX % streetWidth;

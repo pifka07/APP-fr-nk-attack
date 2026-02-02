@@ -1008,7 +1008,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Floor/Ceiling collision
-        const groundY = height * GROUND_Y_PCT;
+        const groundY = level === 'paris' ? (height * GROUND_Y_PCT - 50) : (height * GROUND_Y_PCT);
         const topMargin = 20;
         const bottomMargin = 20;
 

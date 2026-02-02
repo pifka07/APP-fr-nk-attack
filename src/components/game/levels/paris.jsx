@@ -26,7 +26,7 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 130;
             enemy.height = 170;
-            enemy.y = parisGroundY - 120;
+            enemy.y = parisGroundY - 60;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 50;
         } else if (rand < 0.45) {
@@ -35,7 +35,7 @@ export const spawnParisEnemy = (width, height, groundY, scrollSpeed) => {
             enemy.isTarget = true;
             enemy.width = 140;
             enemy.height = 180;
-            enemy.y = parisGroundY - 110;
+            enemy.y = parisGroundY - 70;
             enemy.vx = -scrollSpeed;
             enemy.scoreValue = 60;
         } else if (rand < 0.65) {

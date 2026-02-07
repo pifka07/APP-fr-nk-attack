@@ -253,7 +253,8 @@ export default function Missions() {
                                 </CardContent>
                             </Card>
                         </motion.div>
-            </div>
-        </div>
-    );
-}
+                        </div>
+                        </div>
+                        </div>
+                        );
+                        }

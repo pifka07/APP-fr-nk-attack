@@ -19,14 +19,41 @@ export default function Layout({ children, currentPageName }) {
                 .font-titan {
                     font-family: 'Titan One', cursive;
                 }
+                
+                /* Dark mode variables - system aware */
                 :root {
                     --color-primary: #2DD4BF;
                     --color-secondary: #9333EA;
                     --color-accent: #FACC15;
+                    --bg-primary: #0f172a;
+                    --bg-secondary: #1e293b;
+                    --text-primary: #f1f5f9;
+                    --text-secondary: #94a3b8;
                 }
+                
+                @media (prefers-color-scheme: dark) {
+                    :root {
+                        --bg-primary: #0f172a;
+                        --bg-secondary: #1e293b;
+                        --text-primary: #f1f5f9;
+                        --text-secondary: #94a3b8;
+                    }
+                }
+                
                 body {
                     overscroll-behavior: none;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    user-select: none;
                 }
+                
+                /* Allow text selection for content areas */
+                input, textarea, [contenteditable] {
+                    -webkit-user-select: text;
+                    -moz-user-select: text;
+                    user-select: text;
+                }
+                
                 /* Safe area insets for mobile notches */
                 .safe-area-pt {
                     padding-top: env(safe-area-inset-top);

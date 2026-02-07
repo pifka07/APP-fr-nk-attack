@@ -12,43 +12,83 @@ export default function Leaderboard() {
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
     const [playerRanks, setPlayerRanks] = useState({});
+    const [refreshing, setRefreshing] = useState(false);
+    const [touchStart, setTouchStart] = useState(0);
+    const [pullDistance, setPullDistance] = useState(0);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch top 10 leaderboard entries sorted by score descending
-                const [topScores, user] = await Promise.all([
-                    base44.entities.LeaderboardEntry.list('-score', 10),
-                    base44.auth.me().catch(() => null)
-                ]);
-                setLeaders(topScores);
-                setCurrentUser(user);
-                
-                // Fetch player stats for each leaderboard entry to calculate ranks
-                const ranks = {};
-                for (const entry of topScores) {
-                    if (entry.user_id) {
-                        try {
-                            const userStats = await base44.entities.User.filter({ id: entry.user_id });
-                            if (userStats.length > 0) {
-                                const stats = userStats[0];
-                                const rankInfo = calculatePlayerRank(stats.total_score || 0, stats.total_distance || 0);
-                                ranks[entry.user_id] = rankInfo.player_level;
-                            }
-                        } catch (err) {
-                            console.error("Could not fetch stats for user", entry.user_id);
+    const fetchData = async (isRefresh = false) => {
+        try {
+            if (isRefresh) setRefreshing(true);
+            else setLoading(true);
+            
+            // Fetch top 10 leaderboard entries sorted by score descending
+            const [topScores, user] = await Promise.all([
+                base44.entities.LeaderboardEntry.list('-score', 10),
+                base44.auth.me().catch(() => null)
+            ]);
+            setLeaders(topScores);
+            setCurrentUser(user);
+            
+            // Fetch player stats for each leaderboard entry to calculate ranks
+            const ranks = {};
+            for (const entry of topScores) {
+                if (entry.user_id) {
+                    try {
+                        const userStats = await base44.entities.User.filter({ id: entry.user_id });
+                        if (userStats.length > 0) {
+                            const stats = userStats[0];
+                            const rankInfo = calculatePlayerRank(stats.total_score || 0, stats.total_distance || 0);
+                            ranks[entry.user_id] = rankInfo.player_level;
                         }
+                    } catch (err) {
+                        console.error("Could not fetch stats for user", entry.user_id);
                     }
                 }
-                setPlayerRanks(ranks);
-            } catch (error) {
-                console.error("Failed to fetch leaderboard", error);
-            } finally {
-                setLoading(false);
             }
-        };
+            setPlayerRanks(ranks);
+            
+            if (isRefresh) {
+                toast.success('Leaderboard refreshed!');
+            }
+        } catch (error) {
+            console.error("Failed to fetch leaderboard", error);
+            if (isRefresh) {
+                toast.error('Failed to refresh');
+            }
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+            setPullDistance(0);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
+
+    const handleTouchStart = (e) => {
+        if (window.scrollY === 0) {
+            setTouchStart(e.touches[0].clientY);
+        }
+    };
+
+    const handleTouchMove = (e) => {
+        if (touchStart > 0 && window.scrollY === 0) {
+            const distance = e.touches[0].clientY - touchStart;
+            if (distance > 0) {
+                setPullDistance(Math.min(distance, 100));
+            }
+        }
+    };
+
+    const handleTouchEnd = () => {
+        if (pullDistance > 60) {
+            fetchData(true);
+        } else {
+            setPullDistance(0);
+        }
+        setTouchStart(0);
+    };
 
     const getRankIcon = (index) => {
         switch (index) {
@@ -60,23 +100,27 @@ export default function Leaderboard() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[45px] pb-[15px] relative overflow-hidden">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-8 relative z-10">
-                <Link to={createPageUrl('Home')}>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-slate-800 select-none">
-                        <ArrowLeft className="w-6 h-6" />
-                    </Button>
-                </Link>
-                <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 uppercase tracking-wider">
-                    Highscores
-                </h1>
-            </div>
+        <div 
+            className="min-h-screen bg-slate-900 text-slate-100 relative overflow-hidden select-none"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
+            {pullDistance > 0 && (
+                <div 
+                    className="absolute top-0 left-0 right-0 flex justify-center items-center transition-all z-50"
+                    style={{ height: `${pullDistance}px` }}
+                >
+                    <RefreshCw className={`w-6 h-6 text-teal-400 ${pullDistance > 60 ? 'animate-spin' : ''}`} />
+                </div>
+            )}
+            
+            <MobileHeader title="Highscores" showBack={true} backTo={createPageUrl('Home')} />
 
-            <div className="max-w-md mx-auto space-y-4 relative z-10 pb-20">
-                {loading ? (
+            <div className="max-w-md mx-auto space-y-4 relative z-10 p-4 pb-20">
+                {(loading || refreshing) && !pullDistance ? (
                     <div className="text-center py-20 text-slate-500 animate-pulse">
-                        Loading champions...
+                        {refreshing ? 'Refreshing...' : 'Loading champions...'}
                     </div>
                 ) : (
                     <>

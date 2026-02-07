@@ -9,6 +9,7 @@ import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Coins, Zap, Palette, Lock, Check } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import MobileHeader from '@/components/MobileHeader';
 
 export default function Shop() {
     const [user, setUser] = useState(null);
@@ -108,6 +109,18 @@ export default function Shop() {
             return;
         }
 
+        // Optimistic update
+        const previousCoins = user.total_coins;
+        const newCoins = previousCoins - skin.cost_coins;
+        
+        if (newCoins < 0) {
+            toast.error(`Not enough coins! Need ${skin.cost_coins}, have ${previousCoins}`);
+            return;
+        }
+        
+        setUser({ ...user, total_coins: newCoins });
+        setPlayerSkins([...playerSkins, { skin_id: skin.id, owned: true, user_id: user.id }]);
+
         try {
             console.log('Calling buySkin with skin.id:', skin.id);
             const response = await base44.functions.invoke('buySkin', { 
@@ -118,6 +131,10 @@ export default function Shop() {
             console.log('Response data:', response.data);
 
             if (!response.data.success) {
+                // Revert optimistic update on failure
+                setUser({ ...user, total_coins: previousCoins });
+                setPlayerSkins(playerSkins);
+                
                 const reason = response.data.reason;
                 const message = response.data.message;
                 console.log('❌ Purchase failed:', reason, message);
@@ -135,8 +152,12 @@ export default function Shop() {
             }
 
             toast.success(`Unlocked ${skin.name}!`);
-            fetchData();
+            fetchData(); // Sync with server
         } catch (error) {
+            // Revert optimistic update on error
+            setUser({ ...user, total_coins: previousCoins });
+            setPlayerSkins(playerSkins);
+            
             console.error("❌ Skin purchase error:", error);
             console.error("Error response:", error.response?.data);
             const errorData = error.response?.data;
@@ -154,11 +175,16 @@ export default function Shop() {
             return;
         }
 
+        // Optimistic update
+        const previousSkin = user.equipped_skin;
+        setUser({ ...user, equipped_skin: skinKey });
+
         try {
             await base44.auth.updateMe({ equipped_skin: skinKey });
             toast.success("Skin Equipped!");
-            fetchData();
         } catch (error) {
+            // Revert on error
+            setUser({ ...user, equipped_skin: previousSkin });
             toast.error("Failed to equip skin.");
         }
     };
@@ -166,21 +192,22 @@ export default function Shop() {
     if (loading) return <div className="flex justify-center items-center h-screen text-teal-400">Loading Shop...</div>;
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20 select-none">
-            <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
-                <div className="flex items-center gap-2">
-                    <Link to={createPageUrl('Home')}>
-                        <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700 select-none">
-                            <ArrowLeft className="w-6 h-6" />
-                        </Button>
-                    </Link>
-                    <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400 ml-2">SHOP</h1>
-                </div>
-                <div className="flex items-center bg-slate-800 px-4 py-2 rounded-full border-2 border-yellow-500/50 shadow-lg">
-                    <Coins className="w-5 h-5 text-yellow-400 mr-2" />
-                    <span className="font-mono font-bold text-xl text-yellow-400">{user?.total_coins || 0}</span>
+        <div className="min-h-screen bg-slate-900 text-slate-100 pb-20 select-none">
+            <div className="sticky top-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800 safe-area-pt">
+                <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400 uppercase tracking-wider">
+                            SHOP
+                        </h1>
+                    </div>
+                    <div className="flex items-center bg-slate-800 px-4 py-2 rounded-full border-2 border-yellow-500/50 shadow-lg">
+                        <Coins className="w-5 h-5 text-yellow-400 mr-2" />
+                        <span className="font-mono font-bold text-xl text-yellow-400">{user?.total_coins || 0}</span>
+                    </div>
                 </div>
             </div>
+            
+            <div className="p-4">
 
             <Tabs defaultValue="skins" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-slate-800 mb-6">
@@ -284,6 +311,7 @@ export default function Shop() {
                     })}
                 </TabsContent>
             </Tabs>
+            </div>
         </div>
     );
 }

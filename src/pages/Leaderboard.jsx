@@ -64,7 +64,7 @@ export default function Leaderboard() {
             {/* Header */}
             <div className="flex items-center gap-4 mb-8 relative z-10">
                 <Link to={createPageUrl('Home')}>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-slate-800">
+                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-slate-800 select-none">
                         <ArrowLeft className="w-6 h-6" />
                     </Button>
                 </Link>

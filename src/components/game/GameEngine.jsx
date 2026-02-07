@@ -1030,6 +1030,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball' && p.type !== 'icecube') {
                 p.vy += GRAVITY * 0.5; // accelerate down
             }
+            // Ice cubes fall slower
+            if (p.type === 'icecube') {
+                p.vy += GRAVITY * 0.3;
+            }
             // Bubbles float slowly upward
             if (p.type === 'bubble') {
                 p.vy -= 0.1;

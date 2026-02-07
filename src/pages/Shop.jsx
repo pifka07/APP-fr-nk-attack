@@ -166,11 +166,11 @@ export default function Shop() {
     if (loading) return <div className="flex justify-center items-center h-screen text-teal-400">Loading Shop...</div>;
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
+        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20 select-none">
             <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <div className="flex items-center gap-2">
                     <Link to={createPageUrl('Home')}>
-                        <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700">
+                        <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700 select-none">
                             <ArrowLeft className="w-6 h-6" />
                         </Button>
                     </Link>
@@ -200,7 +200,7 @@ export default function Shop() {
 
                         return (
                             <motion.div key={skin.id} whileTap={{ scale: 0.95 }}>
-                                <Card className={`bg-slate-800 border-2 overflow-hidden h-full flex flex-col ${isEquipped ? 'border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'border-slate-700'}`}>
+                                <Card className={`bg-slate-800 border-2 overflow-hidden h-full flex flex-col select-none ${isEquipped ? 'border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'border-slate-700'}`}>
                                     <div className="h-24 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${skin.color_primary || '#333'}, ${skin.color_secondary || '#000'})` }}>
                                         <img 
                                             src={skin.image_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d027d1bd2_ChatGPTImage4Dez202509_43_52.png"}
@@ -247,7 +247,7 @@ export default function Shop() {
                         const canAfford = (user?.total_coins || 0) >= nextCost;
 
                         return (
-                            <Card key={upgrade.id} className="bg-slate-800 border-slate-700">
+                            <Card key={upgrade.id} className="bg-slate-800 border-slate-700 select-none">
                                 <CardHeader className="pb-2">
                                     <div className="flex justify-between">
                                         <CardTitle className="text-lg font-bold text-teal-300">{upgrade.name}</CardTitle>

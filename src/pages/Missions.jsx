@@ -13,11 +13,11 @@ export default function Missions() {
     const levels = [];
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
+        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20 select-none">
             {/* Header */}
             <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
                 <Link to={createPageUrl('Home')}>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white select-none">
                         <ArrowLeft className="w-6 h-6" />
                     </Button>
                 </Link>
@@ -35,7 +35,7 @@ export default function Missions() {
                         <Link 
                             to={level.locked ? '#' : (level.id === 'europa' ? createPageUrl('Europa') : `${createPageUrl('Game')}?level=${level.id}`)}
                         >
-                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
+                            <Card className={`relative overflow-hidden border-4 transition-all duration-300 group select-none ${level.locked ? 'border-slate-700 opacity-70' : 'border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]'}`}>
                                 {/* Background Image */}
                                 <div className="absolute inset-0 z-0">
                                     <img 
@@ -76,7 +76,7 @@ export default function Missions() {
                         transition={{ delay: 0 }}
                     >
                         <Link to={createPageUrl('Training')}>
-                            <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+                            <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] select-none">
                                 <div className="absolute inset-0 z-0">
                                     <img 
                                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png" 
@@ -109,7 +109,7 @@ export default function Missions() {
                             transition={{ delay: 0.1 }}
                         >
                             <Link to={createPageUrl('Europa')}>
-                                <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]">
+                                <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-teal-500 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] select-none">
                                     <div className="absolute inset-0 z-0">
                                         <img 
                                             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/98fa42c68_file_000000001534722f810de02738a4050d.png" 
@@ -141,7 +141,7 @@ export default function Missions() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <Card className="relative overflow-hidden border-4 transition-all duration-300 border-slate-700 opacity-70">
+                            <Card className="relative overflow-hidden border-4 transition-all duration-300 border-slate-700 opacity-70 select-none">
                                 <div className="absolute inset-0 z-0">
                                     <img 
                                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png" 

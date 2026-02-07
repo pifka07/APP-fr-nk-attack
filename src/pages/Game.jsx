@@ -545,7 +545,7 @@ export default function Game() {
 
                                     <Button 
                                         size="lg" 
-                                        className="w-full h-16 text-3xl font-titan bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider"
+                                        className="w-full h-16 text-3xl font-titan bg-orange-500 hover:bg-orange-400 text-white border-4 border-slate-900 shadow-[0_6px_0_#0f172a] active:shadow-none active:translate-y-1.5 transition-all mb-4 rounded-full uppercase tracking-wider select-none"
                                         onClick={(e) => { e.stopPropagation(); startGame(); }}
                                     >
                                         PLAY

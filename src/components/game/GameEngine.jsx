@@ -927,9 +927,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         });
     };
 
-    const spawnMilestoneCoins = (width, height, numRows) => {
+    const spawnMilestoneCoins = (width, height, numRows, groundY) => {
         const state = gameStateRef.current;
-        const groundY = height * GROUND_Y_PCT;
         const spacing = 70; // Vertical spacing between coins
         const startY = 100; // Start from top (80 + 20px margin)
 

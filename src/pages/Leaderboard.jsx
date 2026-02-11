@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Trophy, Medal, User } from "lucide-react";
+import { ArrowLeft, Trophy, Medal, User, RefreshCw } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { calculatePlayerRank } from '@/components/game/PlayerRanks';
+import MobileHeader from '@/components/MobileHeader';
 
 export default function Leaderboard() {
     const [leaders, setLeaders] = useState([]);

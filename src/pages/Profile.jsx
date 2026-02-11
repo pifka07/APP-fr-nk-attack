@@ -10,6 +10,13 @@ import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, Trash2 } from "lucide-react";
 import { calculatePlayerRank } from '@/components/game/PlayerRanks';
 import { Progress } from "@/components/ui/progress";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -22,6 +29,7 @@ export default function Profile() {
     const [deleting, setDeleting] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [rankInfo, setRankInfo] = useState(null);
+    const [showRanksDialog, setShowRanksDialog] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -113,7 +121,10 @@ export default function Profile() {
             {/* Profile Header */}
             <div className="flex flex-col items-center mb-8">
                 {rankInfo && (
-                    <div className="mb-4">
+                    <button 
+                        onClick={() => setShowRanksDialog(true)}
+                        className="mb-4 cursor-pointer hover:scale-105 transition-transform active:scale-95"
+                    >
                         <img 
                             src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${
                                 rankInfo.player_level === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
@@ -125,7 +136,7 @@ export default function Profile() {
                             alt={rankInfo.player_rank_name}
                             className="w-48 h-48 object-contain drop-shadow-2xl"
                         />
-                    </div>
+                    </button>
                 )}
                 {isEditing ? (
                     <div className="flex items-center gap-2 mb-1">
@@ -271,6 +282,53 @@ export default function Profile() {
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
+
+            {/* Ranks Info Dialog */}
+            <Dialog open={showRanksDialog} onOpenChange={setShowRanksDialog}>
+                <DialogContent className="bg-slate-800 border-slate-700 max-w-sm w-full mx-4 max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-white text-2xl font-bold text-center">Rank System</DialogTitle>
+                        <DialogDescription className="text-slate-400 text-center text-sm">
+                            Progress = Score × 0.7 + Distance × 0.3
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                        {[
+                            { level: 1, name: 'Street Sparrow', threshold: 0, image: 'ab940f029_Abzeichen-Kopie.png' },
+                            { level: 2, name: 'Urban Pigeon', threshold: 10000, image: '4c2d7b20c_Abzeichen-Kopie2.png' },
+                            { level: 3, name: 'Sky Runner', threshold: 50000, image: '640ba9ba4_Abzeichen-Kopie3.png' },
+                            { level: 4, name: 'Apex Eagle', threshold: 150000, image: '0a1c8ab54_Abzeichen-Kopie4.png' },
+                            { level: 5, name: 'Legendary Fränk', threshold: 300000, image: '904e55289_Abzeichen-Kopie5.png' }
+                        ].map((rank) => (
+                            <div 
+                                key={rank.level}
+                                className={`flex items-center gap-4 p-3 rounded-lg border-2 ${
+                                    rankInfo?.player_level === rank.level 
+                                        ? 'bg-teal-500/20 border-teal-500' 
+                                        : 'bg-slate-700/30 border-slate-600'
+                                }`}
+                            >
+                                <img 
+                                    src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${rank.image}`}
+                                    alt={rank.name}
+                                    className="w-16 h-16 object-contain"
+                                />
+                                <div className="flex-1">
+                                    <div className="font-bold text-white">{rank.name}</div>
+                                    <div className="text-xs text-slate-400">
+                                        Level {rank.level} • {rank.threshold.toLocaleString()} Punkte
+                                    </div>
+                                    {rankInfo?.player_level === rank.level && (
+                                        <div className="text-xs text-teal-400 font-bold mt-1">
+                                            ⭐ Dein aktueller Rank
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </DialogContent>
+            </Dialog>
                     </div>
                     );
                     }

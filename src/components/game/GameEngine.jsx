@@ -10,7 +10,8 @@ import { spawnBerlinEnemy } from './levels/berlin';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
-const GROUND_Y_PCT = 0.85; // Ground level at 85% height
+const GROUND_OFFSET_PX = 120; // Fixed pixel distance from bottom (consistent across devices)
+const PARIS_GROUND_OFFSET_PX = 170; // Fixed pixel distance for Paris level
 const SPAWN_RATE_INITIAL = 100; // Frames between spawns
 const SCROLL_SPEED_INITIAL = 3;
 
@@ -871,7 +872,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     const spawnEnemy = (width, height) => {
         const { enemies, scrollSpeed } = gameStateRef.current;
-        const groundY = height * GROUND_Y_PCT;
+        const groundY = height - GROUND_OFFSET_PX;
 
         let enemy;
 
@@ -978,7 +979,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         const currentMilestone = Math.floor(state.distance / 1000);
         if (currentMilestone > state.lastMilestone && currentMilestone <= 10) {
             state.lastMilestone = currentMilestone;
-            spawnMilestoneCoins(width, height, currentMilestone);
+            const groundY = level === 'paris' ? (height - PARIS_GROUND_OFFSET_PX) : (height - GROUND_OFFSET_PX);
+            spawnMilestoneCoins(width, height, currentMilestone, groundY);
             createParticles(width/2, height/2, '#FFD700', 20); // Celebrate milestone
         }
 
@@ -1008,8 +1010,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             state.player.vy *= 0.5;
         }
 
-        // Floor/Ceiling collision
-        const groundY = level === 'paris' ? (height * GROUND_Y_PCT - 50) : (height * GROUND_Y_PCT);
+        // Floor/Ceiling collision - fixed pixel distance from bottom
+        const groundY = level === 'paris' ? (height - PARIS_GROUND_OFFSET_PX) : (height - GROUND_OFFSET_PX);
         const topMargin = 20;
         const bottomMargin = 20;
 
@@ -1703,7 +1705,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Berlin scrolling buildings - above street, behind NPCs
         if (level === 'berlin') {
-            const groundY = height * GROUND_Y_PCT;
+            const groundY = height - GROUND_OFFSET_PX;
 
             state.berlinBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
@@ -1715,7 +1717,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Gelsenkirchen scrolling sidewalk and buildings
         if (level === 'gelsenkirchen') {
-            const groundY = height * GROUND_Y_PCT;
+            const groundY = height - GROUND_OFFSET_PX;
 
             // Draw vegetation (behind buildings)
             state.gelsenkirchenVegetation.forEach(veg => {
@@ -1765,7 +1767,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Rome scrolling buildings - behind NPCs
         if (level === 'rome') {
-            const groundY = height * GROUND_Y_PCT;
+            const groundY = height - GROUND_OFFSET_PX;
 
             state.romeBuildings.forEach(building => {
                 if (isImageValid(building.img)) {
@@ -1804,7 +1806,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Madrid scrolling street - below buildings
         if (level === 'madrid' && isImageValid(IMAGES.current.madridStreet)) {
-            const groundY = height * GROUND_Y_PCT;
+            const groundY = height - GROUND_OFFSET_PX;
             const street = IMAGES.current.madridStreet;
             const streetHeight = 180; // Fixed height for street
             const streetScale = streetHeight / street.height;
@@ -1824,7 +1826,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         // Draw Madrid scrolling scenery (buildings and trees) - above street, behind NPCs
         if (level === 'madrid') {
-            const groundY = height * GROUND_Y_PCT;
+            const groundY = height - GROUND_OFFSET_PX;
 
             state.madridScenery.forEach(item => {
                 if (isImageValid(item.img)) {

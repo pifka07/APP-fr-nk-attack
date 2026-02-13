@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Play, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import MobileHeader from '@/components/MobileHeader';
+import { Button } from "@/components/ui/button";
 
 export default function Training() {
     const navigate = useNavigate();

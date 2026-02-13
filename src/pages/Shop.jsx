@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Coins, Zap, Palette, Lock, Check } from "lucide-react";
+import { Coins, Zap, Palette, Check, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import MobileHeader from '@/components/MobileHeader';
+import { usePullToRefresh } from '@/components/hooks/usePullToRefresh';
 
 export default function Shop() {
     const [user, setUser] = useState(null);
@@ -62,6 +62,13 @@ export default function Shop() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleRefresh = async () => {
+        await fetchData();
+        toast.success('Shop refreshed!');
+    };
+
+    const { touchHandlers, pullDistance, refreshing } = usePullToRefresh(handleRefresh);
 
     const handleBuyUpgrade = async (upgrade) => {
         if (!user) {
@@ -192,7 +199,16 @@ export default function Shop() {
     if (loading) return <div className="flex justify-center items-center h-screen text-teal-400">Loading Shop...</div>;
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 pb-20 select-none">
+        <div className="min-h-screen bg-slate-900 text-slate-100 pb-20 select-none" {...touchHandlers}>
+            {pullDistance > 0 && (
+                <div 
+                    className="absolute top-0 left-0 right-0 flex justify-center items-center transition-all z-50"
+                    style={{ height: `${pullDistance}px` }}
+                >
+                    <RefreshCw className={`w-6 h-6 text-purple-400 ${pullDistance > 60 ? 'animate-spin' : ''}`} />
+                </div>
+            )}
+            
             <div className="sticky top-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800 safe-area-pt">
                 <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-3">

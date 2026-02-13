@@ -30,18 +30,8 @@ export default function BottomNav() {
     const handleTabClick = (e, tab) => {
         e.preventDefault();
         
-        // If clicking current tab and we have history, go back in stack
-        if (location.pathname.startsWith(tab.path)) {
-            const stack = historyStackRef.current[tab.key] || [];
-            if (stack.length > 1) {
-                navigate(-1);
-            } else {
-                navigate(tab.path);
-            }
-        } else {
-            // Navigate to tab root
-            navigate(tab.path);
-        }
+        // Always navigate to the root path of the tab
+        navigate(tab.path);
     };
 
     return (

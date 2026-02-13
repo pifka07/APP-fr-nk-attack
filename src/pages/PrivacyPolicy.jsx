@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import MobileHeader from '@/components/MobileHeader';
 import { createPageUrl } from '@/utils';
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPolicy() {
     return (
@@ -258,15 +256,8 @@ export default function PrivacyPolicy() {
                 }
             `}} />
             
-            <div className="privacy-page" style={{paddingTop: '15px', paddingBottom: '15px'}}>
-                <div className="header-bar">
-                    <Link to={createPageUrl('Home')}>
-                        <Button className="bg-slate-800 text-white border-4 border-slate-900 shadow-[0_4px_0_#0f172a] active:shadow-none active:translate-y-1 rounded-full w-12 h-12 flex items-center justify-center hover:bg-slate-700">
-                            <ArrowLeft className="w-6 h-6" />
-                        </Button>
-                    </Link>
-                    <h1 style={{fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', margin: 0}}>Privacy & Security</h1>
-                </div>
+            <div className="privacy-page" style={{paddingBottom: '15px'}}>
+                <MobileHeader title="Privacy & Security" showBack={true} backTo={createPageUrl('Home')} />
                 <div className="page-wrapper">
                     <header>
                         <div className="badge">

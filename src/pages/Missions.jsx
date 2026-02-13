@@ -1,20 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Play, Lock, MapPin } from "lucide-react";
+import { Play, Lock, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import MobileHeader from '@/components/MobileHeader';
+import { usePullToRefresh } from '@/components/hooks/usePullToRefresh';
+import { toast } from "sonner";
 
 export default function Missions() {
+    const handleRefresh = async () => {
+        // Simulate refresh delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        toast.success('Missions refreshed!');
+    };
 
-
+    const { touchHandlers, pullDistance, refreshing } = usePullToRefresh(handleRefresh);
 
     const levels = [];
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 pb-20 select-none">
+        <div className="min-h-screen bg-slate-900 text-slate-100 pb-20 select-none" {...touchHandlers}>
+            {pullDistance > 0 && (
+                <div 
+                    className="absolute top-0 left-0 right-0 flex justify-center items-center transition-all z-50"
+                    style={{ height: `${pullDistance}px` }}
+                >
+                    <RefreshCw className={`w-6 h-6 text-teal-400 ${pullDistance > 60 ? 'animate-spin' : ''}`} />
+                </div>
+            )}
+            
             <MobileHeader title="MISSIONS" />
             
             <div className="p-4">

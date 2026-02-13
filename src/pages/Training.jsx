@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Play, Lock } from "lucide-react";
+import { Play, Lock } from "lucide-react";
 import { motion } from "framer-motion";
+import MobileHeader from '@/components/MobileHeader';
 
 export default function Training() {
     const navigate = useNavigate();
@@ -39,15 +39,10 @@ export default function Training() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
-            <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
-                <Link to={createPageUrl('Missions')}>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
-                        <ArrowLeft className="w-6 h-6" />
-                    </Button>
-                </Link>
-                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">TRAINING</h1>
-            </div>
+        <div className="min-h-screen bg-slate-900 text-slate-100 pb-20">
+            <MobileHeader title="TRAINING" showBack={true} backTo={createPageUrl('Missions')} />
+            
+            <div className="p-4">
 
             <div className="grid grid-cols-1 gap-4">
                 {trainingMissions.map((mission, index) => (
@@ -91,6 +86,7 @@ export default function Training() {
                         </div>
                     </motion.div>
                 ))}
+            </div>
             </div>
         </div>
     );

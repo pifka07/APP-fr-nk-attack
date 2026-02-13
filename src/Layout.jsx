@@ -67,7 +67,7 @@ export default function Layout({ children, currentPageName }) {
                 }
             `}</style>
             
-            <main className="w-full max-w-md mx-auto min-h-screen bg-slate-900 relative shadow-2xl overflow-hidden border-x border-slate-800 safe-area-p">
+            <main className="w-full max-w-md mx-auto min-h-screen bg-slate-900 relative shadow-2xl overflow-hidden border-x border-slate-800">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}

@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Trophy, Medal, User, RefreshCw } from "lucide-react";
+import { Trophy, Medal, RefreshCw } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { calculatePlayerRank } from '@/components/game/PlayerRanks';
 import MobileHeader from '@/components/MobileHeader';
+import { usePullToRefresh } from '@/components/hooks/usePullToRefresh';
 
 export default function Leaderboard() {
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
     const [playerRanks, setPlayerRanks] = useState({});
-    const [refreshing, setRefreshing] = useState(false);
-    const [touchStart, setTouchStart] = useState(0);
-    const [pullDistance, setPullDistance] = useState(0);
 
-    const fetchData = async (isRefresh = false) => {
+    const fetchData = async () => {
         try {
-            if (isRefresh) setRefreshing(true);
-            else setLoading(true);
+            setLoading(true);
             
             // Fetch top 10 leaderboard entries sorted by score descending
             const [topScores, user] = await Promise.all([
@@ -49,49 +44,23 @@ export default function Leaderboard() {
                 }
             }
             setPlayerRanks(ranks);
-            
-            if (isRefresh) {
-                toast.success('Leaderboard refreshed!');
-            }
         } catch (error) {
             console.error("Failed to fetch leaderboard", error);
-            if (isRefresh) {
-                toast.error('Failed to refresh');
-            }
         } finally {
             setLoading(false);
-            setRefreshing(false);
-            setPullDistance(0);
         }
     };
+
+    const handleRefresh = async () => {
+        await fetchData();
+        toast.success('Leaderboard refreshed!');
+    };
+
+    const { touchHandlers, pullDistance, refreshing } = usePullToRefresh(handleRefresh);
 
     useEffect(() => {
         fetchData();
     }, []);
-
-    const handleTouchStart = (e) => {
-        if (window.scrollY === 0) {
-            setTouchStart(e.touches[0].clientY);
-        }
-    };
-
-    const handleTouchMove = (e) => {
-        if (touchStart > 0 && window.scrollY === 0) {
-            const distance = e.touches[0].clientY - touchStart;
-            if (distance > 0) {
-                setPullDistance(Math.min(distance, 100));
-            }
-        }
-    };
-
-    const handleTouchEnd = () => {
-        if (pullDistance > 60) {
-            fetchData(true);
-        } else {
-            setPullDistance(0);
-        }
-        setTouchStart(0);
-    };
 
     const getRankIcon = (index) => {
         switch (index) {
@@ -105,9 +74,7 @@ export default function Leaderboard() {
     return (
         <div 
             className="min-h-screen bg-slate-900 text-slate-100 relative overflow-hidden select-none"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            {...touchHandlers}
         >
             {pullDistance > 0 && (
                 <div 

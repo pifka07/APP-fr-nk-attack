@@ -4,9 +4,10 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Play, Lock, Trophy, Coins } from "lucide-react";
+import { Play, Lock, Trophy, Coins } from "lucide-react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { toast } from "sonner";
+import MobileHeader from '@/components/MobileHeader';
 
 export default function Europa() {
     const navigate = useNavigate();
@@ -149,22 +150,16 @@ export default function Europa() {
 
     return (
         <motion.div 
-            className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20"
+            className="min-h-screen bg-slate-900 text-slate-100 pb-20"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={{ left: 0, right: 0.5 }}
             onDragEnd={handleDragEnd}
             style={{ background }}
         >
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
-                <Link to={createPageUrl('Missions')}>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
-                        <ArrowLeft className="w-6 h-6" />
-                    </Button>
-                </Link>
-                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">EUROPA</h1>
-            </div>
+            <MobileHeader title="EUROPA" showBack={true} backTo={createPageUrl('Missions')} />
+            
+            <div className="p-4">
 
             <div className="space-y-6">
                 {europeanLevels.map((level, index) => (
@@ -287,6 +282,7 @@ export default function Europa() {
                         )}
                     </motion.div>
                     ))}
+                    </div>
                     </div>
                     </motion.div>
                     );

@@ -7,6 +7,7 @@ import { spawnMadridEnemy } from './levels/madrid';
 import { spawnRomeEnemy } from './levels/rome';
 import { spawnGelsenkirchenEnemy } from './levels/gelsenkirchen';
 import { spawnBerlinEnemy } from './levels/berlin';
+import { spawnUSAEnemy } from './levels/usa';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -174,8 +175,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/5d06e0a92_Hintergrund.png";
             IMAGES.current.gelsenkirchenSidewalk = new Image();
             IMAGES.current.gelsenkirchenSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
+        } else if (level === 'usa') {
+            IMAGES.current.background.src = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png';
         } else if (level === 'berlin') {
-            // Berlin - Fixed background
             IMAGES.current.background.src = "";
         } else {
             // Downtown/Gelsenkirchen - New 5-layer structure
@@ -777,7 +779,6 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             gameStateRef.current.romeStreetX = 0;
             gameStateRef.current.rooftopStreetX = 0;
             gameStateRef.current.parisStreetX = 0;
-
             // Initialize Poop Tank
             const config = getEffectiveConfig();
             gameStateRef.current.currentPoops = config.maxPoops;
@@ -893,6 +894,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             enemy = spawnMadridEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'rome') {
             enemy = spawnRomeEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'usa') {
+            enemy = spawnUSAEnemy(width, height, groundY, scrollSpeed);
         } else {
             // Downtown/Gelsenkirchen
             enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
@@ -984,23 +987,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             createParticles(width/2, height/2, '#FFD700', 20); // Celebrate milestone
         }
 
-        // Process Burst Fire Queue
         const now = performance.now();
         if (state.shotQueue.length > 0) {
-            // Find shots that are due
             const dueShots = state.shotQueue.filter(t => t <= now);
-            // Keep shots that are future
             state.shotQueue = state.shotQueue.filter(t => t > now);
-            
-            dueShots.forEach(() => {
-                 state.poops.push({
-                    x: state.player.x,
-                    y: state.player.y + 20,
-                    vx: 2,
-                    vy: 5,
-                    active: true
-                });
-            });
+            dueShots.forEach(() => state.poops.push({x:state.player.x,y:state.player.y+20,vx:2,vy:5,active:true}));
         }
 
         // Player Physics
@@ -1576,42 +1567,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
             ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
-        } else if (level === 'berlin' && isImageValid(IMAGES.current.berlinBackground)) {
-            // Berlin: Fixed background (no scrolling)
-            const bg = IMAGES.current.berlinBackground;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'rome' && isImageValid(IMAGES.current.romeBackground)) {
-            // Rome: Fixed background (no scrolling)
-            const bg = IMAGES.current.romeBackground;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'madrid' && isImageValid(IMAGES.current.madridBackground)) {
-            // Madrid: Fixed background (no scrolling)
-            const bg = IMAGES.current.madridBackground;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
-        } else if (level === 'rooftop' && isImageValid(IMAGES.current.rooftopBackground)) {
-            // Rooftop: Fixed background (no scrolling)
-            const bg = IMAGES.current.rooftopBackground;
-            const scale = Math.max(width / bg.width, height / bg.height);
-            const w = bg.width * scale;
-            const h = bg.height * scale;
-            const x = (width - w) / 2;
-            const y = (height - h) / 2;
-            ctx.drawImage(bg, x, y, w, h);
+        } else if (['berlin','rome','madrid','rooftop'].includes(level)) {
+            const bgMap={berlin:IMAGES.current.berlinBackground,rome:IMAGES.current.romeBackground,madrid:IMAGES.current.madridBackground,rooftop:IMAGES.current.rooftopBackground};
+            const bg=bgMap[level];
+            if(isImageValid(bg)){const sc=Math.max(width/bg.width,height/bg.height),w=bg.width*sc,h=bg.height*sc;ctx.drawImage(bg,(width-w)/2,(height-h)/2,w,h);}
         } else if (level === 'london' && assetsLoaded.current && isImageValid(IMAGES.current.background)) {
             // London: slow scrolling background (1/10 of foreground speed)
             const bg = IMAGES.current.background;
@@ -1914,667 +1873,58 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Draw Poops
-        state.poops.forEach(p => {
-            if (p.active) {
-                 if (assetsLoaded.current) {
-                    ctx.save();
-                    ctx.translate(p.x, p.y);
-
-                    if (p.type === 'laser') {
-                        // Draw laser beam
-                        ctx.shadowColor = '#ff00ff';
-                        ctx.shadowBlur = 15;
-                        ctx.fillStyle = '#ff00ff';
-                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(-p.width/2 + 5, -p.height/2 + 2, p.width - 10, p.height - 4);
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'lightning') {
-                        // Draw lightning bolt
-                        ctx.shadowColor = '#00ffff';
-                        ctx.shadowBlur = 20;
-                        ctx.strokeStyle = '#00ffff';
-                        ctx.lineWidth = 4;
-                        ctx.beginPath();
-                        ctx.moveTo(-p.width/2, -p.height/2);
-                        ctx.lineTo(-p.width/4, 0);
-                        ctx.lineTo(p.width/4, -p.height/4);
-                        ctx.lineTo(p.width/2, p.height/2);
-                        ctx.stroke();
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.lineWidth = 2;
-                        ctx.beginPath();
-                        ctx.moveTo(-p.width/2, -p.height/2);
-                        ctx.lineTo(-p.width/4, 0);
-                        ctx.lineTo(p.width/4, -p.height/4);
-                        ctx.lineTo(p.width/2, p.height/2);
-                        ctx.stroke();
-                        ctx.shadowBlur = 0;
-                        } else if (p.type === 'goldbar') {
-                            // Draw gold bar with rotation
-                            ctx.rotate(state.animFrame * 0.15);
-                            ctx.shadowColor = '#ffd700';
-                            ctx.shadowBlur = 15;
-
-                            // Outer gold bar
-                            ctx.fillStyle = '#ffd700';
-                            ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                            // Inner highlight
-                            ctx.fillStyle = '#ffed4e';
-                            ctx.fillRect(-p.width/2 + 2, -p.height/2 + 2, p.width - 4, p.height - 4);
-
-                            // Dark edge for depth
-                            ctx.fillStyle = '#b8860b';
-                            ctx.fillRect(p.width/2 - 2, -p.height/2, 2, p.height);
-                            ctx.fillRect(-p.width/2, p.height/2 - 2, p.width, 2);
-
-                            ctx.shadowBlur = 0;
-                            } else if (p.type === 'candycane') {
-                            // Draw rotating candy cane
-                            ctx.rotate(state.animFrame * 0.25);
-                            ctx.shadowColor = '#dc2626';
-                            ctx.shadowBlur = 10;
-
-                            // Red and white stripes
-                            ctx.fillStyle = '#dc2626';
-                            ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                            // White stripes
-                            ctx.fillStyle = '#ffffff';
-                            for (let i = 0; i < 3; i++) {
-                                const offset = (i * p.width / 3) - p.width/2;
-                                ctx.fillRect(offset, -p.height/2, p.width/6, p.height);
-                            }
-
-                            // Curved top like candy cane
-                            ctx.beginPath();
-                            ctx.arc(-p.width/3, -p.height/2, p.width/4, 0, Math.PI * 2);
-                            ctx.fillStyle = '#dc2626';
-                            ctx.fill();
-                            ctx.beginPath();
-                            ctx.arc(-p.width/3, -p.height/2, p.width/5, 0, Math.PI * 2);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fill();
-
-                            ctx.shadowBlur = 0;
-                            } else if (p.type === 'bubble') {
-                            // Draw soap bubble with rainbow shimmer
-                            const bubbleScale = 1 + Math.sin(state.animFrame * 0.15) * 0.1;
-                            ctx.scale(bubbleScale, bubbleScale);
-
-                            // Outer bubble
-                            ctx.shadowColor = '#ec4899';
-                            ctx.shadowBlur = 15;
-                            ctx.fillStyle = 'rgba(236, 72, 153, 0.3)';
-                            ctx.beginPath();
-                            ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
-                            ctx.fill();
-
-                            // Inner lighter layer
-                            ctx.fillStyle = 'rgba(244, 114, 182, 0.5)';
-                            ctx.beginPath();
-                            ctx.arc(-p.width/8, -p.height/8, p.width/3, 0, Math.PI * 2);
-                            ctx.fill();
-
-                            // Highlight shimmer
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                            ctx.beginPath();
-                            ctx.arc(-p.width/6, -p.height/6, p.width/6, 0, Math.PI * 2);
-                            ctx.fill();
-
-                            // Outline
-                            ctx.strokeStyle = 'rgba(236, 72, 153, 0.6)';
-                            ctx.lineWidth = 2;
-                            ctx.beginPath();
-                            ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
-                            ctx.stroke();
-
-                            ctx.shadowBlur = 0;
-                            } else if (p.type === 'batarang') {
-                            // Draw batarang (Batman throwing knife)
-                            ctx.rotate(state.animFrame * 0.35);
-                            ctx.shadowColor = '#1f2937';
-                            ctx.shadowBlur = 12;
-
-                            // Bat wing shape
-                            ctx.fillStyle = '#1f2937';
-                            ctx.beginPath();
-                            // Left wing
-                            ctx.moveTo(0, 0);
-                            ctx.quadraticCurveTo(-p.width/2, -p.height/4, -p.width/2, p.height/3);
-                            ctx.quadraticCurveTo(-p.width/3, p.height/4, 0, 0);
-                            // Right wing
-                            ctx.moveTo(0, 0);
-                            ctx.quadraticCurveTo(p.width/2, -p.height/4, p.width/2, p.height/3);
-                            ctx.quadraticCurveTo(p.width/3, p.height/4, 0, 0);
-                            ctx.fill();
-
-                            // Yellow/gold accents
-                            ctx.fillStyle = '#fbbf24';
-                            ctx.beginPath();
-                            ctx.arc(0, 0, p.width / 8, 0, Math.PI * 2);
-                            ctx.fill();
-
-                            // Sharp edges highlight
-                            ctx.strokeStyle = '#4b5563';
-                            ctx.lineWidth = 2;
-                            ctx.beginPath();
-                            ctx.moveTo(-p.width/2, p.height/3);
-                            ctx.lineTo(0, 0);
-                            ctx.lineTo(p.width/2, p.height/3);
-                            ctx.stroke();
-
-                            ctx.shadowBlur = 0;
-                            } else if (p.type === 'bone') {
-                            // Draw bone projectile with custom image
-                            ctx.rotate(state.animFrame * 0.25);
-                            
-                            if (isImageValid(IMAGES.current.boneProjectile)) {
-                                ctx.drawImage(IMAGES.current.boneProjectile, -p.width/2, -p.height/2, p.width, p.height);
-                            } else {
-                                // Fallback if image not loaded
-                                ctx.shadowColor = '#f5f5dc';
-                                ctx.shadowBlur = 8;
-
-                                // Draw bone shape
-                                ctx.fillStyle = '#f5f5dc'; // Beige bone color
-                                ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                                // Bone ends (knobs)
-                                ctx.beginPath();
-                                ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                                ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                                ctx.fill();
-
-                                // Darker outline
-                                ctx.strokeStyle = '#d3c5a0';
-                                ctx.lineWidth = 2;
-                                ctx.beginPath();
-                                ctx.arc(-p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                                ctx.stroke();
-                                ctx.beginPath();
-                                ctx.arc(p.width/2, 0, p.height/1.5, 0, Math.PI * 2);
-                                ctx.stroke();
-                                ctx.strokeRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                                ctx.shadowBlur = 0;
-                            }
-                            } else if (p.type === 'shuriken') {
-                            // Draw ninja star (shuriken)
-                            ctx.rotate(state.animFrame * 0.3);
-                            ctx.shadowColor = '#94a3b8';
-                            ctx.shadowBlur = 10;
-
-                            // Draw 4-pointed star
-                            ctx.fillStyle = '#cbd5e1';
-                            ctx.beginPath();
-                            for (let i = 0; i < 4; i++) {
-                                const angle = (i * Math.PI / 2) - Math.PI / 4;
-                                const r = p.width / 2;
-                                ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-                                ctx.lineTo(Math.cos(angle + Math.PI / 4) * (r * 0.4), Math.sin(angle + Math.PI / 4) * (r * 0.4));
-                            }
-                            ctx.closePath();
-                            ctx.fill();
-
-                            // Bright silver center
-                            ctx.fillStyle = '#f1f5f9';
-                            ctx.beginPath();
-                            ctx.arc(0, 0, p.width / 6, 0, Math.PI * 2);
-                            ctx.fill();
-
-                            ctx.shadowBlur = 0;
-                    } else if (p.type === 'ghost_poop') {
-                        // Draw white ghost poop
-                        ctx.rotate(state.animFrame * 0.2);
-                        ctx.shadowColor = '#ffffff';
-                        ctx.shadowBlur = 10;
-
-                        // White poop shape
-                        ctx.fillStyle = '#ffffff';
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Highlight
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                        ctx.beginPath();
-                        ctx.arc(-p.width/6, -p.height/6, p.width/3, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'grenade') {
-                        // Draw hand grenade
-                        ctx.rotate(state.animFrame * 0.3);
-                        ctx.shadowColor = '#2f4f2f';
-                        ctx.shadowBlur = 10;
-
-                        // Grenade body (olive green)
-                        ctx.fillStyle = '#556b2f';
-                        ctx.beginPath();
-                        ctx.ellipse(0, 2, p.width/2.5, p.height/2, 0, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Top cap (darker)
-                        ctx.fillStyle = '#3d4f25';
-                        ctx.fillRect(-p.width/4, -p.height/2, p.width/2, p.height/5);
-
-                        // Pin ring
-                        ctx.strokeStyle = '#ffd700';
-                        ctx.lineWidth = 2;
-                        ctx.beginPath();
-                        ctx.arc(-p.width/3, -p.height/2.5, p.width/6, 0, Math.PI * 2);
-                        ctx.stroke();
-
-                        // Segments
-                        ctx.strokeStyle = '#2f4f2f';
-                        ctx.lineWidth = 2;
-                        ctx.beginPath();
-                        ctx.moveTo(0, -p.height/4);
-                        ctx.lineTo(0, p.height/3);
-                        ctx.moveTo(-p.width/4, 2);
-                        ctx.lineTo(p.width/4, 2);
-                        ctx.stroke();
-
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'plank') {
-                        // Draw wooden plank
-                        ctx.rotate(state.animFrame * 0.25);
-                        ctx.shadowColor = '#8B4513';
-                        ctx.shadowBlur = 8;
-
-                        // Wood plank (brown)
-                        ctx.fillStyle = '#8B4513';
-                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                        // Wood grain lines
-                        ctx.strokeStyle = '#654321';
-                        ctx.lineWidth = 2;
-                        for (let i = 0; i < 3; i++) {
-                            ctx.beginPath();
-                            const offset = (i - 1) * p.height / 4;
-                            ctx.moveTo(-p.width/2 + 5, offset);
-                            ctx.lineTo(p.width/2 - 5, offset);
-                            ctx.stroke();
-                        }
-
-                        // Lighter edge highlight
-                        ctx.fillStyle = '#D2691E';
-                        ctx.fillRect(-p.width/2, -p.height/2, p.width, 2);
-                        ctx.fillRect(-p.width/2, -p.height/2, 2, p.height);
-
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'stone') {
-                        // Draw stone rock
-                        ctx.rotate(state.animFrame * 0.2);
-                        ctx.shadowColor = '#4a5568';
-                        ctx.shadowBlur = 10;
-
-                        // Main stone body (gray)
-                        ctx.fillStyle = '#6b7280';
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Darker cracks/texture
-                        ctx.strokeStyle = '#4b5563';
-                        ctx.lineWidth = 2;
-                        ctx.beginPath();
-                        ctx.moveTo(-p.width/3, -p.height/6);
-                        ctx.lineTo(p.width/4, p.height/6);
-                        ctx.moveTo(-p.width/4, p.height/4);
-                        ctx.lineTo(p.width/3, -p.height/5);
-                        ctx.stroke();
-
-                        // Highlight spots
-                        ctx.fillStyle = '#9ca3af';
-                        ctx.beginPath();
-                        ctx.arc(-p.width/4, -p.height/4, p.width/6, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'fireball') { // Added new projectile type
-                        ctx.rotate(state.animFrame * 0.3);
-                        ctx.shadowColor = '#ff4500'; // OrangeRed
-                        ctx.shadowBlur = 20;
-
-                        // Core of the fireball
-                        ctx.fillStyle = '#ff4500'; // OrangeRed
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width/2, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Inner glow
-                        ctx.fillStyle = '#ff8c00'; // DarkOrange
-                        ctx.beginPath();
-                        ctx.arc(0, 0, p.width/3, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Brightest part
-                        ctx.fillStyle = '#ffff00'; // Yellow
-                        ctx.beginPath();
-                        ctx.arc(-p.width/8, -p.height/8, p.width/6, 0, Math.PI * 2);
-                        ctx.fill();
-
-                        // Trailing embers/flames
-                        for (let i = 0; i < 3; i++) {
-                            const offset = i * 8; // Spread out
-                            const size = (p.width/4) * (1 - i * 0.3); // Decrease size
-                            ctx.fillStyle = i === 0 ? '#ff6600' : (i === 1 ? '#ff8800' : '#ffaa00'); // Different shades of orange
-                            ctx.globalAlpha = 0.6 - i * 0.2; // Fade out
-                            ctx.beginPath();
-                            ctx.arc(-offset - p.width/2, Math.sin(state.animFrame * 0.2 + i) * 5, size, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-
-                        ctx.globalAlpha = 1.0;
-                        ctx.shadowBlur = 0;
-                    } else if (p.type === 'icecube') {
-                        // Draw ice cube
-                        ctx.rotate(state.animFrame * 0.2);
-                        ctx.shadowColor = '#00D4FF';
-                        ctx.shadowBlur = 15;
-
-                        // Main ice cube (light blue transparent)
-                        ctx.fillStyle = 'rgba(135, 206, 235, 0.8)';
-                        ctx.fillRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                        // Inner brighter layer
-                        ctx.fillStyle = 'rgba(0, 212, 255, 0.6)';
-                        ctx.fillRect(-p.width/2 + 4, -p.height/2 + 4, p.width - 8, p.height - 8);
-
-                        // Highlight spots (white glow)
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                        ctx.fillRect(-p.width/3, -p.height/3, p.width/4, p.height/4);
-                        ctx.fillRect(p.width/5, p.height/6, p.width/5, p.height/5);
-
-                        // Frost patterns (cracks)
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(-p.width/2, 0);
-                        ctx.lineTo(p.width/2, 0);
-                        ctx.moveTo(0, -p.height/2);
-                        ctx.lineTo(0, p.height/2);
-                        ctx.stroke();
-
-                        // Outer border (ice edge)
-                        ctx.strokeStyle = 'rgba(0, 180, 255, 0.8)';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(-p.width/2, -p.height/2, p.width, p.height);
-
-                        ctx.shadowBlur = 0;
-                    } else {
-                        const img = IMAGES.current.poopProjectile;
-                        // Spin the poop!
-                        ctx.rotate(state.animFrame * 0.2);
-
-                        // Draw full image
-                        if (p.type === 'triple' && IMAGES.current.poopTriple) {
-                            ctx.drawImage(IMAGES.current.poopTriple, -p.width/2, -p.height/2, p.width, p.height);
-                        } else {
-                            ctx.drawImage(img, -p.width/2, -p.height/2, p.width, p.height);
-                        }
-                    }
-                    ctx.restore();
-                    } else {
-                    ctx.fillText('💩', p.x, p.y);
-                    }
-            }
-        });
+        if(assetsLoaded.current){state.poops.filter(p=>p.active).forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(state.animFrame*0.2);if(p.type==='triple'&&isImageValid(IMAGES.current.poopTriple)){ctx.drawImage(IMAGES.current.poopTriple,-p.width/2,-p.height/2,p.width,p.height);}else if(isImageValid(IMAGES.current.poopProjectile)){ctx.drawImage(IMAGES.current.poopProjectile,-p.width/2,-p.height/2,p.width,p.height);}ctx.restore();});}
+        else{state.poops.forEach(p=>{if(p.active)ctx.fillText('💩',p.x,p.y);});}
 
         // Draw Enemies
         state.enemies.forEach(e => {
             if (assetsLoaded.current && e.spriteType) {
                 let sheet, sx, sy, sw, sh;
-                
-                // Helper for single image sprites
+
                 const useFullImage = (img) => {
-                    if (isImageValid(img)) {
-                        sheet = img;
-                        sx = 0; sy = 0; sw = img.width; sh = img.height;
-                        return true;
-                    }
+                    if (isImageValid(img)) { sheet = img; sx = 0; sy = 0; sw = img.width; sh = img.height; return true; }
                     return false;
                 };
 
-                if (e.spriteType === 'eagle') useFullImage(IMAGES.current.eagle);
-                else if (e.spriteType === 'cop') useFullImage(IMAGES.current.cop);
-                else if (e.spriteType === 'granny') useFullImage(IMAGES.current.granny);
-                else if (e.spriteType === 'car') useFullImage(IMAGES.current.car);
-                else if (e.spriteType === 'drone') useFullImage(IMAGES.current.drone);
-                else if (e.spriteType === 'dog') useFullImage(IMAGES.current.dog);
-                else if (e.spriteType === 'worker') useFullImage(IMAGES.current.worker);
-                else if (e.spriteType === 'fruit_vendor') useFullImage(IMAGES.current.fruit_vendor);
-                else if (e.spriteType === 'sparrow') useFullImage(IMAGES.current.sparrow);
-                else if (e.spriteType === 'rooftop_sparrow') useFullImage(IMAGES.current.sparrow);
-                else if (e.spriteType === 'rooftop_pigeon') useFullImage(IMAGES.current.rooftop_pigeon);
-                else if (e.spriteType === 'rooftop_ninja') useFullImage(IMAGES.current.rooftop_ninja);
-                else if (e.spriteType === 'rooftop_sunbather') useFullImage(IMAGES.current.rooftop_sunbather);
-                else if (e.spriteType === 'rooftop_fitness') useFullImage(IMAGES.current.rooftop_fitness);
-                else if (e.spriteType === 'rooftop_worker2') useFullImage(IMAGES.current.rooftop_worker2);
-                else if (e.spriteType === 'rooftop_ninja2') useFullImage(IMAGES.current.rooftop_ninja2);
-                else if (e.spriteType === 'rooftop_ac2') useFullImage(IMAGES.current.rooftop_ac2);
-                else if (e.spriteType === 'rooftop_plant1') useFullImage(IMAGES.current.rooftop_plant1);
-                else if (e.spriteType === 'rooftop_plant2') useFullImage(IMAGES.current.rooftop_plant2);
-                else if (e.spriteType === 'rooftop_plant3') useFullImage(IMAGES.current.rooftop_plant3);
-                else if (e.spriteType === 'cat') useFullImage(IMAGES.current.cat);
-                else if (e.spriteType === 'ac_unit') useFullImage(IMAGES.current.ac_unit);
-                else if (e.spriteType === 'seagull') useFullImage(IMAGES.current.seagull);
-                else if (e.spriteType === 'drone_l2') useFullImage(IMAGES.current.drone_l2);
-                else if (e.spriteType === 'squirrel') useFullImage(IMAGES.current.squirrel);
-                else if (e.spriteType === 'snail') useFullImage(IMAGES.current.snail);
-                else if (e.spriteType === 'fly') useFullImage(IMAGES.current.fly);
-                else if (e.spriteType === 'trash_can') useFullImage(IMAGES.current.trash_can);
-                else if (e.spriteType === 'business_person') useFullImage(IMAGES.current.business_person);
-                else if (e.spriteType === 'tourist') useFullImage(IMAGES.current.tourist);
-                else if (e.spriteType === 'london_cop') useFullImage(IMAGES.current.london_cop);
-                else if (e.spriteType === 'street_vendor') useFullImage(IMAGES.current.street_vendor);
-                else if (e.spriteType === 'street_musician') useFullImage(IMAGES.current.street_musician);
-                else if (e.spriteType === 'london_car') useFullImage(IMAGES.current.london_car);
-                else if (e.spriteType === 'pigeon') useFullImage(IMAGES.current.pigeon);
-                else if (e.spriteType === 'balloon') useFullImage(IMAGES.current.balloon);
-                else if (e.spriteType === 'london_drone') useFullImage(IMAGES.current.london_drone);
-                else if (e.spriteType === 'london_pigeon') useFullImage(IMAGES.current.london_pigeon);
-                else if (e.spriteType === 'paris_car') useFullImage(IMAGES.current.paris_car);
-                else if (e.spriteType === 'police_man') useFullImage(IMAGES.current.police_man);
-                else if (e.spriteType === 'paris_tourist') useFullImage(IMAGES.current.paris_tourist);
-                else if (e.spriteType === 'watch_seller') useFullImage(IMAGES.current.watch_seller);
-                else if (e.spriteType === 'paris_mime') useFullImage(IMAGES.current.paris_mime);
-                else if (e.spriteType === 'paris_pigeon') useFullImage(IMAGES.current.paris_pigeon);
-                else if (e.spriteType === 'paris_balloon') useFullImage(IMAGES.current.paris_balloon);
-                else if (e.spriteType === 'madrid_waiter') useFullImage(IMAGES.current.madrid_waiter);
-                else if (e.spriteType === 'madrid_flamenco') useFullImage(IMAGES.current.madrid_flamenco);
-                else if (e.spriteType === 'madrid_tourist_girl') useFullImage(IMAGES.current.madrid_tourist_girl);
-                else if (e.spriteType === 'madrid_flower_girl') useFullImage(IMAGES.current.madrid_flower_girl);
-                else if (e.spriteType === 'madrid_elderly') useFullImage(IMAGES.current.madrid_elderly);
-                else if (e.spriteType === 'madrid_flight_attendant') useFullImage(IMAGES.current.madrid_flight_attendant);
-                else if (e.spriteType === 'madrid_boy_tourist') useFullImage(IMAGES.current.madrid_boy_tourist);
-                else if (e.spriteType === 'madrid_car') useFullImage(IMAGES.current.madrid_car);
-                else if (e.spriteType === 'madrid_balloon') useFullImage(IMAGES.current.madrid_balloon);
-                else if (e.spriteType === 'madrid_pigeon') useFullImage(IMAGES.current.madrid_pigeon);
-                else if (e.spriteType === 'madrid_parrot') useFullImage(IMAGES.current.madrid_parrot);
-                else if (e.spriteType === 'madrid_sparrow') useFullImage(IMAGES.current.madrid_sparrow);
-                else if (e.spriteType === 'madrid_drone') useFullImage(IMAGES.current.madrid_drone);
-                else if (e.spriteType === 'rome_car') useFullImage(IMAGES.current.rome_car);
-                else if (e.spriteType === 'rome_tourist') useFullImage(IMAGES.current.rome_tourist);
-                else if (e.spriteType === 'rome_priest') useFullImage(IMAGES.current.rome_priest);
-                else if (e.spriteType === 'rome_pizza_chef') useFullImage(IMAGES.current.rome_pizza_chef);
-                else if (e.spriteType === 'rome_vespa_driver') useFullImage(IMAGES.current.rome_vespa_driver);
-                else if (e.spriteType === 'rome_old_lady') useFullImage(IMAGES.current.rome_old_lady);
-                else if (e.spriteType === 'rome_gladiator') useFullImage(IMAGES.current.rome_gladiator);
-                else if (e.spriteType === 'rome_couple_bench') useFullImage(IMAGES.current.rome_couple_bench);
-                else if (e.spriteType === 'rome_couple_standing') useFullImage(IMAGES.current.rome_couple_standing);
-                else if (e.spriteType === 'rome_musician') useFullImage(IMAGES.current.rome_musician);
-                else if (e.spriteType === 'rome_couple_bench2') useFullImage(IMAGES.current.rome_couple_bench2);
-                else if (e.spriteType === 'rome_couple_vespa') useFullImage(IMAGES.current.rome_couple_vespa);
-                else if (e.spriteType === 'rome_girl_basket') useFullImage(IMAGES.current.rome_girl_basket);
-                else if (e.spriteType === 'rome_bird1') useFullImage(IMAGES.current.rome_bird1);
-                else if (e.spriteType === 'rome_bird2') useFullImage(IMAGES.current.rome_bird2);
-                else if (e.spriteType === 'rome_bird3') useFullImage(IMAGES.current.rome_bird3);
-                else if (e.spriteType === 'rome_bird4') useFullImage(IMAGES.current.rome_bird4);
-                else if (e.spriteType === 'rome_bird5') useFullImage(IMAGES.current.rome_bird5);
-                else if (e.spriteType === 'gelsenkirchen_npc1') useFullImage(IMAGES.current.gelsenkirchen_npc1);
-                else if (e.spriteType === 'gelsenkirchen_npc2') useFullImage(IMAGES.current.gelsenkirchen_npc2);
-                else if (e.spriteType === 'gelsenkirchen_npc3') useFullImage(IMAGES.current.gelsenkirchen_npc3);
-                else if (e.spriteType === 'gelsenkirchen_npc4') useFullImage(IMAGES.current.gelsenkirchen_npc4);
-                else if (e.spriteType === 'gelsenkirchen_npc5') useFullImage(IMAGES.current.gelsenkirchen_npc5);
-                else if (e.spriteType === 'gelsenkirchen_npc6') useFullImage(IMAGES.current.gelsenkirchen_npc6);
-                else if (e.spriteType === 'gelsenkirchen_npc7') useFullImage(IMAGES.current.gelsenkirchen_npc7);
-                else if (e.spriteType === 'gelsenkirchen_npc8') useFullImage(IMAGES.current.gelsenkirchen_npc8);
-                else if (e.spriteType === 'gelsenkirchen_npc9') useFullImage(IMAGES.current.gelsenkirchen_npc9);
-                else if (e.spriteType === 'gelsenkirchen_npc10') useFullImage(IMAGES.current.gelsenkirchen_npc10);
-                else if (e.spriteType === 'gelsenkirchen_npc11') useFullImage(IMAGES.current.gelsenkirchen_npc11);
-                else if (e.spriteType === 'gelsenkirchen_bird1') useFullImage(IMAGES.current.gelsenkirchen_bird1);
-                else if (e.spriteType === 'gelsenkirchen_bird2') useFullImage(IMAGES.current.gelsenkirchen_bird2);
-                else if (e.spriteType === 'gelsenkirchen_bird3') useFullImage(IMAGES.current.gelsenkirchen_bird3);
-                else if (e.spriteType === 'gelsenkirchen_drone1') useFullImage(IMAGES.current.gelsenkirchen_drone1);
-                else if (e.spriteType === 'gelsenkirchen_drone2') useFullImage(IMAGES.current.gelsenkirchen_drone2);
-                else if (e.spriteType === 'gelsenkirchen_drone3') useFullImage(IMAGES.current.gelsenkirchen_drone3);
-                else if (e.spriteType === 'gelsenkirchen_drone4') useFullImage(IMAGES.current.gelsenkirchen_drone4);
-                else if (e.spriteType === 'gelsenkirchen_drone5') useFullImage(IMAGES.current.gelsenkirchen_drone5);
-                else if (e.spriteType === 'gelsenkirchen_drone6') useFullImage(IMAGES.current.gelsenkirchen_drone6);
-                else if (e.spriteType === 'berlin_npc1') useFullImage(IMAGES.current.berlin_npc1);
-                else if (e.spriteType === 'berlin_npc2') useFullImage(IMAGES.current.berlin_npc2);
-                else if (e.spriteType === 'berlin_npc3') useFullImage(IMAGES.current.berlin_npc3);
-                else if (e.spriteType === 'berlin_npc4') useFullImage(IMAGES.current.berlin_npc4);
-                else if (e.spriteType === 'berlin_npc5') useFullImage(IMAGES.current.berlin_npc5);
-                else if (e.spriteType === 'berlin_npc6') useFullImage(IMAGES.current.berlin_npc6);
-                else if (e.spriteType === 'berlin_npc7') useFullImage(IMAGES.current.berlin_npc7);
-                else if (e.spriteType === 'berlin_npc8') useFullImage(IMAGES.current.berlin_npc8);
-                else if (e.spriteType === 'berlin_npc9') useFullImage(IMAGES.current.berlin_npc9);
-                else if (e.spriteType === 'berlin_npc10') useFullImage(IMAGES.current.berlin_npc10);
-                else if (e.spriteType === 'berlin_bird1') useFullImage(IMAGES.current.berlin_bird1);
-                else if (e.spriteType === 'berlin_bird2') useFullImage(IMAGES.current.berlin_bird2);
-                else if (e.spriteType === 'berlin_bird3') useFullImage(IMAGES.current.berlin_bird3);
-                else if (e.spriteType === 'berlin_drone1') useFullImage(IMAGES.current.berlin_drone1);
-                else if (e.spriteType === 'berlin_drone2') useFullImage(IMAGES.current.berlin_drone2);
-                else if (e.spriteType === 'berlin_drone3') useFullImage(IMAGES.current.berlin_drone3);
-                else {
-                    // Fallback to sheet (e.g. for dog or future ones)
+                const imgKey = e.spriteType;
+                if (IMAGES.current[imgKey] && isImageValid(IMAGES.current[imgKey])) {
+                    useFullImage(IMAGES.current[imgKey]);
+                } else {
+                    // Fallback to sheet
                     sheet = IMAGES.current.enemiesSheet;
                     const frames = SPRITE_MAP.enemies[e.spriteType] || SPRITE_MAP.enemies.car;
-                    const def = frames[0]; 
-                    sx = def.x * sheet.width;
-                    sy = def.y * sheet.height;
-                    sw = def.w * sheet.width;
-                    sh = def.h * sheet.height;
+                    const def = frames[0];
+                    sx = def.x * sheet.width; sy = def.y * sheet.height;
+                    sw = def.w * sheet.width; sh = def.h * sheet.height;
                 }
                 
                 ctx.save();
                 ctx.translate(e.x + e.width/2, e.y + e.height/2);
-                
-                // Simple animations based on type
-                if (e.spriteType === 'car' || e.spriteType === 'cop') {
-                    // Bounce
-                    ctx.translate(0, Math.sin(state.animFrame * 0.5) * 2);
-                } else if (e.spriteType === 'granny' || e.spriteType === 'snail') {
-                    // Waddle / crawl
-                    ctx.rotate(Math.sin(state.animFrame * 0.2) * 0.1);
-                } else if (e.spriteType === 'fly') {
-                    // Buzzing erratic
-                    ctx.translate(Math.sin(state.animFrame * 0.8) * 5, Math.cos(state.animFrame * 0.8) * 5);
-                } else if (e.spriteType === 'squirrel') {
-                    // Hop
-                    ctx.translate(0, Math.abs(Math.sin(state.animFrame * 0.4)) * -10);
-                    } else if (e.spriteType === 'business_person' || e.spriteType === 'tourist') {
-                    // Walking animation
-                    ctx.translate(Math.sin(state.animFrame * 0.3) * 2, 0);
-                    } else if (e.spriteType === 'pigeon' || e.spriteType === 'london_pigeon' || e.spriteType === 'rome_bird1' || e.spriteType === 'rome_bird2' || e.spriteType === 'rome_bird3' || e.spriteType === 'rome_bird4' || e.spriteType === 'rome_bird5' || e.spriteType === 'gelsenkirchen_bird1' || e.spriteType === 'gelsenkirchen_bird2' || e.spriteType === 'gelsenkirchen_bird3') {
-                        // Flapping wings
-                        ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
-                    } else if (e.spriteType === 'rooftop_sparrow') {
-                    // Sparrow fast flapping
-                    ctx.translate(0, Math.sin(state.animFrame * 0.6) * 2);
-                    } else if (e.spriteType === 'berlin_npc1' || e.spriteType === 'berlin_npc2' || e.spriteType === 'berlin_npc3' || e.spriteType === 'berlin_npc4' || e.spriteType === 'berlin_npc5' || e.spriteType === 'berlin_npc6' || e.spriteType === 'berlin_npc7' || e.spriteType === 'berlin_npc8' || e.spriteType === 'berlin_npc9' || e.spriteType === 'berlin_npc10') {
-                    // Berlin NPCs - minimal animation
-                    ctx.translate(Math.sin(state.animFrame * 0.1) * 0.5, 0);
-                    } else if (e.spriteType === 'berlin_bird1' || e.spriteType === 'berlin_bird2' || e.spriteType === 'berlin_bird3') {
-                    // Berlin birds flapping
-                    ctx.translate(0, Math.sin(state.animFrame * 0.4) * 3);
-                    } else if (e.spriteType === 'berlin_drone1' || e.spriteType === 'berlin_drone2' || e.spriteType === 'berlin_drone3') {
-                    // Berlin drones hovering
-                    ctx.translate(0, Math.sin(state.animFrame * 0.3) * 2);
-                    } else if (e.spriteType === 'balloon') {
-                    // Gentle float
-                    ctx.translate(Math.sin(state.animFrame * 0.1) * 3, Math.cos(state.animFrame * 0.08) * 4);
-                    } else if (e.spriteType === 'london_drone' || e.spriteType === 'gelsenkirchen_drone1' || e.spriteType === 'gelsenkirchen_drone2' || e.spriteType === 'gelsenkirchen_drone3' || e.spriteType === 'gelsenkirchen_drone4' || e.spriteType === 'gelsenkirchen_drone5' || e.spriteType === 'gelsenkirchen_drone6') {
-                    // Drone hovering
-                    ctx.translate(0, Math.sin(state.animFrame * 0.3) * 2);
-                    }
-                    // Chimney drawing removed for cat as requested (sitting on background chimney)
+                const af = state.animFrame;
+                const st = e.spriteType;
+                if (st==='car'||st==='cop') ctx.translate(0,Math.sin(af*0.5)*2);
+                else if (st==='granny'||st==='snail') ctx.rotate(Math.sin(af*0.2)*0.1);
+                else if (st==='fly') ctx.translate(Math.sin(af*0.8)*5,Math.cos(af*0.8)*5);
+                else if (st==='squirrel') ctx.translate(0,Math.abs(Math.sin(af*0.4))*-10);
+                else if (st==='business_person'||st==='tourist') ctx.translate(Math.sin(af*0.3)*2,0);
+                else if (st.includes('bird')||st.includes('pigeon')) ctx.translate(0,Math.sin(af*0.4)*3);
+                else if (st==='rooftop_sparrow') ctx.translate(0,Math.sin(af*0.6)*2);
+                else if (st.includes('drone')||st.includes('balloon')) ctx.translate(0,Math.sin(af*0.3)*2);
+                else if (st.startsWith('berlin_npc')) ctx.translate(Math.sin(af*0.1)*0.5,0);
 
-                    // Special drawing for Trash Can (Raccoon jumping out)
-                    if (e.spriteType === 'trash_can') {
-                    // 1. Draw Raccoon jumping (behind the can effectively if we want it popping out, 
-                    // but since we can't clip easily without complex canvas, let's draw it BEHIND the can layer-wise or just on top moving up)
-                    // "Aus der Tonne springen" - best effect: Raccoon moves up/down relative to can.
-                    // We'll draw the raccoon first (behind), then the can? Or just on top?
-                    // Let's try: Draw Can. Draw Raccoon moving up/down *behind* the can's front? 
-                    // Simplest: Draw Raccoon behind can, moving Y.
-
-                    const jumpOffset = Math.abs(Math.sin(state.animFrame * 0.1)) * 40; // 0 to 40px up
-
-                    // Draw Raccoon
-                    if (isImageValid(IMAGES.current.raccoon)) {
-                        const rW = 50; 
-                        const rH = 50;
-                        ctx.drawImage(
-                            IMAGES.current.raccoon, 
-                            -rW/2, 
-                            -e.height/2 - jumpOffset + 10, // Start slightly inside
-                            rW, 
-                            rH
-                        );
-
-                        // Label "Jan"
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 10px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.shadowColor = 'black';
-                        ctx.shadowBlur = 2;
-                        ctx.fillText('Jan', 0, e.height/2 + 15); // Below the can
-                        }
-
-                    // Draw Can (Covering the bottom of raccoon?)
-                    // We need the raccoon to appear from *inside*.
-                    // So we draw the Can ON TOP of the lower part of the raccoon.
-                    // But the can image is the whole can. 
-                    // So simply drawing the can *after* the raccoon should hide the raccoon when it's "down" if the can image is opaque.
-                    if (isImageValid(sheet)) {
-                        ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
-                    }
-
-                    } else if (e.spriteType !== 'smoke' && isImageValid(sheet)) {
-                        ctx.drawImage(sheet, sx, sy, sw, sh, -e.width/2, -e.height/2, e.width, e.height);
-                        } else if (e.spriteType === 'smoke') {
-                    // Draw Smoke
-                    ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, e.width/2, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
-                    ctx.beginPath();
-                    ctx.arc(5, -5, e.width/3, 0, Math.PI*2);
-                    ctx.fill();
+                if (st==='trash_can') {
+                    const jO=Math.abs(Math.sin(af*0.1))*40;
+                    if(isImageValid(IMAGES.current.raccoon))ctx.drawImage(IMAGES.current.raccoon,-25,-e.height/2-jO+10,50,50);
+                    if(isImageValid(sheet))ctx.drawImage(sheet,sx,sy,sw,sh,-e.width/2,-e.height/2,e.width,e.height);
+                } else if (st!=='smoke'&&isImageValid(sheet)) {
+                    ctx.drawImage(sheet,sx,sy,sw,sh,-e.width/2,-e.height/2,e.width,e.height);
+                } else if (st==='smoke') {
+                    ctx.fillStyle='rgba(150,150,150,0.8)'; ctx.beginPath(); ctx.arc(0,0,e.width/2,0,Math.PI*2); ctx.fill();
                 }
-
-                // Draw AC Wind Effects
-                if (e.spriteType === 'ac_unit' && e.isBlowing) {
-                    ctx.strokeStyle = 'rgba(200, 255, 255, 0.4)';
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    const t = state.animFrame * 0.2;
-                    for(let i=-1; i<=1; i++) {
-                        const xOff = i * 15 + Math.sin(t + i) * 5;
-                        const yOff = (state.animFrame * 2 + i * 20) % 100; // Moving up
-                        ctx.moveTo(xOff, -e.height/2 - yOff);
-                        ctx.lineTo(xOff, -e.height/2 - yOff - 30);
-                    }
-                    ctx.stroke();
+                if (st==='ac_unit'&&e.isBlowing) {
+                    ctx.strokeStyle='rgba(200,255,255,0.4)'; ctx.lineWidth=3; ctx.beginPath();
+                    const t=af*0.2; for(let i=-1;i<=1;i++){const xO=i*15+Math.sin(t+i)*5,yO=(af*2+i*20)%100; ctx.moveTo(xO,-e.height/2-yO); ctx.lineTo(xO,-e.height/2-yO-30);} ctx.stroke();
                 }
-
                 ctx.restore();
                 } else {
                 ctx.font = '30px serif';
@@ -2585,41 +1935,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         // Draw Powerups
         state.powerups.forEach(p => {
             if (!p.active) return;
-
-            if (p.type === 'coin' && isImageValid(IMAGES.current.coin)) {
-                const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
-                ctx.save();
-                ctx.translate(p.x + p.width/2, p.y + p.height/2);
-                ctx.scale(scale, scale);
-                ctx.drawImage(IMAGES.current.coin, -p.width/2, -p.height/2, p.width, p.height);
-                ctx.restore();
-            }
-            else if (p.type === 'energy' && isImageValid(IMAGES.current.energyIcon)) {
-                const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
-                ctx.save();
-                ctx.translate(p.x + p.width/2, p.y + p.height/2);
-                ctx.scale(scale, scale);
-                ctx.drawImage(IMAGES.current.energyIcon, -p.width/2, -p.height/2, p.width, p.height);
-                ctx.restore();
-            }
-            else if (p.type === 'ammo' && isImageValid(IMAGES.current.ammoIcon)) {
-                const scale = 1 + Math.sin(state.animFrame * 0.1) * 0.1;
-                ctx.save();
-                ctx.translate(p.x + p.width/2, p.y + p.height/2);
-                ctx.scale(scale, scale);
-                ctx.drawImage(IMAGES.current.ammoIcon, -p.width/2, -p.height/2, p.width, p.height);
-                ctx.restore();
-            }
-            else {
-                ctx.fillStyle = p.type === 'coin' ? 'gold' : (p.type === 'ammo' ? 'brown' : 'cyan');
-                ctx.beginPath();
-                ctx.arc(p.x + p.width/2, p.y + p.height/2, p.width/2, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = 'white';
-                ctx.textAlign = 'center';
-                ctx.font = '20px Arial';
-                ctx.fillText(p.type === 'coin' ? '$' : (p.type === 'ammo' ? 'P' : 'E'), p.x + p.width/2, p.y + p.height/2 + 5);
-            }
+            const _puI={coin:IMAGES.current.coin,energy:IMAGES.current.energyIcon,ammo:IMAGES.current.ammoIcon}[p.type];
+            if (_puI&&isImageValid(_puI)){const _s=1+Math.sin(state.animFrame*0.1)*0.1;ctx.save();ctx.translate(p.x+p.width/2,p.y+p.height/2);ctx.scale(_s,_s);ctx.drawImage(_puI,-p.width/2,-p.height/2,p.width,p.height);ctx.restore();}
+            else{ctx.fillStyle='gold';ctx.beginPath();ctx.arc(p.x+p.width/2,p.y+p.height/2,p.width/2,0,Math.PI*2);ctx.fill();}
         });
 
         // Draw Particles

@@ -145,35 +145,35 @@ export default function Missions() {
                             </Link>
                         </motion.div>
 
-                        {/* North America Mission Card - Coming Soon */}
+                        {/* North America Mission Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <Card className="relative overflow-hidden border-4 transition-all duration-300 border-slate-700 opacity-70 select-none">
+                            <Link to={`${createPageUrl('Game')}?level=usa`}>
+                            <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-slate-700 hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] select-none">
                                 <div className="absolute inset-0 z-0">
                                     <img 
-                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png" 
+                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png" 
                                         alt="North America" 
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
                                 </div>
-
                                 <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
                                     <div className="flex justify-between items-end">
                                         <div>
                                             <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">NORTH AMERICA</h2>
-                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">Coming Soon</p>
+                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">The USA awaits — poop on it all!</p>
                                         </div>
-
-                                        <div className="bg-slate-900/80 p-3 rounded-full">
-                                            <Lock className="w-6 h-6 text-slate-500" />
+                                        <div className="bg-blue-500 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                            <Play className="w-6 h-6 text-white fill-current" />
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
+                            </Link>
                         </motion.div>
 
                         {/* South America Mission Card - Coming Soon */}

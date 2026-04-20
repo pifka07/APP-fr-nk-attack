@@ -130,8 +130,8 @@ export default function Profile() {
                                 rankInfo.player_level === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
                                 rankInfo.player_level === 2 ? '904e55289_Abzeichen-Kopie5.png' :
                                 rankInfo.player_level === 3 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
-                                rankInfo.player_level === 4 ? '640ba9ba4_Abzeichen-Kopie3.png' :
-                                '4c2d7b20c_Abzeichen-Kopie2.png'
+                                rankInfo.player_level === 4 ? '4c2d7b20c_Abzeichen-Kopie2.png' :
+                                '640ba9ba4_Abzeichen-Kopie3.png'
                             }`}
                             alt={rankInfo.player_rank_name}
                             className="w-48 h-48 object-contain drop-shadow-2xl"
@@ -297,8 +297,8 @@ export default function Profile() {
                             { level: 1, name: 'Street Sparrow', threshold: 0, image: 'ab940f029_Abzeichen-Kopie.png' },
                             { level: 2, name: 'Urban Pigeon', threshold: 10000, image: '904e55289_Abzeichen-Kopie5.png' },
                             { level: 3, name: 'Sky Runner', threshold: 50000, image: '0a1c8ab54_Abzeichen-Kopie4.png' },
-                            { level: 4, name: 'Apex Eagle', threshold: 150000, image: '640ba9ba4_Abzeichen-Kopie3.png' },
-                            { level: 5, name: 'Legendary Fränk', threshold: 300000, image: '4c2d7b20c_Abzeichen-Kopie2.png' }
+                            { level: 4, name: 'Apex Eagle', threshold: 150000, image: '4c2d7b20c_Abzeichen-Kopie2.png' },
+                            { level: 5, name: 'Legendary Fränk', threshold: 300000, image: '640ba9ba4_Abzeichen-Kopie3.png' }
                         ].map((rank) => (
                             <div 
                                 key={rank.level}

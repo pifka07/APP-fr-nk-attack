@@ -130,8 +130,8 @@ export default function Leaderboard() {
                                                                         playerRanks[player.user_id] === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
                                                                         playerRanks[player.user_id] === 2 ? '904e55289_Abzeichen-Kopie5.png' :
                                                                         playerRanks[player.user_id] === 3 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
-                                                                        playerRanks[player.user_id] === 4 ? '640ba9ba4_Abzeichen-Kopie3.png' :
-                                                                        '4c2d7b20c_Abzeichen-Kopie2.png'
+                                                                        playerRanks[player.user_id] === 4 ? '4c2d7b20c_Abzeichen-Kopie2.png' :
+                                                                        '640ba9ba4_Abzeichen-Kopie3.png'
                                                                     }`}
                                                                     alt={`Level ${playerRanks[player.user_id]}`}
                                                                     className="w-4 h-4 object-contain"

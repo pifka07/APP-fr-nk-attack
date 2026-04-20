@@ -127,8 +127,8 @@ export default function Leaderboard() {
                                                             {playerRanks[player.user_id] && (
                                                                 <img 
                                                                     src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/${
-                                                                        playerRanks[player.user_id] === 1 ? '904e55289_Abzeichen-Kopie5.png' :
-                                                                        playerRanks[player.user_id] === 2 ? 'ab940f029_Abzeichen-Kopie.png' :
+                                                                        playerRanks[player.user_id] === 1 ? 'ab940f029_Abzeichen-Kopie.png' :
+                                                                        playerRanks[player.user_id] === 2 ? '904e55289_Abzeichen-Kopie5.png' :
                                                                         playerRanks[player.user_id] === 3 ? '0a1c8ab54_Abzeichen-Kopie4.png' :
                                                                         playerRanks[player.user_id] === 4 ? '640ba9ba4_Abzeichen-Kopie3.png' :
                                                                         '4c2d7b20c_Abzeichen-Kopie2.png'

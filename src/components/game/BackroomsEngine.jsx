@@ -3,16 +3,18 @@ import * as THREE from 'three';
 
 const ROOM_W = 8;
 const ROOM_H = 3.5;
-const CORRIDOR_LEN = 12;
-const SEGMENTS = 20; // How many corridor segments ahead
+const SEGMENT_LEN = 12; // Length of one corridor segment
+const VISIBLE_SEGMENTS = 8; // How many segments to keep ahead
+
+// Turning
+const TURN_DURATION = 1.2; // seconds to complete a turn
+const TURN_COOLDOWN = 5; // seconds between possible turns
 
 const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, onAmmoUpdate, config = {}, soundEnabled = true, musicEnabled = true, onAssetsLoaded }, ref) => {
     const mountRef = useRef(null);
     const stateRef = useRef({
         isPlaying: false,
         speed: 0,
-        lateralSpeed: 0,
-        verticalSpeed: 0,
         posZ: 0,
         posX: 0,
         posY: 1.5,
@@ -26,21 +28,28 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         maxAmmo: 10,
         shadows: [],
         projectiles: [],
-        particles: [],
         animFrame: 0,
         lastTime: 0,
+        // Turning state
+        turning: null, // { direction: 'left'|'right', progress: 0, fromAngle, toAngle }
+        currentAngle: 0, // camera yaw angle in radians
+        turnCooldown: 0,
+        turnSignZOffset: 0, // z position of next turn sign
+        nextTurnDir: null,
     });
     const rendererRef = useRef(null);
     const sceneRef = useRef(null);
     const cameraRef = useRef(null);
     const rafRef = useRef(null);
-    const corridorGroupRef = useRef(null);
-    const shadowMeshesRef = useRef([]);
     const clockRef = useRef(new THREE.Clock());
     const [loadingDone, setLoadingDone] = useState(false);
 
-    // Input state
-    const inputRef = useRef({ up: false, down: false, left: false, right: false, dx: 0, dy: 0 });
+    // Corridor segments pool for infinite scrolling
+    const segmentsRef = useRef([]); // array of { group, zStart }
+    const materialsRef = useRef(null);
+
+    // Input
+    const inputRef = useRef({ dx: 0, dy: 0 });
 
     useImperativeHandle(ref, () => ({
         start: () => {
@@ -57,9 +66,13 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             s.speed = 0.06;
             s.shadows = [];
             s.projectiles = [];
-            s.particles = [];
             s.ammo = config.poopTankCapacity || 10;
             s.maxAmmo = config.poopTankCapacity || 10;
+            s.currentAngle = 0;
+            s.turning = null;
+            s.turnCooldown = TURN_COOLDOWN;
+            s.turnSignZOffset = -40;
+            s.nextTurnDir = Math.random() < 0.5 ? 'left' : 'right';
             if (onAmmoUpdate) onAmmoUpdate(s.ammo);
             if (onHealthUpdate) onHealthUpdate(100);
             loop();
@@ -68,17 +81,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             stateRef.current.isPlaying = false;
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         },
-        movePlayer: (dy) => {
-            inputRef.current.dy += dy;
-        },
-        moveLateral: (dx) => {
-            inputRef.current.dx += dx;
-        },
+        movePlayer: (dy) => { inputRef.current.dy += dy; },
+        moveLateral: (dx) => { inputRef.current.dx += dx; },
         startInput: () => {},
         endInput: () => {},
-        poop: () => {
-            spawnProjectile();
-        }
+        poop: () => { spawnProjectile(); }
     }));
 
     const spawnProjectile = () => {
@@ -86,8 +93,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         if (!s.isPlaying || s.ammo <= 0) return;
         s.ammo--;
         if (onAmmoUpdate) onAmmoUpdate(s.ammo);
-
-        // Create sphere for projectile
         const geo = new THREE.SphereGeometry(0.15, 8, 8);
         const mat = new THREE.MeshPhongMaterial({ color: 0x8B4513, emissive: 0x3d1f00 });
         const mesh = new THREE.Mesh(geo, mat);
@@ -96,67 +101,13 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         s.projectiles.push({ mesh, vz: -0.5, vy: -0.02, active: true });
     };
 
-    useEffect(() => {
-        const mount = mountRef.current;
-        if (!mount) return;
-
-        // Scene
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0xd4a017, 5, 40);
-        scene.background = new THREE.Color(0xd4a017);
-        sceneRef.current = scene;
-
-        // Camera
-        const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 60);
-        camera.position.set(0, 1.5, 0);
-        cameraRef.current = camera;
-
-        // Renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: false });
-        renderer.setSize(mount.clientWidth, mount.clientHeight);
-        renderer.shadowMap.enabled = false;
-        mount.appendChild(renderer.domElement);
-        rendererRef.current = renderer;
-
-        // Lighting - fluorescent flicker effect
-        const ambientLight = new THREE.AmbientLight(0xfff5c0, 0.4);
-        scene.add(ambientLight);
-
-        // Build corridor segments
-        buildCorridor(scene);
-
-        // Resize
-        const handleResize = () => {
-            if (!mount) return;
-            camera.aspect = mount.clientWidth / mount.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(mount.clientWidth, mount.clientHeight);
-        };
-        window.addEventListener('resize', handleResize);
-
-        setLoadingDone(true);
-        if (onAssetsLoaded) onAssetsLoaded();
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            renderer.dispose();
-            if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
-        };
-    }, []);
-
-    const buildCorridor = (scene) => {
-        const group = new THREE.Group();
-        corridorGroupRef.current = group;
-
-        // Wallpaper yellow texture via canvas
+    // Build materials once
+    const buildMaterials = () => {
         const wallCanvas = document.createElement('canvas');
         wallCanvas.width = 256; wallCanvas.height = 256;
         const wCtx = wallCanvas.getContext('2d');
-        // Base yellow
         wCtx.fillStyle = '#c8a000';
         wCtx.fillRect(0, 0, 256, 256);
-        // Grid pattern
         wCtx.strokeStyle = '#a07800';
         wCtx.lineWidth = 2;
         for (let i = 0; i < 256; i += 32) {
@@ -165,7 +116,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         }
         const wallTex = new THREE.CanvasTexture(wallCanvas);
         wallTex.wrapS = wallTex.wrapT = THREE.RepeatWrapping;
-        wallTex.repeat.set(4, 2);
 
         const floorCanvas = document.createElement('canvas');
         floorCanvas.width = 256; floorCanvas.height = 256;
@@ -191,105 +141,161 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         ceilTex.wrapS = ceilTex.wrapT = THREE.RepeatWrapping;
         ceilTex.repeat.set(2, 6);
 
-        const wallMat = new THREE.MeshLambertMaterial({ map: wallTex });
-        const floorMat = new THREE.MeshLambertMaterial({ map: floorTex });
-        const ceilMat = new THREE.MeshLambertMaterial({ map: ceilTex });
-        const totalLen = CORRIDOR_LEN * SEGMENTS;
+        return {
+            wall: new THREE.MeshLambertMaterial({ map: wallTex }),
+            floor: new THREE.MeshLambertMaterial({ map: floorTex }),
+            ceil: new THREE.MeshLambertMaterial({ map: ceilTex }),
+            pillar: new THREE.MeshLambertMaterial({ color: 0xa08020 }),
+            light: new THREE.MeshBasicMaterial({ color: 0xffffc0 }),
+        };
+    };
+
+    // Build a single corridor segment group at zStart
+    const buildSegment = (scene, zStart) => {
+        const mats = materialsRef.current;
+        const group = new THREE.Group();
+        const L = SEGMENT_LEN;
+        const W = ROOM_W;
+        const H = ROOM_H;
 
         // Floor
-        const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(ROOM_W, totalLen),
-            floorMat
-        );
+        const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, L), mats.floor);
         floor.rotation.x = -Math.PI / 2;
-        floor.position.set(0, 0, -totalLen / 2);
+        floor.position.set(0, 0, zStart - L / 2);
         group.add(floor);
 
         // Ceiling
-        const ceil = new THREE.Mesh(
-            new THREE.PlaneGeometry(ROOM_W, totalLen),
-            ceilMat
-        );
+        const ceil = new THREE.Mesh(new THREE.PlaneGeometry(W, L), mats.ceil);
         ceil.rotation.x = Math.PI / 2;
-        ceil.position.set(0, ROOM_H, -totalLen / 2);
+        ceil.position.set(0, H, zStart - L / 2);
         group.add(ceil);
 
         // Left wall
-        const leftWall = new THREE.Mesh(
-            new THREE.PlaneGeometry(totalLen, ROOM_H),
-            wallMat
-        );
+        const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(L, H), mats.wall.clone());
         leftWall.rotation.y = Math.PI / 2;
-        leftWall.position.set(-ROOM_W / 2, ROOM_H / 2, -totalLen / 2);
+        leftWall.position.set(-W / 2, H / 2, zStart - L / 2);
         group.add(leftWall);
 
         // Right wall
-        const rightWall = new THREE.Mesh(
-            new THREE.PlaneGeometry(totalLen, ROOM_H),
-            wallMat.clone()
-        );
+        const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(L, H), mats.wall.clone());
         rightWall.rotation.y = -Math.PI / 2;
-        rightWall.position.set(ROOM_W / 2, ROOM_H / 2, -totalLen / 2);
+        rightWall.position.set(W / 2, H / 2, zStart - L / 2);
         group.add(rightWall);
 
-        // Ceiling lights - fluorescent tubes every CORRIDOR_LEN
-        for (let i = 0; i < SEGMENTS; i++) {
-            const z = -i * CORRIDOR_LEN - 3;
-            const lightGeo = new THREE.BoxGeometry(0.3, 0.05, 1.5);
-            const lightMat = new THREE.MeshBasicMaterial({ color: 0xffffc0 });
-            const lightMesh = new THREE.Mesh(lightGeo, lightMat);
-            lightMesh.position.set(0, ROOM_H - 0.05, z);
-            group.add(lightMesh);
+        // Ceiling light tube
+        const lightZ = zStart - L / 2;
+        const lightMesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.05, 1.5), mats.light);
+        lightMesh.position.set(0, H - 0.05, lightZ);
+        group.add(lightMesh);
 
-            const pointLight = new THREE.PointLight(0xffffc0, 1.5, CORRIDOR_LEN * 1.2);
-            pointLight.position.set(0, ROOM_H - 0.2, z);
-            group.add(pointLight);
-        }
+        const pointLight = new THREE.PointLight(0xffffc0, 1.5, SEGMENT_LEN * 1.5);
+        pointLight.position.set(0, H - 0.2, lightZ);
+        group.add(pointLight);
 
-        // Column pillars every segment
-        for (let i = 0; i < SEGMENTS; i++) {
-            const z = -i * CORRIDOR_LEN;
-            [-ROOM_W/2 + 0.3, ROOM_W/2 - 0.3].forEach(x => {
-                const pillarGeo = new THREE.BoxGeometry(0.3, ROOM_H, 0.3);
-                const pillarMat = new THREE.MeshLambertMaterial({ color: 0xa08020 });
-                const pillar = new THREE.Mesh(pillarGeo, pillarMat);
-                pillar.position.set(x, ROOM_H / 2, z);
-                group.add(pillar);
-            });
-        }
+        // Pillars at segment start
+        [-W / 2 + 0.3, W / 2 - 0.3].forEach(x => {
+            const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.3, H, 0.3), mats.pillar);
+            pillar.position.set(x, H / 2, zStart);
+            group.add(pillar);
+        });
 
         scene.add(group);
+        return { group, zStart };
+    };
+
+    // Create arrow sign for upcoming turn
+    const buildTurnSign = (scene, zPos, direction) => {
+        const group = new THREE.Group();
+        // Sign board
+        const boardGeo = new THREE.BoxGeometry(1.2, 0.5, 0.05);
+        const boardMat = new THREE.MeshLambertMaterial({ color: 0x223399 });
+        const board = new THREE.Mesh(boardGeo, boardMat);
+        group.add(board);
+
+        // Arrow indicator (colored plane)
+        const arrowGeo = new THREE.PlaneGeometry(0.8, 0.3);
+        const arrowMat = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+        const arrow = new THREE.Mesh(arrowGeo, arrowMat);
+        arrow.position.set(direction === 'left' ? -0.1 : 0.1, 0, 0.04);
+        group.add(arrow);
+
+        group.position.set(0, ROOM_H - 0.8, zPos);
+        scene.add(group);
+        return group;
+    };
+
+    useEffect(() => {
+        const mount = mountRef.current;
+        if (!mount) return;
+
+        const scene = new THREE.Scene();
+        // Fog distance much further to prevent yellow flash
+        scene.fog = new THREE.Fog(0xd4a017, 15, 80);
+        scene.background = new THREE.Color(0xd4a017);
+        sceneRef.current = scene;
+
+        const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 90);
+        camera.position.set(0, 1.5, 0);
+        cameraRef.current = camera;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: false });
+        renderer.setSize(mount.clientWidth, mount.clientHeight);
+        renderer.shadowMap.enabled = false;
+        mount.appendChild(renderer.domElement);
+        rendererRef.current = renderer;
+
+        const ambientLight = new THREE.AmbientLight(0xfff5c0, 0.4);
+        scene.add(ambientLight);
+
+        // Build materials
+        materialsRef.current = buildMaterials();
+
+        // Build initial corridor segments ahead
+        const segments = [];
+        for (let i = 0; i < VISIBLE_SEGMENTS; i++) {
+            segments.push(buildSegment(scene, -i * SEGMENT_LEN));
+        }
+        segmentsRef.current = segments;
 
         // Spawn initial shadows
-        spawnShadows(scene);
-    };
-
-    const spawnShadows = (scene) => {
         const s = stateRef.current;
-        for (let i = 0; i < 8; i++) {
-            spawnOneShadow(scene, -10 - i * 15);
+        for (let i = 0; i < 6; i++) {
+            spawnOneShadow(scene, -10 - i * 18);
         }
-    };
+
+        const handleResize = () => {
+            if (!mount) return;
+            camera.aspect = mount.clientWidth / mount.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(mount.clientWidth, mount.clientHeight);
+        };
+        window.addEventListener('resize', handleResize);
+
+        setLoadingDone(true);
+        if (onAssetsLoaded) onAssetsLoaded();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            renderer.dispose();
+            if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+        };
+    }, []);
 
     const spawnOneShadow = (scene, z) => {
         const s = stateRef.current;
-        const spawnZ = z || (s.posZ - 20 - Math.random() * 30);
-        const x = (Math.random() - 0.5) * (ROOM_W - 1.5);
-        // Both types can fly - y from near floor to near ceiling
+        const spawnZ = z !== undefined ? z : (s.posZ - 20 - Math.random() * 30);
+        const x = (Math.random() - 0.5) * (ROOM_W - 2);
         const y = 0.5 + Math.random() * (ROOM_H - 1.0);
-
         const type = Math.random() < 0.5 ? 'blob' : 'spider';
         const group = new THREE.Group();
         group.position.set(x, y, spawnZ);
 
         if (type === 'blob') {
-            // Black smoke blob with glowing white eyes and red grin
             const bodyGeo = new THREE.SphereGeometry(0.55, 12, 12);
             const bodyMat = new THREE.MeshLambertMaterial({ color: 0x080808, transparent: true, opacity: 0.92 });
-            const body = new THREE.Mesh(bodyGeo, bodyMat);
-            group.add(body);
+            group.add(new THREE.Mesh(bodyGeo, bodyMat));
 
-            // Smoke puffs around body
             for (let i = 0; i < 6; i++) {
                 const pGeo = new THREE.SphereGeometry(0.28 + Math.random() * 0.18, 6, 6);
                 const pMat = new THREE.MeshLambertMaterial({ color: 0x111111, transparent: true, opacity: 0.5 });
@@ -299,68 +305,49 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 group.add(puff);
             }
 
-            // White glowing eyes
             const eyeGeo = new THREE.SphereGeometry(0.08, 8, 8);
             const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
             const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
             eyeL.position.set(-0.18, 0.1, 0.5);
             const eyeR = new THREE.Mesh(eyeGeo, eyeMat.clone());
             eyeR.position.set(0.18, 0.1, 0.5);
-            group.add(eyeL);
-            group.add(eyeR);
+            group.add(eyeL); group.add(eyeR);
 
-            // Red grin (arc of teeth segments)
-            const teethCount = 7;
-            for (let i = 0; i < teethCount; i++) {
-                const t = (i / (teethCount - 1)) - 0.5;
+            for (let i = 0; i < 7; i++) {
+                const t = (i / 6) - 0.5;
                 const tGeo = new THREE.BoxGeometry(0.07, 0.09, 0.04);
-                const tMat = new THREE.MeshBasicMaterial({ color: 0xff2200 });
-                const tooth = new THREE.Mesh(tGeo, tMat);
+                const tooth = new THREE.Mesh(tGeo, new THREE.MeshBasicMaterial({ color: 0xff2200 }));
                 tooth.position.set(t * 0.5, -0.12 + Math.abs(t) * 0.08, 0.5);
                 group.add(tooth);
             }
-
         } else {
-            // Long-legged spider creature (black tendrils)
             const bodyGeo = new THREE.SphereGeometry(0.22, 8, 8);
-            const bodyMat = new THREE.MeshLambertMaterial({ color: 0x060606 });
-            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            const body = new THREE.Mesh(bodyGeo, new THREE.MeshLambertMaterial({ color: 0x060606 }));
             body.scale.set(1.4, 0.8, 1);
             group.add(body);
 
-            // Long spindly legs (4 each side)
             const legMat = new THREE.MeshLambertMaterial({ color: 0x080808 });
-            const legPositions = [-3, -1, 1, 3];
-            legPositions.forEach((offset, i) => {
+            [-3, -1, 1, 3].forEach((offset, i) => {
                 [-1, 1].forEach(side => {
-                    // Upper segment
-                    const upGeo = new THREE.CylinderGeometry(0.025, 0.015, 0.7, 4);
-                    const up = new THREE.Mesh(upGeo, legMat);
+                    const up = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.015, 0.7, 4), legMat);
                     up.position.set(side * 0.2, -0.1, offset * 0.12);
                     up.rotation.z = side * (Math.PI / 4 + i * 0.1);
                     up.rotation.x = offset * 0.3;
                     group.add(up);
 
-                    // Lower segment (longer, draping down)
-                    const downGeo = new THREE.CylinderGeometry(0.015, 0.005, 1.1, 4);
-                    const down = new THREE.Mesh(downGeo, legMat.clone());
-                    const upEnd = new THREE.Vector3(
-                        side * (0.2 + Math.cos(side * (Math.PI / 4 + i * 0.1)) * 0.35),
-                        -0.1 + Math.sin(side * (Math.PI / 4 + i * 0.1)) * 0.35,
-                        offset * 0.12
-                    );
-                    down.position.set(upEnd.x + side * 0.1, upEnd.y - 0.55, upEnd.z + offset * 0.1);
+                    const down = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.005, 1.1, 4), legMat.clone());
+                    const ux = side * (0.2 + Math.cos(side * (Math.PI / 4 + i * 0.1)) * 0.35);
+                    const uy = -0.1 + Math.sin(side * (Math.PI / 4 + i * 0.1)) * 0.35;
+                    down.position.set(ux + side * 0.1, uy - 0.55, offset * 0.12 + offset * 0.1);
                     down.rotation.z = side * 0.3;
                     down.rotation.x = offset * 0.4;
                     group.add(down);
                 });
             });
 
-            // Red eyes
             const eyeGeo = new THREE.SphereGeometry(0.05, 6, 6);
-            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             for (let i = -1; i <= 1; i += 2) {
-                const eye = new THREE.Mesh(eyeGeo, eyeMat.clone());
+                const eye = new THREE.Mesh(eyeGeo, new THREE.MeshBasicMaterial({ color: 0xff0000 }));
                 eye.position.set(i * 0.1, 0.08, 0.22);
                 group.add(eye);
             }
@@ -380,6 +367,35 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         });
     };
 
+    // Recycle corridor segments - move old ones to front
+    const recycleSegments = (posZ) => {
+        const scene = sceneRef.current;
+        const segments = segmentsRef.current;
+
+        // Find furthest ahead segment
+        let minZ = Infinity;
+        segments.forEach(seg => { if (seg.zStart < minZ) minZ = seg.zStart; });
+
+        // Find segments that are behind the player and recycle them
+        segments.forEach(seg => {
+            if (seg.zStart > posZ + SEGMENT_LEN * 2) {
+                // This segment is behind us - move it ahead
+                const newZ = minZ - SEGMENT_LEN;
+                // Update all children positions
+                const offsetZ = newZ - seg.zStart;
+                seg.group.children.forEach(child => {
+                    child.position.z += offsetZ;
+                    if (child.isPointLight) child.position.z += offsetZ;
+                });
+                seg.group.position.z += offsetZ; // Actually move the whole group
+                seg.zStart = newZ;
+                minZ = newZ;
+            }
+        });
+    };
+
+    const turnSignRef = useRef(null);
+
     const loop = () => {
         const s = stateRef.current;
         if (!s.isPlaying) return;
@@ -390,31 +406,82 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
 
         // Flicker lights
         sceneRef.current.children.forEach(child => {
-            if (child instanceof THREE.PointLight) {
+            if (child.isPointLight || child instanceof THREE.PointLight) {
                 child.intensity = 1.2 + Math.sin(t * 8 + child.position.z) * 0.3 + (Math.random() < 0.02 ? -0.8 : 0);
             }
         });
 
-        // Move camera forward
-        s.posZ -= s.speed * 60 * delta;
-        s.distance += s.speed * 60 * delta * 0.5;
+        // Move forward
+        const moveSpeed = s.speed * 60 * delta;
+        s.posZ -= moveSpeed;
+        s.distance += moveSpeed * 0.5;
 
-        // Apply input
+        // Recycle corridor segments for infinite scroll
+        recycleSegments(s.posZ);
+
+        // Apply lateral/vertical input
         const lateralForce = inputRef.current.dx * 0.04;
         const verticalForce = inputRef.current.dy * 0.025;
         inputRef.current.dx *= 0.7;
         inputRef.current.dy *= 0.7;
 
-        s.posX = Math.max(-ROOM_W/2 + 0.5, Math.min(ROOM_W/2 - 0.5, s.posX + lateralForce));
+        s.posX = Math.max(-ROOM_W / 2 + 0.5, Math.min(ROOM_W / 2 - 0.5, s.posX + lateralForce));
         s.posY = Math.max(0.4, Math.min(ROOM_H - 0.4, s.posY + verticalForce));
 
-        // Subtle camera sway
-        const swayX = Math.sin(t * 0.8) * 0.05;
-        const swayY = Math.cos(t * 1.1) * 0.03;
-        cameraRef.current.position.set(s.posX + swayX, s.posY + swayY, s.posZ);
-        cameraRef.current.lookAt(s.posX + swayX, s.posY + swayY, s.posZ - 10);
+        // ---- TURNING LOGIC ----
+        s.turnCooldown = Math.max(0, s.turnCooldown - delta);
 
-        // Increase speed gradually - faster acceleration
+        // Show turn sign ahead of time
+        if (s.turnCooldown <= 0 && !s.turning && turnSignRef.current === null) {
+            s.turnSignZOffset = s.posZ - 20;
+            const dir = s.nextTurnDir || (Math.random() < 0.5 ? 'left' : 'right');
+            s.nextTurnDir = dir;
+            turnSignRef.current = buildTurnSign(sceneRef.current, s.turnSignZOffset, dir);
+        }
+
+        // Trigger turn when player reaches sign
+        if (!s.turning && turnSignRef.current && s.posZ < s.turnSignZOffset + 5) {
+            s.turning = {
+                direction: s.nextTurnDir,
+                progress: 0,
+                fromAngle: s.currentAngle,
+                toAngle: s.currentAngle + (s.nextTurnDir === 'left' ? Math.PI / 2 : -Math.PI / 2),
+            };
+            // Remove sign
+            sceneRef.current.remove(turnSignRef.current);
+            turnSignRef.current = null;
+        }
+
+        // Animate the turn
+        if (s.turning) {
+            s.turning.progress += delta / TURN_DURATION;
+            if (s.turning.progress >= 1) {
+                s.turning.progress = 1;
+                s.currentAngle = s.turning.toAngle;
+                s.turning = null;
+                s.turnCooldown = TURN_COOLDOWN + Math.random() * 4;
+                s.nextTurnDir = Math.random() < 0.5 ? 'left' : 'right';
+            } else {
+                // Smooth interpolation (ease in-out)
+                const ease = s.turning.progress < 0.5
+                    ? 2 * s.turning.progress * s.turning.progress
+                    : -1 + (4 - 2 * s.turning.progress) * s.turning.progress;
+                s.currentAngle = s.turning.fromAngle + (s.turning.toAngle - s.turning.fromAngle) * ease;
+            }
+        }
+
+        // Camera
+        const swayX = Math.sin(t * 0.8) * 0.04;
+        const swayY = Math.cos(t * 1.1) * 0.02;
+        cameraRef.current.position.set(s.posX + swayX, s.posY + swayY, s.posZ);
+
+        // Look direction based on turn angle
+        const lookDist = 10;
+        const lookX = s.posX + Math.sin(s.currentAngle) * lookDist;
+        const lookZ = s.posZ - Math.cos(s.currentAngle) * lookDist;
+        cameraRef.current.lookAt(lookX + swayX, s.posY + swayY, lookZ);
+
+        // Increase speed
         s.speed = Math.min(0.22, s.speed + 0.00008);
 
         // Score
@@ -427,17 +494,13 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             spawnOneShadow(sceneRef.current, s.posZ - 30 - Math.random() * 20);
         }
 
-        // Update shadows - flying/floating movement
+        // Update shadows
         s.shadows.forEach(sh => {
             sh.mesh.position.z += sh.vz;
-            // Floating bob up/down
             sh.mesh.position.y += Math.sin(t * sh.floatSpeed + sh.floatOffset) * 0.008;
-            // Slight lateral drift
             sh.mesh.position.x += Math.cos(t * (sh.floatSpeed * 0.5) + sh.floatOffset) * 0.003;
-            // Clamp within corridor
-            sh.mesh.position.x = Math.max(-ROOM_W/2 + 0.6, Math.min(ROOM_W/2 - 0.6, sh.mesh.position.x));
+            sh.mesh.position.x = Math.max(-ROOM_W / 2 + 0.6, Math.min(ROOM_W / 2 - 0.6, sh.mesh.position.x));
             sh.mesh.position.y = Math.max(0.3, Math.min(ROOM_H - 0.3, sh.mesh.position.y));
-            // Face player
             sh.mesh.lookAt(s.posX, s.posY, s.posZ);
         });
 
@@ -447,7 +510,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             p.mesh.position.z += p.vz;
             p.mesh.position.y += p.vy;
 
-            // Hit shadows
             s.shadows.forEach(sh => {
                 if (sh.hp > 0) {
                     const dx = p.mesh.position.x - sh.mesh.position.x;
@@ -468,7 +530,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 }
             });
 
-            // Remove if too far
             if (p.mesh.position.z < s.posZ - 30) {
                 p.active = false;
                 sceneRef.current.remove(p.mesh);
@@ -505,13 +566,13 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             }
         });
 
-        // Ammo refill slowly
+        // Ammo refill
         if (s.animFrame % 300 === 0 && s.ammo < s.maxAmmo) {
             s.ammo = Math.min(s.maxAmmo, s.ammo + 1);
             if (onAmmoUpdate) onAmmoUpdate(s.ammo);
         }
 
-        // Cleanup dead shadows/projectiles
+        // Cleanup
         s.shadows = s.shadows.filter(sh => sh.hp > 0 && sh.mesh.position.z > s.posZ - 60);
         s.projectiles = s.projectiles.filter(p => p.active);
 
@@ -522,17 +583,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     return (
         <div className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }}>
             <div ref={mountRef} className="absolute inset-0 w-full h-full" />
-            {/* POV Fränk overlay - bottom center */}
             <img
                 src="https://media.base44.com/images/public/6961111599b5db08cf38f4b2/ca040e4c0_FrnkPOV.png"
                 alt="Fränk POV"
                 className="absolute bottom-0 left-1/2 pointer-events-none select-none"
-                style={{
-                    transform: 'translateX(-50%)',
-                    width: '280px',
-                    imageRendering: 'auto',
-                    zIndex: 5,
-                }}
+                style={{ transform: 'translateX(-50%)', width: '280px', imageRendering: 'auto', zIndex: 5 }}
             />
         </div>
     );

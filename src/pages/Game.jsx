@@ -90,42 +90,56 @@ export default function Game() {
   }, []);
 
   const startGame = async () => {
-    try {
-      console.log("startGame called with gameSpeed:", gameSpeed);
+      try {
+          console.log("startGame called with gameSpeed:", gameSpeed);
 
-      // Try to create session if logged in
-      const isAuth = await base44.auth.isAuthenticated();
-      if (isAuth) {
-        const response = await base44.functions.invoke('startRun', {
-          missionId: null,
-          difficulty: gameSpeed
-        });
+          // Try to create session if logged in
+          const isAuth = await base44.auth.isAuthenticated();
+          if (isAuth) {
+              try {
+                  const response = await base44.functions.invoke('startRun', {
+                      missionId: null,
+                      difficulty: gameSpeed
+                  });
 
-        console.log("startRun response:", response.data);
+                  console.log("startRun response:", response.data);
 
-        if (response.data.success) {
-          runSessionIdRef.current = response.data.run_session_id;
-          runStartTimeRef.current = new Date(response.data.started_at);
-          console.log("Session created:", runSessionIdRef.current);
-        }
-      } else {
-        // Allow playing without login
-        runSessionIdRef.current = null;
-        runStartTimeRef.current = new Date();
+                  if (response.data.success) {
+                      runSessionIdRef.current = response.data.run_session_id;
+                      runStartTimeRef.current = new Date(response.data.started_at);
+                      console.log("Session created:", runSessionIdRef.current);
+                  }
+              } catch (sessionError) {
+                  console.warn("Failed to create run session, playing without saving:", sessionError);
+                  runSessionIdRef.current = null;
+                  runStartTimeRef.current = new Date();
+              }
+          } else {
+              // Allow playing without login
+              runSessionIdRef.current = null;
+              runStartTimeRef.current = new Date();
+          }
+
+          setGameState('playing');
+          setScore(0);
+          setCoins(0);
+          setHealth(100);
+          setDistance(0);
+          setCombo(0);
+          setFinalStats(null);
+          if (engineRef.current) engineRef.current.start();
+      } catch (error) {
+          console.error("Failed to start run", error);
+          // Start anyway without session
+          setGameState('playing');
+          setScore(0);
+          setCoins(0);
+          setHealth(100);
+          setDistance(0);
+          setCombo(0);
+          setFinalStats(null);
+          if (engineRef.current) engineRef.current.start();
       }
-
-      setGameState('playing');
-      setScore(0);
-      setCoins(0);
-      setHealth(100);
-      setDistance(0);
-      setCombo(0);
-      setFinalStats(null);
-      if (engineRef.current) engineRef.current.start();
-    } catch (error) {
-      console.error("Failed to start run", error);
-      toast.error("Failed to start game");
-    }
   };
 
   const pauseGame = () => {

@@ -54,7 +54,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             s.posZ = 0;
             s.posX = 0;
             s.posY = 1.5;
-            s.speed = 0.04;
+            s.speed = 0.06;
             s.shadows = [];
             s.projectiles = [];
             s.particles = [];
@@ -273,29 +273,110 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
 
     const spawnOneShadow = (scene, z) => {
         const s = stateRef.current;
-        const geo = new THREE.BoxGeometry(0.6, 1.8, 0.2);
-        const mat = new THREE.MeshLambertMaterial({ color: 0x050505, transparent: true, opacity: 0.85 });
-        const mesh = new THREE.Mesh(geo, mat);
+        const spawnZ = z || (s.posZ - 20 - Math.random() * 30);
         const x = (Math.random() - 0.5) * (ROOM_W - 1.5);
-        const y = 0.9 + Math.random() * 1.0;
-        mesh.position.set(x, y, z || (s.posZ - 20 - Math.random() * 30));
-        // Glowing eyes
-        const eyeGeo = new THREE.SphereGeometry(0.06, 6, 6);
-        const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
-        eyeL.position.set(-0.15, 0.5, 0.12);
-        const eyeR = new THREE.Mesh(eyeGeo, eyeMat.clone());
-        eyeR.position.set(0.15, 0.5, 0.12);
-        mesh.add(eyeL);
-        mesh.add(eyeR);
-        sceneRef.current.add(mesh);
+        // Both types can fly - y from near floor to near ceiling
+        const y = 0.5 + Math.random() * (ROOM_H - 1.0);
+
+        const type = Math.random() < 0.5 ? 'blob' : 'spider';
+        const group = new THREE.Group();
+        group.position.set(x, y, spawnZ);
+
+        if (type === 'blob') {
+            // Black smoke blob with glowing white eyes and red grin
+            const bodyGeo = new THREE.SphereGeometry(0.55, 12, 12);
+            const bodyMat = new THREE.MeshLambertMaterial({ color: 0x080808, transparent: true, opacity: 0.92 });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            group.add(body);
+
+            // Smoke puffs around body
+            for (let i = 0; i < 6; i++) {
+                const pGeo = new THREE.SphereGeometry(0.28 + Math.random() * 0.18, 6, 6);
+                const pMat = new THREE.MeshLambertMaterial({ color: 0x111111, transparent: true, opacity: 0.5 });
+                const puff = new THREE.Mesh(pGeo, pMat);
+                const angle = (i / 6) * Math.PI * 2;
+                puff.position.set(Math.cos(angle) * 0.45, Math.sin(angle) * 0.3, 0);
+                group.add(puff);
+            }
+
+            // White glowing eyes
+            const eyeGeo = new THREE.SphereGeometry(0.08, 8, 8);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+            eyeL.position.set(-0.18, 0.1, 0.5);
+            const eyeR = new THREE.Mesh(eyeGeo, eyeMat.clone());
+            eyeR.position.set(0.18, 0.1, 0.5);
+            group.add(eyeL);
+            group.add(eyeR);
+
+            // Red grin (arc of teeth segments)
+            const teethCount = 7;
+            for (let i = 0; i < teethCount; i++) {
+                const t = (i / (teethCount - 1)) - 0.5;
+                const tGeo = new THREE.BoxGeometry(0.07, 0.09, 0.04);
+                const tMat = new THREE.MeshBasicMaterial({ color: 0xff2200 });
+                const tooth = new THREE.Mesh(tGeo, tMat);
+                tooth.position.set(t * 0.5, -0.12 + Math.abs(t) * 0.08, 0.5);
+                group.add(tooth);
+            }
+
+        } else {
+            // Long-legged spider creature (black tendrils)
+            const bodyGeo = new THREE.SphereGeometry(0.22, 8, 8);
+            const bodyMat = new THREE.MeshLambertMaterial({ color: 0x060606 });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.scale.set(1.4, 0.8, 1);
+            group.add(body);
+
+            // Long spindly legs (4 each side)
+            const legMat = new THREE.MeshLambertMaterial({ color: 0x080808 });
+            const legPositions = [-3, -1, 1, 3];
+            legPositions.forEach((offset, i) => {
+                [-1, 1].forEach(side => {
+                    // Upper segment
+                    const upGeo = new THREE.CylinderGeometry(0.025, 0.015, 0.7, 4);
+                    const up = new THREE.Mesh(upGeo, legMat);
+                    up.position.set(side * 0.2, -0.1, offset * 0.12);
+                    up.rotation.z = side * (Math.PI / 4 + i * 0.1);
+                    up.rotation.x = offset * 0.3;
+                    group.add(up);
+
+                    // Lower segment (longer, draping down)
+                    const downGeo = new THREE.CylinderGeometry(0.015, 0.005, 1.1, 4);
+                    const down = new THREE.Mesh(downGeo, legMat.clone());
+                    const upEnd = new THREE.Vector3(
+                        side * (0.2 + Math.cos(side * (Math.PI / 4 + i * 0.1)) * 0.35),
+                        -0.1 + Math.sin(side * (Math.PI / 4 + i * 0.1)) * 0.35,
+                        offset * 0.12
+                    );
+                    down.position.set(upEnd.x + side * 0.1, upEnd.y - 0.55, upEnd.z + offset * 0.1);
+                    down.rotation.z = side * 0.3;
+                    down.rotation.x = offset * 0.4;
+                    group.add(down);
+                });
+            });
+
+            // Red eyes
+            const eyeGeo = new THREE.SphereGeometry(0.05, 6, 6);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            for (let i = -1; i <= 1; i += 2) {
+                const eye = new THREE.Mesh(eyeGeo, eyeMat.clone());
+                eye.position.set(i * 0.1, 0.08, 0.22);
+                group.add(eye);
+            }
+        }
+
+        sceneRef.current.add(group);
         s.shadows.push({
-            mesh,
+            mesh: group,
             hp: 1,
             isTarget: true,
             isObstacle: true,
-            scoreValue: 25,
-            vz: 0.015 + Math.random() * 0.02,
+            scoreValue: type === 'spider' ? 35 : 25,
+            vz: 0.015 + Math.random() * 0.025,
+            type,
+            floatOffset: Math.random() * Math.PI * 2,
+            floatSpeed: 0.8 + Math.random() * 1.2,
         });
     };
 
@@ -333,8 +414,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         cameraRef.current.position.set(s.posX + swayX, s.posY + swayY, s.posZ);
         cameraRef.current.lookAt(s.posX + swayX, s.posY + swayY, s.posZ - 10);
 
-        // Increase speed gradually
-        s.speed = Math.min(0.12, s.speed + 0.00002);
+        // Increase speed gradually - faster acceleration
+        s.speed = Math.min(0.22, s.speed + 0.00008);
 
         // Score
         s.score += 1;
@@ -346,10 +427,17 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             spawnOneShadow(sceneRef.current, s.posZ - 30 - Math.random() * 20);
         }
 
-        // Update shadows
+        // Update shadows - flying/floating movement
         s.shadows.forEach(sh => {
             sh.mesh.position.z += sh.vz;
-            // Face player roughly
+            // Floating bob up/down
+            sh.mesh.position.y += Math.sin(t * sh.floatSpeed + sh.floatOffset) * 0.008;
+            // Slight lateral drift
+            sh.mesh.position.x += Math.cos(t * (sh.floatSpeed * 0.5) + sh.floatOffset) * 0.003;
+            // Clamp within corridor
+            sh.mesh.position.x = Math.max(-ROOM_W/2 + 0.6, Math.min(ROOM_W/2 - 0.6, sh.mesh.position.x));
+            sh.mesh.position.y = Math.max(0.3, Math.min(ROOM_H - 0.3, sh.mesh.position.y));
+            // Face player
             sh.mesh.lookAt(s.posX, s.posY, s.posZ);
         });
 

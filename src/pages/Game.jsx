@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { base44 } from '@/api/base44Client';
 import GameEngine from '@/components/game/GameEngine';
+import BackroomsEngine from '@/components/game/BackroomsEngine';
 import { Pause, Play, RefreshCw, Home as HomeIcon, Heart, Trophy, Target, Zap, Music, Music2, Volume2, VolumeX, ArrowUp, Coins } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -264,24 +265,37 @@ export default function Game() {
             engineRef.current.startInput();
             // Initialize touch/mouse position
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             touchYRef.current = clientY;
+            touchXRef.current = clientX;
         }
     };
+
+    const touchXRef = useRef(null);
 
     const handleInputMove = (e) => {
         if (gameState === 'playing' && engineRef.current && touchYRef.current !== null) {
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const deltaY = clientY - touchYRef.current;
+            const deltaX = clientX - (touchXRef.current ?? clientX);
 
-            // Pass movement to engine (sensitivity adjustment if needed)
-            engineRef.current.movePlayer(deltaY * 1.2);
+            if (currentLevel === 'backrooms') {
+                // Backrooms: both axes
+                engineRef.current.movePlayer(deltaY * 1.2);
+                if (engineRef.current.moveLateral) engineRef.current.moveLateral(deltaX * 1.2);
+            } else {
+                engineRef.current.movePlayer(deltaY * 1.2);
+            }
 
             touchYRef.current = clientY;
+            touchXRef.current = clientX;
         }
     };
 
     const handleInputEnd = () => {
         touchYRef.current = null;
+        touchXRef.current = null;
         if (gameState === 'playing' && engineRef.current) {
             engineRef.current.endInput();
         }
@@ -307,21 +321,36 @@ export default function Game() {
         >
             {/* Game Engine Canvas */}
             <div className="absolute top-0 bottom-0 left-0 right-0 z-0">
-                <GameEngine 
-                    ref={engineRef}
-                    config={gameConfig}
-                    skin={skin}
-                    level={currentLevel}
-                    gameSpeed={gameSpeed}
-                    musicEnabled={musicEnabled}
-                    soundEnabled={soundEnabled}
-                    onGameOver={handleGameOver}
-                    onScoreUpdate={(s, c, d) => { setScore(s); setCoins(c); setDistance(d); }}
-                    onHealthUpdate={setHealth}
-                    onComboUpdate={setCombo}
-                    onAmmoUpdate={setAmmo}
-                    onAssetsLoaded={() => setAssetsReady(true)}
-                />
+                {currentLevel === 'backrooms' ? (
+                    <BackroomsEngine
+                        ref={engineRef}
+                        config={gameConfig}
+                        musicEnabled={musicEnabled}
+                        soundEnabled={soundEnabled}
+                        onGameOver={handleGameOver}
+                        onScoreUpdate={(s, c, d) => { setScore(s); setCoins(c); setDistance(d); }}
+                        onHealthUpdate={setHealth}
+                        onComboUpdate={setCombo}
+                        onAmmoUpdate={setAmmo}
+                        onAssetsLoaded={() => setAssetsReady(true)}
+                    />
+                ) : (
+                    <GameEngine 
+                        ref={engineRef}
+                        config={gameConfig}
+                        skin={skin}
+                        level={currentLevel}
+                        gameSpeed={gameSpeed}
+                        musicEnabled={musicEnabled}
+                        soundEnabled={soundEnabled}
+                        onGameOver={handleGameOver}
+                        onScoreUpdate={(s, c, d) => { setScore(s); setCoins(c); setDistance(d); }}
+                        onHealthUpdate={setHealth}
+                        onComboUpdate={setCombo}
+                        onAmmoUpdate={setAmmo}
+                        onAssetsLoaded={() => setAssetsReady(true)}
+                    />
+                )}
             </div>
 
 
@@ -438,32 +467,51 @@ export default function Game() {
                                     }, 3000);
                                 }}
                                 id="swipe-hints"
-                                className="absolute left-10 bottom-[120px] flex flex-col items-center gap-3 pointer-events-none"
+                                className={`absolute ${currentLevel === 'backrooms' ? 'left-4 bottom-[140px]' : 'left-10 bottom-[120px]'} flex flex-col items-center gap-3 pointer-events-none`}
                             >
-                                <motion.div
-                                    initial={{ y: 0 }}
-                                    animate={{ y: -10 }}
-                                    transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
-                                    className="flex items-center gap-2"
-                                >
-                                    <div className="relative">
-                                        <div className="absolute inset-0 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
-                                        <ArrowUp className="w-8 h-8 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                {currentLevel === 'backrooms' ? (
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-xs font-black text-yellow-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] tracking-wide">DRAG TO FLY</span>
+                                        <div className="grid grid-cols-3 gap-1">
+                                            <div />
+                                            <motion.div animate={{ y: [-4, 4] }} transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.5 }} className="flex justify-center"><ArrowUp className="w-6 h-6 text-yellow-300 stroke-[3]" /></motion.div>
+                                            <div />
+                                            <motion.div animate={{ x: [-4, 4] }} transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.5 }} className="flex justify-center"><ArrowUp className="w-6 h-6 -rotate-90 text-yellow-300 stroke-[3]" /></motion.div>
+                                            <div className="w-6 h-6 rounded-full bg-yellow-400/30 border border-yellow-400/60" />
+                                            <motion.div animate={{ x: [4, -4] }} transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.5 }} className="flex justify-center"><ArrowUp className="w-6 h-6 rotate-90 text-yellow-300 stroke-[3]" /></motion.div>
+                                            <div />
+                                            <motion.div animate={{ y: [4, -4] }} transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.5 }} className="flex justify-center"><ArrowUp className="w-6 h-6 rotate-180 text-yellow-300 stroke-[3]" /></motion.div>
+                                            <div />
+                                        </div>
                                     </div>
-                                    <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE UP</span>
-                                </motion.div>
+                                ) : (
+                                    <>
                                 <motion.div
-                                    initial={{ y: 0 }}
-                                    animate={{ y: 10 }}
-                                    transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
-                                    className="flex items-center gap-2"
-                                >
-                                    <div className="relative">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
-                                        <ArrowUp className="w-8 h-8 rotate-180 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
-                                    </div>
-                                    <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE DOWN</span>
-                                </motion.div>
+                                     initial={{ y: 0 }}
+                                     animate={{ y: -10 }}
+                                     transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                                     className="flex items-center gap-2"
+                                 >
+                                     <div className="relative">
+                                         <div className="absolute inset-0 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
+                                         <ArrowUp className="w-8 h-8 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                     </div>
+                                     <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE UP</span>
+                                 </motion.div>
+                                 <motion.div
+                                     initial={{ y: 0 }}
+                                     animate={{ y: 10 }}
+                                     transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.6 }}
+                                     className="flex items-center gap-2"
+                                 >
+                                     <div className="relative">
+                                         <div className="absolute inset-0 bg-gradient-to-t from-yellow-400 to-orange-500 rounded-full blur-sm opacity-60"></div>
+                                         <ArrowUp className="w-8 h-8 rotate-180 text-white relative z-10 drop-shadow-[0_2px_8px_rgba(251,191,36,0.8)] stroke-[3]" />
+                                     </div>
+                                     <span className="text-base font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">SWIPE DOWN</span>
+                                 </motion.div>
+                                 </>
+                                )}
                             </motion.div>
                         </AnimatePresence>
                     </div>

@@ -61,6 +61,11 @@ export class AssetLoader {
         this.images.balloon = new Image();
         this.images.london_drone = new Image();
         this.images.london_pigeon = new Image();
+        
+        // Backrooms entities
+        this.images.backrooms_shadow = new Image();
+        this.images.backrooms_shadow_tall = new Image();
+        this.images.backrooms_shadow_low = new Image();
 
         // Powerups & Projectiles
         this.images.coin = new Image();
@@ -109,6 +114,10 @@ export class AssetLoader {
         this.images.london_drone.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/204dc8607_Drohne.png";
         this.images.london_pigeon.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/ba609c1c4_Taube1.png";
         
+        this.images.backrooms_shadow.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e0aaa0ef0_generated_image.png";
+        this.images.backrooms_shadow_tall.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e0aaa0ef0_generated_image.png";
+        this.images.backrooms_shadow_low.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e0aaa0ef0_generated_image.png";
+        
         this.images.coin.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/a3d089aef_FrnkdieTaubecoin.png";
         this.images.poopProjectile.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/6fef2bdb0_Frnkkacke-Kopie-Kopie.png";
         this.images.poopTriple.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d851cff29_Frnkkacke-Kopie.png";
@@ -128,6 +137,10 @@ export class AssetLoader {
         this.images.rooftopForeground1.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/51fb3855b_Rooftop1.png";
         this.images.rooftopForeground2.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/d3b217c6a_Rooftop2.png";
         this.images.rooftopForeground3.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/5358e6ade_Rooftop3.png";
+        
+        // Backrooms background
+        this.images.backroomsBackground = new Image();
+        this.images.backroomsBackground.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/049d72dfb_generated_image.png";
 
         return this.waitForLoad();
     }

@@ -39,11 +39,38 @@ export function drawEnemies(ctx, enemies, IMAGES, animFrame, isImageValid, SPRIT
         else if (st==='rooftop_sparrow') ctx.translate(0,Math.sin(af*0.6)*2);
         else if (st.includes('drone')||st.includes('balloon')) ctx.translate(0,Math.sin(af*0.3)*2);
         else if (st.startsWith('berlin_npc')) ctx.translate(Math.sin(af*0.1)*0.5,0);
+        else if (st.startsWith('backrooms_shadow')) {
+            // Eerie floating/glitching effect for shadow entities
+            ctx.translate(Math.sin(af*0.4)*3, Math.cos(af*0.3)*4);
+            ctx.globalAlpha = 0.75 + Math.sin(af*0.8)*0.25;
+        }
 
         if (st==='trash_can') {
             const jO=Math.abs(Math.sin(af*0.1))*40;
             if(isImageValid(IMAGES.raccoon))ctx.drawImage(IMAGES.raccoon,-25,-e.height/2-jO+10,50,50);
             if(isImageValid(sheet))ctx.drawImage(sheet,sx,sy,sw,sh,-e.width/2,-e.height/2,e.width,e.height);
+        } else if (st.startsWith('backrooms_shadow')) {
+            if (isImageValid(sheet)) {
+                // Draw with dark tint for shadow effect
+                ctx.drawImage(sheet,sx,sy,sw,sh,-e.width/2,-e.height/2,e.width,e.height);
+                // Overlay black silhouette
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.fillStyle = 'rgba(0,0,0,0.85)';
+                ctx.fillRect(-e.width/2,-e.height/2,e.width,e.height);
+                ctx.globalCompositeOperation = 'source-over';
+                // Glowing white eyes
+                ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                ctx.beginPath(); ctx.ellipse(-e.width*0.15,-e.height*0.18,4,2.5,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(e.width*0.15,-e.height*0.18,4,2.5,0,0,Math.PI*2); ctx.fill();
+            } else {
+                // Fallback: draw pure black silhouette
+                ctx.fillStyle = 'rgba(0,0,0,0.9)';
+                ctx.fillRect(-e.width/2,-e.height/2,e.width,e.height);
+                ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                ctx.beginPath(); ctx.ellipse(-e.width*0.15,-e.height*0.18,4,2.5,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(e.width*0.15,-e.height*0.18,4,2.5,0,0,Math.PI*2); ctx.fill();
+            }
+            ctx.globalAlpha = 1.0;
         } else if (st!=='smoke'&&isImageValid(sheet)) {
             ctx.drawImage(sheet,sx,sy,sw,sh,-e.width/2,-e.height/2,e.width,e.height);
         } else if (st==='smoke') {

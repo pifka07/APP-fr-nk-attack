@@ -110,6 +110,18 @@ export class LevelManager {
                 music: 'https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3',
                 groundNPCs: [],
                 airNPCs: []
+            },
+            backrooms: {
+                name: 'Backrooms',
+                groundY: 0.88,
+                music: 'https://commondatastorage.googleapis.com/codeskulptor-demos/pang/paza-moduless.mp3',
+                groundNPCs: ['backrooms_shadow', 'backrooms_shadow_tall', 'backrooms_shadow_low'],
+                airNPCs: ['backrooms_shadow'],
+                groundOffsets: {
+                    backrooms_shadow: 90,
+                    backrooms_shadow_tall: 110,
+                    backrooms_shadow_low: 55
+                }
             }
         };
 

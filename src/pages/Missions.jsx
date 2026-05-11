@@ -79,6 +79,44 @@ export default function Missions() {
                     </motion.div>
                     ))}
 
+                    {/* Backrooms Level Card - TRENDING */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0 }}
+                    >
+                        <Link to={`${createPageUrl('Game')}?level=backrooms`}>
+                            <Card className="relative overflow-hidden border-4 transition-all duration-300 group border-yellow-700 hover:border-yellow-400 hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] select-none">
+                                <div className="absolute inset-0 z-0">
+                                    <img 
+                                        src="https://media.base44.com/images/public/6961111599b5db08cf38f4b2/ce2082506_generated_image.png"
+                                        alt="Backrooms" 
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                                </div>
+
+                                {/* Trending badge */}
+                                <div className="absolute top-3 right-3 z-20 bg-yellow-500 text-slate-900 font-black text-[10px] px-2 py-1 rounded-full shadow-lg uppercase tracking-widest animate-pulse">
+                                    🔥 TRENDING
+                                </div>
+
+                                <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <h2 className="text-3xl font-black text-yellow-300 font-titan uppercase drop-shadow-lg" style={{textShadow: '0 0 20px rgba(234,179,8,0.8)'}}>THE BACKROOMS</h2>
+                                            <p className="text-yellow-100/80 text-sm font-medium drop-shadow-md max-w-[80%]">Don't get lost. They're watching.</p>
+                                        </div>
+
+                                        <div className="bg-yellow-600 p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                                            <Play className="w-6 h-6 text-white fill-current" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </motion.div>
+
                     {/* Training Mission Card */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

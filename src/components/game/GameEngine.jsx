@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { spawnRooftopEnemy } from './levels/rooftop';
+import { spawnBackroomsEnemy } from './levels/backrooms';
 import { spawnParkEnemy } from './levels/park';
 import { spawnLondonEnemy } from './levels/london';
 import { spawnParisEnemy } from './levels/paris';
@@ -166,6 +167,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/7786d17f6_ChatGPTImage7Jan202610_45_40.png";
         } else if (level === 'paris') {
             IMAGES.current.background.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/98ca3a459_Hinergrund.png";
+        } else if (level === 'backrooms') {
+            IMAGES.current.background.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/049d72dfb_generated_image.png";
+            IMAGES.current.backrooms_shadow = new Image();
+            IMAGES.current.backrooms_shadow.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e0aaa0ef0_generated_image.png";
+            IMAGES.current.backrooms_shadow_tall = IMAGES.current.backrooms_shadow;
+            IMAGES.current.backrooms_shadow_low = IMAGES.current.backrooms_shadow;
         } else if (level === 'rooftop') {
             IMAGES.current.background.src = "";
             IMAGES.current.rooftopBackground = new Image();
@@ -880,7 +887,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         let enemy;
 
         // Use level-specific spawn functions
-        if (level === 'gelsenkirchen') {
+        if (level === 'backrooms') {
+            enemy = spawnBackroomsEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'gelsenkirchen') {
             enemy = spawnGelsenkirchenEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'berlin') {
             enemy = spawnBerlinEnemy(width, height, groundY, scrollSpeed);
@@ -1562,6 +1571,53 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
             ctx.drawImage(bg, -bgOffset, (height - h) / 2, w, h);
             ctx.drawImage(bg, w - bgOffset, (height - h) / 2, w, h);
+        } else if (level === 'backrooms') {
+            // Backrooms: scrolling procedural background (drawn in drawBackroomsBackground)
+            const bg = IMAGES.current.background;
+            if (bg && bg.complete && bg.naturalWidth > 0) {
+                const scale = Math.max(width / bg.width, height / bg.height);
+                const w = bg.width * scale;
+                const h = bg.height * scale;
+                const offset = (state.distance * 8) % w;
+                ctx.drawImage(bg, -offset, 0, w, h);
+                ctx.drawImage(bg, w - offset, 0, w, h);
+            } else {
+                // Procedural backrooms
+                const gradient = ctx.createLinearGradient(0, 0, 0, height);
+                gradient.addColorStop(0, '#1a1500');
+                gradient.addColorStop(0.4, '#3d3000');
+                gradient.addColorStop(1, '#1a1000');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+            }
+            // Flickering light overlay
+            const t2 = Date.now() * 0.003;
+            const flicker2 = 0.03 + Math.abs(Math.sin(t2*7.3)*Math.sin(t2*3.1))*0.06;
+            ctx.fillStyle = `rgba(255,240,150,${flicker2})`;
+            ctx.fillRect(0, 0, width, height);
+            // Ceiling lights
+            const lightSpacing2 = width / 4;
+            const lightOff2 = (state.distance * 12) % lightSpacing2;
+            for (let i = -1; i <= 5; i++) {
+                const lx2 = i * lightSpacing2 - lightOff2;
+                ctx.save();
+                ctx.globalAlpha = 0.5;
+                const lg2 = ctx.createRadialGradient(lx2, 0, 0, lx2, 0, 100);
+                lg2.addColorStop(0, 'rgba(255,255,200,0.7)');
+                lg2.addColorStop(1, 'rgba(255,255,200,0)');
+                ctx.fillStyle = lg2;
+                ctx.fillRect(lx2 - 100, 0, 200, 180);
+                ctx.restore();
+            }
+            // Carpet floor
+            const groundY2 = height * 0.88;
+            const cg = ctx.createLinearGradient(0, groundY2, 0, height);
+            cg.addColorStop(0, '#4a3800'); cg.addColorStop(1, '#2d2200');
+            ctx.fillStyle = cg;
+            ctx.fillRect(0, groundY2, width, height - groundY2);
+            ctx.strokeStyle = 'rgba(90,70,0,0.5)'; ctx.lineWidth = 2;
+            const patOff = (state.distance * 15) % 40;
+            for (let x2 = -patOff; x2 < width; x2 += 40) { ctx.beginPath(); ctx.moveTo(x2, groundY2); ctx.lineTo(x2, height); ctx.stroke(); }
         } else if (['berlin','rome','madrid','rooftop'].includes(level)) {
             const bgMap={berlin:IMAGES.current.berlinBackground,rome:IMAGES.current.romeBackground,madrid:IMAGES.current.madridBackground,rooftop:IMAGES.current.rooftopBackground};
             const bg=bgMap[level];

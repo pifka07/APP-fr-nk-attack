@@ -9,7 +9,9 @@ export class LevelRenderer {
     drawBackground(ctx, width, height, distance) {
         const levelType = this.levelData.name.toLowerCase();
 
-        if (levelType === 'rooftop') {
+        if (levelType === 'backrooms') {
+            this.drawBackroomsBackground(ctx, width, height, distance);
+        } else if (levelType === 'rooftop') {
             // Sky blue background
             ctx.fillStyle = '#87CEEB';
             ctx.fillRect(0, 0, width, height);
@@ -25,6 +27,74 @@ export class LevelRenderer {
         } else {
             // Downtown - alternating backgrounds
             this.drawDowntownBackgrounds(ctx, width, height, distance);
+        }
+    }
+
+    drawBackroomsBackground(ctx, width, height, distance) {
+        const bg = this.assetLoader.getImage('backroomsBackground');
+        
+        // Always draw base yellow/brown gradient as fallback
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, '#1a1500');
+        gradient.addColorStop(0.3, '#2d2200');
+        gradient.addColorStop(0.7, '#3d3000');
+        gradient.addColorStop(1, '#1a1000');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        // Scrolling backrooms background image
+        if (bg && bg.complete && bg.naturalWidth > 0) {
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const offset = (distance * 8) % w;
+            ctx.globalAlpha = 0.85;
+            ctx.drawImage(bg, -offset, 0, w, h);
+            ctx.drawImage(bg, w - offset, 0, w, h);
+            ctx.globalAlpha = 1.0;
+        }
+
+        // Flickering fluorescent light overlay effect
+        const t = Date.now() * 0.003;
+        const flicker = 0.03 + Math.abs(Math.sin(t * 7.3) * Math.sin(t * 3.1)) * 0.06;
+        ctx.fillStyle = `rgba(255, 240, 150, ${flicker})`;
+        ctx.fillRect(0, 0, width, height);
+
+        // Draw ceiling lights
+        const lightCount = 4;
+        const lightSpacing = width / lightCount;
+        const lightOffset = (distance * 12) % lightSpacing;
+        for (let i = -1; i <= lightCount + 1; i++) {
+            const lx = i * lightSpacing - lightOffset;
+            const flick = Math.random() > 0.02 ? 1 : 0.3;
+            ctx.save();
+            ctx.globalAlpha = 0.6 * flick;
+            const lg = ctx.createRadialGradient(lx, 0, 0, lx, 0, 120);
+            lg.addColorStop(0, 'rgba(255, 255, 200, 0.8)');
+            lg.addColorStop(1, 'rgba(255, 255, 200, 0)');
+            ctx.fillStyle = lg;
+            ctx.fillRect(lx - 120, 0, 240, 200);
+            ctx.globalAlpha = 1.0;
+            ctx.restore();
+        }
+
+        // Ground - stained carpet (yellowish brown)
+        const groundY = height * 0.88;
+        const carpetGrad = ctx.createLinearGradient(0, groundY, 0, height);
+        carpetGrad.addColorStop(0, '#4a3800');
+        carpetGrad.addColorStop(1, '#2d2200');
+        ctx.fillStyle = carpetGrad;
+        ctx.fillRect(0, groundY, width, height - groundY);
+
+        // Carpet pattern lines
+        ctx.strokeStyle = 'rgba(90, 70, 0, 0.5)';
+        ctx.lineWidth = 2;
+        const patternOffset = (distance * 15) % 40;
+        for (let x = -patternOffset; x < width; x += 40) {
+            ctx.beginPath();
+            ctx.moveTo(x, groundY);
+            ctx.lineTo(x, height);
+            ctx.stroke();
         }
     }
 

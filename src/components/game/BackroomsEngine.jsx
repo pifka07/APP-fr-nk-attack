@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const ROOM_W = 8;
 const ROOM_H = 3.5;
 const SEGMENT_LEN = 12; // Length of one corridor segment
-const VISIBLE_SEGMENTS = 8; // How many segments to keep ahead
+const VISIBLE_SEGMENTS = 14; // How many segments to keep ahead
 
 // Turning
 const TURN_DURATION = 1.2; // seconds to complete a turn
@@ -229,12 +229,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         if (!mount) return;
 
         const scene = new THREE.Scene();
-        // Fog distance much further to prevent yellow flash
-        scene.fog = new THREE.Fog(0xd4a017, 15, 80);
+        scene.fog = new THREE.Fog(0xd4a017, 30, 160);
         scene.background = new THREE.Color(0xd4a017);
         sceneRef.current = scene;
 
-        const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 90);
+        const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 180);
         camera.position.set(0, 1.5, 0);
         cameraRef.current = camera;
 

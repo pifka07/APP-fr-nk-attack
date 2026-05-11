@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
-import { spawnRooftopEnemy } from './levels/rooftop';
+import { spawnRooftopEnemy } from './levels/rooftopLevel';
 import { spawnBackroomsEnemy } from './levels/backrooms';
-import { spawnParkEnemy } from './levels/park';
+import { spawnParkEnemy } from './levels/parkLevel';
 import { spawnLondonEnemy } from './levels/london';
 import { spawnParisEnemy } from './levels/paris';
 import { spawnMadridEnemy } from './levels/madrid';
@@ -9,7 +9,7 @@ import { spawnRomeEnemy } from './levels/rome';
 import { spawnGelsenkirchenEnemy } from './levels/gelsenkirchen';
 import { spawnBerlinEnemy } from './levels/berlin';
 import { spawnUSAEnemy } from './levels/usa';
-import { spawnDowntownEnemy } from './levels/downtown';
+import { spawnDowntownEnemy } from './levels/downtownLevel';
 import { drawEnemies } from './drawEnemies';
 
 const GRAVITY = 0.4;

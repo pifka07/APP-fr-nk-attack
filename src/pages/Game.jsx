@@ -569,7 +569,14 @@ export default function Game() {
                                 READY TO POOP?
                             </h1>
                             <div className="space-y-4 w-full max-w-xs">
-                                <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
+                                <div className={`p-6 rounded-3xl text-center backdrop-blur-sm shadow-2xl ${currentLevel === 'backrooms' ? 'border-0 bg-transparent' : 'bg-slate-800/80 border-4 border-slate-700'}`}
+                    style={currentLevel === 'backrooms' ? {
+                        backgroundImage: 'url(https://media.base44.com/images/public/6961111599b5db08cf38f4b2/37d4804c0_Backrooms.png)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        borderRadius: '24px',
+                    } : {}}
+                >
                                     <div className="mb-6">
                                         <img 
                                             src={currentLevel === 'backrooms' ? 'https://media.base44.com/images/public/6961111599b5db08cf38f4b2/375d2eecf_Backrooms.png' : skinImageUrl} 

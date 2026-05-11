@@ -474,7 +474,12 @@ export default function Game() {
                 {/* Skin Image */}
                 <div className="flex justify-center">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden border-4 border-teal-400 shadow-lg bg-teal-900">
-                    <img src={skinImageUrl} alt="Skin" className="w-full h-full object-cover" />
+                    <img
+                      src={currentLevel === 'backrooms'
+                        ? 'https://media.base44.com/images/public/6961111599b5db08cf38f4b2/38268ae57_FrnkPOV-Kopie.png'
+                        : skinImageUrl}
+                      alt="Skin"
+                      className="w-full h-full object-cover" />
                   </div>
                 </div>
 

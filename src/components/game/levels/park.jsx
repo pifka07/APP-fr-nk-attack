@@ -1,3 +1,4 @@
+json
 {
   "name": "Park",
   "groundY": 0.85,

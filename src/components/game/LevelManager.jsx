@@ -13,18 +13,10 @@ export class LevelManager {
             return this.currentLevel;
         }
 
-        try {
-            const levelModule = await import(`./levels/${levelName}.json`);
-            const levelData = levelModule.default || levelModule;
-            
-            this.levelCache[levelName] = levelData;
-            this.currentLevel = levelData;
-            return levelData;
-        } catch (error) {
-            console.error(`Failed to load level: ${levelName}`, error);
-            // Fallback to default level structure
-            return this.getDefaultLevel(levelName);
-        }
+        const levelData = this.getDefaultLevel(levelName);
+        this.levelCache[levelName] = levelData;
+        this.currentLevel = levelData;
+        return levelData;
     }
 
     getDefaultLevel(levelName) {

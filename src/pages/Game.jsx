@@ -444,7 +444,7 @@ export default function Game() {
         <div
           className="absolute top-0 left-0 right-0 bottom-0 z-50 flex flex-col items-center justify-center p-6"
           style={currentLevel === 'backrooms' ? {
-            backgroundImage: 'url(https://media.base44.com/images/public/6961111599b5db08cf38f4b2/027a004fd_FrnkPOV2.png)',
+            backgroundImage: 'url(https://media.base44.com/images/public/6961111599b5db08cf38f4b2/60fdf89c9_FrnkPOV2.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           } : { background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(4px)' }}>

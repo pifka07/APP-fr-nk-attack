@@ -1,3 +1,4 @@
+json
 {
   "name": "Rooftop",
   "groundY": 0.85,

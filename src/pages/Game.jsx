@@ -572,8 +572,8 @@ export default function Game() {
                                 <div className="bg-slate-800/80 p-6 rounded-3xl border-4 border-slate-700 text-center backdrop-blur-sm shadow-2xl">
                                     <div className="mb-6">
                                         <img 
-                                            src={skinImageUrl} 
-                                            className="w-32 h-32 mx-auto object-cover rounded-3xl border-4 border-teal-500 bg-cyan-400 mb-4" 
+                                            src={currentLevel === 'backrooms' ? 'https://media.base44.com/images/public/6961111599b5db08cf38f4b2/375d2eecf_Backrooms.png' : skinImageUrl} 
+                                            className={`w-32 h-32 mx-auto mb-4 ${currentLevel === 'backrooms' ? 'object-cover rounded-2xl border-4 border-stone-500' : 'object-cover rounded-3xl border-4 border-teal-500 bg-cyan-400'}`}
                                             style={{ width: '120px', height: '120px' }}
                                             alt="Fränk"
                                         />

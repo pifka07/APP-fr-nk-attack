@@ -1,3 +1,4 @@
+json
 {
   "name": "Downtown",
   "groundY": 0.85,

@@ -520,7 +520,21 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     };
 
     return (
-        <div ref={mountRef} className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }} />
+        <div className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }}>
+            <div ref={mountRef} className="absolute inset-0 w-full h-full" />
+            {/* POV Fränk overlay - bottom center */}
+            <img
+                src="https://media.base44.com/images/public/6961111599b5db08cf38f4b2/ca040e4c0_FrnkPOV.png"
+                alt="Fränk POV"
+                className="absolute bottom-0 left-1/2 pointer-events-none select-none"
+                style={{
+                    transform: 'translateX(-50%)',
+                    width: '280px',
+                    imageRendering: 'auto',
+                    zIndex: 5,
+                }}
+            />
+        </div>
     );
 });
 

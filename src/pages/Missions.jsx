@@ -214,37 +214,6 @@ export default function Missions() {
                             </Link>
                         </motion.div>
 
-                        {/* South America Mission Card - Coming Soon */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            <Card className="relative overflow-hidden border-4 transition-all duration-300 border-slate-700 opacity-70">
-                                <div className="absolute inset-0 z-0">
-                                    <img 
-                                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693033c50efef1894f9768b3/08af38dd2_Level1Hintergrund.png" 
-                                        alt="South America" 
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
-                                </div>
-
-                                <CardContent className="relative z-10 p-6 h-40 flex flex-col justify-end">
-                                    <div className="flex justify-between items-end">
-                                        <div>
-                                            <h2 className="text-3xl font-black text-white font-titan uppercase stroke-black drop-shadow-lg">SOUTH AMERICA</h2>
-                                            <p className="text-slate-200 text-sm font-medium drop-shadow-md max-w-[80%]">Coming Soon</p>
-                                        </div>
-
-                                        <div className="bg-slate-900/80 p-3 rounded-full">
-                                            <Lock className="w-6 h-6 text-slate-500" />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-
                         {/* Africa Mission Card - Coming Soon */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

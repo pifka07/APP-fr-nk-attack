@@ -383,11 +383,15 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Recycle corridor segments for infinite scroll
         recycleSegments(s.posZ);
 
-        // Apply lateral/vertical input
-        const lateralForce = inputRef.current.dx * 0.04;
-        const verticalForce = inputRef.current.dy * 0.025;
+        // Apply lateral/vertical input to player position
+        s.posX += inputRef.current.dx * 0.05;
+        s.posY -= inputRef.current.dy * 0.03;
         inputRef.current.dx *= 0.7;
         inputRef.current.dy *= 0.7;
+
+        // Clamp player within room bounds
+        s.posX = Math.max(-ROOM_W / 2 + 0.5, Math.min(ROOM_W / 2 - 0.5, s.posX));
+        s.posY = Math.max(0.4, Math.min(ROOM_H - 0.4, s.posY));
 
         // Camera stays fixed at center, always looking straight ahead
         const swayX = Math.sin(t * 0.8) * 0.04;
@@ -398,16 +402,17 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Update player position for bird image
         if (s.animFrame % 2 === 0) setPlayerPos({ x: s.posX, y: s.posY });
 
-        // Increase speed
-        s.speed = Math.min(0.22, s.speed + 0.00008);
+        // Speed stays constant — difficulty increases via more enemies
 
         // Score
         s.score += 1;
         onScoreUpdate(s.score, s.coins, Math.floor(s.distance));
 
-        // Spawn more shadows
+        // Spawn more shadows — density increases with distance
+        const maxShadows = 4 + Math.floor(s.distance / 50); // +1 every 50m
+        const spawnInterval = Math.max(8, 25 - Math.floor(s.distance / 30)); // tighter spawning over time
         const lastShadow = s.shadows[s.shadows.length - 1];
-        if (!lastShadow || lastShadow.mesh.position.z > s.posZ - 25) {
+        if (s.shadows.length < maxShadows && (!lastShadow || lastShadow.mesh.position.z > s.posZ - spawnInterval)) {
             spawnOneShadow(sceneRef.current, s.posZ - 30 - Math.random() * 20);
         }
 

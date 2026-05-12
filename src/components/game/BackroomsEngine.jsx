@@ -503,7 +503,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     };
 
     const screenOffsetX = (playerPos.x / (ROOM_W / 2)) * 100;
-    const screenOffsetY = -((playerPos.y - 1.5) / (ROOM_H / 2)) * 80;
+    const screenOffsetY = -((playerPos.y - 1.5) / (ROOM_H - 1.5)) * 160;
 
     return (
         <div className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }}>

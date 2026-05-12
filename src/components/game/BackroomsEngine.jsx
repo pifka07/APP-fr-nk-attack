@@ -6,9 +6,6 @@ const ROOM_H = 3.5;
 const SEGMENT_LEN = 12; // Length of one corridor segment
 const VISIBLE_SEGMENTS = 14; // How many segments to keep ahead
 
-// Turning
-const TURN_DURATION = 1.2; // seconds to complete a turn
-const TURN_COOLDOWN = 5; // seconds between possible turns
 
 const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onComboUpdate, onAmmoUpdate, config = {}, soundEnabled = true, musicEnabled = true, onAssetsLoaded }, ref) => {
     const mountRef = useRef(null);
@@ -30,12 +27,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         projectiles: [],
         animFrame: 0,
         lastTime: 0,
-        // Turning state
-        turning: null, // { direction: 'left'|'right', progress: 0, fromAngle, toAngle }
-        currentAngle: 0, // camera yaw angle in radians
-        turnCooldown: 0,
-        turnSignZOffset: 0, // z position of next turn sign
-        nextTurnDir: null,
     });
     const rendererRef = useRef(null);
     const sceneRef = useRef(null);
@@ -43,6 +34,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     const rafRef = useRef(null);
     const clockRef = useRef(new THREE.Clock());
     const [loadingDone, setLoadingDone] = useState(false);
+    const [playerPos, setPlayerPos] = useState({ x: 0, y: 0 });
 
     // Corridor segments pool for infinite scrolling
     const segmentsRef = useRef([]); // array of { group, zStart }
@@ -68,11 +60,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             s.projectiles = [];
             s.ammo = config.poopTankCapacity || 10;
             s.maxAmmo = config.poopTankCapacity || 10;
-            s.currentAngle = 0;
-            s.turning = null;
-            s.turnCooldown = TURN_COOLDOWN;
-            s.turnSignZOffset = -40;
-            s.nextTurnDir = Math.random() < 0.5 ? 'left' : 'right';
             if (onAmmoUpdate) onAmmoUpdate(s.ammo);
             if (onHealthUpdate) onHealthUpdate(100);
             loop();
@@ -203,26 +190,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         return { group, zStart };
     };
 
-    // Create arrow sign for upcoming turn
-    const buildTurnSign = (scene, zPos, direction) => {
-        const group = new THREE.Group();
-        // Sign board
-        const boardGeo = new THREE.BoxGeometry(1.2, 0.5, 0.05);
-        const boardMat = new THREE.MeshLambertMaterial({ color: 0x223399 });
-        const board = new THREE.Mesh(boardGeo, boardMat);
-        group.add(board);
-
-        // Arrow indicator (colored plane)
-        const arrowGeo = new THREE.PlaneGeometry(0.8, 0.3);
-        const arrowMat = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-        const arrow = new THREE.Mesh(arrowGeo, arrowMat);
-        arrow.position.set(direction === 'left' ? -0.1 : 0.1, 0, 0.04);
-        group.add(arrow);
-
-        group.position.set(0, ROOM_H - 0.8, zPos);
-        scene.add(group);
-        return group;
-    };
 
     useEffect(() => {
         const mount = mountRef.current;
@@ -393,8 +360,6 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         });
     };
 
-    const turnSignRef = useRef(null);
-
     const loop = () => {
         const s = stateRef.current;
         if (!s.isPlaying) return;
@@ -424,61 +389,14 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         inputRef.current.dx *= 0.7;
         inputRef.current.dy *= 0.7;
 
-        s.posX = Math.max(-ROOM_W / 2 + 0.5, Math.min(ROOM_W / 2 - 0.5, s.posX + lateralForce));
-        s.posY = Math.max(0.4, Math.min(ROOM_H - 0.4, s.posY + verticalForce));
-
-        // ---- TURNING LOGIC ----
-        s.turnCooldown = Math.max(0, s.turnCooldown - delta);
-
-        // Show turn sign ahead of time
-        if (s.turnCooldown <= 0 && !s.turning && turnSignRef.current === null) {
-            s.turnSignZOffset = s.posZ - 20;
-            const dir = s.nextTurnDir || (Math.random() < 0.5 ? 'left' : 'right');
-            s.nextTurnDir = dir;
-            turnSignRef.current = buildTurnSign(sceneRef.current, s.turnSignZOffset, dir);
-        }
-
-        // Trigger turn when player reaches sign
-        if (!s.turning && turnSignRef.current && s.posZ < s.turnSignZOffset + 5) {
-            s.turning = {
-                direction: s.nextTurnDir,
-                progress: 0,
-                fromAngle: s.currentAngle,
-                toAngle: s.currentAngle + (s.nextTurnDir === 'left' ? Math.PI / 2 : -Math.PI / 2),
-            };
-            // Remove sign
-            sceneRef.current.remove(turnSignRef.current);
-            turnSignRef.current = null;
-        }
-
-        // Animate the turn
-        if (s.turning) {
-            s.turning.progress += delta / TURN_DURATION;
-            if (s.turning.progress >= 1) {
-                s.turning.progress = 1;
-                s.currentAngle = s.turning.toAngle;
-                s.turning = null;
-                s.turnCooldown = TURN_COOLDOWN + Math.random() * 4;
-                s.nextTurnDir = Math.random() < 0.5 ? 'left' : 'right';
-            } else {
-                // Smooth interpolation (ease in-out)
-                const ease = s.turning.progress < 0.5
-                    ? 2 * s.turning.progress * s.turning.progress
-                    : -1 + (4 - 2 * s.turning.progress) * s.turning.progress;
-                s.currentAngle = s.turning.fromAngle + (s.turning.toAngle - s.turning.fromAngle) * ease;
-            }
-        }
-
-        // Camera
+        // Camera stays fixed at center, always looking straight ahead
         const swayX = Math.sin(t * 0.8) * 0.04;
         const swayY = Math.cos(t * 1.1) * 0.02;
-        cameraRef.current.position.set(s.posX + swayX, s.posY + swayY, s.posZ);
+        cameraRef.current.position.set(swayX, 1.5 + swayY, s.posZ);
+        cameraRef.current.lookAt(swayX, 1.5 + swayY, s.posZ - 10);
 
-        // Look direction based on turn angle
-        const lookDist = 10;
-        const lookX = s.posX + Math.sin(s.currentAngle) * lookDist;
-        const lookZ = s.posZ - Math.cos(s.currentAngle) * lookDist;
-        cameraRef.current.lookAt(lookX + swayX, s.posY + swayY, lookZ);
+        // Update player position for bird image
+        if (s.animFrame % 2 === 0) setPlayerPos({ x: s.posX, y: s.posY });
 
         // Increase speed
         s.speed = Math.min(0.22, s.speed + 0.00008);
@@ -579,6 +497,9 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         rafRef.current = requestAnimationFrame(loop);
     };
 
+    const screenOffsetX = (playerPos.x / (ROOM_W / 2)) * 100;
+    const screenOffsetY = -((playerPos.y - 1.5) / (ROOM_H / 2)) * 80;
+
     return (
         <div className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }}>
             <div ref={mountRef} className="absolute inset-0 w-full h-full" />
@@ -586,7 +507,12 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 src="https://media.base44.com/images/public/6961111599b5db08cf38f4b2/ca040e4c0_FrnkPOV.png"
                 alt="Fränk POV"
                 className="absolute bottom-0 left-1/2 pointer-events-none select-none"
-                style={{ transform: 'translateX(-50%)', width: '280px', imageRendering: 'auto', zIndex: 5 }}
+                style={{
+                    transform: `translateX(calc(-50% + ${screenOffsetX}px)) translateY(${screenOffsetY}px)`,
+                    width: '280px',
+                    imageRendering: 'auto',
+                    zIndex: 5,
+                }}
             />
         </div>
     );

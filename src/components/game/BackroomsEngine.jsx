@@ -375,11 +375,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Recycle corridor segments for infinite scroll
         recycleSegments(s.posZ);
 
-        // Apply lateral/vertical input to player position
-        s.posX += inputRef.current.dx * 0.05;
-        s.posY -= inputRef.current.dy * 0.03;
-        inputRef.current.dx *= 0.7;
-        inputRef.current.dy *= 0.7;
+        // Apply lateral/vertical input to player position (smoother, less sensitive)
+        s.posX += inputRef.current.dx * 0.025;
+        s.posY -= inputRef.current.dy * 0.015;
+        inputRef.current.dx *= 0.85;
+        inputRef.current.dy *= 0.85;
 
         // Clamp player — allow flying close to the walls laterally
         s.posX = Math.max(-ROOM_W / 2 + 0.1, Math.min(ROOM_W / 2 - 0.1, s.posX));
@@ -394,7 +394,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Update player position for bird image
         if (s.animFrame % 2 === 0) setPlayerPos({ x: s.posX, y: s.posY });
 
-        // Speed stays constant — difficulty increases via more enemies
+        // Speed increases with distance
+        s.speed = 0.06 + s.distance * 0.00008;
 
         // Score
         s.score += 1;

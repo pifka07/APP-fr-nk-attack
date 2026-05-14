@@ -230,8 +230,8 @@ export default function Game() {
       const deltaX = clientX - (touchXRef.current ?? clientX);
 
       if (currentLevel === 'backrooms') {
-        engineRef.current.movePlayer(deltaY * 1.2);
-        if (engineRef.current.moveLateral) engineRef.current.moveLateral(deltaX * 1.2);
+        engineRef.current.movePlayer(deltaY * 0.7);
+        if (engineRef.current.moveLateral) engineRef.current.moveLateral(deltaX * 0.7);
       } else {
         engineRef.current.movePlayer(deltaY * 1.2);
       }

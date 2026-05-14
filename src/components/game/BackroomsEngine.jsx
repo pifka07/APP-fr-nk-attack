@@ -137,52 +137,52 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         };
     };
 
-    // Build a single corridor segment group at zStart
+    // Build a single corridor segment group — all positions relative to group origin at zStart
     const buildSegment = (scene, zStart) => {
         const mats = materialsRef.current;
         const group = new THREE.Group();
+        group.position.z = zStart; // group origin at zStart
         const L = SEGMENT_LEN;
         const W = ROOM_W;
         const H = ROOM_H;
 
-        // Floor
+        // Floor — centered in the segment (local Z: -L/2)
         const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, L), mats.floor);
         floor.rotation.x = -Math.PI / 2;
-        floor.position.set(0, 0, zStart - L / 2);
+        floor.position.set(0, 0, -L / 2);
         group.add(floor);
 
         // Ceiling
         const ceil = new THREE.Mesh(new THREE.PlaneGeometry(W, L), mats.ceil);
         ceil.rotation.x = Math.PI / 2;
-        ceil.position.set(0, H, zStart - L / 2);
+        ceil.position.set(0, H, -L / 2);
         group.add(ceil);
 
         // Left wall
         const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(L, H), mats.wall.clone());
         leftWall.rotation.y = Math.PI / 2;
-        leftWall.position.set(-W / 2, H / 2, zStart - L / 2);
+        leftWall.position.set(-W / 2, H / 2, -L / 2);
         group.add(leftWall);
 
         // Right wall
         const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(L, H), mats.wall.clone());
         rightWall.rotation.y = -Math.PI / 2;
-        rightWall.position.set(W / 2, H / 2, zStart - L / 2);
+        rightWall.position.set(W / 2, H / 2, -L / 2);
         group.add(rightWall);
 
-        // Ceiling light tube
-        const lightZ = zStart - L / 2;
+        // Ceiling light tube (local center)
         const lightMesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.05, 1.5), mats.light);
-        lightMesh.position.set(0, H - 0.05, lightZ);
+        lightMesh.position.set(0, H - 0.05, -L / 2);
         group.add(lightMesh);
 
         const pointLight = new THREE.PointLight(0xffffc0, 1.5, SEGMENT_LEN * 1.5);
-        pointLight.position.set(0, H - 0.2, lightZ);
+        pointLight.position.set(0, H - 0.2, -L / 2);
         group.add(pointLight);
 
-        // Pillars at segment start
+        // Pillars at segment entrance (local Z: 0)
         [-W / 2 + 0.3, W / 2 - 0.3].forEach(x => {
             const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.3, H, 0.3), mats.pillar);
-            pillar.position.set(x, H / 2, zStart);
+            pillar.position.set(x, H / 2, 0);
             group.add(pillar);
         });
 
@@ -335,25 +335,17 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
 
     // Recycle corridor segments - move old ones to front
     const recycleSegments = (posZ) => {
-        const scene = sceneRef.current;
         const segments = segmentsRef.current;
 
-        // Find furthest ahead segment
+        // Find furthest ahead (smallest Z) segment
         let minZ = Infinity;
-        segments.forEach(seg => { if (seg.zStart < minZ) minZ = seg.zStart; });
+        segments.forEach(seg => { if (seg.group.position.z < minZ) minZ = seg.group.position.z; });
 
-        // Find segments that are behind the player and recycle them
+        // Recycle segments that are behind the player
         segments.forEach(seg => {
-            if (seg.zStart > posZ + SEGMENT_LEN * 2) {
-                // This segment is behind us - move it ahead
+            if (seg.group.position.z > posZ + SEGMENT_LEN * 2) {
                 const newZ = minZ - SEGMENT_LEN;
-                // Update all children positions
-                const offsetZ = newZ - seg.zStart;
-                seg.group.children.forEach(child => {
-                    child.position.z += offsetZ;
-                    if (child.isPointLight) child.position.z += offsetZ;
-                });
-                seg.group.position.z += offsetZ; // Actually move the whole group
+                seg.group.position.z = newZ;
                 seg.zStart = newZ;
                 minZ = newZ;
             }

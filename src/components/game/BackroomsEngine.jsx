@@ -381,8 +381,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         inputRef.current.dx *= 0.7;
         inputRef.current.dy *= 0.7;
 
-        // Clamp player within room bounds
-        s.posX = Math.max(-ROOM_W / 2 + 0.5, Math.min(ROOM_W / 2 - 0.5, s.posX));
+        // Clamp player — allow flying close to the walls laterally
+        s.posX = Math.max(-ROOM_W / 2 + 0.1, Math.min(ROOM_W / 2 - 0.1, s.posX));
         s.posY = Math.max(0.4, Math.min(ROOM_H - 0.4, s.posY));
 
         // Camera stays fixed at center, always looking straight ahead
@@ -465,7 +465,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 const dx = s.posX - sh.mesh.position.x;
                 const dy = s.posY - sh.mesh.position.y;
                 const dz = s.posZ - sh.mesh.position.z;
-                if (Math.abs(dx) < 0.6 && Math.abs(dy) < 1.1 && Math.abs(dz) < 0.6) {
+                if (Math.abs(dx) < 0.35 && Math.abs(dy) < 0.9 && Math.abs(dz) < 0.5) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
                     s.health -= 20;

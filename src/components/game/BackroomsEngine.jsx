@@ -503,7 +503,9 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     };
 
     const screenOffsetX = (playerPos.x / (ROOM_W / 2)) * 100;
-    const screenOffsetY = -((playerPos.y - 1.5) / (ROOM_H - 1.5)) * 160;
+    // Map posY from [0.4 .. ROOM_H-0.4] to [+45vh .. -45vh] (bottom=+45, top=-45)
+    const normalizedY = (playerPos.y - ROOM_H / 2) / (ROOM_H / 2); // -1 (bottom) to +1 (top)
+    const screenOffsetY = -normalizedY * 45; // in vh: positive = down from center
 
     return (
         <div className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }}>
@@ -511,9 +513,10 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             <img
                 src="https://media.base44.com/images/public/6961111599b5db08cf38f4b2/ca040e4c0_FrnkPOV.png"
                 alt="Fränk POV"
-                className="absolute bottom-0 left-1/2 pointer-events-none select-none"
+                className="absolute left-1/2 pointer-events-none select-none"
                 style={{
-                    transform: `translateX(calc(-50% + ${screenOffsetX}px)) translateY(${screenOffsetY}px)`,
+                    top: '50%',
+                    transform: `translateX(calc(-50% + ${screenOffsetX}px)) translateY(calc(-50% + ${screenOffsetY}vh))`,
                     width: '280px',
                     imageRendering: 'auto',
                     zIndex: 5,

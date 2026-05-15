@@ -251,7 +251,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     const spawnOneShadow = (scene, z) => {
         const s = stateRef.current;
         const spawnZ = z !== undefined ? z : (s.posZ - 20 - Math.random() * 30);
-        const x = (Math.random() - 0.5) * (ROOM_W - 2);
+        const x = (Math.random() - 0.5) * 3.0; // max ±1.5, reachable by player
         const y = 0.5 + Math.random() * (ROOM_H - 1.0);
         const type = Math.random() < 0.5 ? 'blob' : 'spider';
         const group = new THREE.Group();
@@ -326,7 +326,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             isTarget: true,
             isObstacle: true,
             scoreValue: type === 'spider' ? 35 : 25,
-            vz: 0.015 + Math.random() * 0.025,
+            vz: -(0.03 + Math.random() * 0.02), // negative = moves toward player
             type,
             floatOffset: Math.random() * Math.PI * 2,
             floatSpeed: 0.8 + Math.random() * 1.2,
@@ -414,7 +414,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             sh.mesh.position.z += sh.vz; // vz is positive = moves toward camera
             sh.mesh.position.y += Math.sin(t * sh.floatSpeed + sh.floatOffset) * 0.008;
             sh.mesh.position.x += Math.cos(t * (sh.floatSpeed * 0.5) + sh.floatOffset) * 0.003;
-            sh.mesh.position.x = Math.max(-ROOM_W / 2 + 0.6, Math.min(ROOM_W / 2 - 0.6, sh.mesh.position.x));
+            sh.mesh.position.x = Math.max(-1.5, Math.min(1.5, sh.mesh.position.x)); // stay in reachable zone
             sh.mesh.position.y = Math.max(0.3, Math.min(ROOM_H - 0.3, sh.mesh.position.y));
             sh.mesh.lookAt(s.posX, s.posY, s.posZ);
         });
@@ -488,8 +488,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             if (onAmmoUpdate) onAmmoUpdate(s.ammo);
         }
 
-        // Cleanup
-        s.shadows = s.shadows.filter(sh => sh.hp > 0 && sh.mesh.position.z > s.posZ - 60);
+        // Cleanup — remove enemies that passed the player (now behind, z > posZ + some margin)
+        s.shadows = s.shadows.filter(sh => sh.hp > 0 && sh.mesh.position.z > s.posZ - 10);
         s.projectiles = s.projectiles.filter(p => p.active);
 
         rendererRef.current.render(sceneRef.current, cameraRef.current);

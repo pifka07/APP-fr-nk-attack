@@ -466,7 +466,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 const dx = s.posX - sh.mesh.position.x;
                 const dy = s.posY - sh.mesh.position.y;
                 const dz = s.posZ - sh.mesh.position.z;
-                if (Math.abs(dx) < 0.35 && Math.abs(dy) < 0.9 && Math.abs(dz) < 0.5) {
+                // dz: enemy is ahead of player (negative), check if player flew into them
+                if (Math.abs(dx) < 0.8 && Math.abs(dy) < 0.8 && dz < 0.5 && dz > -2.0) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
                     s.health -= 20;
@@ -510,7 +511,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 style={{
                     top: '50%',
                     transform: `translateX(calc(-50% + ${screenOffsetX}px)) translateY(calc(-50% + ${screenOffsetY}vh))`,
-                    width: '280px',
+                    width: '200px',
                     imageRendering: 'auto',
                     zIndex: 5,
                 }}

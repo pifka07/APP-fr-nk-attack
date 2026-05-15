@@ -409,9 +409,9 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             spawnOneShadow(sceneRef.current, s.posZ - 30 - Math.random() * 20);
         }
 
-        // Update shadows
+        // Update shadows — enemies move toward player (positive Z direction since player moves in negative Z)
         s.shadows.forEach(sh => {
-            sh.mesh.position.z += sh.vz;
+            sh.mesh.position.z += sh.vz; // vz is positive = moves toward camera
             sh.mesh.position.y += Math.sin(t * sh.floatSpeed + sh.floatOffset) * 0.008;
             sh.mesh.position.x += Math.cos(t * (sh.floatSpeed * 0.5) + sh.floatOffset) * 0.003;
             sh.mesh.position.x = Math.max(-ROOM_W / 2 + 0.6, Math.min(ROOM_W / 2 - 0.6, sh.mesh.position.x));
@@ -466,8 +466,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 const dx = s.posX - sh.mesh.position.x;
                 const dy = s.posY - sh.mesh.position.y;
                 const dz = s.posZ - sh.mesh.position.z;
-                // dz: enemy is ahead of player (negative), check if player flew into them
-                if (Math.abs(dx) < 0.8 && Math.abs(dy) < 0.8 && dz < 0.5 && dz > -2.0) {
+                // dz > 0 means enemy passed the player (behind), check close range
+                if (Math.abs(dx) < 0.9 && Math.abs(dy) < 0.9 && Math.abs(dz) < 2.5) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
                     s.health -= 20;

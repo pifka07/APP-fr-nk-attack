@@ -405,11 +405,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         s.score += 1;
         onScoreUpdate(s.score, s.coins, Math.floor(s.distance));
 
-        // Spawn shadows — max 3, one at a time with spacing
-        const maxShadows = Math.min(3, 1 + Math.floor(s.distance / 100));
+        // Spawn shadows — max 5, increasing with distance
+        const maxShadows = Math.min(5, 2 + Math.floor(s.distance / 60));
         const lastShadow = s.shadows[s.shadows.length - 1];
-        if (s.shadows.length < maxShadows && (!lastShadow || lastShadow.mesh.position.z > s.posZ - 20)) {
-            spawnOneShadow(sceneRef.current, s.posZ - 25 - Math.random() * 15);
+        if (s.shadows.length < maxShadows && (!lastShadow || lastShadow.mesh.position.z > s.posZ - 15)) {
+            spawnOneShadow(sceneRef.current, s.posZ - 20 - Math.random() * 15);
         }
 
         // Update shadows — enemies move toward player (positive Z direction since player moves in negative Z)
@@ -433,7 +433,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                     const dx = p.mesh.position.x - sh.mesh.position.x;
                     const dy = p.mesh.position.y - sh.mesh.position.y;
                     const dz = p.mesh.position.z - sh.mesh.position.z;
-                    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 1 && Math.abs(dz) < 0.5) {
+                    const hitR = sh.type === 'spider' ? 1.2 : 0.7;
+                    if (Math.abs(dx) < hitR && Math.abs(dy) < hitR && Math.abs(dz) < hitR) {
                         sh.hp = 0;
                         p.active = false;
                         sceneRef.current.remove(sh.mesh);
@@ -468,9 +469,12 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             if (sh.hp > 0 && sh.isObstacle) {
                 const dx = Math.abs(s.posX - sh.mesh.position.x);
                 const dy = Math.abs(s.posY - sh.mesh.position.y);
-                // Enemy has reached or passed player: sh.mesh.position.z >= s.posZ - 0.5
-                const enemyAtPlayer = sh.mesh.position.z >= s.posZ - 1.0;
-                if (enemyAtPlayer && dx < 1.2 && dy < 1.2) {
+                // Spider has long legs, use larger hitbox
+                const hitW = sh.type === 'spider' ? 1.6 : 1.2;
+                const hitH = sh.type === 'spider' ? 1.6 : 1.2;
+                // Enemy at player level: within 2 units of player Z
+                const enemyAtPlayer = sh.mesh.position.z >= s.posZ - 2.0 && sh.mesh.position.z <= s.posZ + 1.0;
+                if (enemyAtPlayer && dx < hitW && dy < hitH) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
                     s.health = Math.max(0, s.health - 20);

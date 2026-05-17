@@ -375,14 +375,18 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Recycle corridor segments for infinite scroll
         recycleSegments(s.posZ);
 
-        // Apply lateral/vertical input to player position (smoother, less sensitive)
-        s.posX += inputRef.current.dx * 0.025;
-        s.posY -= inputRef.current.dy * 0.015;
-        inputRef.current.dx *= 0.85;
-        inputRef.current.dy *= 0.85;
+        // Apply lateral/vertical input — smooth inertia
+        s.velX = (s.velX || 0) + inputRef.current.dx * 0.012;
+        s.velY = (s.velY || 0) - inputRef.current.dy * 0.008;
+        s.velX *= 0.80;
+        s.velY *= 0.80;
+        inputRef.current.dx *= 0.7;
+        inputRef.current.dy *= 0.7;
+        s.posX += s.velX;
+        s.posY += s.velY;
 
-        // Clamp player — allow flying close to the walls laterally
-        s.posX = Math.max(-ROOM_W / 2 + 0.1, Math.min(ROOM_W / 2 - 0.1, s.posX));
+        // Clamp player — wider lateral range so Fränk can reach enemies
+        s.posX = Math.max(-ROOM_W / 2 + 0.5, Math.min(ROOM_W / 2 - 0.5, s.posX));
         s.posY = Math.max(0.4, Math.min(ROOM_H - 0.4, s.posY));
 
         // Camera stays fixed at center, always looking straight ahead
@@ -460,17 +464,16 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             }
         }
 
-        // Player hits shadow
+        // Player hits shadow — enemy must be close to Fränk in 3D space
         s.shadows.forEach(sh => {
             if (sh.hp > 0 && sh.isObstacle) {
-                const dx = s.posX - sh.mesh.position.x;
-                const dy = s.posY - sh.mesh.position.y;
-                const dz = s.posZ - sh.mesh.position.z;
-                // dz > 0 means enemy passed the player (behind), check close range
-                if (Math.abs(dx) < 0.9 && Math.abs(dy) < 0.9 && Math.abs(dz) < 2.5) {
+                const dx = Math.abs(s.posX - sh.mesh.position.x);
+                const dy = Math.abs(s.posY - sh.mesh.position.y);
+                const dz = Math.abs(s.posZ - sh.mesh.position.z);
+                if (dx < 1.0 && dy < 1.0 && dz < 1.5) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
-                    s.health -= 20;
+                    s.health = Math.max(0, s.health - 20);
                     if (onHealthUpdate) onHealthUpdate(s.health);
                     if (s.health <= 0) {
                         s.isPlaying = false;
@@ -496,10 +499,10 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         rafRef.current = requestAnimationFrame(loop);
     };
 
-    const screenOffsetX = (playerPos.x / (ROOM_W / 2)) * 100;
-    // Map posY from [0.4 .. ROOM_H-0.4] to [+45vh .. -45vh] (bottom=+45, top=-45)
-    const normalizedY = (playerPos.y - ROOM_H / 2) / (ROOM_H / 2); // -1 (bottom) to +1 (top)
-    const screenOffsetY = -normalizedY * 45; // in vh: positive = down from center
+    // Map posX [-3.5..3.5] to [-50vw..+50vw] so Fränk can go half off screen
+    const screenOffsetX = (playerPos.x / (ROOM_W / 2)) * 50; // in vw
+    const normalizedY = (playerPos.y - ROOM_H / 2) / (ROOM_H / 2);
+    const screenOffsetY = -normalizedY * 40; // in vh
 
     return (
         <div className="absolute inset-0 w-full h-full" style={{ cursor: 'none' }}>
@@ -510,8 +513,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 className="absolute left-1/2 pointer-events-none select-none"
                 style={{
                     top: '50%',
-                    transform: `translateX(calc(-50% + ${screenOffsetX}px)) translateY(calc(-50% + ${screenOffsetY}vh))`,
-                    width: '200px',
+                    transform: `translateX(calc(-50% + ${screenOffsetX}vw)) translateY(calc(-50% + ${screenOffsetY}vh))`,
+                    width: '160px',
                     imageRendering: 'auto',
                     zIndex: 5,
                 }}

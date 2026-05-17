@@ -375,13 +375,13 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Recycle corridor segments for infinite scroll
         recycleSegments(s.posZ);
 
-        // Apply lateral/vertical input — smooth inertia
-        s.velX = (s.velX || 0) + inputRef.current.dx * 0.012;
-        s.velY = (s.velY || 0) - inputRef.current.dy * 0.008;
-        s.velX *= 0.80;
-        s.velY *= 0.80;
-        inputRef.current.dx *= 0.7;
-        inputRef.current.dy *= 0.7;
+        // Apply lateral/vertical input — heavy inertia for smooth flight feel
+        s.velX = (s.velX || 0) + inputRef.current.dx * 0.005;
+        s.velY = (s.velY || 0) - inputRef.current.dy * 0.004;
+        s.velX *= 0.88;
+        s.velY *= 0.88;
+        inputRef.current.dx *= 0.5;
+        inputRef.current.dy *= 0.5;
         s.posX += s.velX;
         s.posY += s.velY;
 

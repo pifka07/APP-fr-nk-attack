@@ -223,10 +223,10 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         }
         segmentsRef.current = segments;
 
-        // Spawn initial shadows
+        // Spawn initial shadows — start sparse
         const s = stateRef.current;
-        for (let i = 0; i < 6; i++) {
-            spawnOneShadow(scene, -10 - i * 18);
+        for (let i = 0; i < 2; i++) {
+            spawnOneShadow(scene, -15 - i * 25);
         }
 
         const handleResize = () => {
@@ -405,12 +405,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         s.score += 1;
         onScoreUpdate(s.score, s.coins, Math.floor(s.distance));
 
-        // Spawn more shadows — density increases with distance
-        const maxShadows = 4 + Math.floor(s.distance / 50); // +1 every 50m
-        const spawnInterval = Math.max(8, 25 - Math.floor(s.distance / 30)); // tighter spawning over time
+        // Spawn shadows — max 3, one at a time with spacing
+        const maxShadows = Math.min(3, 1 + Math.floor(s.distance / 100));
         const lastShadow = s.shadows[s.shadows.length - 1];
-        if (s.shadows.length < maxShadows && (!lastShadow || lastShadow.mesh.position.z > s.posZ - spawnInterval)) {
-            spawnOneShadow(sceneRef.current, s.posZ - 30 - Math.random() * 20);
+        if (s.shadows.length < maxShadows && (!lastShadow || lastShadow.mesh.position.z > s.posZ - 20)) {
+            spawnOneShadow(sceneRef.current, s.posZ - 25 - Math.random() * 15);
         }
 
         // Update shadows — enemies move toward player (positive Z direction since player moves in negative Z)
@@ -464,13 +463,14 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             }
         }
 
-        // Player hits shadow — enemy must be close to Fränk in 3D space
+        // Player hits shadow — trigger when enemy reaches the player's Z position
         s.shadows.forEach(sh => {
             if (sh.hp > 0 && sh.isObstacle) {
                 const dx = Math.abs(s.posX - sh.mesh.position.x);
                 const dy = Math.abs(s.posY - sh.mesh.position.y);
-                const dz = Math.abs(s.posZ - sh.mesh.position.z);
-                if (dx < 1.0 && dy < 1.0 && dz < 1.5) {
+                // Enemy has reached or passed player: sh.mesh.position.z >= s.posZ - 0.5
+                const enemyAtPlayer = sh.mesh.position.z >= s.posZ - 1.0;
+                if (enemyAtPlayer && dx < 1.2 && dy < 1.2) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
                     s.health = Math.max(0, s.health - 20);
@@ -491,8 +491,15 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             if (onAmmoUpdate) onAmmoUpdate(s.ammo);
         }
 
-        // Cleanup — remove enemies that passed the player (now behind, z > posZ + some margin)
-        s.shadows = s.shadows.filter(sh => sh.hp > 0 && sh.mesh.position.z > s.posZ - 10);
+        // Cleanup — remove enemies that flew past the player (their Z is now > player's Z)
+        s.shadows = s.shadows.filter(sh => {
+            if (sh.hp <= 0) return false;
+            if (sh.mesh.position.z > s.posZ + 3) {
+                sceneRef.current.remove(sh.mesh);
+                return false;
+            }
+            return true;
+        });
         s.projectiles = s.projectiles.filter(p => p.active);
 
         rendererRef.current.render(sceneRef.current, cameraRef.current);

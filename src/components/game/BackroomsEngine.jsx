@@ -326,7 +326,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             isTarget: true,
             isObstacle: true,
             scoreValue: type === 'spider' ? 35 : 25,
-            vz: -(0.03 + Math.random() * 0.02), // negative = moves toward player
+            vz: 0.04 + Math.random() * 0.03, // positive = moves toward camera (player moves in -Z)
             type,
             floatOffset: Math.random() * Math.PI * 2,
             floatSpeed: 0.8 + Math.random() * 1.2,
@@ -398,8 +398,8 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         // Update player position for bird image
         if (s.animFrame % 2 === 0) setPlayerPos({ x: s.posX, y: s.posY });
 
-        // Speed increases with distance
-        s.speed = 0.06 + s.distance * 0.00008;
+        // Speed increases with distance — noticeably faster over time
+        s.speed = 0.06 + s.distance * 0.0003;
 
         // Score
         s.score += 1;
@@ -412,9 +412,9 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             spawnOneShadow(sceneRef.current, s.posZ - 20 - Math.random() * 15);
         }
 
-        // Update shadows — enemies move toward player (positive Z direction since player moves in negative Z)
+        // Update shadows — enemies move toward player (player moves in -Z, enemies move in +Z)
         s.shadows.forEach(sh => {
-            sh.mesh.position.z += sh.vz; // vz is positive = moves toward camera
+            sh.mesh.position.z += sh.vz;
             sh.mesh.position.y += Math.sin(t * sh.floatSpeed + sh.floatOffset) * 0.008;
             sh.mesh.position.x += Math.cos(t * (sh.floatSpeed * 0.5) + sh.floatOffset) * 0.003;
             sh.mesh.position.x = Math.max(-1.5, Math.min(1.5, sh.mesh.position.x)); // stay in reachable zone
@@ -464,17 +464,16 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             }
         }
 
-        // Player hits shadow — trigger when enemy reaches the player's Z position
+        // Player hits shadow — use 3D distance between Fränk and enemy
         s.shadows.forEach(sh => {
             if (sh.hp > 0 && sh.isObstacle) {
                 const dx = Math.abs(s.posX - sh.mesh.position.x);
                 const dy = Math.abs(s.posY - sh.mesh.position.y);
-                // Spider has long legs, use larger hitbox
-                const hitW = sh.type === 'spider' ? 1.6 : 1.2;
-                const hitH = sh.type === 'spider' ? 1.6 : 1.2;
-                // Enemy at player level: within 2 units of player Z
-                const enemyAtPlayer = sh.mesh.position.z >= s.posZ - 2.0 && sh.mesh.position.z <= s.posZ + 1.0;
-                if (enemyAtPlayer && dx < hitW && dy < hitH) {
+                const dz = Math.abs(s.posZ - sh.mesh.position.z);
+                // Spider has long legs → bigger hitbox
+                const hitXY = sh.type === 'spider' ? 1.4 : 0.9;
+                const hitZ  = sh.type === 'spider' ? 1.4 : 0.9;
+                if (dx < hitXY && dy < hitXY && dz < hitZ) {
                     sh.hp = 0;
                     sceneRef.current.remove(sh.mesh);
                     s.health = Math.max(0, s.health - 20);

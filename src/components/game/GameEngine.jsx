@@ -917,22 +917,48 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
     const spawnPowerup = (width, height) => {
         const state = gameStateRef.current;
-        if (Math.random() > 0.01) return;
 
-        const typeRand = Math.random();
-        let type = 'coin';
-        if (typeRand > 0.85) type = 'energy';
-        else if (typeRand > 0.7) type = 'ammo';
+        // Spawn ammo (2 Körner) every ~400 frames
+        if (frameRef.current % 400 === 0) {
+            // Spawn 2 Körner close together
+            for (let i = 0; i < 2; i++) {
+                state.powerups.push({
+                    x: width + 50 + i * 55,
+                    y: 80 + Math.random() * (height * 0.55 - 40),
+                    width: 42,
+                    height: 42,
+                    type: 'ammo',
+                    vx: -state.scrollSpeed * 0.85,
+                    active: true
+                });
+            }
+        }
 
-        state.powerups.push({
-            x: width + 50,
-            y: 20 + Math.random() * (height * 0.6 - 40) + 50,
-            width: 40,
-            height: 40,
-            type,
-            vx: -state.scrollSpeed,
-            active: true
-        });
+        // Spawn energy (Energie-Münze) every ~600 frames
+        if (frameRef.current % 600 === 0) {
+            state.powerups.push({
+                x: width + 50,
+                y: 80 + Math.random() * (height * 0.55 - 40),
+                width: 42,
+                height: 42,
+                type: 'energy',
+                vx: -state.scrollSpeed * 0.85,
+                active: true
+            });
+        }
+
+        // Coins still spawn randomly
+        if (Math.random() > 0.98) {
+            state.powerups.push({
+                x: width + 50,
+                y: 20 + Math.random() * (height * 0.6 - 40) + 50,
+                width: 40,
+                height: 40,
+                type: 'coin',
+                vx: -state.scrollSpeed,
+                active: true
+            });
+        }
     };
 
     const spawnMilestoneCoins = (width, height, numRows, groundY) => {

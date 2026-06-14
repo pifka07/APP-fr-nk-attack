@@ -1,0 +1,40 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "equipped_skin": {
+      "type": "string",
+      "default": "default"
+    },
+    "total_coins": {
+      "type": "number",
+      "default": 0
+    },
+    "total_score": {
+      "type": "number",
+      "default": 0
+    },
+    "total_distance": {
+      "type": "number",
+      "default": 0
+    },
+    "best_score": {
+      "type": "number",
+      "default": 0
+    },
+    "best_distance": {
+      "type": "number",
+      "default": 0
+    },
+    "total_runs": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "username"
+  ]
+}

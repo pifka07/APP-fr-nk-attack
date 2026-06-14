@@ -1,0 +1,44 @@
+{
+  "name": "PlayerMission",
+  "type": "object",
+  "properties": {
+    "mission_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "locked",
+        "active",
+        "completed"
+      ],
+      "default": "locked"
+    },
+    "progress": {
+      "type": "number",
+      "default": 0
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID"
+    }
+  },
+  "required": [
+    "mission_id",
+    "user_id"
+  ],
+  "rls": {
+    "create": {
+      "user_id": "{{user.id}}"
+    },
+    "read": {
+      "user_id": "{{user.id}}"
+    },
+    "update": {
+      "user_id": "{{user.id}}"
+    },
+    "delete": {
+      "user_id": "{{user.id}}"
+    }
+  }
+}

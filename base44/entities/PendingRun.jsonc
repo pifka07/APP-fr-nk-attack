@@ -1,0 +1,60 @@
+{
+  "name": "PendingRun",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID"
+    },
+    "mission_id": {
+      "type": "string",
+      "description": "Mission ID for this run session"
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "Difficulty level"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the run was started"
+    },
+    "used": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this session was already used"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this session expires"
+    }
+  },
+  "required": [
+    "user_id",
+    "started_at",
+    "expires_at"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

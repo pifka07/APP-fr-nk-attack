@@ -1,0 +1,53 @@
+{
+  "name": "Upgrade",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "max_level": {
+      "type": "number"
+    },
+    "base_cost": {
+      "type": "number"
+    },
+    "cost_multiplier": {
+      "type": "number"
+    },
+    "effect_per_level": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "key",
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

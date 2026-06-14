@@ -1,0 +1,65 @@
+{
+  "name": "PlayerStats",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID",
+      "unique": true
+    },
+    "total_coins": {
+      "type": "number",
+      "default": 0
+    },
+    "total_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Cumulative score across all runs"
+    },
+    "total_distance": {
+      "type": "number",
+      "default": 0,
+      "description": "Cumulative distance across all runs"
+    },
+    "best_score": {
+      "type": "number",
+      "default": 0
+    },
+    "best_distance": {
+      "type": "number",
+      "default": 0
+    },
+    "total_runs": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "user_id"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "data.user_id": "{{user.id}}"
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

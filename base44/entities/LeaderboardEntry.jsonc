@@ -1,0 +1,52 @@
+{
+  "name": "LeaderboardEntry",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "description": "Display name of the player"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User ID to link to user"
+    },
+    "score": {
+      "type": "number",
+      "description": "High score"
+    },
+    "level": {
+      "type": "string",
+      "description": "Level where the highscore was achieved"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "username",
+    "score"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

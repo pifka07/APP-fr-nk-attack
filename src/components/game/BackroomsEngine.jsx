@@ -25,6 +25,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         maxAmmo: 10,
         shadows: [],
         projectiles: [],
+        pickups: [],
         animFrame: 0,
         lastTime: 0,
     });
@@ -58,6 +59,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             s.speed = 0.06;
             s.shadows = [];
             s.projectiles = [];
+            s.pickups = [];
             s.ammo = config.poopTankCapacity || 10;
             s.maxAmmo = config.poopTankCapacity || 10;
             if (onAmmoUpdate) onAmmoUpdate(s.ammo);
@@ -333,6 +335,41 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
         });
     };
 
+    const spawnPickup = (type) => {
+        const s = stateRef.current;
+        const spawnZ = s.posZ - 25 - Math.random() * 20;
+        const x = (Math.random() - 0.5) * 4.0;
+        const y = 0.6 + Math.random() * (ROOM_H - 1.2);
+        const group = new THREE.Group();
+        group.position.set(x, y, spawnZ);
+
+        if (type === 'ammo') {
+            // Golden seed / Körner
+            const geo = new THREE.SphereGeometry(0.18, 8, 8);
+            const mat = new THREE.MeshPhongMaterial({ color: 0xf5c518, emissive: 0x7a6000, shininess: 120 });
+            group.add(new THREE.Mesh(geo, mat));
+            // small sparkle ring
+            const ringGeo = new THREE.TorusGeometry(0.28, 0.04, 6, 16);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xffe066 });
+            group.add(new THREE.Mesh(ringGeo, ringMat));
+        } else {
+            // Red heart / Leben
+            const heartMat = new THREE.MeshPhongMaterial({ color: 0xff2244, emissive: 0x660011, shininess: 80 });
+            // Two spheres side by side + one diamond below = heart shape
+            const s1 = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), heartMat);
+            s1.position.set(-0.1, 0.06, 0);
+            const s2 = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), heartMat);
+            s2.position.set(0.1, 0.06, 0);
+            const body = new THREE.Mesh(new THREE.OctahedronGeometry(0.2), heartMat);
+            body.position.set(0, -0.08, 0);
+            body.rotation.y = Math.PI / 4;
+            group.add(s1); group.add(s2); group.add(body);
+        }
+
+        sceneRef.current.add(group);
+        s.pickups.push({ mesh: group, type, active: true, floatOffset: Math.random() * Math.PI * 2 });
+    };
+
     // Recycle corridor segments - move old ones to front
     const recycleSegments = (posZ) => {
         const segments = segmentsRef.current;
@@ -488,11 +525,45 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             }
         });
 
-        // Ammo refill
-        if (s.animFrame % 300 === 0 && s.ammo < s.maxAmmo) {
-            s.ammo = Math.min(s.maxAmmo, s.ammo + 1);
-            if (onAmmoUpdate) onAmmoUpdate(s.ammo);
+        // Spawn pickups periodically
+        if (s.animFrame % 200 === 0) {
+            const r = Math.random();
+            if (r < 0.5) spawnPickup('ammo');
+            else spawnPickup('health');
         }
+
+        // Update & collect pickups
+        const t2 = Date.now() * 0.001;
+        s.pickups.forEach(pk => {
+            if (!pk.active) return;
+            pk.mesh.rotation.y += 0.04;
+            pk.mesh.position.y += Math.sin(t2 * 2 + pk.floatOffset) * 0.005;
+            // Move toward player like enemies
+            pk.mesh.position.z += 0.035;
+
+            const dx = Math.abs(s.posX - pk.mesh.position.x);
+            const dy = Math.abs(s.posY - pk.mesh.position.y);
+            const dz = Math.abs(s.posZ - pk.mesh.position.z);
+            if (dx < 0.8 && dy < 0.8 && dz < 0.8) {
+                pk.active = false;
+                sceneRef.current.remove(pk.mesh);
+                if (pk.type === 'ammo') {
+                    s.ammo = Math.min(s.maxAmmo, s.ammo + 3);
+                    if (onAmmoUpdate) onAmmoUpdate(s.ammo);
+                } else {
+                    s.health = Math.min(100, s.health + 20);
+                    if (onHealthUpdate) onHealthUpdate(s.health);
+                }
+            }
+        });
+        s.pickups = s.pickups.filter(pk => {
+            if (!pk.active) return false;
+            if (pk.mesh.position.z > s.posZ + 3) {
+                sceneRef.current.remove(pk.mesh);
+                return false;
+            }
+            return true;
+        });
 
         // Cleanup — remove enemies that flew past the player (their Z is now > player's Z)
         s.shadows = s.shadows.filter(sh => {

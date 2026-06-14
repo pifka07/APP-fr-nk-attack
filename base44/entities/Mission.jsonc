@@ -1,0 +1,59 @@
+{
+  "name": "Mission",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "hit_target",
+        "survive_time",
+        "combo_reach",
+        "distance_reach"
+      ]
+    },
+    "goal_value": {
+      "type": "number"
+    },
+    "target_type": {
+      "type": "string",
+      "description": "Specific target like police, car, etc. if applicable"
+    },
+    "reward_coins": {
+      "type": "number"
+    },
+    "order": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "title",
+    "goal_type",
+    "goal_value"
+  ],
+  "rls": {
+    "read": {
+      "condition": "true"
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

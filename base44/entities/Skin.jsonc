@@ -1,0 +1,54 @@
+{
+  "name": "Skin",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "cost_coins": {
+      "type": "number"
+    },
+    "color_primary": {
+      "type": "string"
+    },
+    "color_secondary": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to skin preview image"
+    }
+  },
+  "required": [
+    "key",
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

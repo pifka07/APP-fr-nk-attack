@@ -1,0 +1,37 @@
+{
+  "name": "PlayerSkin",
+  "type": "object",
+  "properties": {
+    "skin_id": {
+      "type": "string"
+    },
+    "owned": {
+      "type": "boolean",
+      "default": true
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID"
+    }
+  },
+  "required": [
+    "skin_id",
+    "user_id"
+  ],
+  "rls": {
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "data.user_id": "{{user.id}}"
+    }
+  }
+}

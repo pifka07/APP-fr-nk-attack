@@ -1,0 +1,34 @@
+{
+  "name": "UnlockedLevel",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID"
+    },
+    "level_id": {
+      "type": "string",
+      "description": "Level identifier (e.g., 'paris', 'madrid')"
+    }
+  },
+  "required": [
+    "user_id",
+    "level_id"
+  ],
+  "rls": {
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "data.user_id": "{{user.id}}"
+    },
+    "read": {
+      "data.user_id": "{{user.id}}"
+    },
+    "update": {
+      "data.user_id": "{{user.id}}"
+    }
+  }
+}

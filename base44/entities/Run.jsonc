@@ -1,0 +1,71 @@
+{
+  "name": "Run",
+  "type": "object",
+  "properties": {
+    "score": {
+      "type": "number"
+    },
+    "distance": {
+      "type": "number"
+    },
+    "coins_earned": {
+      "type": "number"
+    },
+    "combos_max": {
+      "type": "number"
+    },
+    "duration_ms": {
+      "type": "number",
+      "description": "Run duration in milliseconds"
+    },
+    "mission_id": {
+      "type": "string",
+      "description": "Mission ID if played in mission mode"
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "Difficulty level of the run"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "endless",
+        "mission"
+      ],
+      "default": "endless"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID"
+    }
+  },
+  "required": [
+    "score",
+    "user_id"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "data.user_id": "{{user.id}}"
+    }
+  }
+}

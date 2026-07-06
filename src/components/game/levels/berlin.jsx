@@ -14,13 +14,13 @@ const GROUND_ENEMIES = [
 ];
 
 const AIR_ENEMIES = [
-    { type: 'rooftop_sparrow', weight: 3 },
+    { type: 'sparrow', weight: 3 },
+    { type: 'seagull', weight: 2 },
+    { type: 'pigeon', weight: 2 },
+    { type: 'rooftop_pigeon', weight: 2 },
     { type: 'fly', weight: 2 },
     { type: 'eagle', weight: 1 },
     { type: 'drone_l2', weight: 1 },
-    { type: 'gelsenkirchen_drone1', weight: 1 },
-    { type: 'gelsenkirchen_drone2', weight: 1 },
-    { type: 'paris_balloon', weight: 2 },
     { type: 'balloon', weight: 2 }
 ];
 

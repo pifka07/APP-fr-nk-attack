@@ -918,9 +918,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
     const spawnPowerup = (width, height) => {
         const state = gameStateRef.current;
 
-        // Spawn ammo (2 Körner) every ~400 frames
+        // Spawn ammo (2 Körner) every ~400 frames — same flow as enemies
         if (frameRef.current % 400 === 0) {
-            // Spawn 2 Körner close together
             for (let i = 0; i < 2; i++) {
                 state.powerups.push({
                     x: width + 50 + i * 55,
@@ -928,13 +927,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     width: 42,
                     height: 42,
                     type: 'ammo',
-                    vx: -state.scrollSpeed * 0.85,
+                    vx: -state.scrollSpeed,
                     active: true
                 });
             }
         }
 
-        // Spawn energy (Energie-Münze) every ~600 frames
+        // Spawn energy (Energie-Pfeil) every ~600 frames — same flow as enemies
         if (frameRef.current % 600 === 0) {
             state.powerups.push({
                 x: width + 50,
@@ -942,12 +941,12 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                 width: 42,
                 height: 42,
                 type: 'energy',
-                vx: -state.scrollSpeed * 0.85,
+                vx: -state.scrollSpeed,
                 active: true
             });
         }
 
-        // Coins still spawn randomly
+        // Coins still spawn randomly — same flow as enemies
         if (Math.random() > 0.98) {
             state.powerups.push({
                 x: width + 50,

@@ -539,7 +539,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
             pk.mesh.rotation.y += 0.04;
             pk.mesh.position.y += Math.sin(t2 * 2 + pk.floatOffset) * 0.005;
             // Move toward player like enemies
-            pk.mesh.position.z += 0.035;
+            pk.mesh.position.z += s.speed * 60 * 0.016; // same flow as enemies
 
             const dx = Math.abs(s.posX - pk.mesh.position.x);
             const dy = Math.abs(s.posY - pk.mesh.position.y);

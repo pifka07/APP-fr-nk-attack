@@ -1,23 +1,18 @@
 // Detroit Level Enemy Spawning - North America
-// Reuses existing NPC sprite types from GameEngine
+// Custom Detroit/USA-themed NPCs
 
 const GROUND_NPCS = [
-    { spriteType: 'cop', weight: 15 },
-    { spriteType: 'london_cop', weight: 12 },
-    { spriteType: 'worker', weight: 12 },
-    { spriteType: 'granny', weight: 10 },
-    { spriteType: 'london_car', weight: 18 },
-    { spriteType: 'dog', weight: 10 },
-    { spriteType: 'tourist', weight: 8 },
-    { spriteType: 'business_person', weight: 8 },
-    { spriteType: 'fruit_vendor', weight: 7 },
+    { spriteType: 'detroit_cop', weight: 15, isVehicle: false },
+    { spriteType: 'detroit_muscle_car', weight: 14, isVehicle: true },
+    { spriteType: 'detroit_hotdog_vendor', weight: 12, isVehicle: false },
+    { spriteType: 'detroit_football_player', weight: 12, isVehicle: false },
+    { spriteType: 'detroit_pickup_truck', weight: 10, isVehicle: true },
 ];
 
 const AIR_NPCS = [
     { spriteType: 'eagle', weight: 30 },
     { spriteType: 'seagull', weight: 25 },
-    { spriteType: 'sparrow', weight: 20 },
-    { spriteType: 'london_drone', weight: 15 },
+    { spriteType: 'detroit_drone', weight: 25 },
     { spriteType: 'balloon', weight: 10 },
 ];
 
@@ -48,13 +43,13 @@ export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
             isTarget: true,
             isObstacle: false,
             scoreValue: 120,
-            erratic: npc.spriteType.includes('sparrow') || npc.spriteType.includes('pigeon'),
+            erratic: false,
         };
     } else {
         const npc = weightedRandom(GROUND_NPCS);
-        const isVehicle = npc.spriteType === 'london_car';
-        const w = isVehicle ? 120 : 60;
-        const h = isVehicle ? 60 : 90;
+        const isVehicle = npc.isVehicle;
+        const w = isVehicle ? 130 : 65;
+        const h = isVehicle ? 65 : 95;
         return {
             x: width + 20,
             y: groundY - h,

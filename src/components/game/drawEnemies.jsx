@@ -35,6 +35,7 @@ export function drawEnemies(ctx, enemies, IMAGES, animFrame, isImageValid, SPRIT
         else if (st==='fly') ctx.translate(Math.sin(af*0.8)*5,Math.cos(af*0.8)*5);
         else if (st==='squirrel') ctx.translate(0,Math.abs(Math.sin(af*0.4))*-10);
         else if (st==='business_person'||st==='tourist') ctx.translate(Math.sin(af*0.3)*2,0);
+        else if (st.startsWith('detroit_')) ctx.translate(Math.sin(af*0.15)*1.5,0);
         else if (st.includes('bird')||st.includes('pigeon')) ctx.translate(0,Math.sin(af*0.4)*3);
         else if (st==='rooftop_sparrow') ctx.translate(0,Math.sin(af*0.6)*2);
         else if (st.includes('drone')||st.includes('balloon')) ctx.translate(0,Math.sin(af*0.3)*2);

@@ -195,17 +195,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.detroitBackground.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/1048f9b4b_generated_image.png";
             // Detroit NPCs
             IMAGES.current.detroit_cop = new Image();
-            IMAGES.current.detroit_cop.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/beff745ef_generated_image.png";
+            IMAGES.current.detroit_cop.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/c98bdf5ba_generated_image.png";
             IMAGES.current.detroit_muscle_car = new Image();
-            IMAGES.current.detroit_muscle_car.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/d5fb75f51_generated_image.png";
+            IMAGES.current.detroit_muscle_car.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/276ef5a36_generated_image.png";
             IMAGES.current.detroit_hotdog_vendor = new Image();
-            IMAGES.current.detroit_hotdog_vendor.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/50f043bcd_generated_image.png";
+            IMAGES.current.detroit_hotdog_vendor.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/bfced0b6d_generated_image.png";
             IMAGES.current.detroit_football_player = new Image();
-            IMAGES.current.detroit_football_player.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/04338c325_generated_image.png";
+            IMAGES.current.detroit_football_player.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/4d8de13d1_generated_image.png";
             IMAGES.current.detroit_pickup_truck = new Image();
-            IMAGES.current.detroit_pickup_truck.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/dca7407d1_generated_image.png";
+            IMAGES.current.detroit_pickup_truck.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/7de3fdcb8_generated_image.png";
             IMAGES.current.detroit_drone = new Image();
-            IMAGES.current.detroit_drone.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/8ec0bb83d_generated_image.png";
+            IMAGES.current.detroit_drone.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e40f9c073_generated_image.png";
         } else if (level === 'berlin') {
             IMAGES.current.background.src = "";
         } else {

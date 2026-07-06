@@ -36,6 +36,7 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
     const clockRef = useRef(new THREE.Clock());
     const [loadingDone, setLoadingDone] = useState(false);
     const [playerPos, setPlayerPos] = useState({ x: 0, y: 0 });
+    const [pickupFlash, setPickupFlash] = useState({ color: null, id: 0 });
 
     // Corridor segments pool for infinite scrolling
     const segmentsRef = useRef([]); // array of { group, zStart }
@@ -550,9 +551,11 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                 if (pk.type === 'ammo') {
                     s.ammo = Math.min(s.maxAmmo, s.ammo + 3);
                     if (onAmmoUpdate) onAmmoUpdate(s.ammo);
+                    setPickupFlash({ color: '245, 197, 24', id: Date.now() });
                 } else {
                     s.health = Math.min(100, s.health + 20);
                     if (onHealthUpdate) onHealthUpdate(s.health);
+                    setPickupFlash({ color: '0, 255, 102', id: Date.now() });
                 }
             }
         });
@@ -600,6 +603,23 @@ const BackroomsEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate,
                     zIndex: 5,
                 }}
             />
+            {pickupFlash.color && (
+                <div
+                    key={pickupFlash.id}
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        backgroundColor: `rgba(${pickupFlash.color}, 0.35)`,
+                        animation: 'bkPickupFlash 0.4s ease-out forwards',
+                        zIndex: 10,
+                    }}
+                />
+            )}
+            <style>{`
+                @keyframes bkPickupFlash {
+                    0% { opacity: 1; }
+                    100% { opacity: 0; }
+                }
+            `}</style>
         </div>
     );
 });

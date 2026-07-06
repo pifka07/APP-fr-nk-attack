@@ -721,6 +721,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         rapidFireUntil: 0,
         shotQueue: [],
         lastMilestone: 0, // Track last milestone reached
+        pickupFlash: null, // { color, alpha } visual flash on pickup collection
         gelsenkirchenBuildings: [], // Gelsenkirchen scrolling buildings
         gelsenkirchenSidewalkX: 0, // Gelsenkirchen sidewalk scroll position
         gelsenkirchenHoles: [], // Gelsenkirchen street holes
@@ -1544,11 +1545,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     const toAdd = Math.min(3, effectiveConfig.maxPoops - state.currentPoops);
                     state.currentPoops = Math.min(effectiveConfig.maxPoops, state.currentPoops + toAdd);
                     if (onAmmoUpdate) onAmmoUpdate(state.currentPoops);
-                    createParticles(state.player.x, state.player.y, '#8B4513', 8);
+                    createParticles(state.player.x, state.player.y, '#f5c518', 15);
+                    state.pickupFlash = { color: '245, 197, 24', alpha: 0.35 };
                 } else if (p.type === 'energy') {
                     state.health = Math.min(100, state.health + 20);
                     onHealthUpdate(state.health);
-                    createParticles(state.player.x, state.player.y, '#00FFFF', 8);
+                    createParticles(state.player.x, state.player.y, '#00FF66', 15);
+                    state.pickupFlash = { color: '0, 255, 102', alpha: 0.35 };
                 }
                 onScoreUpdate(state.score, state.coins, Math.floor(state.distance));
             }
@@ -1976,6 +1979,13 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             ctx.fill();
             ctx.globalAlpha = 1.0;
         });
+
+        // Pickup flash overlay — fades each frame
+        if (state.pickupFlash && state.pickupFlash.alpha > 0.01) {
+            ctx.fillStyle = `rgba(${state.pickupFlash.color}, ${state.pickupFlash.alpha})`;
+            ctx.fillRect(0, 0, width, height);
+            state.pickupFlash.alpha *= 0.82;
+        }
     };
 
     const gameLoop = (time) => {

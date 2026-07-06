@@ -179,6 +179,54 @@ Deno.serve(async (req) => {
             }
         }
 
+        // Update daily missions progress
+        try {
+            function getDateStringBerlin() {
+                const now = new Date();
+                const berlinTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
+                const yyyy = berlinTime.getFullYear();
+                const mm = String(berlinTime.getMonth() + 1).padStart(2, '0');
+                const dd = String(berlinTime.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            }
+
+            const todayStr = getDateStringBerlin();
+            const dailyMissions = await base44.entities.DailyMission.filter({
+                user_id: user.id,
+                date_string: todayStr
+            });
+
+            for (const dm of dailyMissions) {
+                if (dm.claimed) continue;
+                let addedProgress = 0;
+                switch (dm.mission_type) {
+                    case 'distance':
+                        addedProgress = distance || 0;
+                        break;
+                    case 'score':
+                        addedProgress = score;
+                        break;
+                    case 'coins':
+                        addedProgress = coinsCollected;
+                        break;
+                    case 'duration':
+                        addedProgress = durationMs;
+                        break;
+                }
+                if (addedProgress <= 0) continue;
+                const newProgress = Math.min(dm.goal_value, (dm.progress || 0) + addedProgress);
+                const nowCompleted = newProgress >= dm.goal_value;
+                if (newProgress !== dm.progress || (nowCompleted && !dm.completed)) {
+                    await base44.entities.DailyMission.update(dm.id, {
+                        progress: newProgress,
+                        completed: nowCompleted
+                    });
+                }
+            }
+        } catch (dmError) {
+            console.error("Error updating daily missions:", dmError);
+        }
+
         return Response.json({
             success: true,
             isHighscore,

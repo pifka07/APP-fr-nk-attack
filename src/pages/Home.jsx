@@ -53,6 +53,25 @@ export default function StartScreen() {
         </motion.div>
       </div>
 
+      {/* Daily Missions Button */}
+      <div className="absolute top-[31px] left-4 z-20">
+        <Link to={createPageUrl('DailyMissions')}>
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 bg-gradient-to-r from-amber-500/90 to-orange-600/90 backdrop-blur-sm rounded-2xl px-4 py-2.5 border border-amber-300/30 shadow-lg"
+          >
+            <span className="text-xl">🎯</span>
+            <div className="flex flex-col">
+              <span className="text-xs font-bold text-white leading-tight">Tägliche</span>
+              <span className="text-xs font-bold text-white leading-tight">Missionen</span>
+            </div>
+          </motion.div>
+        </Link>
+      </div>
+
       {/* Footer */}
       <div className="absolute top-[31px] right-4 z-20 flex flex-col items-end gap-1">
         <a href="https://pifka07.de" target="_blank" rel="noopener noreferrer" className="text-white/30 font-titan text-sm italic hover:text-white/60 transition-colors">

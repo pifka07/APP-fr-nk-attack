@@ -57,6 +57,7 @@ import Profile from './pages/Profile';
 import Shop from './pages/Shop';
 import Skins from './pages/Skins';
 import Training from './pages/Training';
+import DailyMissions from './pages/DailyMissions';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "Shop": Shop,
     "Skins": Skins,
     "Training": Training,
+    "DailyMissions": DailyMissions,
 }
 
 export const pagesConfig = {

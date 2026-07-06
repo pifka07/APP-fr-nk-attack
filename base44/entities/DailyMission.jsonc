@@ -1,0 +1,74 @@
+{
+  "name": "DailyMission",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User ID"
+    },
+    "date_string": {
+      "type": "string",
+      "description": "Date key in YYYY-MM-DD format (Europe/Berlin timezone)"
+    },
+    "mission_type": {
+      "type": "string",
+      "enum": [
+        "distance",
+        "score",
+        "coins",
+        "duration"
+      ],
+      "description": "Which stat this mission tracks"
+    },
+    "goal_value": {
+      "type": "number",
+      "description": "Target value to reach"
+    },
+    "progress": {
+      "type": "number",
+      "default": 0,
+      "description": "Current progress toward goal_value"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "claimed": {
+      "type": "boolean",
+      "default": false
+    },
+    "reward_coins": {
+      "type": "number"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "date_string",
+    "mission_type",
+    "goal_value",
+    "reward_coins",
+    "title"
+  ],
+  "rls": {
+    "create": {
+      "data.user_id": "{{user.id}}"
+    },
+    "read": {
+      "data.user_id": "{{user.id}}"
+    },
+    "update": {
+      "data.user_id": "{{user.id}}"
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

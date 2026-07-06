@@ -52,6 +52,7 @@ import Game from './pages/Game';
 import Home from './pages/Home';
 import Leaderboard from './pages/Leaderboard';
 import Missions from './pages/Missions';
+import Nordamerika from './pages/Nordamerika';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
 import Shop from './pages/Shop';
@@ -67,6 +68,7 @@ export const PAGES = {
     "Home": Home,
     "Leaderboard": Leaderboard,
     "Missions": Missions,
+    "Nordamerika": Nordamerika,
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
     "Shop": Shop,

@@ -103,6 +103,21 @@ export class LevelManager {
                 groundNPCs: [],
                 airNPCs: []
             },
+            detroit: {
+                name: 'Detroit',
+                groundY: 0.995,
+                music: 'https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3',
+                groundNPCs: ['cop', 'london_cop', 'worker', 'granny', 'london_car', 'dog'],
+                airNPCs: ['eagle', 'seagull', 'sparrow'],
+                groundOffsets: {
+                    cop: 200,
+                    london_cop: 180,
+                    worker: 130,
+                    granny: 120,
+                    london_car: 120,
+                    dog: 40
+                }
+            },
             backrooms: {
                 name: 'Backrooms',
                 groundY: 0.88,

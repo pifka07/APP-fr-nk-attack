@@ -9,7 +9,9 @@ export class LevelRenderer {
     drawBackground(ctx, width, height, distance) {
         const levelType = this.levelData.name.toLowerCase();
 
-        if (levelType === 'backrooms') {
+        if (levelType === 'detroit') {
+            this.drawDetroitBackground(ctx, width, height, distance);
+        } else if (levelType === 'backrooms') {
             this.drawBackroomsBackground(ctx, width, height, distance);
         } else if (levelType === 'rooftop') {
             // Sky blue background
@@ -28,6 +30,36 @@ export class LevelRenderer {
             // Downtown - alternating backgrounds
             this.drawDowntownBackgrounds(ctx, width, height, distance);
         }
+    }
+
+    drawDetroitBackground(ctx, width, height, distance) {
+        const bg = this.assetLoader.getImage('detroitBackground');
+        if (!bg || !bg.complete || bg.naturalWidth === 0) {
+            // Fallback: industrial grey sky
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            grad.addColorStop(0, '#6b6555');
+            grad.addColorStop(0.5, '#8a7d68');
+            grad.addColorStop(1, '#4a4640');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+            return;
+        }
+
+        // Slow parallax scroll for the background
+        const scale = Math.max(width / bg.width, height / bg.height);
+        const w = bg.width * scale;
+        const h = bg.height * scale;
+        const bgOffset = (distance * 1.5) % w;
+
+        ctx.drawImage(bg, -bgOffset, 0, w, h);
+        ctx.drawImage(bg, w - bgOffset, 0, w, h);
+
+        // Subtle smog/haze overlay at the bottom for industrial feel
+        const hazeGrad = ctx.createLinearGradient(0, height * 0.6, 0, height);
+        hazeGrad.addColorStop(0, 'rgba(80, 70, 55, 0)');
+        hazeGrad.addColorStop(1, 'rgba(60, 50, 40, 0.3)');
+        ctx.fillStyle = hazeGrad;
+        ctx.fillRect(0, height * 0.6, width, height * 0.4);
     }
 
     drawBackroomsBackground(ctx, width, height, distance) {

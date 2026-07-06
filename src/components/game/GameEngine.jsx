@@ -9,6 +9,7 @@ import { spawnRomeEnemy } from './levels/rome';
 import { spawnGelsenkirchenEnemy } from './levels/gelsenkirchen';
 import { spawnBerlinEnemy } from './levels/berlin';
 import { spawnUSAEnemy } from './levels/usa';
+import { spawnDetroitEnemy } from './levels/detroit';
 import { spawnDowntownEnemy } from './levels/downtownLevel';
 import { drawEnemies } from './drawEnemies';
 
@@ -119,6 +120,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
 
         if (level === 'rooftop') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3";
+        } else if (level === 'detroit') {
+            musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3";
         } else if (level === 'park') {
             musicUrl = "https://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3"; 
         } else if (level === 'london') {
@@ -186,6 +189,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.gelsenkirchenSidewalk.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/cafe8eadb_Gehweg.png";
         } else if (level === 'usa') {
             IMAGES.current.background.src = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6961111599b5db08cf38f4b2/2ea91ee38_ChatGPTImage20Jan202617_45_17.png';
+        } else if (level === 'detroit') {
+            IMAGES.current.background.src = "";
+            IMAGES.current.detroitBackground = new Image();
+            IMAGES.current.detroitBackground.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/1048f9b4b_generated_image.png";
         } else if (level === 'berlin') {
             IMAGES.current.background.src = "";
         } else {
@@ -644,6 +651,9 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (level === 'paris') {
             if (IMAGES.current.parisStreet) criticalImages.push(IMAGES.current.parisStreet);
         }
+        if (level === 'detroit') {
+            if (IMAGES.current.detroitBackground) criticalImages.push(IMAGES.current.detroitBackground);
+        }
 
 
         let loadedCount = 0;
@@ -908,6 +918,8 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             enemy = spawnRomeEnemy(width, height, groundY, scrollSpeed);
         } else if (level === 'usa') {
             enemy = spawnUSAEnemy(width, height, groundY, scrollSpeed);
+        } else if (level === 'detroit') {
+            enemy = spawnDetroitEnemy(width, height, groundY, scrollSpeed);
         } else {
             // Downtown
             enemy = spawnDowntownEnemy(width, height, groundY, scrollSpeed);
@@ -1650,6 +1662,20 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const bgMap={berlin:IMAGES.current.berlinBackground,rome:IMAGES.current.romeBackground,madrid:IMAGES.current.madridBackground,rooftop:IMAGES.current.rooftopBackground};
             const bg=bgMap[level];
             if(isImageValid(bg)){const sc=Math.max(width/bg.width,height/bg.height),w=bg.width*sc,h=bg.height*sc;ctx.drawImage(bg,(width-w)/2,(height-h)/2,w,h);}
+        } else if (level === 'detroit' && isImageValid(IMAGES.current.detroitBackground)) {
+            const bg = IMAGES.current.detroitBackground;
+            const scale = Math.max(width / bg.width, height / bg.height);
+            const w = bg.width * scale;
+            const h = bg.height * scale;
+            const bgOffset = (state.distance * 1.5) % w;
+            ctx.drawImage(bg, -bgOffset, 0, w, h);
+            ctx.drawImage(bg, w - bgOffset, 0, w, h);
+            // Industrial smog overlay
+            const haze = ctx.createLinearGradient(0, height * 0.6, 0, height);
+            haze.addColorStop(0, 'rgba(80,70,55,0)');
+            haze.addColorStop(1, 'rgba(60,50,40,0.3)');
+            ctx.fillStyle = haze;
+            ctx.fillRect(0, height * 0.6, width, height * 0.4);
         } else if (level === 'london' && assetsLoaded.current && isImageValid(IMAGES.current.background)) {
             // London: slow scrolling background (1/10 of foreground speed)
             const bg = IMAGES.current.background;

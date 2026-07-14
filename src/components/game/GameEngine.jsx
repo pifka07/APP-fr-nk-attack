@@ -195,13 +195,17 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.detroitBackground = new Image();
             IMAGES.current.detroitBackground.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/1048f9b4b_generated_image.png";
             // Detroit NPCs
-            loadTransparentNPC(IMAGES, 'detroit_cop', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/c98bdf5ba_generated_image.png");
+            // Detroit Cars
             loadTransparentNPC(IMAGES, 'detroit_sedan', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/06eaf5a1b_generated_image.png");
             loadTransparentNPC(IMAGES, 'detroit_muscle_car', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/1f030a451_generated_image.png");
-            loadTransparentNPC(IMAGES, 'detroit_hotdog_vendor', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/bfced0b6d_generated_image.png");
-            loadTransparentNPC(IMAGES, 'detroit_football_player', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/4d8de13d1_generated_image.png");
             loadTransparentNPC(IMAGES, 'detroit_pickup_truck', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/7029eedeb_generated_image.png");
-            loadTransparentNPC(IMAGES, 'detroit_drone', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e40f9c073_generated_image.png");
+            // Detroit Ground Obstacles
+            loadTransparentNPC(IMAGES, 'detroit_barrel', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/6c846b3c7_generated_image.png");
+            loadTransparentNPC(IMAGES, 'detroit_dumpster', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/8ce916d73_generated_image.png");
+            loadTransparentNPC(IMAGES, 'detroit_hydrant', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/150b304d0_generated_image.png");
+            // Detroit Air Obstacles
+            loadTransparentNPC(IMAGES, 'detroit_crow', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/00f522203_generated_image.png");
+            loadTransparentNPC(IMAGES, 'detroit_broken_drone', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/0a8c43f6e_generated_image.png");
         } else if (level === 'berlin') {
             IMAGES.current.background.src = "";
         } else {

@@ -1,20 +1,20 @@
 // Detroit Level Enemy Spawning - North America
-// Custom Detroit/USA-themed NPCs
+// All NPCs are obstacles that damage Fränk on collision
 
 const GROUND_NPCS = [
-    { spriteType: 'detroit_cop', weight: 15, isVehicle: false },
-    { spriteType: 'detroit_muscle_car', weight: 16, isVehicle: true },
-    { spriteType: 'detroit_sedan', weight: 16, isVehicle: true },
-    { spriteType: 'detroit_hotdog_vendor', weight: 12, isVehicle: false },
-    { spriteType: 'detroit_football_player', weight: 12, isVehicle: false },
-    { spriteType: 'detroit_pickup_truck', weight: 12, isVehicle: true },
+    // Cars
+    { spriteType: 'detroit_muscle_car', weight: 18, isVehicle: true },
+    { spriteType: 'detroit_sedan', weight: 18, isVehicle: true },
+    { spriteType: 'detroit_pickup_truck', weight: 16, isVehicle: true },
+    // Ground obstacles
+    { spriteType: 'detroit_barrel', weight: 12, isVehicle: false },
+    { spriteType: 'detroit_dumpster', weight: 10, isVehicle: false },
+    { spriteType: 'detroit_hydrant', weight: 10, isVehicle: false },
 ];
 
 const AIR_NPCS = [
-    { spriteType: 'eagle', weight: 30 },
-    { spriteType: 'seagull', weight: 25 },
-    { spriteType: 'detroit_drone', weight: 25 },
-    { spriteType: 'balloon', weight: 10 },
+    { spriteType: 'detroit_crow', weight: 30 },
+    { spriteType: 'detroit_broken_drone', weight: 25 },
 ];
 
 function weightedRandom(items) {
@@ -32,25 +32,27 @@ export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
 
     if (isAir) {
         const npc = weightedRandom(AIR_NPCS);
-        const w = npc.spriteType === 'eagle' ? 80 : (npc.spriteType === 'balloon' ? 60 : 55);
+        const w = 70;
+        const h = 70;
         return {
             x: width + 20,
             y: 40 + Math.random() * (groundY * 0.6),
             vx: -scrollSpeed,
             width: w,
-            height: w,
+            height: h,
             spriteType: npc.spriteType,
             hp: 1,
             isTarget: true,
-            isObstacle: false,
+            isObstacle: true,
             scoreValue: 120,
-            erratic: false,
+            erratic: npc.spriteType === 'detroit_crow',
         };
     } else {
         const npc = weightedRandom(GROUND_NPCS);
         const isVehicle = npc.isVehicle;
-        const w = isVehicle ? 220 : 65;
-        const h = isVehicle ? 130 : 95;
+        // Cars 1.2x bigger than previous (was 220x130)
+        const w = isVehicle ? 264 : 70;
+        const h = isVehicle ? 156 : 90;
         return {
             x: width + 20,
             y: groundY - h,
@@ -60,7 +62,7 @@ export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
             spriteType: npc.spriteType,
             hp: 1,
             isTarget: true,
-            isObstacle: isVehicle,
+            isObstacle: true,
             scoreValue: isVehicle ? 200 : 100,
         };
     }

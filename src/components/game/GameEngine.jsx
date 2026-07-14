@@ -13,6 +13,8 @@ import { spawnDetroitEnemy } from './levels/detroit';
 import { spawnDowntownEnemy } from './levels/downtownLevel';
 import { drawEnemies } from './drawEnemies';
 import { loadTransparentNPC } from './utils/removeCheckerboard';
+import { drawProjectiles } from './ProjectileRenderer';
+import { SKIN_PROJECTILES } from './skinProjectiles';
 
 const GRAVITY = 0.4;
 const FLAP_STRENGTH = -7; // Jump height
@@ -865,40 +867,29 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         if (onAmmoUpdate) onAmmoUpdate(state.currentPoops);
         state.lastPoopTime = now;
         
-        // Helper to push a poop
-        // Check if Rapid Fire is active
+        // Check if Rapid Fire is active (applies to default skin only)
         const isRapidFire = now < state.rapidFireUntil;
+        const proj = SKIN_PROJECTILES[skin];
 
-        const pushPoop = () => {
-            const isLaser = skin === 'neon';
-            const isNinja = skin === 'ninja';
-            const isAlien = skin === 'alien';
-            const isGold = skin === 'gold';
-            const isChristmas = skin === 'christmas';
-            const isPink = skin === 'pink';
-            const isBat = skin === 'bat';
-            const isZombie = skin === 'zombie';
-            const isGhost = skin === 'ghost';
-            const isArmy = skin === 'army';
-            const isWood = skin === 'wood';
-            const isStone = skin === 'stone';
-            const isSkeleton = skin === 'skeleton';
-            const isFire = skin === 'fire';
-            const isIce = skin === 'ice';
+        let pType, pWidth, pHeight, pVx, pVy;
+        if (proj) {
+            pType = proj.type; pWidth = proj.width; pHeight = proj.height; pVx = proj.vx; pVy = proj.vy;
+        } else if (isRapidFire) {
+            pType = 'triple'; pWidth = 60; pHeight = 60; pVx = 2; pVy = 5;
+        } else {
+            pType = 'normal'; pWidth = 30; pHeight = 30; pVx = 2; pVy = 5;
+        }
 
-            state.poops.push({
-                x: state.player.x,
-                y: state.player.y + 20,
-                vx: isLaser ? 8 : (isNinja ? 6 : (isAlien ? 7 : (isGold ? 5 : (isChristmas ? 6 : (isPink ? 4 : (isBat ? 7 : (isZombie ? 5 : (isGhost ? 3 : (isArmy ? 5 : (isWood ? 6 : (isStone ? 7 : (isSkeleton ? 5 : (isFire ? 6 : (isIce ? 6 : 2)))))))))))))),
-                vy: isLaser ? 4 : (isNinja ? 12 : (isAlien ? 6 : (isGold ? 8 : (isChristmas ? 8 : (isPink ? 3 : (isBat ? 10 : (isZombie ? 7 : (isGhost ? 6 : (isArmy ? 6 : (isWood ? 8 : (isStone ? 9 : (isSkeleton ? 7 : (isFire ? 8 : (isIce ? 8 : 5)))))))))))))),
-                active: true,
-                type: isLaser ? 'laser' : (isNinja ? 'shuriken' : (isAlien ? 'lightning' : (isGold ? 'goldbar' : (isChristmas ? 'candycane' : (isPink ? 'bubble' : (isBat ? 'batarang' : (isZombie ? 'bone' : (isGhost ? 'ghost_poop' : (isArmy ? 'grenade' : (isWood ? 'plank' : (isStone ? 'stone' : (isSkeleton ? 'bone' : (isFire ? 'fireball' : (isIce ? 'icecube' : (isRapidFire ? 'triple' : 'normal'))))))))))))))),
-                width: isLaser ? 40 : (isNinja ? 35 : (isAlien ? 45 : (isGold ? 10 : (isChristmas ? 20 : (isPink ? 25 : (isBat ? 40 : (isZombie ? 35 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 45 : (isStone ? 35 : (isSkeleton ? 35 : (isFire ? 40 : (isIce ? 30 : (isRapidFire ? 60 : 30))))))))))))))),
-                height: isLaser ? 10 : (isNinja ? 35 : (isAlien ? 15 : (isGold ? 6 : (isChristmas ? 5 : (isPink ? 25 : (isBat ? 20 : (isZombie ? 15 : (isGhost ? 30 : (isArmy ? 30 : (isWood ? 15 : (isStone ? 35 : (isSkeleton ? 15 : (isFire ? 40 : (isIce ? 30 : (isRapidFire ? 60 : 30)))))))))))))))
-            });
-        };
-
-        pushPoop();
+        state.poops.push({
+            x: state.player.x,
+            y: state.player.y + 20,
+            vx: pVx,
+            vy: pVy,
+            active: true,
+            type: pType,
+            width: pWidth,
+            height: pHeight
+        });
 
         // Rapid Fire Logic - Now uses special graphic instead of queueing multiple shots
         // (Queue logic removed in favor of "Triple Poop" projectile)
@@ -1074,7 +1065,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         state.poops.forEach(p => {
             p.x += p.vx;
             p.y += p.vy;
-            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball' && p.type !== 'icecube') {
+            if (p.type !== 'laser' && p.type !== 'shuriken' && p.type !== 'lightning' && p.type !== 'neon_lightning' && p.type !== 'ghost_lightning' && p.type !== 'goldbar' && p.type !== 'bubble' && p.type !== 'batarang' && p.type !== 'bone' && p.type !== 'stone' && p.type !== 'fireball' && p.type !== 'icecube') {
                 p.vy += GRAVITY * 0.5; // accelerate down
             }
             // Ice cubes fall slower
@@ -1993,7 +1984,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
         }
 
         // Draw Poops
-        if(assetsLoaded.current){state.poops.filter(p=>p.active).forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(state.animFrame*0.2);if(p.type==='triple'&&isImageValid(IMAGES.current.poopTriple)){ctx.drawImage(IMAGES.current.poopTriple,-p.width/2,-p.height/2,p.width,p.height);}else if(isImageValid(IMAGES.current.poopProjectile)){ctx.drawImage(IMAGES.current.poopProjectile,-p.width/2,-p.height/2,p.width,p.height);}ctx.restore();});}
+        if(assetsLoaded.current){drawProjectiles(ctx,state.poops.filter(p=>p.active),state.animFrame,IMAGES.current,isImageValid);}
         else{state.poops.forEach(p=>{if(p.active)ctx.fillText('💩',p.x,p.y);});}
 
         // Draw Enemies

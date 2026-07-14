@@ -1,0 +1,23 @@
+// Central config: skin → projectile type, physics, and dimensions
+export const SKIN_PROJECTILES = {
+    default:    { type: 'normal',         vx: 2, vy: 5,  width: 30, height: 30 },
+    neon:       { type: 'neon_lightning', vx: 8, vy: 4,  width: 40, height: 12 },
+    ninja:      { type: 'shuriken',       vx: 6, vy: 12, width: 35, height: 35 },
+    alien:      { type: 'laser',          vx: 7, vy: 6,  width: 45, height: 15 },
+    gold:       { type: 'goldbar',        vx: 5, vy: 8,  width: 28, height: 14 },
+    christmas:  { type: 'candycane',      vx: 6, vy: 8,  width: 20, height: 10 },
+    pink:       { type: 'bubble',         vx: 4, vy: 3,  width: 25, height: 25 },
+    bat:        { type: 'batarang',       vx: 7, vy: 10, width: 40, height: 20 },
+    zombie:     { type: 'vomit',          vx: 5, vy: 7,  width: 35, height: 20 },
+    ghost:      { type: 'ghost_lightning',vx: 3, vy: 6,  width: 30, height: 30 },
+    army:       { type: 'grenade',        vx: 5, vy: 6,  width: 30, height: 30 },
+    wood:       { type: 'plank',          vx: 6, vy: 8,  width: 45, height: 15 },
+    stone:      { type: 'stone',          vx: 7, vy: 9,  width: 35, height: 35 },
+    skeleton:   { type: 'bone',           vx: 5, vy: 7,  width: 35, height: 15 },
+    fire:       { type: 'fireball',       vx: 6, vy: 8,  width: 40, height: 40 },
+    ice:        { type: 'icecube',        vx: 6, vy: 8,  width: 30, height: 30 },
+    punk:       { type: 'chain',          vx: 5, vy: 7,  width: 40, height: 20 },
+    gangster:   { type: 'coin',           vx: 5, vy: 8,  width: 30, height: 30 },
+    boss:       { type: 'pen',            vx: 6, vy: 8,  width: 35, height: 12 },
+    pixel:      { type: 'pixel_cube',     vx: 5, vy: 6,  width: 30, height: 30 },
+};

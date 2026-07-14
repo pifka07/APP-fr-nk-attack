@@ -49,8 +49,8 @@ export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
     } else {
         const npc = weightedRandom(GROUND_NPCS);
         const isVehicle = npc.isVehicle;
-        const w = isVehicle ? 130 : 65;
-        const h = isVehicle ? 65 : 95;
+        const w = isVehicle ? 220 : 65;
+        const h = isVehicle ? 130 : 95;
         return {
             x: width + 20,
             y: groundY - h,

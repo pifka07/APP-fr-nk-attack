@@ -196,10 +196,11 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             IMAGES.current.detroitBackground.src = "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/1048f9b4b_generated_image.png";
             // Detroit NPCs
             loadTransparentNPC(IMAGES, 'detroit_cop', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/c98bdf5ba_generated_image.png");
-            loadTransparentNPC(IMAGES, 'detroit_muscle_car', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/276ef5a36_generated_image.png");
+            loadTransparentNPC(IMAGES, 'detroit_sedan', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/06eaf5a1b_generated_image.png");
+            loadTransparentNPC(IMAGES, 'detroit_muscle_car', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/1f030a451_generated_image.png");
             loadTransparentNPC(IMAGES, 'detroit_hotdog_vendor', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/bfced0b6d_generated_image.png");
             loadTransparentNPC(IMAGES, 'detroit_football_player', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/4d8de13d1_generated_image.png");
-            loadTransparentNPC(IMAGES, 'detroit_pickup_truck', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/7de3fdcb8_generated_image.png");
+            loadTransparentNPC(IMAGES, 'detroit_pickup_truck', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/7029eedeb_generated_image.png");
             loadTransparentNPC(IMAGES, 'detroit_drone', "https://media.base44.com/images/public/6961111599b5db08cf38f4b2/e40f9c073_generated_image.png");
         } else if (level === 'berlin') {
             IMAGES.current.background.src = "";

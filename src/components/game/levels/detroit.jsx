@@ -3,10 +3,11 @@
 
 const GROUND_NPCS = [
     { spriteType: 'detroit_cop', weight: 15, isVehicle: false },
-    { spriteType: 'detroit_muscle_car', weight: 14, isVehicle: true },
+    { spriteType: 'detroit_muscle_car', weight: 16, isVehicle: true },
+    { spriteType: 'detroit_sedan', weight: 16, isVehicle: true },
     { spriteType: 'detroit_hotdog_vendor', weight: 12, isVehicle: false },
     { spriteType: 'detroit_football_player', weight: 12, isVehicle: false },
-    { spriteType: 'detroit_pickup_truck', weight: 10, isVehicle: true },
+    { spriteType: 'detroit_pickup_truck', weight: 12, isVehicle: true },
 ];
 
 const AIR_NPCS = [

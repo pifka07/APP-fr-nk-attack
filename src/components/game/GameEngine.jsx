@@ -1529,6 +1529,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     state.score = Math.max(0, state.score - 50);
 
                     createParticles(state.player.x, state.player.y, '#FFFFFF', 10);
+                    state.pickupFlash = { color: '239, 68, 68', alpha: 0.4 };
                     onHealthUpdate(state.health);
                     onScoreUpdate(state.score, state.coins, Math.floor(state.distance)); // Update score display
 
@@ -1562,12 +1563,10 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
                     state.currentPoops = Math.min(effectiveConfig.maxPoops, state.currentPoops + toAdd);
                     if (onAmmoUpdate) onAmmoUpdate(state.currentPoops);
                     createParticles(state.player.x, state.player.y, '#f5c518', 15);
-                    state.pickupFlash = { color: '245, 197, 24', alpha: 0.35 };
                 } else if (p.type === 'energy') {
                     state.health = Math.min(100, state.health + 20);
                     onHealthUpdate(state.health);
                     createParticles(state.player.x, state.player.y, '#00FF66', 15);
-                    state.pickupFlash = { color: '0, 255, 102', alpha: 0.35 };
                 }
                 onScoreUpdate(state.score, state.coins, Math.floor(state.distance));
             }

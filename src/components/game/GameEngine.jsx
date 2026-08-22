@@ -21,7 +21,7 @@ const FLAP_STRENGTH = -7; // Jump height
 const GROUND_OFFSET_PX = 120; // Fixed pixel distance from bottom (consistent across devices)
 const PARIS_GROUND_OFFSET_PX = 170; // Fixed pixel distance for Paris level
 const SPAWN_RATE_INITIAL = 100; // Frames between spawns
-const SCROLL_SPEED_INITIAL = 3;
+const SCROLL_SPEED_INITIAL = 4.2;
 
 // Assets & Sprite Maps
 const SPRITE_MAP = {

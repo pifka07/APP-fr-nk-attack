@@ -15,37 +15,44 @@ export function removeCheckerboard(img) {
         const w = canvas.width;
         const h = canvas.height;
 
-        // Sample corner pixels to detect the actual background color dynamically
-        const corners = [
-            [0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1],
-            [1, 1], [w - 2, 1], [1, h - 2], [w - 2, h - 2]
-        ];
+        // Sample all edge pixels to detect background colors (handles checkerboard with multiple shades)
+        const edgePixels = [];
+        for (let x = 0; x < w; x += Math.max(1, Math.floor(w / 50))) {
+            edgePixels.push([x, 0], [x, h - 1]);
+        }
+        for (let y = 0; y < h; y += Math.max(1, Math.floor(h / 50))) {
+            edgePixels.push([0, y], [w - 1, y]);
+        }
 
-        let bgR = 0, bgG = 0, bgB = 0;
-        let count = 0;
-        corners.forEach(([cx, cy]) => {
+        // Collect distinct background color clusters from edges
+        const bgColors = [];
+        const clusterTolerance = 30;
+        edgePixels.forEach(([cx, cy]) => {
             const idx = (cy * w + cx) * 4;
-            bgR += data[idx];
-            bgG += data[idx + 1];
-            bgB += data[idx + 2];
-            count++;
+            const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+            const found = bgColors.some(c =>
+                Math.abs(r - c.r) < clusterTolerance &&
+                Math.abs(g - c.g) < clusterTolerance &&
+                Math.abs(b - c.b) < clusterTolerance
+            );
+            if (!found) bgColors.push({ r, g, b });
         });
-        bgR = Math.round(bgR / count);
-        bgG = Math.round(bgG / count);
-        bgB = Math.round(bgB / count);
 
         // Wide tolerance to catch both checkerboard shades and anti-aliased edges
-        const tolerance = 50;
+        const tolerance = 55;
 
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
 
-            // Check if pixel is close to the sampled background color
-            if (Math.abs(r - bgR) < tolerance &&
-                Math.abs(g - bgG) < tolerance &&
-                Math.abs(b - bgB) < tolerance) {
+            // Check if pixel is close to any sampled background color
+            const isBg = bgColors.some(c =>
+                Math.abs(r - c.r) < tolerance &&
+                Math.abs(g - c.g) < tolerance &&
+                Math.abs(b - c.b) < tolerance
+            );
+            if (isBg) {
                 data[i + 3] = 0; // Make fully transparent
             }
         }

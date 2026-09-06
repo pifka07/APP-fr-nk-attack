@@ -56,7 +56,7 @@ export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
         return {
             x: width + 20,
             y: groundY - h,
-            vx: isVehicle ? -scrollSpeed * 1.5 : -scrollSpeed,
+            vx: -scrollSpeed,
             width: w,
             height: h,
             spriteType: npc.spriteType,

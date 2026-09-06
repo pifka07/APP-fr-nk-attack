@@ -1672,7 +1672,7 @@ const GameEngine = forwardRef(({ onGameOver, onScoreUpdate, onHealthUpdate, onCo
             const scale = Math.max(width / bg.width, height / bg.height);
             const w = bg.width * scale;
             const h = bg.height * scale;
-            const bgOffset = (state.distance * 1.5) % w;
+            const bgOffset = (state.distance * 10) % w;
             ctx.drawImage(bg, -bgOffset, 0, w, h);
             ctx.drawImage(bg, w - bgOffset, 0, w, h);
             // Industrial smog overlay

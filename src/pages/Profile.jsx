@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, Trash2 } from "lucide-react";
+import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, LogIn, Trash2 } from "lucide-react";
 import { calculatePlayerRank } from '@/components/game/PlayerRanks';
 import { Progress } from "@/components/ui/progress";
 import {
@@ -30,10 +30,17 @@ export default function Profile() {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [rankInfo, setRankInfo] = useState(null);
     const [showRanksDialog, setShowRanksDialog] = useState(false);
+    const [isAuth, setIsAuth] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
+                const authenticated = await base44.auth.isAuthenticated();
+                setIsAuth(authenticated);
+                if (!authenticated) {
+                    setLoading(false);
+                    return;
+                }
                 const userData = await base44.auth.me();
                 const runsData = await base44.entities.Run.filter({ user_id: userData.id });
 
@@ -51,6 +58,7 @@ export default function Profile() {
                 setRuns(runsData.sort((a, b) => b.score - a.score).slice(0, 10));
             } catch (error) {
                 console.error("Error fetching profile", error);
+                setIsAuth(false);
             } finally {
                 setLoading(false);
             }
@@ -82,7 +90,11 @@ export default function Profile() {
     };
 
     const handleLogout = () => {
-        base44.auth.logout(createPageUrl('Home'));
+        base44.auth.logout(window.location.origin + createPageUrl('Home'));
+    };
+
+    const handleLogin = () => {
+        base44.auth.redirectToLogin(window.location.origin + '/Profile');
     };
 
     const handleDeleteUser = async () => {
@@ -106,6 +118,33 @@ export default function Profile() {
     };
 
     if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-teal-400">Loading...</div>;
+
+    if (!isAuth) {
+        return (
+            <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
+                <div className="flex items-center gap-2 mb-6 sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 border-b border-slate-800">
+                    <Link to={createPageUrl('Home')}>
+                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+                            <ArrowLeft className="w-6 h-6" />
+                        </Button>
+                    </Link>
+                    <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-400">PROFILE</h1>
+                </div>
+                <div className="flex flex-col items-center justify-center mt-20 gap-6">
+                    <div className="w-20 h-20 bg-teal-500/20 rounded-full flex items-center justify-center">
+                        <LogIn className="w-10 h-10 text-teal-400" />
+                    </div>
+                    <p className="text-slate-300 text-center text-lg">Bitte einloggen, um dein Profil zu sehen</p>
+                    <Button 
+                        onClick={handleLogin}
+                        className="h-12 px-8 font-bold bg-teal-500 hover:bg-teal-400 text-white border-2 border-teal-700 rounded-full"
+                    >
+                        <LogIn className="mr-2 w-5 h-5" /> Einloggen
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 p-4 pt-[15px] pb-20">
@@ -222,21 +261,32 @@ export default function Profile() {
 
             {/* Account Actions */}
             <div className="grid grid-cols-2 gap-4 mb-8">
-                <Button 
-                    onClick={handleLogout}
-                    variant="outline"
-                    className="h-12 font-bold border-slate-600 bg-slate-800 hover:bg-slate-700 text-slate-200"
-                >
-                    <LogOut className="mr-2 w-5 h-5" /> Logout
-                </Button>
-                <Button 
-                    onClick={() => setShowDeleteDialog(true)}
-                    disabled={deleting}
-                    variant="outline"
-                    className="h-12 font-bold border-red-900 bg-red-950/50 hover:bg-red-900/50 text-red-400"
-                >
-                    <Trash2 className="mr-2 w-5 h-5" /> {deleting ? 'Lösche...' : 'Delete User'}
-                </Button>
+                {isAuth ? (
+                    <Button 
+                        onClick={handleLogout}
+                        variant="outline"
+                        className="h-12 font-bold border-slate-600 bg-slate-800 hover:bg-slate-700 text-slate-200"
+                    >
+                        <LogOut className="mr-2 w-5 h-5" /> Logout
+                    </Button>
+                ) : (
+                    <Button 
+                        onClick={handleLogin}
+                        className="h-12 font-bold bg-teal-500 hover:bg-teal-400 text-white border-2 border-teal-700"
+                    >
+                        <LogIn className="mr-2 w-5 h-5" /> Login
+                    </Button>
+                )}
+                {isAuth && (
+                    <Button 
+                        onClick={() => setShowDeleteDialog(true)}
+                        disabled={deleting}
+                        variant="outline"
+                        className="h-12 font-bold border-red-900 bg-red-950/50 hover:bg-red-900/50 text-red-400"
+                    >
+                        <Trash2 className="mr-2 w-5 h-5" /> {deleting ? 'Lösche...' : 'Delete User'}
+                    </Button>
+                )}
             </div>
 
             {/* Recent Runs */}

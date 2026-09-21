@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Lock, LogIn } from "lucide-react";
 import { base44 } from '@/api/base44Client';
+import { appParams } from '@/lib/app-params';
 
 export default function LoginModal({ open, onClose }) {
     const handleLogin = () => {
         // Redirect to Base44's built-in login with proper next URL
-        const nextUrl = window.location.pathname + window.location.search;
-        base44.auth.redirectToLogin(nextUrl);
+        const nextUrl = window.location.origin + window.location.pathname + window.location.search;
+        const loginUrl = `${appParams.serverUrl}/login?from_url=${encodeURIComponent(nextUrl)}`;
+        window.location.href = loginUrl;
     };
 
     return (

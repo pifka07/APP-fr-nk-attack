@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { base44 } from '@/api/base44Client';
+import { appParams } from '@/lib/app-params';
 import { ArrowLeft, Trophy, MapPin, Coins, Hash, User as UserIcon, Pencil, Check, X, Shirt, LogOut, LogIn, Trash2 } from "lucide-react";
 import { calculatePlayerRank } from '@/components/game/PlayerRanks';
 import { Progress } from "@/components/ui/progress";
@@ -94,7 +95,9 @@ export default function Profile() {
     };
 
     const handleLogin = () => {
-        base44.auth.redirectToLogin(window.location.origin + '/Profile');
+        const redirectUrl = window.location.origin + '/Profile';
+        const loginUrl = `${appParams.serverUrl}/login?from_url=${encodeURIComponent(redirectUrl)}`;
+        window.location.href = loginUrl;
     };
 
     const handleDeleteUser = async () => {

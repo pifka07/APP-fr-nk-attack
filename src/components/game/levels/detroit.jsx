@@ -13,8 +13,11 @@ const GROUND_NPCS = [
 ];
 
 const AIR_NPCS = [
-    { spriteType: 'detroit_crow', weight: 30 },
-    { spriteType: 'detroit_broken_drone', weight: 25 },
+    { spriteType: 'detroit_crow', weight: 24, size: 70, erratic: true },
+    { spriteType: 'detroit_broken_drone', weight: 18, size: 70 },
+    { spriteType: 'gelsenkirchen_bird1', weight: 14, size: 62, erratic: true },
+    { spriteType: 'madrid_pigeon', weight: 12, size: 58, erratic: true },
+    { spriteType: 'gelsenkirchen_drone4', weight: 10, size: 66 },
 ];
 
 function weightedRandom(items) {
@@ -28,12 +31,12 @@ function weightedRandom(items) {
 }
 
 export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
-    const isAir = Math.random() < 0.35;
+    const isAir = Math.random() < 0.5;
 
     if (isAir) {
         const npc = weightedRandom(AIR_NPCS);
-        const w = 70;
-        const h = 70;
+        const w = npc.size || 70;
+        const h = npc.size || 70;
         return {
             x: width + 20,
             y: 40 + Math.random() * (groundY * 0.6),
@@ -45,7 +48,7 @@ export function spawnDetroitEnemy(width, height, groundY, scrollSpeed) {
             isTarget: true,
             isObstacle: true,
             scoreValue: 120,
-            erratic: npc.spriteType === 'detroit_crow',
+            erratic: !!npc.erratic,
         };
     } else {
         const npc = weightedRandom(GROUND_NPCS);

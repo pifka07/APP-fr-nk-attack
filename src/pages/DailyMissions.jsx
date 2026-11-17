@@ -12,10 +12,16 @@ export default function DailyMissions() {
     const [loading, setLoading] = useState(true);
     const [claimingId, setClaimingId] = useState(null);
     const [totalCoins, setTotalCoins] = useState(0);
+    const [needsLogin, setNeedsLogin] = useState(false);
 
     const loadMissions = useCallback(async () => {
         setLoading(true);
         try {
+            const authed = await base44.auth.isAuthenticated();
+            if (!authed) {
+                setNeedsLogin(true);
+                return;
+            }
             const res = await base44.functions.invoke('getDailyMissions', {});
             const data = res.data;
             if (data.success) {
@@ -146,6 +152,20 @@ export default function DailyMissions() {
                 </div>
             )}
 
+            {/* Login hint */}
+            {needsLogin && !loading && (
+                <div className="text-center py-14 px-4 bg-slate-800/60 rounded-2xl border border-slate-700">
+                    <Lock className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+                    <p className="font-bold text-white mb-1">Anmeldung nötig</p>
+                    <p className="text-sm text-slate-400 mb-4">Missionen und Belohnungen werden mit deinem Konto gespeichert.</p>
+                    <button
+                        onClick={() => base44.auth.redirectToLogin(window.location.href)}
+                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold active:scale-[0.98] transition-all">
+                        Jetzt anmelden
+                    </button>
+                </div>
+            )}
+
             {/* Missions list */}
             {loading ? (
                 <div className="flex flex-col gap-4">
@@ -153,7 +173,7 @@ export default function DailyMissions() {
                         <div key={i} className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700 animate-pulse h-32" />
                     ))}
                 </div>
-            ) : missions.length === 0 ? (
+            ) : needsLogin ? null : missions.length === 0 ? (
                 <div className="text-center py-20 text-slate-500">
                     <p>Keine Missionen verfügbar</p>
                 </div>
@@ -223,6 +243,19 @@ export default function DailyMissions() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* Start button */}
+                                    {!mission.claimed && (
+                                        <Link to={`${createPageUrl('Game')}?mission=${mission.id}`}>
+                                            <motion.div
+                                                whileTap={{ scale: 0.97 }}
+                                                className="w-full mt-3 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20"
+                                            >
+                                                <Play className="w-4 h-4 fill-white" />
+                                                Mission starten
+                                            </motion.div>
+                                        </Link>
+                                    )}
 
                                     {/* Claim button */}
                                     {canClaim && (

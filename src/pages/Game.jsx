@@ -35,6 +35,7 @@ export default function Game() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const currentLevel = urlParams.get('level') || 'downtown';
+  const missionId = urlParams.get('mission') || null;
 
   useEffect(() => {
     const loadConfig = async () => {
@@ -89,7 +90,7 @@ export default function Game() {
       if (isAuth) {
         try {
           const response = await base44.functions.invoke('startRun', {
-            missionId: null,
+            missionId,
             difficulty: gameSpeed
           });
           if (response.data.success) {
@@ -170,7 +171,7 @@ export default function Game() {
         coinsCollected: stats.coins,
         distance: stats.distance,
         durationMs: durationMs,
-        missionId: null,
+        missionId,
         difficulty: gameSpeed,
         level: currentLevel
       });
@@ -486,7 +487,7 @@ export default function Game() {
                 {/* Mission Label */}
                 <div className="text-center">
                   <div className="text-teal-400 font-black text-xs uppercase tracking-widest">Mission</div>
-                  <div className="text-white font-black text-base uppercase">Poop on Everything</div>
+                  <div className="text-white font-black text-base uppercase">{missionId ? 'Tägliche Mission' : 'Poop on Everything'}</div>
                 </div>
 
                 {/* Speed Selector */}
